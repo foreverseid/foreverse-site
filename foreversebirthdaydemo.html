@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Foreverse — Pratinjau Birthday Reveal</title>
+<style>
+  :root{
+    --lilac:#CBB8EC; --mint:#A9E0C9; --butter:#FBE39A; --cream:#FFFBF3;
+    --ink:#2B2438; --ink-soft:#5C5468;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; height:100%; background:var(--cream); color:var(--ink);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif; overflow-x:hidden;}
+  #app{position:relative; min-height:100vh; width:100%;}
+  .screen{min-height:100vh; width:100%; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; padding:32px 20px; text-align:center; position:relative;}
+  .screen[hidden]{display:none;}
+  .badge{position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:50;
+    background:var(--ink); color:var(--cream); font-size:11px; letter-spacing:.04em;
+    padding:6px 14px; border-radius:999px; opacity:.88;}
+  h1{font-size:clamp(22px,5vw,32px); margin:0 0 8px; font-weight:700;}
+  p.sub{color:var(--ink-soft); font-size:15px; max-width:320px; margin:0 auto 22px; line-height:1.5;}
+  .tap-hint{font-size:13px; color:var(--ink-soft); margin-top:18px; animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .btn{border:none; background:var(--ink); color:var(--cream); padding:14px 28px; border-radius:999px;
+    font-size:15px; font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(43,36,56,.18);
+    transition:transform .15s ease;}
+  .btn:active{transform:scale(.96);}
+  .hero-wrap{position:relative; width:220px; height:220px; margin-bottom:8px; cursor:pointer;}
+  .sparkle{position:absolute; pointer-events:none; font-size:18px; opacity:0; animation:sparkle .8s ease-out forwards;}
+  @keyframes sparkle{0%{opacity:1; transform:translate(0,0) scale(.4)}100%{opacity:0; transform:translate(var(--dx),var(--dy)) scale(1.2)}}
+  .stage{position:relative; width:100%; max-width:360px; height:360px; background:linear-gradient(180deg,var(--lilac)22,var(--mint)22);
+    border-radius:24px; margin:0 auto;}
+  .find-item,.drag-item{position:absolute; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    font-size:22px; border-radius:50%; background:var(--cream); box-shadow:0 4px 10px rgba(43,36,56,.15); cursor:pointer; user-select:none;}
+  .find-item.found{background:var(--butter); transform:scale(1.15); pointer-events:none;}
+  .progress{margin-top:16px; font-weight:600; color:var(--ink-soft);}
+  .drop-box{position:absolute; bottom:16px; left:50%; transform:translateX(-50%); width:120px; height:80px;
+    border:3px dashed var(--ink); border-radius:16px; display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:var(--ink-soft);}
+  .envelope{width:180px; height:120px; background:var(--lilac); border-radius:10px; position:relative; cursor:pointer;
+    box-shadow:0 10px 24px rgba(43,36,56,.2); margin-bottom:22px;}
+  .envelope::before{content:''; position:absolute; top:0; left:0; width:0; height:0;
+    border-left:90px solid transparent; border-right:90px solid transparent; border-top:60px solid var(--mint);
+    transition:transform .4s ease; transform-origin:top;}
+  .envelope.open::before{transform:rotateX(180deg);}
+  .letter-paper{max-width:340px; background:var(--cream); border-radius:14px; padding:24px 20px;
+    box-shadow:0 12px 30px rgba(43,36,56,.15); font-size:15px; line-height:1.7; text-align:left; min-height:120px;}
+  .gallery-item{width:100%; max-width:300px; background:var(--mint); border-radius:16px; padding:18px;
+    margin-bottom:16px; display:flex; align-items:center; gap:14px; text-align:left;}
+  .gallery-num{font-size:22px; font-weight:800; color:var(--ink); opacity:.5; min-width:34px;}
+  .quote-card{max-width:320px; background:var(--butter); border-radius:20px; padding:26px 22px; font-size:16px;
+    font-style:italic; line-height:1.6; box-shadow:0 10px 24px rgba(43,36,56,.15);}
+  .heart-btn{margin-top:18px; background:none; border:none; font-size:34px; cursor:pointer; transition:transform .2s;}
+  .heart-btn.replied{transform:scale(1.3);}
+  .share-card{max-width:300px; background:var(--lilac); border-radius:20px; padding:26px; box-shadow:0 10px 24px rgba(43,36,56,.15);}
+  #music-bar{position:fixed; bottom:14px; left:50%; transform:translateX(-50%); z-index:40;
+    display:flex; align-items:center; gap:10px; background:rgba(43,36,56,.92); color:var(--cream);
+    padding:8px 16px; border-radius:999px; font-size:12px; box-shadow:0 8px 20px rgba(0,0,0,.25);}
+  .eq{display:flex; align-items:flex-end; gap:2px; height:14px;}
+  .eq span{width:3px; background:var(--mint); border-radius:2px; animation:eq 1s infinite ease-in-out;}
+  .eq span:nth-child(2){animation-delay:.15s} .eq span:nth-child(3){animation-delay:.3s} .eq span:nth-child(4){animation-delay:.45s}
+  @keyframes eq{0%,100%{height:4px}50%{height:14px}}
+  #jejak-layer,#melintas-layer{position:fixed; inset:0; pointer-events:none; z-index:60;}
+  .jejak-stamp{position:absolute; font-size:26px; opacity:0; animation:stampIn .5s ease forwards;}
+  @keyframes stampIn{0%{opacity:0; transform:scale(.3) rotate(-10deg)}60%{opacity:1; transform:scale(1.1) rotate(4deg)}100%{opacity:0; transform:scale(1) rotate(0)}}
+  .melintas-panel{position:fixed; top:0; bottom:0; left:-110%; width:110%;
+    background:linear-gradient(120deg,var(--lilac),var(--mint)); display:flex; align-items:center; justify-content:flex-end;
+    animation:sweep .9s cubic-bezier(.6,0,.2,1) forwards; font-size:44px; padding-right:24px;}
+  @keyframes sweep{0%{left:-110%}55%{left:0}100%{left:110%}}
+  .confetti-piece{position:fixed; top:-10px; font-size:18px; animation:fall 1.6s ease-in forwards; z-index:70;}
+  @keyframes fall{to{transform:translateY(100vh) rotate(400deg); opacity:0}}
+  footer.demo-note{position:fixed; top:44px; left:0; right:0; text-align:center; font-size:11px; color:var(--ink-soft); z-index:45;}
+</style>
+</head>
+<body>
+
+<div class="badge">🔍 Ini pratinjau template — versi kamu diisi dengan cerita sendiri</div>
+<div id="app"></div>
+<div id="music-bar" style="display:none;">
+  <div class="eq"><span></span><span></span><span></span><span></span></div>
+  <span id="music-title">Lagu favorit kalian</span>
+</div>
+<div id="jejak-layer"></div>
+<div id="melintas-layer"></div>
+
+<script>
+// ==== Config block — this is the single place a real order gets personalized ====
+const SURAT = {
+  namaPenerima: "Kamu",
+  namaPengirim: "Seseorang yang sayang kamu",
+  jumlahCari: 5,
+  jumlahTarik: 4,
+  namaLagu: "Lagu favorit kalian",
+  pesan: "Selamat ulang tahun. Aku nggak jago merangkai kata, tapi aku tahu persis apa yang mau aku bilang: makasih udah jadi bagian dari hari-hariku. Semoga tahun ini semua yang kamu perjuangkan diam-diam, kelihatan hasilnya. Aku di sini, di sudut manapun kamu butuh.",
+  foto: [
+    {label:"Waktu itu, di tempat biasa kita nongkrong"},
+    {label:"Momen random yang ternyata paling aku inget"},
+    {label:"Hari paling capek tapi paling lucu"}
+  ],
+  quote: "“Kamu itu bukti kalau hal baik masih beneran ada.”"
+};
+
+const app = document.getElementById('app');
+let historyTrapped = false;
+
+function trapHistory(){
+  if(historyTrapped) return;
+  historyTrapped = true;
+  history.pushState(null, '', location.href);
+  window.addEventListener('popstate', () => history.pushState(null, '', location.href));
+}
+
+function removeScreen(el){ if(el) el.remove(); }
+
+// jejak — staggered trail of small icon stamps, used frequently between sections
+function playJejak(cb){
+  const layer = document.getElementById('jejak-layer');
+  const icons = ['✨','💛','🌷','💌','⭐','🌿','💫'];
+  for(let i=0;i<7;i++){
+    const s = document.createElement('span');
+    s.className = 'jejak-stamp';
+    s.textContent = icons[i % icons.length];
+    s.style.left = (10 + i*11) + '%';
+    s.style.top = (20 + (i%3)*20) + '%';
+    s.style.animationDelay = (i*70) + 'ms';
+    layer.appendChild(s);
+  }
+  setTimeout(()=>{ layer.innerHTML=''; cb && cb(); }, 700);
+}
+
+// melintas — one bigger one-time sweep, used once before letter/gallery/quote unlock
+function playMelintas(cb){
+  const layer = document.getElementById('melintas-layer');
+  const panel = document.createElement('div');
+  panel.className = 'melintas-panel';
+  panel.innerHTML = '🎂';
+  layer.appendChild(panel);
+  setTimeout(()=>{ layer.innerHTML=''; cb && cb(); }, 950);
+}
+
+function confettiBurst(){
+  const emojis = ['🎉','💛','✨','🌷','💫'];
+  for(let i=0;i<24;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti-piece';
+    c.textContent = emojis[i % emojis.length];
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.animationDelay = (Math.random()*300)+'ms';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 2000);
+  }
+}
+
+function sparkleBurst(x,y){
+  for(let i=0;i<10;i++){
+    const s = document.createElement('span');
+    s.className = 'sparkle';
+    s.textContent = '✨';
+    const angle = (Math.PI*2*i)/10;
+    s.style.setProperty('--dx', Math.cos(angle)*70+'px');
+    s.style.setProperty('--dy', Math.sin(angle)*70+'px');
+    s.style.left = x+'px'; s.style.top = y+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 800);
+  }
+}
+
+// ---- Screen builders ----
+function screenIntro(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-intro';
+  s.innerHTML = `
+    <div class="hero-wrap" id="hero-tap">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="100" fill="#CBB8EC"/>
+        <circle cx="110" cy="118" r="70" fill="#FBE39A"/>
+        <path d="M70 100 Q110 60 150 100 Q150 140 110 160 Q70 140 70 100 Z" fill="#A9E0C9"/>
+      </svg>
+    </div>
+    <h1>Untuk ${SURAT.namaPenerima}, dari ${SURAT.namaPengirim}</h1>
+    <p class="sub">Ada sesuatu yang disiapkan khusus buat kamu. Ketuk ilustrasinya untuk mulai.</p>
+    <div class="tap-hint">👆 Ketuk untuk mulai</div>
+  `;
+  app.appendChild(s);
+  const hero = s.querySelector('#hero-tap');
+  hero.addEventListener('click', (e)=>{
+    const rect = hero.getBoundingClientRect();
+    sparkleBurst(rect.left+rect.width/2, rect.top+rect.height/2);
+    setTimeout(()=> goTo(s, screenGame1, true), 400);
+  }, {once:true});
+}
+
+function screenGame1(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-game1';
+  s.innerHTML = `
+    <h1>Cari yang tersembunyi</h1>
+    <p class="sub">Ada ${SURAT.jumlahCari} ikon kecil yang sembunyi di panggung ini. Temukan semuanya.</p>
+    <div class="stage" id="stage1"></div>
+    <div class="progress" id="progress1">0 / ${SURAT.jumlahCari}</div>
+  `;
+  app.appendChild(s);
+  const stage = s.querySelector('#stage1');
+  const icons = ['🌷','⭐','💛','🍰','🎈'];
+  let found = 0;
+  for(let i=0;i<SURAT.jumlahCari;i++){
+    const it = document.createElement('div');
+    it.className = 'find-item';
+    it.textContent = icons[i % icons.length];
+    it.style.left = (8 + Math.random()*78) + '%';
+    it.style.top = (8 + Math.random()*78) + '%';
+    it.addEventListener('click', ()=>{
+      if(it.classList.contains('found')) return;
+      it.classList.add('found');
+      found++;
+      s.querySelector('#progress1').textContent = `${found} / ${SURAT.jumlahCari}`;
+      if(found === SURAT.jumlahCari){
+        setTimeout(()=> playJejak(()=> goTo(s, screenGame2)), 400);
+      }
+    });
+    stage.appendChild(it);
+  }
+}
+
+function screenGame2(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-game2';
+  s.innerHTML = `
+    <h1>Kumpulkan semuanya</h1>
+    <p class="sub">Seret ${SURAT.jumlahTarik} item ini ke dalam kotak.</p>
+    <div class="stage" id="stage2"><div class="drop-box" id="dropbox">taruh di sini</div></div>
+    <div class="progress" id="progress2">0 / ${SURAT.jumlahTarik}</div>
+  `;
+  app.appendChild(s);
+  const stage = s.querySelector('#stage2');
+  const dropbox = s.querySelector('#dropbox');
+  const icons = ['🎁','💌','🌿','🎀'];
+  let collected = 0;
+  for(let i=0;i<SURAT.jumlahTarik;i++){
+    const it = document.createElement('div');
+    it.className = 'drag-item';
+    it.textContent = icons[i % icons.length];
+    it.style.left = (10 + (i * 20) % 70) + '%';
+    it.style.top = (10 + Math.random()*40) + '%';
+    it.draggable = false;
+    // simple tap-to-collect for touch reliability (drag technique, tap-friendly implementation)
+    it.addEventListener('click', ()=>{
+      if(it.dataset.done) return;
+      it.dataset.done = '1';
+      it.style.transition = 'all .35s ease';
+      const boxRect = dropbox.getBoundingClientRect();
+      const stageRect = stage.getBoundingClientRect();
+      it.style.left = (boxRect.left - stageRect.left) + 'px';
+      it.style.top = (boxRect.top - stageRect.top) + 'px';
+      it.style.opacity = '0';
+      collected++;
+      s.querySelector('#progress2').textContent = `${collected} / ${SURAT.jumlahTarik}`;
+      if(collected === SURAT.jumlahTarik){
+        setTimeout(()=> playMelintas(()=> goTo(s, screenEnvelope)), 500);
+      }
+    });
+    stage.appendChild(it);
+  }
+}
+
+function screenEnvelope(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-envelope';
+  s.innerHTML = `
+    <h1>Sebuah surat menantimu</h1>
+    <div class="envelope" id="envelope"></div>
+    <div class="tap-hint">👆 Ketuk amplopnya</div>
+    <div id="letter-holder"></div>
+  `;
+  app.appendChild(s);
+  const env = s.querySelector('#envelope');
+  env.addEventListener('click', ()=>{
+    env.classList.add('open');
+    setTimeout(()=>{
+      env.remove();
+      s.querySelector('.tap-hint').remove();
+      const holder = s.querySelector('#letter-holder');
+      const paper = document.createElement('div');
+      paper.className = 'letter-paper';
+      holder.appendChild(paper);
+      typewrite(paper, SURAT.pesan, ()=>{
+        const btn = document.createElement('button');
+        btn.className = 'btn'; btn.style.marginTop = '20px'; btn.textContent = 'Lanjut';
+        btn.addEventListener('click', ()=> playJejak(()=> goTo(s, screenGallery)));
+        holder.appendChild(btn);
+      });
+    }, 500);
+  }, {once:true});
+}
+
+function typewrite(el, text, done){
+  let i = 0;
+  const iv = setInterval(()=>{
+    el.textContent = text.slice(0, i);
+    i++;
+    if(i > text.length){ clearInterval(iv); done && done(); }
+  }, 18);
+}
+
+function screenGallery(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-gallery';
+  let items = '';
+  SURAT.foto.forEach((f, idx)=>{
+    items += `<div class="gallery-item"><div class="gallery-num">${String(idx+1).padStart(2,'0')}</div><div>${f.label}</div></div>`;
+  });
+  s.innerHTML = `
+    <h1>Beberapa momen</h1>
+    <p class="sub">Bukan urutan acak — ini yang paling nempel di ingatan.</p>
+    ${items}
+    <button class="btn" id="gallery-next" style="margin-top:8px;">Lanjut</button>
+  `;
+  app.appendChild(s);
+  s.querySelector('#gallery-next').addEventListener('click', ()=> playJejak(()=> goTo(s, screenQuote)));
+}
+
+function screenQuote(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-quote';
+  s.innerHTML = `
+    <div class="quote-card">${SURAT.quote}</div>
+    <button class="heart-btn" id="heart-reply">🤍</button>
+    <p class="sub" id="reply-caption" style="margin-top:6px;"></p>
+    <button class="btn" id="quote-next" style="display:none;">Lanjut</button>
+  `;
+  app.appendChild(s);
+  const heart = s.querySelector('#heart-reply');
+  heart.addEventListener('click', ()=>{
+    if(heart.classList.contains('replied')) return;
+    heart.classList.add('replied');
+    heart.textContent = '❤️';
+    confettiBurst();
+    s.querySelector('#reply-caption').textContent = 'Balasanmu terkirim.';
+    s.querySelector('#quote-next').style.display = 'inline-block';
+  });
+  s.querySelector('#quote-next').addEventListener('click', ()=> playJejak(()=> goTo(s, screenShare)));
+}
+
+function screenShare(){
+  const s = document.createElement('section');
+  s.className = 'screen'; s.id = 'sec-share';
+  s.innerHTML = `
+    <h1>Sampai di sini dulu 🌷</h1>
+    <div class="share-card">
+      <p style="margin:0 0 6px; font-weight:700;">Foreverse</p>
+      <p style="margin:0; font-size:13px;">Sebuah momen, dikemas jadi pengalaman.</p>
+    </div>
+    <button class="btn" id="share-btn" style="margin-top:20px;">Bagikan</button>
+    <p class="sub" style="margin-top:26px;">Ini baru pratinjau template. Foreverse yang asli dibuat khusus untuk satu orang.</p>
+  `;
+  app.appendChild(s);
+  s.querySelector('#share-btn').addEventListener('click', async ()=>{
+    const shareData = { title:'Foreverse', text:'Lihat pratinjau Foreverse — hadiah digital yang beda dari yang lain.', url: location.href };
+    if(navigator.share){ try{ await navigator.share(shareData); }catch(e){} }
+    else { try{ await navigator.clipboard.writeText(location.href); alert('Tautan disalin.'); }catch(e){} }
+  });
+}
+
+function goTo(currentEl, nextBuilder, isFirst){
+  if(!isFirst) trapHistory();
+  removeScreen(currentEl);
+  nextBuilder();
+}
+
+// boot
+trapHistory();
+screenIntro();
+</script>
+</body>
+</html>
