@@ -369,8 +369,52 @@ function goTo(currentEl, nextBuilder, isFirst){
   nextBuilder();
 }
 
+// ==== QA-only navigation, invisible to real customers ====
+// Only activates with the exact secret value below in the URL — e.g.
+// foreverse-birthday-v6.html?studio=fv-atelier-9247
+// Read-only: lets you jump between sections to check your edits without
+// replaying both games every time. Does not save, export, or edit anything.
+const DEV_KEY = "fv-atelier-9247";
+
+function checkDevMode(){
+  try{
+    return new URLSearchParams(location.search).get('studio') === DEV_KEY;
+  }catch(e){ return false; }
+}
+
+function jumpTo(builder){
+  app.innerHTML = '';
+  document.getElementById('jejak-layer').innerHTML = '';
+  document.getElementById('melintas-layer').innerHTML = '';
+  builder();
+}
+
+function renderDevPanel(){
+  const panel = document.createElement('div');
+  panel.id = 'dev-panel';
+  panel.style.cssText = 'position:fixed;bottom:8px;left:8px;z-index:999;background:rgba(0,0,0,.78);'
+    + 'padding:8px;border-radius:10px;display:flex;flex-wrap:wrap;gap:6px;max-width:190px;';
+  const label = document.createElement('div');
+  label.textContent = 'QA jump (only you see this)';
+  label.style.cssText = 'width:100%;color:#fff;font-size:9px;opacity:.7;margin-bottom:2px;';
+  panel.appendChild(label);
+  const items = [
+    ['Intro', screenIntro], ['Game 1', screenGame1], ['Game 2', screenGame2],
+    ['Envelope', screenEnvelope], ['Gallery', screenGallery], ['Quote', screenQuote], ['Share', screenShare]
+  ];
+  items.forEach(([lbl, fn])=>{
+    const b = document.createElement('button');
+    b.textContent = lbl;
+    b.style.cssText = 'font-size:10px;padding:4px 8px;border:none;border-radius:6px;background:#fff;cursor:pointer;';
+    b.addEventListener('click', ()=> jumpTo(fn));
+    panel.appendChild(b);
+  });
+  document.body.appendChild(panel);
+}
+
 // boot
 trapHistory();
+if(checkDevMode()){ renderDevPanel(); }
 screenIntro();
 </script>
 </body>
