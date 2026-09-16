@@ -36,15 +36,15 @@ const FOREVERSE_SITE = {
   // Mau nambah tema baru? Tinggal tambah satu baris di sini.
   // warna: 3 kode warna khas tema itu, muncul sebagai titik di kartu.
   temaSiap: [
-    { nama:"Birthday",       file:"/foreverse-birthday-demo.html",
+    { nama:"Birthday",       file:"/foreverse-birthday-demo.html", cover:"/foreverse-cover-birthday.svg",
       warna:["#CBB8EC","#A9E0C9","#FBE39A"],
       catatan:"Dua mini-game, amplop yang dibuka sekali, galeri foto, dan kartu ucapan yang bisa dibalas." },
 
-    { nama:"Surat Berlipat", file:"/foreverse-surat-berlipat-demo.html",
+    { nama:"Surat Berlipat", file:"/foreverse-surat-berlipat-demo.html", cover:"/foreverse-cover-surat.svg",
       warna:["#1B1B2F","#E8A5B0","#E8734A"],
       catatan:"Amplop bersegel, lalu surat yang terbuka lipatan demi lipatan. Ada hitungan hari otomatis dan kartu janji." },
 
-    { nama:"Mixtape",        file:"/foreverse-mixtape-demo.html",
+    { nama:"Mixtape",        file:"/foreverse-mixtape-demo.html", cover:"/foreverse-cover-mixtape.svg",
       warna:["#F2A93B","#8E2F45","#2E7D74"],
       catatan:"Kaset yang diputar: lirik muncul mengikuti lagu, tracklist berisi cerita kalian, lalu sisi B berisi foto." }
   ],
@@ -55,6 +55,9 @@ const FOREVERSE_SITE = {
     { nama:"Graduation",           catatan:"Buat yang akhirnya sampai juga, setelah semua yang dilewati." },
     { nama:"Undangan Pernikahan",  catatan:"Undangan digital yang cerita kalian jadi isinya, bukan tempelan." }
   ],
+
+  // --- Cover default untuk tema yang belum jadi ---
+  coverKosong: "/foreverse-cover-locked.svg",
 
   // --- Video demo (opsional) ---
   // Kosongkan = bagian video otomatis disembunyikan.
@@ -287,32 +290,69 @@ const FOREVERSE_SITE = {
     background:var(--violet); border-color:var(--violet); color:#fff;
   }
 
-  /* ── Tema / occasion ── */
-  .themes{
-    display:grid; gap:14px; margin-top:38px;
-    grid-template-columns:repeat(auto-fill, minmax(240px,1fr));
+  /* ── Pilihan momen (pill browse) ── */
+  .occasions{
+    display:flex; flex-wrap:wrap; gap:9px; margin-top:30px;
   }
-  .theme{
-    border:1px solid var(--stone);
-    border-radius:6px;
-    padding:22px;
-    background:#fff;
-    display:flex; flex-direction:column; gap:14px;
+  .occ{
+    font-family:var(--font-sans); font-size:14.5px;
+    padding:9px 17px; border-radius:100px; cursor:pointer;
+    border:1px solid var(--stone); background:#fff; color:var(--ink-soft);
+    transition:transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
   }
-  .theme.locked{ background:transparent; border-style:dashed; }
-  .chips{ display:flex; gap:6px; }
-  .chip{ width:22px; height:22px; border-radius:50%; border:1px solid rgba(22,22,26,.07); }
-  .theme-name{ font-family:var(--font-serif); font-size:20px; }
-  .theme-note{ font-size:14.5px; color:var(--ink-soft); }
-  .tag{
-    align-self:flex-start;
-    font-size:12.5px;
-    padding:4px 11px; border-radius:100px;
+  .occ:hover{ border-color:var(--ink-faint); color:var(--ink); transform:translateY(-1px); }
+  .occ.is-live{ border-color:var(--violet); color:var(--violet); }
+  .occ.is-live:hover{ background:var(--violet); color:#fff; }
+
+  /* ── Galeri tema — kartu ilustrasi, scroll horizontal ── */
+  .gallery{
+    display:flex; gap:18px; margin-top:34px;
+    overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
   }
-  .tag-live{ background:var(--violet); color:#fff; }
-  .theme-link{ font-size:14.5px; color:var(--violet); text-decoration:none; }
-  .theme-link:hover{ text-decoration:underline; }
-  .tag-soon{ background:var(--paper-warm); color:var(--ink-faint); border:1px solid var(--stone); }
+  .gallery::-webkit-scrollbar{ height:7px; }
+  .gallery::-webkit-scrollbar-thumb{ background:var(--stone); border-radius:10px; }
+
+  .theme-card{
+    position:relative; flex:0 0 auto;
+    width:min(240px, 62vw); aspect-ratio:400/520;
+    border-radius:14px; overflow:hidden;
+    scroll-snap-align:start;
+    background:var(--paper-warm) center/cover;
+    text-decoration:none; color:inherit; display:block;
+    box-shadow:0 1px 3px rgba(22,22,26,.10);
+    transition:transform .22s cubic-bezier(.2,.8,.3,1), box-shadow .22s ease;
+  }
+  .theme-card:hover{ transform:translateY(-5px); box-shadow:0 14px 30px rgba(22,22,26,.16); }
+  .theme-card.locked{ cursor:default; }
+  .theme-card.locked:hover{ transform:none; box-shadow:0 1px 3px rgba(22,22,26,.10); }
+
+  .theme-card .veil{
+    position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(22,22,26,.82) 0%, rgba(22,22,26,.35) 42%, rgba(22,22,26,0) 66%);
+  }
+  .theme-card.locked .veil{
+    background:linear-gradient(to top, rgba(74,72,82,.55) 0%, rgba(74,72,82,.12) 55%, rgba(74,72,82,0) 75%);
+  }
+  .theme-card .body{
+    position:absolute; left:0; right:0; bottom:0; padding:18px;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .theme-card .t-name{
+    font-family:var(--font-serif); font-size:21px; color:#fff; line-height:1.15;
+  }
+  .theme-card.locked .t-name{ color:var(--ink-soft); }
+  .theme-card .t-note{
+    font-size:13px; color:rgba(255,255,255,.82); line-height:1.45;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .theme-card.locked .t-note{ color:var(--ink-faint); }
+  .theme-card .t-tag{
+    align-self:flex-start; font-size:11.5px; padding:4px 10px; border-radius:100px;
+    margin-bottom:6px;
+  }
+  .theme-card .t-tag.live{ background:#fff; color:var(--violet); }
+  .theme-card .t-tag.soon{ background:rgba(22,22,26,.06); color:var(--ink-faint); border:1px solid var(--stone); backdrop-filter:blur(2px); }
 
   /* ── Langkah ── */
   .steps{ margin-top:40px; display:grid; gap:0; }
@@ -483,14 +523,12 @@ const FOREVERSE_SITE = {
   <section class="preview" id="preview">
     <div class="wrap">
       <h2>Coba dulu, baru pesan.</h2>
-      <p class="lede">Ini versi contoh, isinya karangan. Yang kamu pesan nanti diisi nama, foto, pesan, dan lagu kalian sendiri. Pilih temanya di bawah.</p>
-
-      <div class="tabs" id="fvTabs" role="tablist"></div>
+      <p class="lede">Ini versi contoh, isinya karangan. Yang kamu pesan nanti diisi nama, foto, pesan, dan lagu kalian sendiri. Tap salah satu kartu di bawah untuk ganti yang tampil di sini.</p>
 
       <div class="frame">
         <iframe id="fvPreview" title="Contoh tema" loading="lazy"></iframe>
         <div class="frame-foot">
-          <span>Paling enak dibuka di HP — flow-nya kerasa utuh.</span>
+          <span id="fvPreviewLabel">Paling enak dibuka di HP — flow-nya kerasa utuh.</span>
           <a id="fvPreviewFull" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
         </div>
       </div>
@@ -510,7 +548,9 @@ const FOREVERSE_SITE = {
       <h2>Tiap tema punya dunianya sendiri.</h2>
       <p class="lede">Bukan satu template dipakai ulang dengan warna yang sama untuk semua acara. Setiap tema dibangun dari nol — warna, permainan, dan alurnya menyesuaikan momennya.</p>
 
-      <div class="themes" id="fvThemes"></div>
+      <div class="occasions" id="fvOccasions"></div>
+
+      <div class="gallery" id="fvGallery"></div>
 
       <p class="lede" style="margin-top:30px;">Ada momen yang belum ada di sini? <a id="fvWaTheme" href="#">Bilang ke kami lewat WhatsApp</a> — tema berikutnya dipilih dari yang paling banyak diminta.</p>
     </div>
@@ -714,53 +754,71 @@ const FOREVERSE_SITE = {
 
   var frame = document.getElementById("fvPreview");
   var full  = document.getElementById("fvPreviewFull");
-  var tabs  = document.getElementById("fvTabs");
+  var label = document.getElementById("fvPreviewLabel");
 
   function show(i){
     var tm = siap[i]; if (!tm) return;
     if (frame){ frame.setAttribute("src", tm.file); frame.setAttribute("title","Contoh tema "+tm.nama); }
     if (full)  full.setAttribute("href", tm.file);
-    if (tabs) Array.prototype.forEach.call(tabs.children, function(b,n){
-      b.setAttribute("aria-selected", n===i ? "true" : "false");
+    if (label) label.textContent = "Lagi lihat: "+tm.nama+" — paling enak dibuka di HP.";
+  }
+  if (siap.length) show(0);
+
+  /* ---------- galeri kartu ilustrasi ---------- */
+  var gallery = document.getElementById("fvGallery");
+  var allThemes = siap.map(function(tm,i){ return {tm:tm, live:true, i:i}; })
+                  .concat(segera.map(function(tm){ return {tm:tm, live:false}; }));
+
+  if (gallery){
+    allThemes.forEach(function(entry){
+      var tm = entry.tm;
+      var cover = entry.live ? tm.cover : (C.coverKosong || tm.cover);
+      var el;
+
+      if (entry.live){
+        el = document.createElement("a");
+        el.href = tm.file; el.target = "_blank"; el.rel = "noopener";
+        el.addEventListener("click", function(ev){
+          // klik kartu = ganti preview di atas, bukan langsung pindah tab baru
+          if (!ev.metaKey && !ev.ctrlKey){ ev.preventDefault(); show(entry.i); frame && frame.scrollIntoView({behavior:"smooth", block:"center"}); }
+        });
+      } else {
+        el = document.createElement("div");
+      }
+
+      el.className = "theme-card" + (entry.live ? "" : " locked");
+      el.dataset.nama = tm.nama;
+      if (cover) el.style.backgroundImage = "url('"+cover+"')";
+
+      el.innerHTML =
+        '<div class="veil"></div>' +
+        '<div class="body">' +
+          '<span class="t-tag '+(entry.live?"live":"soon")+'">'+(entry.live?"Sudah tersedia":"Segera hadir")+'</span>' +
+          '<span class="t-name">'+tm.nama+'</span>' +
+          '<p class="t-note">'+tm.catatan+'</p>' +
+        '</div>';
+
+      gallery.appendChild(el);
     });
   }
 
-  if (tabs && siap.length){
-    siap.forEach(function(tm,i){
+  /* ---------- pill momen: browse + lompat ke kartu ---------- */
+  var occWrap = document.getElementById("fvOccasions");
+  if (occWrap){
+    allThemes.forEach(function(entry){
       var b = document.createElement("button");
-      b.type="button"; b.className="tab"; b.textContent=tm.nama;
-      b.setAttribute("role","tab"); b.setAttribute("aria-selected","false");
-      b.addEventListener("click", function(){ show(i); });
-      tabs.appendChild(b);
-    });
-    if (siap.length < 2) tabs.style.display = "none";
-    show(0);
-  }
-
-  var grid = document.getElementById("fvThemes");
-  function dots(arr){
-    return (arr||["#E4E2DC","#E4E2DC","#E4E2DC"]).map(function(c){
-      return '<span class="chip" style="background:'+c+'"></span>';
-    }).join("");
-  }
-  if (grid){
-    siap.forEach(function(tm,i){
-      var d=document.createElement("div"); d.className="theme";
-      d.innerHTML = '<div class="chips">'+dots(tm.warna)+'</div>'
-        + '<span class="theme-name">'+tm.nama+'</span>'
-        + '<p class="theme-note">'+tm.catatan+'</p>'
-        + '<span class="tag tag-live">Sudah tersedia</span>';
-      d.querySelector(".tag").insertAdjacentHTML("afterend",
-        ' <a href="'+tm.file+'" class="theme-link" target="_blank" rel="noopener">Lihat contoh</a>');
-      grid.appendChild(d);
-    });
-    segera.forEach(function(tm){
-      var d=document.createElement("div"); d.className="theme locked";
-      d.innerHTML = '<div class="chips">'+dots(null)+'</div>'
-        + '<span class="theme-name">'+tm.nama+'</span>'
-        + '<p class="theme-note">'+tm.catatan+'</p>'
-        + '<span class="tag tag-soon">Segera hadir</span>';
-      grid.appendChild(d);
+      b.type = "button"; b.className = "occ" + (entry.live ? " is-live" : "");
+      b.textContent = entry.tm.nama;
+      b.addEventListener("click", function(){
+        var card = gallery.querySelector('[data-nama="'+entry.tm.nama+'"]');
+        if (card){
+          card.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
+          card.style.outline = "2px solid #3B3168"; card.style.outlineOffset = "3px";
+          setTimeout(function(){ card.style.outline = ""; }, 900);
+        }
+        if (entry.live) show(entry.i);
+      });
+      occWrap.appendChild(b);
     });
   }
 
