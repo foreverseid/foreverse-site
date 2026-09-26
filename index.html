@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Foreverse — Hadiah Digital yang Dijalani, Bukan Cuma Dibaca</title>
-<meta name="description" content="Foreverse bikin hadiah digital interaktif buat orang spesialmu. Dibuka sekali, dijalani dari awal sampai akhir. Selesai maks. 1x24 jam. Mulai Rp15.000.">
+<title>Foreverse — Surat Digital untuk Orang yang Kamu Sayang</title>
+<meta name="description" content="Kamu kirim pesan, foto, dan lagunya. Kami rangkai jadi satu halaman yang dia buka lewat link. Rp15.000 per surat, jadi maks. 1x24 jam.">
 
 <meta property="og:type" content="website">
+<meta property="og:locale" content="id_ID">
 <meta property="og:url" content="https://foreverse.id">
-<meta property="og:title" content="Foreverse — Hadiah Digital yang Dijalani, Bukan Cuma Dibaca">
-<meta property="og:description" content="Surat digital interaktif buat orang spesialmu. Dibuka lewat satu link, dijalani dari awal sampai akhir, nggak bisa diulang.">
+<meta property="og:title" content="Foreverse — Surat Digital untuk Orang yang Kamu Sayang">
+<meta property="og:description" content="Kamu kirim pesan, foto, dan lagunya. Kami rangkai jadi satu halaman yang dia buka lewat link.">
 <meta property="og:image" content="https://foreverse.id/foreverse-sealed-infinity-2048-onwarm.png">
 <meta name="twitter:card" content="summary_large_image">
 
@@ -17,691 +18,638 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
    FOREVERSE — KONFIGURASI SITUS
-   Ini satu-satunya bagian yang perlu kamu ubah.
-   Isi tanda kutip dengan link asli kamu, lalu simpan.
+   Semua yang biasa kamu ubah ada di sini. Isi tanda kutipnya, simpan.
    ═══════════════════════════════════════════════════════════════ */
 
 const FOREVERSE_SITE = {
 
-  // --- Link pemesanan ---
-  lynkOrder:   "https://lynk.id/foreverse",        // halaman bayar di Lynk.id
-  orderForm:   "",                                  // link Tally.so (isi setelah form dibuat)
+  /* --- Link --- */
+  lynkOrder: "https://lynk.id/foreverse",    // halaman bayar Lynk.id (satu produk untuk semua tema)
+  whatsapp:  "6289512385393",                // nomor WA, format 62..., tanpa + dan spasi
+  instagram: "https://instagram.com/foreverse.id",
+  tiktok:    "https://tiktok.com/@foreverse.id",
+  privasi:   "/kebijakan-privasi.html",
+  syarat:    "/syarat-ketentuan.html",
 
-  // --- Tema yang sudah jadi ---
-  // Mau nambah tema baru? Tinggal tambah satu baris di sini.
-  // warna: 3 kode warna khas tema itu, muncul sebagai titik di kartu.
-  temaSiap: [
-    { nama:"Birthday",       file:"/foreverse-birthday-demo.html", cover:"/foreverse-cover-birthday.svg",
-      warna:["#CBB8EC","#A9E0C9","#FBE39A"],
-      catatan:"Dua mini-game, amplop yang dibuka sekali, galeri foto, dan kartu ucapan yang bisa dibalas." },
+  /* --- Angka --- */
+  harga:      "Rp15.000",
+  turnaround: "maks. 1x24 jam",
+  revisi:     "1x revisi gratis",
+  batasRevisi:"3 hari",
 
-    { nama:"Surat Berlipat", file:"/foreverse-surat-berlipat-demo.html", cover:"/foreverse-cover-surat.svg",
-      warna:["#1B1B2F","#E8A5B0","#E8734A"],
-      catatan:"Amplop bersegel, lalu surat yang terbuka lipatan demi lipatan. Ada hitungan hari otomatis dan kartu janji." },
+  /* ═══ TEMA ═══
+     Tema = bentuk suratnya. Satu tema bisa dipakai di beberapa momen.
+     alur = urutan yang dilihat penerima (tampil di samping contoh). */
+  tema: {
+    birthday: {
+      nama: "Birthday",
+      file: "/foreverse-birthday-demo.html",
+      cover: "/foreverse-cover-birthday.svg",
+      warna: ["#CBB8EC", "#FBE39A"],
+      ringkas: "Amplop yang dibuka, dua mini-game, galeri foto, lalu kartu ucapan.",
+      isi: ["Mini-game", "Galeri foto"],
+      alur: ["Amplop dibuka", "Dua mini-game singkat", "Galeri foto berurutan", "Kartu ucapan sebagai penutup"]
+    },
+    surat: {
+      nama: "Surat Berlipat",
+      file: "/foreverse-surat-berlipat-demo.html",
+      cover: "/foreverse-cover-surat.svg",
+      warna: ["#1B1B2F", "#E8A5B0"],
+      ringkas: "Amplop bersegel, lalu surat yang terbuka lipatan demi lipatan.",
+      isi: ["3 foto", "Musik", "Hitungan hari"],
+      alur: ["Amplop bersegel dibuka", "Surat terbuka lipatan demi lipatan, tiga bagian pesan", "Tiga foto polaroid", "Hitungan hari sejak tanggal yang kamu pilih", "Penutup dan kartu janji yang bisa dibalik"]
+    },
+    mixtape: {
+      nama: "Mixtape",
+      file: "/foreverse-mixtape-demo.html",
+      cover: "/foreverse-cover-mixtape.svg",
+      warna: ["#F2A93B", "#8E2F45"],
+      ringkas: "Kaset yang diputar. Pesanmu muncul baris demi baris mengikuti lagu.",
+      isi: ["4 foto", "Lagu pilihanmu", "Bisa diputar ulang"],
+      alur: ["Kaset mulai diputar", "Pesan muncul baris demi baris mengikuti lagu", "Tracklist berisi cerita kalian", "Sisi B: empat foto", "Sampul kaset sebagai penutup, bisa diputar ulang"]
+    }
+  },
 
-    { nama:"Mixtape",        file:"/foreverse-mixtape-demo.html", cover:"/foreverse-cover-mixtape.svg",
-      warna:["#F2A93B","#8E2F45","#2E7D74"],
-      catatan:"Kaset yang diputar: lirik muncul mengikuti lagu, tracklist berisi cerita kalian, lalu sisi B berisi foto." }
-  ],
-
-  // --- Tema yang belum jadi ---
-  temaSegera: [
-    { nama:"LDR",                  catatan:"Buat yang jauh — jarak yang dihitung, bukan cuma dikeluhkan." },
-    { nama:"Graduation",           catatan:"Buat yang akhirnya sampai juga, setelah semua yang dilewati." },
-    { nama:"Undangan Pernikahan",  catatan:"Undangan digital yang cerita kalian jadi isinya, bukan tempelan." }
-  ],
-
-  // --- Cover default untuk tema yang belum jadi ---
-  coverKosong: "/foreverse-cover-locked.svg",
-
-  // --- Video demo (opsional) ---
-  // Kosongkan = bagian video otomatis disembunyikan.
-  // Isi setelah kamu rekam layar HP, contoh: "/demo-birthday.mp4"
-  videoDemo:   "",
-
-  // --- Sosial & kontak ---
-  instagram:   "https://instagram.com/foreverse.id",
-  tiktok:      "https://tiktok.com/@foreverse.id",
-  whatsapp:    "https://wa.me/6289512385393",
-
-  // --- Halaman legal (buat dulu filenya sebelum deploy) ---
-  privasi:     "/kebijakan-privasi.html",
-  syarat:      "/syarat-ketentuan.html",
-
-  // --- Angka yang sering berubah ---
-  hargaRange:  "Rp15.000 – Rp30.000",
-  turnaround:  "maks. 1x24 jam",
-  revisi:      "1x revisi gratis"
-
+  /* ═══ MOMEN ═══
+     Momen = surat ini untuk acara apa.
+     tema: [] kosong = tampil sebagai "Segera hadir".
+     Mau tambah tema ke satu momen? Tambah namanya di dalam kurung siku. */
+  momen: [
+    { id:"birthday",    nama:"Birthday",           emoji:"🎂", baris:"Untuk hari ulang tahunnya.",              tema:["birthday","surat","mixtape"] },
+    { id:"anniversary", nama:"Anniversary",        emoji:"🥂", baris:"Untuk hari jadi kalian.",                 tema:["surat","mixtape"] },
+    { id:"ldr",         nama:"LDR",                emoji:"✈️", baris:"Untuk yang lagi jauh.",                   tema:["surat","mixtape"] },
+    { id:"graduation",  nama:"Graduation",         emoji:"🎓", baris:"Untuk yang baru lulus.",                  tema:["surat"] },
+    { id:"apology",     nama:"Apology",            emoji:"🕊️", baris:"Untuk minta maaf yang susah diucapkan langsung.", tema:["surat"] },
+    { id:"lovenote",    nama:"Love Note",          emoji:"💌", baris:"Untuk bilang sayang tanpa nunggu momen.", tema:[] },
+    { id:"congrats",    nama:"Congrats",           emoji:"🏆", baris:"Untuk ikut senang atas pencapaiannya.",   tema:[] },
+    { id:"askout",      nama:"Ask Out",            emoji:"🗓️", baris:"Untuk ngajak dia jalan.",                 tema:[] },
+    { id:"confess",     nama:"Confess",            emoji:"💘", baris:"Untuk menyatakan perasaan.",              tema:[] },
+    { id:"getwell",     nama:"Get Well Soon",      emoji:"🌷", baris:"Untuk yang lagi sakit.",                  tema:[] },
+    { id:"parting",     nama:"Parting Ways",       emoji:"🌇", baris:"Untuk pamit dengan baik.",                tema:[] },
+    { id:"proposal",    nama:"Proposal",           emoji:"💍", baris:"Untuk mengajak dia menikah.",             tema:[] },
+    { id:"wedding",     nama:"Wedding Invitation", emoji:"💒", baris:"Undangan pernikahan digital untuk tamu kalian.", tema:[] }
+  ]
 };
 
-/* ═══════ Di bawah ini tidak perlu diubah ═══════ */
+/* ═══════ Di bawah ini nggak perlu diubah ═══════ */
 </script>
 
 <style>
-  :root{
-    --ink:        #16161A;
-    --ink-soft:   #4A4852;
-    --ink-faint:  #807D88;
-    --paper:      #FBFAF7;
-    --paper-warm: #F4F2ED;
-    --stone:      #E4E2DC;
-    --violet:     #3B3168;
-    --violet-tint:#EEEBF4;
+:root{
+  --ink:#16161A;
+  --ink-deep:#0F0F13;
+  --ink-soft:#4A4852;
+  --ink-faint:#83808C;
+  --cream:#FBFAF7;
+  --cream-lift:#F5F3EE;
+  --paper:#FFFFFF;
+  --stone:#E4E2DC;
+  --violet:#3B3168;
+  --violet-deep:#2C2450;
+  --violet-soft:#6F63B8;
+  --violet-tint:#EEEBF7;
 
-    --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
-    --font-sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 
-    --wrap: 1060px;
-    --gutter: clamp(20px, 5vw, 40px);
-  }
+  --wrap:1120px;
+  --gut:clamp(18px,5vw,44px);
+  --r:16px;
+}
 
-  *{ box-sizing:border-box; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{
+  margin:0;background:var(--cream);color:var(--ink);
+  font-family:var(--sans);font-size:16.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+section{padding:clamp(64px,9vw,108px) 0}
+p{margin:0}
+a{color:inherit}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:4px}
+img{max-width:100%}
 
-  html{ scroll-behavior:smooth; }
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:-.015em}
+h1{font-size:clamp(38px,6.4vw,66px);line-height:1.05}
+h2{font-size:clamp(28px,4.2vw,44px);line-height:1.14}
+h3{font-size:19px;line-height:1.3}
 
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--font-sans);
-    font-size:17px;
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-  }
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.head h2{margin-top:12px;max-width:20ch}
+.head .lede{margin-top:16px;color:var(--ink-soft);max-width:54ch}
+.center{text-align:center}
+.center h2,.center .lede{margin-left:auto;margin-right:auto}
 
-  .wrap{
-    max-width:var(--wrap);
-    margin:0 auto;
-    padding-left:var(--gutter);
-    padding-right:var(--gutter);
-  }
+/* tombol */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--sans);font-size:15.5px;font-weight:600;line-height:1.2;
+  text-decoration:none;padding:14px 24px;border-radius:100px;
+  border:1px solid transparent;cursor:pointer;background:none;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,color .16s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-main{background:var(--violet);color:#fff;box-shadow:0 6px 18px rgba(59,49,104,.22)}
+.btn-main:hover{background:var(--violet-deep)}
+.btn-ghost{border-color:var(--stone);background:var(--paper);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn-sm{padding:10px 18px;font-size:14px}
+.btn svg{width:17px;height:17px;flex:none}
 
-  section{ padding:clamp(64px, 9vw, 104px) 0; }
+/* header */
+header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(251,250,247,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--stone);
+}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:18px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-size:22px}
+.brand img{height:28px;width:auto;display:block}
+.nav{display:none;gap:26px;align-items:center}
+@media(min-width:900px){.nav{display:flex}}
+.nav a{font-size:14.5px;text-decoration:none;color:var(--ink-soft);font-weight:500}
+.nav a:hover{color:var(--ink)}
 
-  h1,h2,h3{ font-family:var(--font-serif); font-weight:400; letter-spacing:-0.01em; margin:0; }
+/* hero */
+.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(52px,7vw,88px);position:relative;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(56% 46% at 80% 30%, rgba(111,99,184,.15), transparent 70%),
+    radial-gradient(44% 40% at 6% 4%, rgba(59,49,104,.07), transparent 70%);
+}
+.hero>.wrap{position:relative}
+.hero-grid{display:grid;gap:clamp(36px,6vw,56px);align-items:center}
+@media(min-width:940px){.hero-grid{grid-template-columns:1.05fr .95fr}}
+.hero h1{margin-top:16px}
+.hero h1 em{font-style:italic;color:var(--violet)}
+.hero-sub{margin-top:20px;font-size:18px;color:var(--ink-soft);max-width:42ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;padding:0;list-style:none}
+.facts li{
+  font-size:13.5px;color:var(--ink-soft);background:var(--paper);
+  border:1px solid var(--stone);border-radius:100px;padding:6px 14px;
+}
+.facts b{font-weight:600;color:var(--ink)}
 
-  h2{
-    font-size:clamp(28px, 4vw, 40px);
-    line-height:1.2;
-    max-width:20ch;
-  }
+.stack{position:relative;height:clamp(300px,44vw,410px);display:flex;align-items:center;justify-content:center}
+.stack .pc{
+  position:absolute;width:clamp(140px,19vw,188px);aspect-ratio:400/520;
+  border-radius:18px;overflow:hidden;background-size:cover;background-position:center;
+  box-shadow:0 18px 44px rgba(22,22,26,.20);border:5px solid #fff;
+}
+.stack .pc:nth-child(1){transform:rotate(-12deg) translate(-58%,4%);z-index:1}
+.stack .pc:nth-child(2){transform:rotate(-1deg) translateY(-5%);z-index:3}
+.stack .pc:nth-child(3){transform:rotate(11deg) translate(58%,4%);z-index:2}
+@media(prefers-reduced-motion:no-preference){
+  .stack .pc{animation:rise .8s cubic-bezier(.2,.8,.3,1) both}
+  .stack .pc:nth-child(1){animation-delay:.1s}
+  .stack .pc:nth-child(3){animation-delay:.18s}
+}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.95)}}
 
-  p{ margin:0; }
+/* strip momen */
+.strip{background:var(--ink);color:var(--cream);overflow:hidden}
+.strip-track{display:flex;white-space:nowrap;padding:14px 0;width:max-content}
+@media(prefers-reduced-motion:no-preference){.strip-track{animation:slide 48s linear infinite}}
+@keyframes slide{to{transform:translateX(-50%)}}
+.strip-track span{font-size:14px;padding:0 22px;opacity:.82;display:inline-flex;align-items:center;gap:8px}
+.strip-track span::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--violet-soft);margin-left:22px}
 
-  a{ color:inherit; }
+/* momen */
+.tabs{
+  display:flex;gap:8px;margin-top:30px;
+  overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);
+}
+.tabs::-webkit-scrollbar{display:none}
+@media(min-width:900px){.tabs{flex-wrap:wrap;overflow:visible;-webkit-mask-image:none;mask-image:none}}
+.tab{
+  flex:none;font-size:14.5px;font-weight:500;cursor:pointer;
+  padding:9px 16px;border-radius:100px;
+  border:1px solid var(--stone);background:var(--paper);color:var(--ink-soft);
+  display:inline-flex;align-items:center;gap:7px;
+  transition:background .15s ease,border-color .15s ease,color .15s ease;
+}
+.tab:hover{border-color:var(--ink-faint);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
+.tab .soon{font-size:11px;font-weight:600;color:var(--ink-faint)}
+.tab[aria-selected="true"] .soon{color:rgba(255,255,255,.7)}
 
-  :focus-visible{
-    outline:2px solid var(--violet);
-    outline-offset:3px;
-    border-radius:2px;
-  }
+.moment-line{
+  margin-top:22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;
+}
+.moment-line strong{font-family:var(--serif);font-weight:400;font-size:24px}
+.moment-line span{color:var(--ink-soft);font-size:15px}
 
-  .lede{
-    margin-top:18px;
-    color:var(--ink-soft);
-    max-width:54ch;
-    font-size:17px;
-  }
+.cards{
+  display:grid;gap:18px;margin-top:22px;
+  grid-auto-flow:column;grid-auto-columns:min(270px,78vw);
+  overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory;scrollbar-width:thin;
+}
+@media(min-width:900px){.cards{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);grid-auto-columns:auto;overflow:visible}}
+.card{
+  scroll-snap-align:start;background:var(--paper);border:1px solid var(--stone);
+  border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s ease;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 38px rgba(22,22,26,.10)}
+.card .cov{aspect-ratio:400/400;background-size:cover;background-position:center;position:relative}
+.card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card .nm{font-family:var(--serif);font-size:22px;line-height:1.15}
+.card .ds{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:12px;font-weight:500;padding:4px 10px;border-radius:100px;background:var(--violet-tint);color:var(--violet-deep)}
+.card .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:6px}
+.card .acts .btn{padding:11px 10px;font-size:14px}
 
-  /* ── Tombol ── */
-  .btn{
-    display:inline-block;
-    font-family:var(--font-sans);
-    font-size:16px;
-    font-weight:500;
-    text-decoration:none;
-    padding:14px 26px;
-    border-radius:4px;
-    border:1px solid transparent;
-    transition:background .18s ease, border-color .18s ease, color .18s ease;
-  }
-  .btn-solid{ background:var(--violet); color:#fff; }
-  .btn-solid:hover{ background:#2C2450; }
-  .btn-line{ border-color:var(--stone); color:var(--ink); background:transparent; }
-  .btn-line:hover{ border-color:var(--ink); }
+.card.empty{border-style:dashed;background:transparent}
+.card.empty .cov{aspect-ratio:auto;height:150px;background:var(--cream-lift);display:flex;align-items:center;justify-content:center;font-size:40px}
+@media(min-width:900px){.card.empty{grid-column:span 1}}
 
-  /* ── Header ── */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:rgba(251,250,247,.9);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--stone);
-  }
-  .bar{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:20px; height:64px;
-  }
-  .mark{
-    display:flex; align-items:center; gap:10px;
-    font-family:var(--font-serif);
-    font-size:21px;
-    text-decoration:none;
-    letter-spacing:-0.015em;
-  }
-  .mark img{ height:24px; width:auto; display:block; }
-  nav{ display:flex; gap:26px; align-items:center; }
-  nav a{
-    font-size:15px; text-decoration:none; color:var(--ink-soft);
-  }
-  nav a:hover{ color:var(--ink); }
-  .nav-links{ display:none; gap:26px; }
-  @media(min-width:840px){ .nav-links{ display:flex; } }
-  .bar .btn{ padding:9px 18px; font-size:15px; }
+.note{margin-top:14px;font-size:14px;color:var(--ink-faint)}
+.note a{color:var(--violet);font-weight:600;text-decoration:none}
+.note a:hover{text-decoration:underline}
 
-  /* ── Hero ── */
-  .hero{
-    padding-top:clamp(56px, 8vw, 88px);
-    padding-bottom:clamp(56px, 8vw, 88px);
-  }
-  .hero-grid{
-    display:grid;
-    gap:clamp(36px, 6vw, 64px);
-    align-items:center;
-  }
-  @media(min-width:880px){
-    .hero-grid{ grid-template-columns:1.15fr .85fr; }
-  }
-  .status{
-    display:inline-flex; align-items:center; gap:9px;
-    font-size:13.5px; color:var(--ink-soft);
-    border:1px solid var(--stone);
-    background:var(--paper-warm);
-    padding:6px 14px; border-radius:100px;
-    margin-bottom:26px;
-  }
-  .dot{
-    width:6px; height:6px; border-radius:50%;
-    background:var(--violet); flex:none;
-  }
-  h1{
-    font-size:clamp(36px, 6.4vw, 62px);
-    line-height:1.08;
-    max-width:15ch;
-  }
-  .hero-sub{
-    margin-top:22px;
-    font-size:18px;
-    color:var(--ink-soft);
-    max-width:46ch;
-  }
-  .hero-cta{
-    display:flex; flex-wrap:wrap; gap:12px;
-    margin-top:34px;
-  }
-  .hero-note{
-    margin-top:20px;
-    font-size:14px;
-    color:var(--ink-faint);
-  }
+/* preview */
+.preview{background:var(--cream-lift);border-block:1px solid var(--stone)}
+.pv-grid{display:grid;gap:clamp(32px,5vw,64px);align-items:center;margin-top:36px}
+@media(min-width:900px){.pv-grid{grid-template-columns:350px 1fr}}
+.phone{
+  justify-self:center;width:350px;max-width:100%;
+  background:var(--ink);border-radius:44px;padding:12px;
+  box-shadow:0 30px 60px rgba(22,22,26,.22);
+}
+.phone .screen{border-radius:32px;overflow:hidden;background:#fff;aspect-ratio:9/18.5;position:relative}
+.phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.pv-switch{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.pv-switch button{
+  font-size:14px;font-weight:500;cursor:pointer;padding:8px 15px;border-radius:100px;
+  border:1px solid var(--stone);background:var(--paper);color:var(--ink-soft);
+}
+.pv-switch button[aria-pressed="true"]{border-color:var(--violet);color:var(--violet);background:var(--violet-tint)}
+.pv-info h3{font-size:clamp(26px,3.4vw,34px)}
+.pv-info .lbl{font-size:14px;color:var(--ink-faint);margin-top:18px}
+.flow{list-style:none;padding:0;margin:12px 0 0;counter-reset:f;display:grid;gap:0}
+.flow li{
+  counter-increment:f;position:relative;padding:11px 0 11px 42px;
+  font-size:15.5px;color:var(--ink-soft);border-bottom:1px solid var(--stone);
+}
+.flow li:last-child{border-bottom:0}
+.flow li::before{
+  content:counter(f);position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--stone);
+  font-size:12.5px;font-weight:600;color:var(--violet);display:flex;align-items:center;justify-content:center;
+}
+.pv-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.pv-fine{margin-top:16px;font-size:13.5px;color:var(--ink-faint)}
 
-  /* ── Logo besar di hero ── */
-  .hero-logo{ display:flex; justify-content:center; }
-  .hero-logo img{
-    width:min(400px, 82vw);
-    height:auto; display:block;
-  }
-  @media(prefers-reduced-motion:no-preference){
-    .hero-logo img{ animation:settle 1.1s cubic-bezier(.2,.8,.3,1) .15s both; }
-  }
-  @keyframes settle{
-    0%   { opacity:0; transform:scale(.94); }
-    100% { opacity:1; transform:scale(1); }
-  }
+/* kamu vs kami */
+.split{display:grid;gap:18px;margin-top:40px}
+@media(min-width:820px){.split{grid-template-columns:1fr 1fr}}
+.side{border-radius:20px;padding:clamp(24px,3.4vw,36px);border:1px solid var(--stone);background:var(--paper)}
+.side.us{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.side .who{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.side.us .who{color:#A79CE0}
+.side h3{margin-top:8px;font-size:24px}
+.side ul{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:12px}
+.side li{position:relative;padding-left:28px;font-size:15.5px;color:var(--ink-soft);line-height:1.55}
+.side.us li{color:rgba(251,250,247,.78)}
+.side li svg{position:absolute;left:0;top:3px;width:18px;height:18px;color:var(--violet)}
+.side.us li svg{color:#A79CE0}
 
-  /* ── Preview ── */
-  .preview{ background:var(--paper-warm); border-top:1px solid var(--stone); border-bottom:1px solid var(--stone); }
-  .frame{
-    margin-top:34px;
-    border:1px solid var(--stone);
-    border-radius:10px;
-    overflow:hidden;
-    background:#fff;
-    box-shadow:0 1px 2px rgba(22,22,26,.04);
-  }
-  .frame iframe, .frame video{
-    display:block; width:100%; height:min(640px, 78vh);
-    border:0; background:#fff;
-  }
-  .frame video{ height:auto; }
-  .frame-foot{
-    display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
-    padding:14px 18px; border-top:1px solid var(--stone);
-    font-size:14px; color:var(--ink-faint);
-  }
+/* langkah */
+.steps{margin-top:40px;display:grid;gap:14px}
+@media(min-width:820px){.steps{grid-template-columns:repeat(4,1fr)}}
+.step{background:var(--paper);border:1px solid var(--stone);border-radius:18px;padding:22px 20px}
+.step .n{font-family:var(--serif);font-size:15px;color:var(--violet);display:block;margin-bottom:10px}
+.step h3{font-size:18px}
+.step p{margin-top:8px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
 
-  /* ── Tab pemilih tema ── */
-  .tabs{
-    display:flex; flex-wrap:wrap; gap:8px; margin-top:28px;
-  }
-  .tab{
-    font-family:var(--font-sans); font-size:15px;
-    padding:9px 18px; border-radius:100px; cursor:pointer;
-    border:1px solid var(--stone); background:#fff; color:var(--ink-soft);
-    transition:border-color .18s ease, color .18s ease, background .18s ease;
-  }
-  .tab:hover{ border-color:var(--ink-faint); color:var(--ink); }
-  .tab[aria-selected="true"]{
-    background:var(--violet); border-color:var(--violet); color:#fff;
-  }
+/* harga */
+.price{margin-top:40px;display:grid;border:1px solid var(--stone);border-radius:22px;overflow:hidden;background:var(--paper);max-width:900px}
+@media(min-width:820px){.price{grid-template-columns:1fr 1.1fr}}
+.price .left{padding:clamp(26px,4vw,40px)}
+.price .right{padding:clamp(26px,4vw,40px);background:var(--cream-lift);border-top:1px solid var(--stone)}
+@media(min-width:820px){.price .right{border-top:0;border-left:1px solid var(--stone)}}
+.price .lbl{font-size:14px;color:var(--ink-faint);font-weight:500}
+.price .amt{font-family:var(--serif);font-size:clamp(44px,6vw,58px);line-height:1;margin:12px 0 6px}
+.price .per{font-size:15px;color:var(--ink-soft)}
+.price .btn{margin-top:26px;width:100%}
+.price ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.price li{font-size:15px;color:var(--ink-soft);padding-left:28px;position:relative;line-height:1.55}
+.price li svg{position:absolute;left:0;top:3px;width:18px;height:18px;color:var(--violet)}
+.price .small{margin-top:18px;font-size:13.5px;color:var(--ink-faint)}
 
-  /* ── Pilihan momen (pill browse) ── */
-  .occasions{
-    display:flex; flex-wrap:wrap; gap:9px; margin-top:30px;
-  }
-  .occ{
-    font-family:var(--font-sans); font-size:14.5px;
-    padding:9px 17px; border-radius:100px; cursor:pointer;
-    border:1px solid var(--stone); background:#fff; color:var(--ink-soft);
-    transition:transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease;
-  }
-  .occ:hover{ border-color:var(--ink-faint); color:var(--ink); transform:translateY(-1px); }
-  .occ.is-live{ border-color:var(--violet); color:var(--violet); }
-  .occ.is-live:hover{ background:var(--violet); color:#fff; }
+/* faq */
+.faq{margin-top:32px;border-top:1px solid var(--stone);max-width:800px}
+details{border-bottom:1px solid var(--stone)}
+summary{cursor:pointer;list-style:none;padding:19px 44px 19px 0;position:relative;
+  font-family:var(--serif);font-size:18px;line-height:1.4}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"";position:absolute;right:10px;top:26px;width:9px;height:9px;
+  border-right:2px solid var(--violet);border-bottom:2px solid var(--violet);
+  transform:rotate(45deg);transition:transform .2s ease,top .2s ease;
+}
+details[open] summary::after{transform:rotate(-135deg);top:30px}
+details p{padding:0 8px 22px 0;color:var(--ink-soft);font-size:15.5px;max-width:64ch}
 
-  /* ── Galeri tema — kartu ilustrasi, scroll horizontal ── */
-  .gallery{
-    display:flex; gap:18px; margin-top:34px;
-    overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity;
-    -webkit-overflow-scrolling:touch;
-  }
-  .gallery::-webkit-scrollbar{ height:7px; }
-  .gallery::-webkit-scrollbar-thumb{ background:var(--stone); border-radius:10px; }
+/* penutup */
+.final{background:var(--ink);color:var(--cream);position:relative;overflow:hidden}
+.final::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(50% 60% at 50% 0%,rgba(111,99,184,.22),transparent 70%)}
+.final>.wrap{position:relative}
+.final .lede{color:rgba(251,250,247,.7)}
+.final .eyebrow{color:#A79CE0}
+.final-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:32px}
+.final .btn-ghost{background:transparent;border-color:rgba(251,250,247,.28);color:var(--cream)}
+.final .btn-ghost:hover{border-color:var(--cream)}
 
-  .theme-card{
-    position:relative; flex:0 0 auto;
-    width:min(240px, 62vw); aspect-ratio:400/520;
-    border-radius:14px; overflow:hidden;
-    scroll-snap-align:start;
-    background:var(--paper-warm) center/cover;
-    text-decoration:none; color:inherit; display:block;
-    box-shadow:0 1px 3px rgba(22,22,26,.10);
-    transition:transform .22s cubic-bezier(.2,.8,.3,1), box-shadow .22s ease;
-  }
-  .theme-card:hover{ transform:translateY(-5px); box-shadow:0 14px 30px rgba(22,22,26,.16); }
-  .theme-card.locked{ cursor:default; }
-  .theme-card.locked:hover{ transform:none; box-shadow:0 1px 3px rgba(22,22,26,.10); }
+/* footer */
+footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px;font-size:14px}
+@media(min-width:700px){footer{padding-bottom:44px}}
+.foot{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
+.foot .fb{display:flex;align-items:center;gap:10px}
+.foot .fb img{height:22px;width:auto;opacity:.85}
+.foot .fl{display:flex;flex-wrap:wrap;gap:8px 22px}
+.foot a{text-decoration:none;color:rgba(251,250,247,.62)}
+.foot a:hover{color:var(--cream);text-decoration:underline}
 
-  .theme-card .veil{
-    position:absolute; inset:0;
-    background:linear-gradient(to top, rgba(22,22,26,.82) 0%, rgba(22,22,26,.35) 42%, rgba(22,22,26,0) 66%);
-  }
-  .theme-card.locked .veil{
-    background:linear-gradient(to top, rgba(74,72,82,.55) 0%, rgba(74,72,82,.12) 55%, rgba(74,72,82,0) 75%);
-  }
-  .theme-card .body{
-    position:absolute; left:0; right:0; bottom:0; padding:18px;
-    display:flex; flex-direction:column; gap:6px;
-  }
-  .theme-card .t-name{
-    font-family:var(--font-serif); font-size:21px; color:#fff; line-height:1.15;
-  }
-  .theme-card.locked .t-name{ color:var(--ink-soft); }
-  .theme-card .t-note{
-    font-size:13px; color:rgba(255,255,255,.82); line-height:1.45;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-  }
-  .theme-card.locked .t-note{ color:var(--ink-faint); }
-  .theme-card .t-tag{
-    align-self:flex-start; font-size:11.5px; padding:4px 10px; border-radius:100px;
-    margin-bottom:6px;
-  }
-  .theme-card .t-tag.live{ background:#fff; color:var(--violet); }
-  .theme-card .t-tag.soon{ background:rgba(22,22,26,.06); color:var(--ink-faint); border:1px solid var(--stone); backdrop-filter:blur(2px); }
+/* tombol WA mengambang */
+.float{
+  position:fixed;right:16px;bottom:16px;z-index:70;
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  background:var(--ink);color:var(--cream);font-size:14px;font-weight:600;
+  padding:12px 18px 12px 14px;border-radius:100px;box-shadow:0 10px 28px rgba(22,22,26,.28);
+  transition:transform .16s ease,opacity .2s ease;
+}
+.float:hover{transform:translateY(-2px)}
+.float svg{width:20px;height:20px;color:#7FD99A}
+.float.gone{opacity:0;pointer-events:none}
+@media(max-width:699px){.float{padding:14px}.float .fl-t{display:none}}
 
-  /* ── Langkah ── */
-  .steps{ margin-top:40px; display:grid; gap:0; }
-  .step{
-    display:grid; gap:4px 22px;
-    grid-template-columns:44px 1fr;
-    padding:24px 0;
-    border-top:1px solid var(--stone);
-  }
-  .step:last-child{ border-bottom:1px solid var(--stone); }
-  .step-n{
-    font-family:var(--font-serif);
-    font-size:20px; color:var(--violet);
-  }
-  .step h3{ font-size:19px; }
-  .step p{ grid-column:2; color:var(--ink-soft); font-size:15.5px; max-width:52ch; }
-
-  /* ── Kenapa beda ── */
-  .reasons{
-    margin-top:40px; display:grid; gap:34px;
-    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
-  }
-  .reason h3{ font-size:19px; margin-bottom:8px; }
-  .reason p{ color:var(--ink-soft); font-size:15.5px; }
-  .reason{ border-left:2px solid var(--violet); padding-left:20px; }
-
-  /* ── Harga ── */
-  .price-box{
-    margin-top:36px;
-    border:1px solid var(--stone);
-    border-radius:8px;
-    background:#fff;
-    padding:clamp(26px, 4vw, 40px);
-  }
-  .price-num{
-    font-family:var(--font-serif);
-    font-size:clamp(30px, 4.6vw, 42px);
-    line-height:1.1;
-    margin:14px 0 6px;
-  }
-  .price-sub{ color:var(--ink-faint); font-size:14.5px; }
-  .facts{
-    list-style:none; padding:0; margin:26px 0 0;
-    display:grid; gap:10px;
-  }
-  .facts li{
-    font-size:15.5px; color:var(--ink-soft);
-    padding-left:24px; position:relative;
-  }
-  .facts li::before{
-    content:""; position:absolute; left:0; top:9px;
-    width:9px; height:9px; border-radius:50%;
-    border:1.5px solid var(--violet);
-  }
-  .price-box .btn{ margin-top:28px; }
-
-  /* ── FAQ ── */
-  .faq{ margin-top:34px; border-top:1px solid var(--stone); }
-  details{ border-bottom:1px solid var(--stone); }
-  summary{
-    cursor:pointer; list-style:none;
-    padding:20px 40px 20px 0;
-    position:relative;
-    font-size:17px;
-    font-family:var(--font-serif);
-  }
-  summary::-webkit-details-marker{ display:none; }
-  summary::after{
-    content:"+";
-    position:absolute; right:6px; top:19px;
-    font-family:var(--font-sans);
-    font-size:20px; color:var(--violet);
-  }
-  details[open] summary::after{ content:"–"; }
-  details p{
-    padding:0 8px 22px 0;
-    color:var(--ink-soft);
-    font-size:15.5px;
-    max-width:62ch;
-  }
-
-  /* ── CTA akhir ── */
-  .final{
-    background:var(--ink); color:var(--paper);
-    text-align:center;
-  }
-  .final h2{ color:var(--paper); margin:0 auto; max-width:18ch; }
-  .final .lede{ color:#B9B6BF; margin-left:auto; margin-right:auto; }
-  .socials{
-    display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
-    margin-top:34px;
-  }
-  .final .btn-solid{ background:var(--paper); color:var(--ink); }
-  .final .btn-solid:hover{ background:#fff; }
-  .final .btn-line{ border-color:#3D3B45; color:var(--paper); }
-  .final .btn-line:hover{ border-color:var(--paper); }
-  .trust{
-    display:flex; flex-wrap:wrap; gap:8px 26px; justify-content:center;
-    margin-top:36px; font-size:14px; color:#8F8C97;
-  }
-
-  /* ── Footer ── */
-  footer{
-    border-top:1px solid var(--stone);
-    padding:38px 0;
-    font-size:14.5px; color:var(--ink-faint);
-  }
-  .foot-row{
-    display:flex; flex-wrap:wrap; gap:18px 28px;
-    align-items:center; justify-content:space-between;
-  }
-  .foot-brand{ display:flex; align-items:center; gap:12px; }
-  .foot-brand img{ height:20px; width:auto; display:block; opacity:.75; }
-  .foot-links{ display:flex; flex-wrap:wrap; gap:20px; }
-  .foot-links a{ text-decoration:none; }
-  .foot-links a:hover{ color:var(--ink); text-decoration:underline; }
-
-  .hide{ display:none !important; }
+.hide{display:none!important}
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap bar">
-    <a href="#top" class="mark">
-      <img src="/foreverse-logo.png" alt="">
-      <span>foreverse</span>
-    </a>
-    <nav>
-      <div class="nav-links">
-        <a href="#preview">Lihat contoh</a>
-        <a href="#tema">Tema</a>
-        <a href="#cara">Cara pesan</a>
-        <a href="#harga">Harga</a>
-      </div>
-      <a href="#harga" class="btn btn-solid">Pesan sekarang</a>
+    <a href="#top" class="brand"><img src="/foreverse-logo.png" alt=""><span>foreverse</span></a>
+    <nav class="nav" aria-label="Navigasi utama">
+      <a href="#momen">Momen</a>
+      <a href="#contoh">Contoh</a>
+      <a href="#cara">Cara pesan</a>
+      <a href="#harga">Harga</a>
+      <a href="#faq">FAQ</a>
     </nav>
+    <a class="btn btn-main btn-sm" href="#momen">Pilih momen</a>
   </div>
 </header>
 
 <main id="top">
 
-  <!-- ══ HERO ══ -->
+  <!-- ═════ HERO ═════ -->
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="status"><span class="dot"></span>Tiga tema sudah bisa dipesan</span>
-
-        <h1>Hadiah yang dijalani, bukan cuma dibaca.</h1>
-
-        <p class="hero-sub">Kami bikin surat digital interaktif buat orang spesialmu. Dibuka lewat satu link, dijalani dari awal sampai akhir, dan nggak bisa diulang — persis seperti momen aslinya.</p>
+        <span class="eyebrow">Surat digital · Dirangkai manual</span>
+        <h1>Surat digital untuk orang yang <em>kamu sayang.</em></h1>
+        <p class="hero-sub">Kamu kirim pesan, foto, dan lagunya. Kami rangkai jadi satu halaman yang dia buka lewat link. Jadi <span data-v="turnaround">maks. 1x24 jam</span>.</p>
 
         <div class="hero-cta">
-          <a href="#preview" class="btn btn-solid">Coba sendiri dulu</a>
-          <a href="#harga" class="btn btn-line">Lihat harga</a>
+          <a href="#momen" class="btn btn-main">Pilih momen</a>
+          <a href="#contoh" class="btn btn-ghost">Coba contohnya</a>
         </div>
 
-        <p class="hero-note">Contohnya terbuka untuk siapa saja. Nggak perlu daftar, nggak ada data yang disimpan.</p>
+        <ul class="facts">
+          <li><b data-v="harga">Rp15.000</b> per surat</li>
+          <li>Kamu nggak perlu ngedit apa pun</li>
+          <li><span data-v="revisi">1x revisi gratis</span></li>
+        </ul>
+      </div>
+      <div class="stack" id="heroStack" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true"><div class="strip-track" id="strip"></div></div>
+
+  <!-- ═════ MOMEN → TEMA ═════ -->
+  <section id="momen">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Langkah 1</span>
+        <h2>Suratnya untuk momen apa?</h2>
+        <p class="lede">Pilih momennya dulu. Tema yang cocok akan muncul di bawahnya, dan tiap tema bisa kamu coba sebelum pesan.</p>
       </div>
 
-      <div class="hero-logo">
-        <img src="/foreverse-logo.png" alt="Logo Foreverse — simpul tanpa ujung yang menyatu dengan amplop">
+      <div class="tabs" id="tabs" role="tablist" aria-label="Pilih momen"></div>
+
+      <div class="moment-line" id="momentLine"></div>
+      <div class="cards" id="cards" role="tabpanel"></div>
+
+      <p class="note">Satu link pembayaran untuk semua tema. Tema dan momen yang kamu pilih ditulis di formulir setelah bayar.</p>
+    </div>
+  </section>
+
+  <!-- ═════ CONTOH ═════ -->
+  <section class="preview" id="contoh">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Coba dulu</span>
+        <h2>Begini yang dia lihat waktu buka linknya.</h2>
+      </div>
+
+      <div class="pv-grid">
+        <div class="phone">
+          <div class="screen"><iframe id="pvFrame" title="Contoh tema" loading="lazy"></iframe></div>
+        </div>
+
+        <div class="pv-info">
+          <div class="pv-switch" id="pvSwitch" aria-label="Ganti tema contoh"></div>
+          <h3 id="pvName">Birthday</h3>
+          <p class="lbl">Urutannya:</p>
+          <ol class="flow" id="pvFlow"></ol>
+          <div class="pv-acts">
+            <a id="pvOrder" class="btn btn-main" href="#" target="_blank" rel="noopener">Pesan tema ini</a>
+            <a id="pvFull" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
+          </div>
+          <p class="pv-fine">Nama, foto, dan pesan di contoh ini karangan (Sofia &amp; Avero). Punyamu nanti diisi cerita kalian sendiri.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ PREVIEW ══ -->
-  <section class="preview" id="preview">
+  <!-- ═════ KAMU vs KAMI ═════ -->
+  <section id="bagian">
     <div class="wrap">
-      <h2>Coba dulu, baru pesan.</h2>
-      <p class="lede">Ini versi contoh, isinya karangan. Yang kamu pesan nanti diisi nama, foto, pesan, dan lagu kalian sendiri. Tap salah satu kartu di bawah untuk ganti yang tampil di sini.</p>
-
-      <div class="frame">
-        <iframe id="fvPreview" title="Contoh tema" loading="lazy"></iframe>
-        <div class="frame-foot">
-          <span id="fvPreviewLabel">Paling enak dibuka di HP — flow-nya kerasa utuh.</span>
-          <a id="fvPreviewFull" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
-        </div>
+      <div class="head">
+        <span class="eyebrow">Pembagian kerja</span>
+        <h2>Kamu cukup cerita. Sisanya kami yang kerjakan.</h2>
+        <p class="lede">Kamu nggak perlu buka editor, ngatur tata letak, atau upload apa pun ke website. Semua bahan cukup diisi di satu formulir.</p>
       </div>
 
-      <div id="fvVideoBlock" class="hide">
-        <p class="lede" style="margin-top:44px;">Nggak sempat jalanin sendiri? Ini rekaman singkatnya.</p>
-        <div class="frame">
-          <video id="fvVideo" controls playsinline preload="metadata"></video>
+      <div class="split">
+        <div class="side">
+          <span class="who">Yang kamu siapkan</span>
+          <h3>Bahan ceritanya</h3>
+          <ul>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Momen dan tema yang kamu pilih</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Nama kamu dan nama dia</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Pesan yang mau kamu sampaikan, dengan kata-katamu sendiri</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Foto kalian (jumlahnya tergantung tema)</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Judul lagu, kalau temanya pakai lagu</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Tanggal kamu butuh linknya</li>
+          </ul>
+        </div>
+
+        <div class="side us">
+          <span class="who">Yang kami kerjakan</span>
+          <h3>Merangkainya jadi satu halaman</h3>
+          <ul>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Memasukkan semua bahanmu ke tema yang kamu pilih</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Membagi pesanmu ke bagian-bagian surat, tanpa mengubah isinya</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Membetulkan typo kalau ada</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Memotong foto supaya pas di bingkainya dan memasang lagunya</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Mengecek hasilnya di HP sebelum dikirim</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Mengirim linknya ke WhatsApp-mu</li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ TEMA ══ -->
-  <section id="tema">
+  <!-- ═════ CARA PESAN ═════ -->
+  <section id="cara" style="background:var(--cream-lift);border-block:1px solid var(--stone)">
     <div class="wrap">
-      <h2>Tiap tema punya dunianya sendiri.</h2>
-      <p class="lede">Bukan satu template dipakai ulang dengan warna yang sama untuk semua acara. Setiap tema dibangun dari nol — warna, permainan, dan alurnya menyesuaikan momennya.</p>
-
-      <div class="occasions" id="fvOccasions"></div>
-
-      <div class="gallery" id="fvGallery"></div>
-
-      <p class="lede" style="margin-top:30px;">Ada momen yang belum ada di sini? <a id="fvWaTheme" href="#">Bilang ke kami lewat WhatsApp</a> — tema berikutnya dipilih dari yang paling banyak diminta.</p>
-    </div>
-  </section>
-
-  <!-- ══ CARA PESAN ══ -->
-  <section id="cara" style="background:var(--paper-warm); border-top:1px solid var(--stone); border-bottom:1px solid var(--stone);">
-    <div class="wrap">
-      <h2>Empat langkah, selesai dalam sehari.</h2>
-      <p class="lede">Kamu yang punya ceritanya. Sisanya kami yang rangkai.</p>
+      <div class="head">
+        <span class="eyebrow">Cara pesan</span>
+        <h2>Empat langkah.</h2>
+      </div>
 
       <div class="steps">
         <div class="step">
-          <span class="step-n">01</span>
+          <span class="n">01</span>
+          <h3>Pilih momen dan tema</h3>
+          <p>Coba contohnya dulu di halaman ini sampai kamu yakin.</p>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
           <h3>Bayar di Lynk.id</h3>
-          <p>Pilih tema, bayar lewat QRIS, e-wallet, atau transfer bank. Prosesnya di halaman Lynk.id kami.</p>
+          <p>Pakai metode yang tersedia di sana, seperti QRIS atau e-wallet.</p>
         </div>
         <div class="step">
-          <span class="step-n">02</span>
-          <h3>Isi ceritanya di satu formulir</h3>
-          <p>Setelah bayar, kamu langsung diarahkan ke formulir: nama penerima, nama kamu, foto, pesan, dan lagu yang mau diselipkan. Sekali isi, nggak perlu bolak-balik chat.</p>
+          <span class="n">03</span>
+          <h3>Isi formulir</h3>
+          <p>Setelah bayar kamu dapat link formulir. Isi nama, pesan, foto, lagu, dan tanggal yang kamu butuhkan.</p>
         </div>
         <div class="step">
-          <span class="step-n">03</span>
-          <h3>Kami rangkai manual</h3>
-          <p>Dikerjakan satu per satu, bukan digenerate otomatis. Selesai <span id="fvTurn2">maks. 1x24 jam</span> setelah datamu lengkap.</p>
-        </div>
-        <div class="step">
-          <span class="step-n">04</span>
-          <h3>Kamu terima linknya</h3>
-          <p>Kami kirim satu link lewat WhatsApp. Tinggal kamu teruskan ke dia — dibuka langsung dari HP, nggak perlu install apa pun.</p>
+          <span class="n">04</span>
+          <h3>Terima linknya</h3>
+          <p>Kami kirim ke WhatsApp-mu <span data-v="turnaround">maks. 1x24 jam</span> setelah formulir lengkap. Kamu yang meneruskannya ke dia.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ KENAPA BEDA ══ -->
-  <section>
+  <!-- ═════ HARGA ═════ -->
+  <section id="harga">
     <div class="wrap">
-      <h2>Kenapa rasanya beda.</h2>
+      <div class="head">
+        <span class="eyebrow">Harga</span>
+        <h2>Satu harga untuk semua tema.</h2>
+      </div>
 
-      <div class="reasons">
-        <div class="reason">
-          <h3>Sekali jalan, tanpa kembali</h3>
-          <p>Nggak ada tombol skip atau scroll balik. Bagian yang sudah lewat benar-benar hilang — sama seperti momen yang kamu kasih.</p>
+      <div class="price">
+        <div class="left">
+          <span class="lbl">Per surat</span>
+          <div class="amt" data-v="harga">Rp15.000</div>
+          <p class="per">Momen dan tema apa pun yang tersedia.</p>
+          <a id="ctaPrice" class="btn btn-main" href="#" target="_blank" rel="noopener">Pesan sekarang</a>
         </div>
-        <div class="reason">
-          <h3>Ditulis, bukan disalin</h3>
-          <p>Setiap kalimat di dalamnya ditulis biar kerasa personal, bukan label aplikasi yang dipakai ulang untuk semua orang.</p>
-        </div>
-        <div class="reason">
-          <h3>Ada yang bisa dimainkan</h3>
-          <p>Mini-game dan transisi yang dibangun sendiri, bukan plugin pasaran — jadi dia ikut bergerak, bukan cuma membaca.</p>
-        </div>
-        <div class="reason">
-          <h3>Lagu kalian, bukan lagu siapa-siapa</h3>
-          <p>Selipkan lagu yang punya arti buat kalian berdua, bukan musik latar generik yang sama untuk semua pesanan.</p>
+        <div class="right">
+          <ul>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Satu surat dengan tema pilihanmu</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Dirangkai manual dari bahan yang kamu kirim</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span><span data-v="revisi">1x revisi gratis</span>, paling lambat <span data-v="batasRevisi">3 hari</span> setelah link dikirim</span></li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Satu link yang bisa dibuka di HP mana pun, tanpa install aplikasi</li>
+          </ul>
+          <p class="small">Butuh untuk tanggal yang mepet? Chat kami dulu sebelum bayar supaya bisa dipastikan sempat.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ HARGA ══ -->
-  <section id="harga" style="background:var(--paper-warm); border-top:1px solid var(--stone);">
+  <!-- ═════ FAQ ═════ -->
+  <section id="faq" style="background:var(--cream-lift);border-top:1px solid var(--stone)">
     <div class="wrap">
-      <h2>Founding Edition</h2>
-      <p class="lede">Ini produk pertama Foreverse, jadi harganya dijaga tetap terjangkau selama masa awal.</p>
-
-      <div class="price-box">
-        <span class="price-sub">Semua tema, harga sama</span>
-        <div class="price-num" id="fvPrice">Rp15.000 – Rp30.000</div>
-        <span class="price-sub">Tergantung jumlah foto dan kompleksitas ceritanya.</span>
-
-        <ul class="facts">
-          <li>Selesai <span id="fvTurn">maks. 1x24 jam</span> setelah data kamu lengkap</li>
-          <li><span id="fvRev">1x revisi gratis</span> sebelum link dikunci</li>
-          <li>Dikerjakan manual satu per satu, bukan hasil generate</li>
-          <li>Foto dan pesan kamu nggak dipublikasikan di mana pun</li>
-        </ul>
-
-        <a id="fvOrder" class="btn btn-solid" href="#" target="_blank" rel="noopener">Pesan sekarang</a>
+      <div class="head">
+        <span class="eyebrow">FAQ</span>
+        <h2>Pertanyaan yang sering masuk.</h2>
       </div>
-    </div>
-  </section>
-
-  <!-- ══ FAQ ══ -->
-  <section>
-    <div class="wrap">
-      <h2>Yang biasanya ditanyakan.</h2>
 
       <div class="faq">
-        <details>
-          <summary>Cara pesannya gimana?</summary>
-          <p>Bayar dulu di halaman Lynk.id kami, lalu kamu langsung diarahkan ke formulir untuk mengisi nama, foto, pesan, dan lagu. Setelah itu tinggal tunggu linknya kami kirim lewat WhatsApp.</p>
+        <details open>
+          <summary>Kenapa nggak langsung jadi?</summary>
+          <p>Karena tiap surat dirangkai manual, bukan dibuat otomatis oleh sistem. Kamu nggak perlu ngedit apa-apa, tapi butuh waktu: <span data-v="turnaround">maks. 1x24 jam</span> setelah formulirmu lengkap.</p>
         </details>
-
         <details>
-          <summary>Berapa lama jadinya?</summary>
-          <p><span id="fvTurn3">Maks. 1x24 jam</span> setelah data kamu lengkap. Kalau kamu butuh lebih cepat karena acaranya mepet, chat kami dulu sebelum bayar supaya kami bisa pastikan sempat.</p>
+          <summary>Pesannya ditulis siapa?</summary>
+          <p>Kamu. Kami pakai kata-katamu sendiri. Yang kami lakukan cuma membetulkan typo dan membagi pesanmu ke bagian-bagian surat supaya pas di temanya.</p>
         </details>
-
+        <details>
+          <summary>Bisa dikirim pas jam 12 malam?</summary>
+          <p>Bisa. Linknya kami kirim ke kamu dulu, jadi kamu bebas meneruskannya ke dia kapan saja, termasuk tepat tengah malam. Tulis tanggal yang kamu butuhkan di formulir supaya linknya siap sebelum hari itu.</p>
+        </details>
         <details>
           <summary>Kalau ada yang mau diubah setelah jadi?</summary>
-          <p>Kamu dapat <span id="fvRev2">1x revisi gratis</span> — misalnya typo, foto ketukar, atau kalimat yang mau diganti. Setelah revisi itu, linknya dikunci dan dianggap final.</p>
+          <p>Ada <span data-v="revisi">1x revisi gratis</span>, misalnya typo, foto yang ketukar, atau kalimat yang mau diganti. Mintanya paling lambat <span data-v="batasRevisi">3 hari</span> setelah link kami kirim.</p>
         </details>
-
         <details>
           <summary>Bayarnya lewat apa?</summary>
-          <p>Lewat Lynk.id, yang menerima QRIS, e-wallet, dan transfer bank. Kami nggak pernah minta transfer ke rekening pribadi lewat chat.</p>
+          <p>Lewat halaman Lynk.id kami. Kami nggak pernah minta transfer ke rekening pribadi lewat chat. Kalau ada yang mengaku Foreverse dan minta itu, abaikan dan kabari kami.</p>
         </details>
-
         <details>
-          <summary>Foto dan pesan saya aman?</summary>
-          <p>Aman. Isi pesananmu nggak kami pajang sebagai contoh, nggak dibagikan ke siapa pun, dan link-nya pakai kode acak sehingga nggak bisa ditebak atau ditemukan lewat pencarian.</p>
+          <summary>Foto dan pesan saya dipakai untuk apa?</summary>
+          <p>Hanya untuk membuat suratmu. Isinya nggak kami pakai sebagai contoh dan nggak kami bagikan ke siapa pun. Linknya hanya kami kirim ke kamu. Detailnya ada di <a href="/kebijakan-privasi.html" style="color:var(--violet)">Kebijakan Privasi</a>.</p>
         </details>
-
         <details>
-          <summary>Linknya aktif sampai kapan?</summary>
-          <p>Linknya tetap aktif dan bisa dibuka kapan saja. Kalau suatu saat kamu ingin link-nya dinonaktifkan, tinggal bilang lewat WhatsApp dan kami hapus.</p>
+          <summary>Linknya bisa dibuka sampai kapan?</summary>
+          <p>Linknya tetap aktif dan bisa dibuka lagi kapan saja. Kalau kamu mau linknya dihapus, bilang saja lewat WhatsApp. Kalau suatu saat Foreverse berhenti beroperasi, kami kabari jauh-jauh hari.</p>
         </details>
-
         <details>
-          <summary>Dia perlu install aplikasi dulu?</summary>
-          <p>Nggak perlu. Cukup buka link-nya dari HP mana pun — Android atau iPhone — langsung jalan di browser.</p>
+          <summary>Dia perlu install aplikasi?</summary>
+          <p>Nggak. Linknya dibuka langsung di browser HP, Android maupun iPhone.</p>
         </details>
-
         <details>
-          <summary>Bisa untuk momen selain ulang tahun?</summary>
-          <p>Saat ini ada tiga tema yang siap: Birthday, Surat Berlipat, dan Mixtape. Tema lain sedang dikerjakan — kalau kamu butuh momen tertentu, bilang ke kami, karena urutan pengerjaannya mengikuti yang paling banyak diminta.</p>
+          <summary>Momen saya belum ada temanya.</summary>
+          <p>Beberapa momen memang masih ditandai "Segera hadir". Kalau kamu butuh salah satunya, kabari kami lewat WhatsApp. Tema berikutnya kami kerjakan dari yang paling banyak diminta.</p>
         </details>
       </div>
     </div>
   </section>
 
-  <!-- ══ CTA AKHIR ══ -->
-  <section class="final" id="kontak">
+  <!-- ═════ PENUTUP ═════ -->
+  <section class="final center" id="kontak">
     <div class="wrap">
-      <h2>Kasih dia sesuatu yang nggak bisa di-scroll lewat.</h2>
-      <p class="lede">Ada pertanyaan sebelum pesan? Chat aja langsung — dibalas orangnya sendiri, bukan bot.</p>
-
-      <div class="socials">
-        <a id="fvOrder2" class="btn btn-solid" href="#" target="_blank" rel="noopener">Pesan sekarang</a>
-        <a id="fvWa"  class="btn btn-line" href="#" target="_blank" rel="noopener">Chat WhatsApp</a>
-        <a id="fvIg"  class="btn btn-line" href="#" target="_blank" rel="noopener">Instagram</a>
-        <a id="fvTt"  class="btn btn-line" href="#" target="_blank" rel="noopener">TikTok</a>
-      </div>
-
-      <div class="trust">
-        <span>Pembayaran lewat Lynk.id</span>
-        <span>Dikerjakan manual, bukan generate</span>
-        <span>Foto kamu nggak dipublikasikan</span>
+      <span class="eyebrow">Mulai dari sini</span>
+      <h2 style="margin-top:12px;max-width:18ch">Sudah tahu momennya? Tinggal pilih temanya.</h2>
+      <p class="lede" style="margin-top:16px;max-width:46ch">Kalau masih ragu, tanya dulu lewat WhatsApp. Dibalas langsung oleh kami, bukan bot.</p>
+      <div class="final-cta">
+        <a href="#momen" class="btn btn-main">Pilih momen</a>
+        <a id="waFinal" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Tanya lewat WhatsApp</a>
       </div>
     </div>
   </section>
@@ -709,135 +657,143 @@ const FOREVERSE_SITE = {
 </main>
 
 <footer>
-  <div class="wrap foot-row">
-    <span class="foot-brand">
-      <img src="/foreverse-logo.png" alt="">
-      Hadiah digital yang dibuat, bukan digenerate. © 2026
-    </span>
-    <div class="foot-links">
-      <a id="fvPrivasi" href="#">Kebijakan Privasi</a>
-      <a id="fvSyarat"  href="#">Syarat &amp; Ketentuan</a>
-      <a id="fvWa2"     href="#" target="_blank" rel="noopener">Hubungi kami</a>
+  <div class="wrap foot">
+    <span class="fb"><img src="/foreverse-logo.png" alt="">Foreverse · Surat digital, dirangkai manual. © 2026</span>
+    <div class="fl">
+      <a id="fIg" href="#" target="_blank" rel="noopener">Instagram</a>
+      <a id="fTt" href="#" target="_blank" rel="noopener">TikTok</a>
+      <a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <a id="fPrivasi" href="#">Kebijakan Privasi</a>
+      <a id="fSyarat" href="#">Syarat &amp; Ketentuan</a>
     </div>
   </div>
 </footer>
 
+<a id="float" class="float" href="#" target="_blank" rel="noopener" aria-label="Tanya lewat WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-2-1.2 7.4 7.4 0 01-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.1.6a2.7 2.7 0 001.8-1.2 2.2 2.2 0 00.1-1.2c0-.1-.2-.2-.4-.3z"/></svg>
+  <span class="fl-t">Ada pertanyaan?</span>
+</a>
+
 <script>
 (function(){
-  var C = FOREVERSE_SITE;
+  "use strict";
+  var C = FOREVERSE_SITE, T = C.tema || {}, M = C.momen || [];
 
-  function link(id, url){
-    var el = document.getElementById(id);
-    if (el && url) el.setAttribute("href", url);
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function wa(text){ return "https://wa.me/"+C.whatsapp+(text?"?text="+encodeURIComponent(text):""); }
+  function href(id,url){ var e=$(id); if(e&&url) e.href=url; }
+
+  /* angka di seluruh halaman */
+  document.querySelectorAll("[data-v]").forEach(function(el){
+    var v=C[el.getAttribute("data-v")]; if(v) el.textContent=v;
+  });
+
+  /* link */
+  href("ctaPrice",C.lynkOrder); href("pvOrder",C.lynkOrder);
+  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("fWa",wa(""));
+  href("float",wa("Halo Foreverse, saya mau tanya."));
+  href("fIg",C.instagram); href("fTt",C.tiktok);
+  href("fPrivasi",C.privasi); href("fSyarat",C.syarat);
+
+  function bg(el,t){
+    el.style.background="linear-gradient(150deg,"+t.warna[0]+","+t.warna[1]+")";
+    if(t.cover){ el.style.backgroundImage="url('"+t.cover+"')"; el.style.backgroundSize="cover"; el.style.backgroundPosition="center"; }
   }
-  function text(id, val){
-    var el = document.getElementById(id);
-    if (el && val) el.textContent = val;
+
+  /* hero: tumpukan sampul */
+  var stack=$("heroStack");
+  Object.keys(T).slice(0,3).forEach(function(k){
+    var d=document.createElement("div"); d.className="pc"; bg(d,T[k]); stack.appendChild(d);
+  });
+
+  /* strip momen */
+  var s=M.map(function(m){ return "<span>"+m.emoji+" "+esc(m.nama)+"</span>"; }).join("");
+  $("strip").innerHTML=s+s;
+
+  /* contoh (preview) */
+  var current=null, keys=Object.keys(T);
+  var sw=$("pvSwitch");
+  keys.forEach(function(k){
+    var b=document.createElement("button"); b.type="button"; b.textContent=T[k].nama;
+    b.setAttribute("data-k",k); b.addEventListener("click",function(){ show(k); });
+    sw.appendChild(b);
+  });
+  function show(k){
+    var t=T[k]; if(!t||k===current) return; current=k;
+    $("pvFrame").src=t.file; $("pvFrame").title="Contoh tema "+t.nama;
+    $("pvFull").href=t.file; $("pvName").textContent=t.nama;
+    $("pvFlow").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
+    sw.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-k")===k ? "true":"false"); });
   }
 
-  // Pemesanan: pakai Lynk.id kalau ada, kalau belum ke formulir/WhatsApp
-  var order = C.lynkOrder || C.orderForm || C.whatsapp;
-  link("fvOrder",  order);
-  link("fvOrder2", order);
+  /* momen → tema */
+  var tabs=$("tabs"), cards=$("cards"), line=$("momentLine");
 
-  link("fvWa",       C.whatsapp);
-  link("fvWa2",      C.whatsapp);
-  link("fvWaTheme",  C.whatsapp);
-  link("fvIg",       C.instagram);
-  link("fvTt",       C.tiktok);
-  link("fvPrivasi",  C.privasi);
-  link("fvSyarat",   C.syarat);
-
-  /* ---------- tab preview + kartu tema ---------- */
-  var siap   = C.temaSiap   || [];
-  var segera = C.temaSegera || [];
-
-  var frame = document.getElementById("fvPreview");
-  var full  = document.getElementById("fvPreviewFull");
-  var label = document.getElementById("fvPreviewLabel");
-
-  function show(i){
-    var tm = siap[i]; if (!tm) return;
-    if (frame){ frame.setAttribute("src", tm.file); frame.setAttribute("title","Contoh tema "+tm.nama); }
-    if (full)  full.setAttribute("href", tm.file);
-    if (label) label.textContent = "Lagi lihat: "+tm.nama+" — paling enak dibuka di HP.";
+  function card(k){
+    var t=T[k];
+    return '<article class="card">'+
+      '<div class="cov" data-k="'+k+'"></div>'+
+      '<div class="body">'+
+        '<span class="nm">'+esc(t.nama)+'</span>'+
+        '<p class="ds">'+esc(t.ringkas)+'</p>'+
+        '<div class="chips">'+t.isi.map(function(i){ return "<span>"+esc(i)+"</span>"; }).join("")+'</div>'+
+        '<div class="acts">'+
+          '<button type="button" class="btn btn-ghost" data-try="'+k+'">Coba contoh</button>'+
+          '<a class="btn btn-main" href="'+esc(C.lynkOrder)+'" target="_blank" rel="noopener">Pesan</a>'+
+        '</div>'+
+      '</div></article>';
   }
-  if (siap.length) show(0);
 
-  /* ---------- galeri kartu ilustrasi ---------- */
-  var gallery = document.getElementById("fvGallery");
-  var allThemes = siap.map(function(tm,i){ return {tm:tm, live:true, i:i}; })
-                  .concat(segera.map(function(tm){ return {tm:tm, live:false}; }));
+  function pick(i, focus){
+    var m=M[i];
+    tabs.querySelectorAll(".tab").forEach(function(b,j){
+      b.setAttribute("aria-selected", j===i ? "true":"false"); b.tabIndex = j===i ? 0 : -1;
+    });
+    if(focus) tabs.children[i].focus();
 
-  if (gallery){
-    allThemes.forEach(function(entry){
-      var tm = entry.tm;
-      var cover = entry.live ? tm.cover : (C.coverKosong || tm.cover);
-      var el;
+    var n=m.tema.length;
+    line.innerHTML='<strong>'+m.emoji+' '+esc(m.nama)+'</strong><span>'+esc(m.baris)+
+      (n ? ' '+n+' tema tersedia.' : '')+'</span>';
 
-      if (entry.live){
-        el = document.createElement("a");
-        el.href = tm.file; el.target = "_blank"; el.rel = "noopener";
-        el.addEventListener("click", function(ev){
-          // klik kartu = ganti preview di atas, bukan langsung pindah tab baru
-          if (!ev.metaKey && !ev.ctrlKey){ ev.preventDefault(); show(entry.i); frame && frame.scrollIntoView({behavior:"smooth", block:"center"}); }
+    if(n){
+      cards.innerHTML=m.tema.map(card).join("");
+      cards.querySelectorAll(".cov").forEach(function(c){ bg(c,T[c.getAttribute("data-k")]); });
+      cards.querySelectorAll("[data-try]").forEach(function(b){
+        b.addEventListener("click",function(){
+          show(b.getAttribute("data-try"));
+          $("contoh").scrollIntoView({behavior:"smooth",block:"start"});
         });
-      } else {
-        el = document.createElement("div");
-      }
-
-      el.className = "theme-card" + (entry.live ? "" : " locked");
-      el.dataset.nama = tm.nama;
-      if (cover) el.style.backgroundImage = "url('"+cover+"')";
-
-      el.innerHTML =
-        '<div class="veil"></div>' +
-        '<div class="body">' +
-          '<span class="t-tag '+(entry.live?"live":"soon")+'">'+(entry.live?"Sudah tersedia":"Segera hadir")+'</span>' +
-          '<span class="t-name">'+tm.nama+'</span>' +
-          '<p class="t-note">'+tm.catatan+'</p>' +
-        '</div>';
-
-      gallery.appendChild(el);
-    });
-  }
-
-  /* ---------- pill momen: browse + lompat ke kartu ---------- */
-  var occWrap = document.getElementById("fvOccasions");
-  if (occWrap){
-    allThemes.forEach(function(entry){
-      var b = document.createElement("button");
-      b.type = "button"; b.className = "occ" + (entry.live ? " is-live" : "");
-      b.textContent = entry.tm.nama;
-      b.addEventListener("click", function(){
-        var card = gallery.querySelector('[data-nama="'+entry.tm.nama+'"]');
-        if (card){
-          card.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
-          card.style.outline = "2px solid #3B3168"; card.style.outlineOffset = "3px";
-          setTimeout(function(){ card.style.outline = ""; }, 900);
-        }
-        if (entry.live) show(entry.i);
       });
-      occWrap.appendChild(b);
+      show(m.tema[0]);
+    } else {
+      cards.innerHTML='<article class="card empty"><div class="cov">'+m.emoji+'</div><div class="body">'+
+        '<span class="nm">Segera hadir</span>'+
+        '<p class="ds">Tema untuk '+esc(m.nama)+' belum tersedia. Kalau kamu butuh, kabari kami. Momen yang paling banyak diminta kami kerjakan duluan.</p>'+
+        '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
+        esc(wa("Halo Foreverse, saya butuh tema untuk momen "+m.nama+"."))+'">Kabari saya</a></div>'+
+        '</div></article>';
+    }
+  }
+
+  M.forEach(function(m,i){
+    var b=document.createElement("button");
+    b.type="button"; b.className="tab"; b.setAttribute("role","tab");
+    b.innerHTML='<span aria-hidden="true">'+m.emoji+'</span>'+esc(m.nama)+(m.tema.length?'':'<span class="soon">· segera</span>');
+    b.addEventListener("click",function(){ pick(i); });
+    b.addEventListener("keydown",function(e){
+      if(e.key==="ArrowRight"){ e.preventDefault(); pick((i+1)%M.length,true); }
+      if(e.key==="ArrowLeft"){ e.preventDefault(); pick((i-1+M.length)%M.length,true); }
     });
-  }
+    tabs.appendChild(b);
+  });
+  if(M.length) pick(0);
 
-  text("fvPrice", C.hargaRange);
-  text("fvTurn",  C.turnaround);
-  text("fvTurn2", C.turnaround);
-  text("fvRev",   C.revisi);
-  text("fvRev2",  C.revisi);
-
-  if (C.turnaround){
-    var t3 = document.getElementById("fvTurn3");
-    if (t3) t3.textContent = C.turnaround.charAt(0).toUpperCase() + C.turnaround.slice(1);
-  }
-
-  // Video hanya muncul kalau sudah diisi
-  if (C.videoDemo){
-    var v = document.getElementById("fvVideo");
-    var b = document.getElementById("fvVideoBlock");
-    if (v && b){ v.setAttribute("src", C.videoDemo); b.classList.remove("hide"); }
+  /* tombol WA mengambang disembunyikan di bagian penutup */
+  var fl=$("float"), fin=$("kontak");
+  if("IntersectionObserver" in window && fl && fin){
+    new IntersectionObserver(function(es){ fl.classList.toggle("gone", es[0].isIntersecting); },{threshold:.2}).observe(fin);
   }
 })();
 </script>
