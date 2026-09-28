@@ -4,20 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foreverse — Surat Digital untuk Orang yang Kamu Sayang</title>
-<meta name="description" content="Kamu kirim pesan, foto, dan lagunya. Kami rangkai jadi satu halaman yang dia buka lewat link. Rp15.000 per surat, jadi maks. 1x24 jam.">
+<meta name="description" content="Tulis pesanmu, pilih fotonya, bayar Rp15.000. Link surat digitalnya masuk ke WhatsApp-mu, tinggal kamu kirim ke dia.">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="id_ID">
 <meta property="og:url" content="https://foreverse.id">
 <meta property="og:title" content="Foreverse — Surat Digital untuk Orang yang Kamu Sayang">
-<meta property="og:description" content="Kamu kirim pesan, foto, dan lagunya. Kami rangkai jadi satu halaman yang dia buka lewat link.">
-<meta property="og:image" content="https://foreverse.id/foreverse-sealed-infinity-2048-onwarm.png">
+<meta property="og:description" content="Tulis pesanmu, pilih fotonya, bayar Rp15.000. Link-nya masuk ke WhatsApp-mu.">
+<meta property="og:image" content="https://foreverse.id/og-kotak-kejutan.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FBFAF7">
 
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,70 +35,49 @@
 const FOREVERSE_SITE = {
 
   /* --- Link --- */
-  lynkOrder: "https://lynk.id/foreverse",    // halaman bayar Lynk.id (satu produk untuk semua tema)
-  whatsapp:  "6289512385393",                // nomor WA, format 62..., tanpa + dan spasi
+  formPesan: "",                  // link formulir Tally. Kosong = tombol "Pesan" membuka WhatsApp
+  whatsapp:  "6289512385393",     // format 62..., tanpa + dan spasi
   instagram: "https://instagram.com/foreverse.id",
   tiktok:    "https://tiktok.com/@foreverse.id",
   privasi:   "/kebijakan-privasi.html",
   syarat:    "/syarat-ketentuan.html",
 
-  /* --- Angka --- */
-  harga:      "Rp15.000",
-  turnaround: "maks. 1x24 jam",
-  revisi:     "1x revisi gratis",
-  batasRevisi:"3 hari",
+  /* --- Angka & janji --- */
+  harga:       "Rp15.000",
+  waktuKirim:  "beberapa menit",  // ganti di sini kalau janjinya berubah
+  revisi:      "1x revisi gratis",
+  batasRevisi: "3 hari",
 
   /* ═══ TEMA ═══
-     Tema = bentuk suratnya. Satu tema bisa dipakai di beberapa momen.
-     alur = urutan yang dilihat penerima (tampil di samping contoh). */
+     Tema = bentuk suratnya. Satu tema bisa dipakai di beberapa momen. */
   tema: {
-    birthday: {
-      nama: "Birthday",
-      file: "/foreverse-birthday-demo.html",
-      cover: "/foreverse-cover-birthday.svg",
-      warna: ["#CBB8EC", "#FBE39A"],
-      ringkas: "Amplop yang dibuka, dua mini-game, galeri foto, lalu kartu ucapan.",
-      isi: ["Mini-game", "Galeri foto"],
-      alur: ["Amplop dibuka", "Dua mini-game singkat", "Galeri foto berurutan", "Kartu ucapan sebagai penutup"]
-    },
-    surat: {
-      nama: "Surat Berlipat",
-      file: "/foreverse-surat-berlipat-demo.html",
-      cover: "/foreverse-cover-surat.svg",
-      warna: ["#1B1B2F", "#E8A5B0"],
-      ringkas: "Amplop bersegel, lalu surat yang terbuka lipatan demi lipatan.",
-      isi: ["3 foto", "Musik", "Hitungan hari"],
-      alur: ["Amplop bersegel dibuka", "Surat terbuka lipatan demi lipatan, tiga bagian pesan", "Tiga foto polaroid", "Hitungan hari sejak tanggal yang kamu pilih", "Penutup dan kartu janji yang bisa dibalik"]
-    },
-    mixtape: {
-      nama: "Mixtape",
-      file: "/foreverse-mixtape-demo.html",
-      cover: "/foreverse-cover-mixtape.svg",
-      warna: ["#F2A93B", "#8E2F45"],
-      ringkas: "Kaset yang diputar. Pesanmu muncul baris demi baris mengikuti lagu.",
-      isi: ["4 foto", "Lagu pilihanmu", "Bisa diputar ulang"],
-      alur: ["Kaset mulai diputar", "Pesan muncul baris demi baris mengikuti lagu", "Tracklist berisi cerita kalian", "Sisi B: empat foto", "Sampul kaset sebagai penutup, bisa diputar ulang"]
+    "kotak-kejutan": {
+      nama:    "Kotak Kejutan",
+      file:    "/kotak-kejutan-demo.html",
+      cover:   "/cover-kotak-kejutan.jpg",
+      ringkas: "Kotak kado yang dibuka dengan menarik pitanya. Di dalamnya ada kartu ucapan, foto, hitungan umur, dan satu permintaan.",
+      isi:     ["Tarik pita", "3 foto", "Hitungan umur", "Musik"],
+      alur:    ["Kotak kado dibuka dengan menarik pitanya", "Kartu ucapan tiga bagian, muncul satu per satu", "Tiga foto polaroid yang bisa digeser", "Hitungan umur dan jumlah hari yang sudah dijalani", "Pejamkan mata, buat permintaan, lalu harapan darimu muncul", "Kartu penutup yang bisa dibalik, berisi pesan rahasia"]
     }
   },
 
   /* ═══ MOMEN ═══
-     Momen = surat ini untuk acara apa.
-     tema: [] kosong = tampil sebagai "Segera hadir".
-     Mau tambah tema ke satu momen? Tambah namanya di dalam kurung siku. */
+     tema: [] kosong = tampil "Segera hadir".
+     Tema baru jadi? Tambahkan namanya di kurung siku momen yang cocok. */
   momen: [
-    { id:"birthday",    nama:"Birthday",           emoji:"🎂", baris:"Untuk hari ulang tahunnya.",              tema:["birthday","surat","mixtape"] },
-    { id:"anniversary", nama:"Anniversary",        emoji:"🥂", baris:"Untuk hari jadi kalian.",                 tema:["surat","mixtape"] },
-    { id:"ldr",         nama:"LDR",                emoji:"✈️", baris:"Untuk yang lagi jauh.",                   tema:["surat","mixtape"] },
-    { id:"graduation",  nama:"Graduation",         emoji:"🎓", baris:"Untuk yang baru lulus.",                  tema:["surat"] },
-    { id:"apology",     nama:"Apology",            emoji:"🕊️", baris:"Untuk minta maaf yang susah diucapkan langsung.", tema:["surat"] },
-    { id:"lovenote",    nama:"Love Note",          emoji:"💌", baris:"Untuk bilang sayang tanpa nunggu momen.", tema:[] },
-    { id:"congrats",    nama:"Congrats",           emoji:"🏆", baris:"Untuk ikut senang atas pencapaiannya.",   tema:[] },
-    { id:"askout",      nama:"Ask Out",            emoji:"🗓️", baris:"Untuk ngajak dia jalan.",                 tema:[] },
-    { id:"confess",     nama:"Confess",            emoji:"💘", baris:"Untuk menyatakan perasaan.",              tema:[] },
-    { id:"getwell",     nama:"Get Well Soon",      emoji:"🌷", baris:"Untuk yang lagi sakit.",                  tema:[] },
-    { id:"parting",     nama:"Parting Ways",       emoji:"🌇", baris:"Untuk pamit dengan baik.",                tema:[] },
-    { id:"proposal",    nama:"Proposal",           emoji:"💍", baris:"Untuk mengajak dia menikah.",             tema:[] },
-    { id:"wedding",     nama:"Wedding Invitation", emoji:"💒", baris:"Undangan pernikahan digital untuk tamu kalian.", tema:[] }
+    { nama:"Birthday",           emoji:"🎂", baris:"Untuk hari ulang tahunnya.",                       tema:["kotak-kejutan"] },
+    { nama:"Anniversary",        emoji:"🥂", baris:"Untuk hari jadi kalian.",                          tema:[] },
+    { nama:"LDR",                emoji:"✈️", baris:"Untuk yang lagi jauh.",                            tema:[] },
+    { nama:"Graduation",         emoji:"🎓", baris:"Untuk yang baru lulus.",                           tema:[] },
+    { nama:"Apology",            emoji:"🕊️", baris:"Untuk minta maaf yang susah diucapkan langsung.",  tema:[] },
+    { nama:"Love Note",          emoji:"💌", baris:"Untuk bilang sayang tanpa nunggu momen.",          tema:[] },
+    { nama:"Congrats",           emoji:"🏆", baris:"Untuk ikut senang atas pencapaiannya.",            tema:[] },
+    { nama:"Ask Out",            emoji:"🗓️", baris:"Untuk ngajak dia jalan.",                          tema:[] },
+    { nama:"Confess",            emoji:"💘", baris:"Untuk menyatakan perasaan.",                       tema:[] },
+    { nama:"Get Well Soon",      emoji:"🌷", baris:"Untuk yang lagi sakit.",                           tema:[] },
+    { nama:"Parting Ways",       emoji:"🌇", baris:"Untuk pamit dengan baik.",                         tema:[] },
+    { nama:"Proposal",           emoji:"💍", baris:"Untuk mengajak dia menikah.",                      tema:[] },
+    { nama:"Wedding Invitation", emoji:"💒", baris:"Undangan pernikahan digital untuk tamu kalian.",   tema:[] }
   ]
 };
 
@@ -104,303 +86,225 @@ const FOREVERSE_SITE = {
 
 <style>
 :root{
-  --ink:#16161A;
-  --ink-deep:#0F0F13;
-  --ink-soft:#4A4852;
-  --ink-faint:#83808C;
-  --cream:#FBFAF7;
-  --cream-lift:#F5F3EE;
-  --paper:#FFFFFF;
-  --stone:#E4E2DC;
-  --violet:#3B3168;
-  --violet-deep:#2C2450;
-  --violet-soft:#6F63B8;
-  --violet-tint:#EEEBF7;
+  --ink:#16161A; --ink-soft:#4A4852; --ink-faint:#83808C;
+  --cream:#FBFAF7; --cream-lift:#F5F3EE; --paper:#FFFFFF; --stone:#E4E2DC;
+  --violet:#3B3168; --violet-deep:#2C2450; --violet-soft:#6F63B8; --violet-tint:#EEEBF7;
+  --coral:#E8734A; --blush:#E8A5B0; --blush-tint:#FBEDEF; --gold:#F2C14E;
 
   --serif:'Fraunces',Georgia,'Times New Roman',serif;
   --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-
-  --wrap:1120px;
-  --gut:clamp(18px,5vw,44px);
-  --r:16px;
+  --wrap:1120px; --gut:clamp(16px,5vw,44px); --r:18px;
 }
-
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:76px}
-body{
-  margin:0;background:var(--cream);color:var(--ink);
-  font-family:var(--sans);font-size:16.5px;line-height:1.65;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;
-}
+html{scroll-behavior:smooth;scroll-padding-top:74px}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
-section{padding:clamp(64px,9vw,108px) 0}
-p{margin:0}
-a{color:inherit}
-button{font:inherit}
-:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:4px}
-img{max-width:100%}
+section{padding:clamp(64px,9vw,104px) 0}
+p{margin:0} a{color:inherit} button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:6px}
+img{max-width:100%;display:block}
 
 h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:-.015em}
-h1{font-size:clamp(38px,6.4vw,66px);line-height:1.05}
-h2{font-size:clamp(28px,4.2vw,44px);line-height:1.14}
+h1{font-size:clamp(40px,6.6vw,70px);line-height:1.03}
+h2{font-size:clamp(30px,4.3vw,46px);line-height:1.12}
 h3{font-size:19px;line-height:1.3}
-
-.eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--violet)}
 .head h2{margin-top:12px;max-width:20ch}
 .head .lede{margin-top:16px;color:var(--ink-soft);max-width:54ch}
-.center{text-align:center}
-.center h2,.center .lede{margin-left:auto;margin-right:auto}
 
 /* tombol */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  font-family:var(--sans);font-size:15.5px;font-weight:600;line-height:1.2;
-  text-decoration:none;padding:14px 24px;border-radius:100px;
-  border:1px solid transparent;cursor:pointer;background:none;
-  transition:transform .16s ease,background .16s ease,border-color .16s ease,color .16s ease;
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:15.5px;font-weight:600;line-height:1.2;
+  text-decoration:none;padding:14px 24px;border-radius:100px;border:1px solid transparent;cursor:pointer;background:none;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
 .btn:hover{transform:translateY(-2px)}
-.btn-main{background:var(--violet);color:#fff;box-shadow:0 6px 18px rgba(59,49,104,.22)}
-.btn-main:hover{background:var(--violet-deep)}
+.btn-main{background:var(--violet);color:#fff;box-shadow:0 8px 20px rgba(59,49,104,.22)}
+.btn-main:hover{background:var(--violet-deep);box-shadow:0 12px 26px rgba(59,49,104,.28)}
 .btn-ghost{border-color:var(--stone);background:var(--paper);color:var(--ink)}
 .btn-ghost:hover{border-color:var(--ink)}
 .btn-sm{padding:10px 18px;font-size:14px}
-.btn svg{width:17px;height:17px;flex:none}
 
 /* header */
-header{
-  position:sticky;top:0;z-index:60;
-  background:rgba(251,250,247,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--stone);
-}
+header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(228,226,220,.8)}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:18px;height:64px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-size:22px}
-.brand img{height:28px;width:auto;display:block}
-.nav{display:none;gap:26px;align-items:center}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-size:22px;letter-spacing:-.01em}
+.brand img{height:26px;width:auto}
+.nav{display:none;gap:26px}
 @media(min-width:900px){.nav{display:flex}}
 .nav a{font-size:14.5px;text-decoration:none;color:var(--ink-soft);font-weight:500}
 .nav a:hover{color:var(--ink)}
 
 /* hero */
-.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(52px,7vw,88px);position:relative;overflow:hidden}
-.hero::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(56% 46% at 80% 30%, rgba(111,99,184,.15), transparent 70%),
-    radial-gradient(44% 40% at 6% 4%, rgba(59,49,104,.07), transparent 70%);
-}
+.hero{position:relative;overflow:hidden;padding-top:clamp(36px,6vw,70px);padding-bottom:clamp(56px,7vw,90px)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(42% 44% at 80% 36%,rgba(232,165,176,.30),transparent 70%),
+  radial-gradient(34% 36% at 94% 80%,rgba(242,193,78,.20),transparent 70%),
+  radial-gradient(40% 40% at 4% 0%,rgba(111,99,184,.12),transparent 70%)}
 .hero>.wrap{position:relative}
-.hero-grid{display:grid;gap:clamp(36px,6vw,56px);align-items:center}
+.hero-grid{display:grid;gap:clamp(30px,5vw,56px);align-items:center}
 @media(min-width:940px){.hero-grid{grid-template-columns:1.05fr .95fr}}
 .hero h1{margin-top:16px}
 .hero h1 em{font-style:italic;color:var(--violet)}
-.hero-sub{margin-top:20px;font-size:18px;color:var(--ink-soft);max-width:42ch}
+.hero-sub{margin-top:20px;font-size:18px;color:var(--ink-soft);max-width:44ch}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;padding:0;list-style:none}
-.facts li{
-  font-size:13.5px;color:var(--ink-soft);background:var(--paper);
-  border:1px solid var(--stone);border-radius:100px;padding:6px 14px;
-}
-.facts b{font-weight:600;color:var(--ink)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0;padding:0;list-style:none}
+.facts li{font-size:13.5px;color:var(--ink-soft);background:rgba(255,255,255,.75);border:1px solid var(--stone);border-radius:100px;padding:6px 14px}
+.facts b{color:var(--ink);font-weight:600}
 
-.stack{position:relative;height:clamp(300px,44vw,410px);display:flex;align-items:center;justify-content:center}
-.stack .pc{
-  position:absolute;width:clamp(140px,19vw,188px);aspect-ratio:400/520;
-  border-radius:18px;overflow:hidden;background-size:cover;background-position:center;
-  box-shadow:0 18px 44px rgba(22,22,26,.20);border:5px solid #fff;
-}
-.stack .pc:nth-child(1){transform:rotate(-12deg) translate(-58%,4%);z-index:1}
-.stack .pc:nth-child(2){transform:rotate(-1deg) translateY(-5%);z-index:3}
-.stack .pc:nth-child(3){transform:rotate(11deg) translate(58%,4%);z-index:2}
-@media(prefers-reduced-motion:no-preference){
-  .stack .pc{animation:rise .8s cubic-bezier(.2,.8,.3,1) both}
-  .stack .pc:nth-child(1){animation-delay:.1s}
-  .stack .pc:nth-child(3){animation-delay:.18s}
-}
-@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.95)}}
+/* ilustrasi kado */
+.scene{position:relative;height:clamp(340px,44vw,440px)}
+.giftbox{position:absolute;left:50%;top:50%;width:210px;height:230px;transform:translate(-50%,-46%)}
+.giftbox .gb-float{position:absolute;inset:0;animation:bob 3.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+.gb-body{position:absolute;left:5px;top:66px;width:200px;height:150px;border-radius:14px;
+  background:linear-gradient(160deg,#EE8A63,var(--coral) 55%,#C95A33);box-shadow:0 26px 44px rgba(201,90,51,.28),inset 0 -14px 24px rgba(0,0,0,.08)}
+.gb-body::after{content:"";position:absolute;inset:0;border-radius:14px;opacity:.55;
+  background-image:radial-gradient(circle,#F7D58A 2.2px,transparent 2.6px);background-size:22px 22px;background-position:6px 8px;
+  -webkit-mask:linear-gradient(90deg,#000 42%,transparent 42%,transparent 58%,#000 58%);mask:linear-gradient(90deg,#000 42%,transparent 42%,transparent 58%,#000 58%)}
+.gb-body::before,.gb-lid::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:30px;transform:translateX(-50%);background:linear-gradient(90deg,#E594A1,var(--blush),#F1BFC7);z-index:1}
+.gb-lid{position:absolute;left:-5px;top:40px;width:220px;height:40px;border-radius:11px;z-index:2;background:linear-gradient(170deg,#F29A77,var(--coral) 70%);box-shadow:0 6px 12px rgba(201,90,51,.22)}
+.gb-bow{position:absolute;left:50%;top:-30px;width:110px;height:44px;transform:translateX(-50%);z-index:3}
+.gb-bow i{position:absolute;top:4px;width:50px;height:34px;border:10px solid var(--blush);border-radius:50%/60% 60% 40% 40%}
+.gb-bow i:nth-child(1){left:2px;transform:rotate(-18deg)} .gb-bow i:nth-child(2){right:2px;transform:rotate(18deg)}
+.gb-bow b{position:absolute;left:50%;top:18px;width:22px;height:20px;border-radius:7px;transform:translateX(-50%);background:#E594A1}
+.gb-tag{position:absolute;right:-26px;top:118px;z-index:4;background:#FFFDF8;border-radius:10px;padding:8px 12px 8px 20px;
+  font-family:var(--serif);font-style:italic;font-size:16px;box-shadow:0 10px 22px rgba(22,22,26,.14);transform:rotate(8deg)}
+.gb-tag::before{content:"";position:absolute;left:8px;top:50%;width:6px;height:6px;border-radius:50%;background:var(--stone);transform:translateY(-50%)}
+.gb-shadow{position:absolute;left:50%;bottom:-8px;width:170px;height:18px;border-radius:50%;transform:translateX(-50%);background:rgba(22,22,26,.12);filter:blur(5px);animation:sh 3.6s ease-in-out infinite}
+@keyframes sh{50%{transform:translateX(-50%) scale(.88);opacity:.7}}
+.chip{position:absolute;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--stone);border-radius:100px;
+  padding:7px 13px;font-size:13.5px;font-weight:500;color:var(--ink-soft);box-shadow:0 8px 20px rgba(22,22,26,.07);animation:bob 5s ease-in-out infinite;white-space:nowrap}
+.chip.c1{left:4%;top:12%;animation-delay:-1s} .chip.c2{right:2%;top:4%;animation-delay:-2.5s}
+.chip.c3{left:0;bottom:16%;animation-delay:-3.2s} .chip.c4{right:6%;bottom:6%;animation-delay:-.4s}
+.chip.on{border-color:rgba(59,49,104,.35);color:var(--violet)}
+.chip small{font-size:11px;color:var(--ink-faint);font-weight:500}
+.spark{position:absolute;width:8px;height:8px;border-radius:2px;opacity:.8;animation:twk 3s ease-in-out infinite}
+@keyframes twk{50%{transform:translateY(-8px) rotate(45deg);opacity:.35}}
+@media(prefers-reduced-motion:reduce){.giftbox .gb-float,.chip,.gb-shadow,.spark,.strip-track{animation:none!important}}
 
 /* strip momen */
-.strip{background:var(--ink);color:var(--cream);overflow:hidden}
-.strip-track{display:flex;white-space:nowrap;padding:14px 0;width:max-content}
-@media(prefers-reduced-motion:no-preference){.strip-track{animation:slide 48s linear infinite}}
+.strip{border-block:1px solid var(--stone);background:var(--cream-lift);overflow:hidden}
+.strip-track{display:flex;white-space:nowrap;padding:13px 0;width:max-content;animation:slide 52s linear infinite}
 @keyframes slide{to{transform:translateX(-50%)}}
-.strip-track span{font-size:14px;padding:0 22px;opacity:.82;display:inline-flex;align-items:center;gap:8px}
-.strip-track span::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--violet-soft);margin-left:22px}
+.strip-track span{font-size:14px;padding:0 20px;color:var(--ink-soft);display:inline-flex;align-items:center;gap:8px}
+.strip-track span::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--blush);margin-left:20px}
 
-/* momen */
-.tabs{
-  display:flex;gap:8px;margin-top:30px;
-  overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;
-  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);
-}
+/* momen → tema */
+.tabs{display:flex;gap:8px;margin-top:30px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
 .tabs::-webkit-scrollbar{display:none}
 @media(min-width:900px){.tabs{flex-wrap:wrap;overflow:visible;-webkit-mask-image:none;mask-image:none}}
-.tab{
-  flex:none;font-size:14.5px;font-weight:500;cursor:pointer;
-  padding:9px 16px;border-radius:100px;
-  border:1px solid var(--stone);background:var(--paper);color:var(--ink-soft);
-  display:inline-flex;align-items:center;gap:7px;
-  transition:background .15s ease,border-color .15s ease,color .15s ease;
-}
+.tab{flex:none;font-size:14.5px;font-weight:500;cursor:pointer;padding:9px 16px;border-radius:100px;border:1px solid var(--stone);
+  background:var(--paper);color:var(--ink-soft);display:inline-flex;align-items:center;gap:7px;transition:all .15s ease}
 .tab:hover{border-color:var(--ink-faint);color:var(--ink)}
-.tab[aria-selected="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
+.tab[aria-selected="true"]{background:var(--violet);border-color:var(--violet);color:#fff;box-shadow:0 6px 16px rgba(59,49,104,.22)}
 .tab .soon{font-size:11px;font-weight:600;color:var(--ink-faint)}
 .tab[aria-selected="true"] .soon{color:rgba(255,255,255,.7)}
-
-.moment-line{
-  margin-top:22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;
-}
-.moment-line strong{font-family:var(--serif);font-weight:400;font-size:24px}
+.moment-line{margin-top:22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.moment-line strong{font-family:var(--serif);font-weight:400;font-size:25px}
 .moment-line span{color:var(--ink-soft);font-size:15px}
-
-.cards{
-  display:grid;gap:18px;margin-top:22px;
-  grid-auto-flow:column;grid-auto-columns:min(270px,78vw);
-  overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory;scrollbar-width:thin;
-}
-@media(min-width:900px){.cards{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);grid-auto-columns:auto;overflow:visible}}
-.card{
-  scroll-snap-align:start;background:var(--paper);border:1px solid var(--stone);
-  border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
-  transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s ease;
-}
-.card:hover{transform:translateY(-4px);box-shadow:0 18px 38px rgba(22,22,26,.10)}
-.card .cov{aspect-ratio:400/400;background-size:cover;background-position:center;position:relative}
+.cards{display:grid;gap:18px;margin-top:22px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));max-width:1000px}
+.card{background:var(--paper);border:1px solid var(--stone);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(22,22,26,.09)}
+.card .cov{aspect-ratio:1/1;background:var(--cream-lift) center/cover no-repeat;position:relative}
+.card .badge{position:absolute;left:14px;top:14px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:100px;background:#fff;color:var(--violet);box-shadow:0 4px 10px rgba(22,22,26,.08)}
 .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
-.card .nm{font-family:var(--serif);font-size:22px;line-height:1.15}
+.card .nm{font-family:var(--serif);font-size:24px;line-height:1.15}
 .card .ds{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips span{font-size:12px;font-weight:500;padding:4px 10px;border-radius:100px;background:var(--violet-tint);color:var(--violet-deep)}
 .card .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:6px}
-.card .acts .btn{padding:11px 10px;font-size:14px}
-
+.card .acts .btn{padding:12px 10px;font-size:14px}
 .card.empty{border-style:dashed;background:transparent}
-.card.empty .cov{aspect-ratio:auto;height:150px;background:var(--cream-lift);display:flex;align-items:center;justify-content:center;font-size:40px}
-@media(min-width:900px){.card.empty{grid-column:span 1}}
+.card.empty .cov{aspect-ratio:auto;height:150px;display:flex;align-items:center;justify-content:center;font-size:42px}
 
-.note{margin-top:14px;font-size:14px;color:var(--ink-faint)}
-.note a{color:var(--violet);font-weight:600;text-decoration:none}
-.note a:hover{text-decoration:underline}
-
-/* preview */
-.preview{background:var(--cream-lift);border-block:1px solid var(--stone)}
+/* contoh */
+.preview{background:linear-gradient(180deg,var(--cream-lift),var(--blush-tint));border-block:1px solid var(--stone)}
 .pv-grid{display:grid;gap:clamp(32px,5vw,64px);align-items:center;margin-top:36px}
 @media(min-width:900px){.pv-grid{grid-template-columns:350px 1fr}}
-.phone{
-  justify-self:center;width:350px;max-width:100%;
-  background:var(--ink);border-radius:44px;padding:12px;
-  box-shadow:0 30px 60px rgba(22,22,26,.22);
-}
-.phone .screen{border-radius:32px;overflow:hidden;background:#fff;aspect-ratio:9/18.5;position:relative}
-.phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
-.pv-switch{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
-.pv-switch button{
-  font-size:14px;font-weight:500;cursor:pointer;padding:8px 15px;border-radius:100px;
-  border:1px solid var(--stone);background:var(--paper);color:var(--ink-soft);
-}
-.pv-switch button[aria-pressed="true"]{border-color:var(--violet);color:var(--violet);background:var(--violet-tint)}
+.phone{justify-self:center;width:350px;max-width:100%;background:#1D1B26;border-radius:46px;padding:11px;box-shadow:0 34px 70px rgba(59,49,104,.22)}
+.phone .screen{position:relative;border-radius:36px;overflow:hidden;background:#FAF3E8;aspect-ratio:9/18.5}
+.phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .pv-info h3{font-size:clamp(26px,3.4vw,34px)}
-.pv-info .lbl{font-size:14px;color:var(--ink-faint);margin-top:18px}
-.flow{list-style:none;padding:0;margin:12px 0 0;counter-reset:f;display:grid;gap:0}
-.flow li{
-  counter-increment:f;position:relative;padding:11px 0 11px 42px;
-  font-size:15.5px;color:var(--ink-soft);border-bottom:1px solid var(--stone);
-}
+.pv-info .lbl{font-size:14px;color:var(--ink-faint);margin-top:16px}
+.flow{list-style:none;padding:0;margin:10px 0 0;counter-reset:f}
+.flow li{counter-increment:f;position:relative;padding:10px 0 10px 42px;font-size:15.5px;color:var(--ink-soft);border-bottom:1px solid rgba(228,226,220,.9)}
 .flow li:last-child{border-bottom:0}
-.flow li::before{
-  content:counter(f);position:absolute;left:0;top:10px;width:26px;height:26px;border-radius:50%;
-  background:var(--paper);border:1px solid var(--stone);
-  font-size:12.5px;font-weight:600;color:var(--violet);display:flex;align-items:center;justify-content:center;
-}
+.flow li::before{content:counter(f);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--stone);
+  font-size:12.5px;font-weight:600;color:var(--violet);display:flex;align-items:center;justify-content:center}
 .pv-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-.pv-fine{margin-top:16px;font-size:13.5px;color:var(--ink-faint)}
-
-/* kamu vs kami */
-.split{display:grid;gap:18px;margin-top:40px}
-@media(min-width:820px){.split{grid-template-columns:1fr 1fr}}
-.side{border-radius:20px;padding:clamp(24px,3.4vw,36px);border:1px solid var(--stone);background:var(--paper)}
-.side.us{background:var(--ink);border-color:var(--ink);color:var(--cream)}
-.side .who{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
-.side.us .who{color:#A79CE0}
-.side h3{margin-top:8px;font-size:24px}
-.side ul{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:12px}
-.side li{position:relative;padding-left:28px;font-size:15.5px;color:var(--ink-soft);line-height:1.55}
-.side.us li{color:rgba(251,250,247,.78)}
-.side li svg{position:absolute;left:0;top:3px;width:18px;height:18px;color:var(--violet)}
-.side.us li svg{color:#A79CE0}
+.pv-fine{margin-top:14px;font-size:13.5px;color:var(--ink-faint)}
 
 /* langkah */
 .steps{margin-top:40px;display:grid;gap:14px}
 @media(min-width:820px){.steps{grid-template-columns:repeat(4,1fr)}}
-.step{background:var(--paper);border:1px solid var(--stone);border-radius:18px;padding:22px 20px}
-.step .n{font-family:var(--serif);font-size:15px;color:var(--violet);display:block;margin-bottom:10px}
+.step{background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:22px 20px}
+.step .n{display:inline-flex;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;
+  background:var(--violet-tint);color:var(--violet);margin-bottom:12px}
+.step:nth-child(4) .n{background:var(--violet);color:#fff}
 .step h3{font-size:18px}
 .step p{margin-top:8px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
 
+/* kenapa */
+.why{background:var(--cream-lift);border-block:1px solid var(--stone)}
+.why-grid{display:grid;gap:14px;margin-top:40px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.why-it{background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:24px 22px}
+.why-it .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.why-it .ic svg{width:21px;height:21px}
+.why-it p{margin-top:8px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+
 /* harga */
-.price{margin-top:40px;display:grid;border:1px solid var(--stone);border-radius:22px;overflow:hidden;background:var(--paper);max-width:900px}
+.price{margin-top:40px;display:grid;border:1px solid var(--stone);border-radius:24px;overflow:hidden;background:var(--paper);max-width:900px;box-shadow:0 20px 50px rgba(22,22,26,.05)}
 @media(min-width:820px){.price{grid-template-columns:1fr 1.1fr}}
-.price .left{padding:clamp(26px,4vw,40px)}
+.price .left{padding:clamp(26px,4vw,40px);background:radial-gradient(80% 80% at 0% 0%,var(--violet-tint),transparent 70%)}
 .price .right{padding:clamp(26px,4vw,40px);background:var(--cream-lift);border-top:1px solid var(--stone)}
 @media(min-width:820px){.price .right{border-top:0;border-left:1px solid var(--stone)}}
 .price .lbl{font-size:14px;color:var(--ink-faint);font-weight:500}
-.price .amt{font-family:var(--serif);font-size:clamp(44px,6vw,58px);line-height:1;margin:12px 0 6px}
+.price .amt{font-family:var(--serif);font-size:clamp(46px,6vw,60px);line-height:1;margin:12px 0 8px}
 .price .per{font-size:15px;color:var(--ink-soft)}
 .price .btn{margin-top:26px;width:100%}
 .price ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
 .price li{font-size:15px;color:var(--ink-soft);padding-left:28px;position:relative;line-height:1.55}
 .price li svg{position:absolute;left:0;top:3px;width:18px;height:18px;color:var(--violet)}
-.price .small{margin-top:18px;font-size:13.5px;color:var(--ink-faint)}
 
 /* faq */
 .faq{margin-top:32px;border-top:1px solid var(--stone);max-width:800px}
 details{border-bottom:1px solid var(--stone)}
-summary{cursor:pointer;list-style:none;padding:19px 44px 19px 0;position:relative;
-  font-family:var(--serif);font-size:18px;line-height:1.4}
+summary{cursor:pointer;list-style:none;padding:19px 44px 19px 0;position:relative;font-family:var(--serif);font-size:18px;line-height:1.4}
 summary::-webkit-details-marker{display:none}
-summary::after{
-  content:"";position:absolute;right:10px;top:26px;width:9px;height:9px;
-  border-right:2px solid var(--violet);border-bottom:2px solid var(--violet);
-  transform:rotate(45deg);transition:transform .2s ease,top .2s ease;
-}
+summary::after{content:"";position:absolute;right:10px;top:26px;width:9px;height:9px;border-right:2px solid var(--violet);border-bottom:2px solid var(--violet);transform:rotate(45deg);transition:transform .2s ease,top .2s ease}
 details[open] summary::after{transform:rotate(-135deg);top:30px}
 details p{padding:0 8px 22px 0;color:var(--ink-soft);font-size:15.5px;max-width:64ch}
+details a{color:var(--violet)}
 
 /* penutup */
-.final{background:var(--ink);color:var(--cream);position:relative;overflow:hidden}
-.final::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(50% 60% at 50% 0%,rgba(111,99,184,.22),transparent 70%)}
+.final{text-align:center;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--cream),var(--violet-tint))}
+.final::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(36% 50% at 20% 100%,rgba(232,165,176,.35),transparent 70%),radial-gradient(36% 50% at 85% 100%,rgba(242,193,78,.22),transparent 70%)}
 .final>.wrap{position:relative}
-.final .lede{color:rgba(251,250,247,.7)}
-.final .eyebrow{color:#A79CE0}
-.final-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:32px}
-.final .btn-ghost{background:transparent;border-color:rgba(251,250,247,.28);color:var(--cream)}
-.final .btn-ghost:hover{border-color:var(--cream)}
+.final h2{margin:12px auto 0;max-width:18ch}
+.final .lede{margin:16px auto 0;max-width:46ch;color:var(--ink-soft)}
+.final-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
 
 /* footer */
-footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px;font-size:14px}
-@media(min-width:700px){footer{padding-bottom:44px}}
-.foot{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
-.foot .fb{display:flex;align-items:center;gap:10px}
-.foot .fb img{height:22px;width:auto;opacity:.85}
+footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink-faint);padding:34px 0 96px;font-size:14px}
+@media(min-width:700px){footer{padding-bottom:36px}}
+.foot{display:flex;flex-wrap:wrap;gap:16px 30px;align-items:center;justify-content:space-between}
+.foot .fb{display:flex;align-items:center;gap:10px;color:var(--ink-soft)}
+.foot .fb img{height:22px;width:auto}
 .foot .fl{display:flex;flex-wrap:wrap;gap:8px 22px}
-.foot a{text-decoration:none;color:rgba(251,250,247,.62)}
-.foot a:hover{color:var(--cream);text-decoration:underline}
+.foot a{text-decoration:none;color:var(--ink-soft)}
+.foot a:hover{color:var(--ink);text-decoration:underline}
 
-/* tombol WA mengambang */
-.float{
-  position:fixed;right:16px;bottom:16px;z-index:70;
-  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
-  background:var(--ink);color:var(--cream);font-size:14px;font-weight:600;
-  padding:12px 18px 12px 14px;border-radius:100px;box-shadow:0 10px 28px rgba(22,22,26,.28);
-  transition:transform .16s ease,opacity .2s ease;
-}
+/* WA mengambang */
+.float{position:fixed;right:16px;bottom:16px;z-index:70;display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  background:var(--paper);color:var(--ink);border:1px solid var(--stone);font-size:14px;font-weight:600;
+  padding:11px 17px 11px 13px;border-radius:100px;box-shadow:0 12px 30px rgba(22,22,26,.14);transition:transform .16s ease,opacity .2s ease}
 .float:hover{transform:translateY(-2px)}
-.float svg{width:20px;height:20px;color:#7FD99A}
+.float svg{width:21px;height:21px;color:#25D366}
 .float.gone{opacity:0;pointer-events:none}
-@media(max-width:699px){.float{padding:14px}.float .fl-t{display:none}}
-
-.hide{display:none!important}
+@media(max-width:699px){.float{padding:13px}.float .fl-t{display:none}}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -409,11 +313,7 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
   <div class="wrap bar">
     <a href="#top" class="brand"><img src="/foreverse-logo.png" alt=""><span>foreverse</span></a>
     <nav class="nav" aria-label="Navigasi utama">
-      <a href="#momen">Momen</a>
-      <a href="#contoh">Contoh</a>
-      <a href="#cara">Cara pesan</a>
-      <a href="#harga">Harga</a>
-      <a href="#faq">FAQ</a>
+      <a href="#momen">Momen</a><a href="#contoh">Contoh</a><a href="#cara">Cara pesan</a><a href="#harga">Harga</a><a href="#faq">FAQ</a>
     </nav>
     <a class="btn btn-main btn-sm" href="#momen">Pilih momen</a>
   </div>
@@ -425,22 +325,38 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">Surat digital · Dirangkai manual</span>
+        <span class="eyebrow">Surat digital interaktif</span>
         <h1>Surat digital untuk orang yang <em>kamu sayang.</em></h1>
-        <p class="hero-sub">Kamu kirim pesan, foto, dan lagunya. Kami rangkai jadi satu halaman yang dia buka lewat link. Jadi <span data-v="turnaround">maks. 1x24 jam</span>.</p>
-
+        <p class="hero-sub">Tulis pesanmu, pilih fotonya, bayar <span data-v="harga">Rp15.000</span>. Link-nya masuk ke WhatsApp-mu dalam <span data-v="waktuKirim">beberapa menit</span>, tinggal kamu kirim ke dia.</p>
         <div class="hero-cta">
           <a href="#momen" class="btn btn-main">Pilih momen</a>
           <a href="#contoh" class="btn btn-ghost">Coba contohnya</a>
         </div>
-
         <ul class="facts">
-          <li><b data-v="harga">Rp15.000</b> per surat</li>
-          <li>Kamu nggak perlu ngedit apa pun</li>
-          <li><span data-v="revisi">1x revisi gratis</span></li>
+          <li><b data-v="harga">Rp15.000</b>, tanpa biaya lain</li>
+          <li>Dibuka di HP, tanpa aplikasi</li>
+          <li>Link tidak kedaluwarsa</li>
         </ul>
       </div>
-      <div class="stack" id="heroStack" aria-hidden="true"></div>
+
+      <div class="scene" aria-hidden="true">
+        <span class="chip c1 on">🎂 Birthday</span>
+        <span class="chip c2">🥂 Anniversary <small>segera</small></span>
+        <span class="chip c3">✈️ LDR <small>segera</small></span>
+        <span class="chip c4">🎓 Graduation <small>segera</small></span>
+        <i class="spark" style="left:22%;top:30%;background:var(--gold)"></i>
+        <i class="spark" style="right:24%;top:22%;background:var(--blush);animation-delay:-1s"></i>
+        <i class="spark" style="left:30%;bottom:22%;background:var(--coral);animation-delay:-2s"></i>
+        <i class="spark" style="right:16%;top:52%;background:var(--violet-soft);animation-delay:-1.5s"></i>
+        <div class="giftbox">
+          <div class="gb-float">
+            <div class="gb-lid"><div class="gb-bow"><i></i><i></i><b></b></div></div>
+            <div class="gb-body"></div>
+            <div class="gb-tag">untuk Amira</div>
+          </div>
+          <div class="gb-shadow"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -450,17 +366,13 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
   <section id="momen">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow">Langkah 1</span>
+        <span class="eyebrow">Pilih momen</span>
         <h2>Suratnya untuk momen apa?</h2>
-        <p class="lede">Pilih momennya dulu. Tema yang cocok akan muncul di bawahnya, dan tiap tema bisa kamu coba sebelum pesan.</p>
+        <p class="lede">Pilih momennya dulu. Tema yang cocok muncul di bawahnya, dan tiap tema bisa kamu coba sebelum pesan.</p>
       </div>
-
       <div class="tabs" id="tabs" role="tablist" aria-label="Pilih momen"></div>
-
       <div class="moment-line" id="momentLine"></div>
       <div class="cards" id="cards" role="tabpanel"></div>
-
-      <p class="note">Satu link pembayaran untuk semua tema. Tema dan momen yang kamu pilih ditulis di formulir setelah bayar.</p>
     </div>
   </section>
 
@@ -470,95 +382,68 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
       <div class="head">
         <span class="eyebrow">Coba dulu</span>
         <h2>Begini yang dia lihat waktu buka linknya.</h2>
+        <p class="lede">Contohnya bisa langsung kamu mainkan di sini. Tarik pitanya.</p>
       </div>
-
       <div class="pv-grid">
-        <div class="phone">
-          <div class="screen"><iframe id="pvFrame" title="Contoh tema" loading="lazy"></iframe></div>
-        </div>
-
+        <div class="phone"><div class="screen"><iframe id="pvFrame" title="Contoh tema" loading="lazy"></iframe></div></div>
         <div class="pv-info">
-          <div class="pv-switch" id="pvSwitch" aria-label="Ganti tema contoh"></div>
-          <h3 id="pvName">Birthday</h3>
+          <h3 id="pvName"></h3>
           <p class="lbl">Urutannya:</p>
           <ol class="flow" id="pvFlow"></ol>
           <div class="pv-acts">
             <a id="pvOrder" class="btn btn-main" href="#" target="_blank" rel="noopener">Pesan tema ini</a>
             <a id="pvFull" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
           </div>
-          <p class="pv-fine">Nama, foto, dan pesan di contoh ini karangan (Sofia &amp; Avero). Punyamu nanti diisi cerita kalian sendiri.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═════ KAMU vs KAMI ═════ -->
-  <section id="bagian">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">Pembagian kerja</span>
-        <h2>Kamu cukup cerita. Sisanya kami yang kerjakan.</h2>
-        <p class="lede">Kamu nggak perlu buka editor, ngatur tata letak, atau upload apa pun ke website. Semua bahan cukup diisi di satu formulir.</p>
-      </div>
-
-      <div class="split">
-        <div class="side">
-          <span class="who">Yang kamu siapkan</span>
-          <h3>Bahan ceritanya</h3>
-          <ul>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Momen dan tema yang kamu pilih</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Nama kamu dan nama dia</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Pesan yang mau kamu sampaikan, dengan kata-katamu sendiri</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Foto kalian (jumlahnya tergantung tema)</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Judul lagu, kalau temanya pakai lagu</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="10" r="7.5"/></svg>Tanggal kamu butuh linknya</li>
-          </ul>
-        </div>
-
-        <div class="side us">
-          <span class="who">Yang kami kerjakan</span>
-          <h3>Merangkainya jadi satu halaman</h3>
-          <ul>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Memasukkan semua bahanmu ke tema yang kamu pilih</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Membagi pesanmu ke bagian-bagian surat, tanpa mengubah isinya</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Membetulkan typo kalau ada</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Memotong foto supaya pas di bingkainya dan memasang lagunya</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Mengecek hasilnya di HP sebelum dikirim</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Mengirim linknya ke WhatsApp-mu</li>
-          </ul>
+          <p class="pv-fine">Nama dan pesan di contoh ini karangan (Amira &amp; Fatah), dan fotonya diganti ilustrasi. Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═════ CARA PESAN ═════ -->
-  <section id="cara" style="background:var(--cream-lift);border-block:1px solid var(--stone)">
+  <section id="cara">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Cara pesan</span>
-        <h2>Empat langkah.</h2>
+        <h2>Isi dulu, bayar terakhir.</h2>
+        <p class="lede">Kamu baru bayar setelah semua isinya selesai kamu tulis.</p>
       </div>
-
       <div class="steps">
-        <div class="step">
-          <span class="n">01</span>
-          <h3>Pilih momen dan tema</h3>
-          <p>Coba contohnya dulu di halaman ini sampai kamu yakin.</p>
+        <div class="step"><span class="n">1</span><h3>Pilih momen dan tema</h3><p>Coba contohnya di halaman ini sampai kamu yakin.</p></div>
+        <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, tiga foto, tanggal, dan lagu. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
+        <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS atau e-wallet. Tidak ada biaya admin tambahan.</p></div>
+        <div class="step"><span class="n">4</span><h3>Link masuk ke WhatsApp-mu</h3><p>Dalam <span data-v="waktuKirim">beberapa menit</span>. Kamu yang meneruskannya ke dia, kapan pun kamu mau.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ KENAPA ═════ -->
+  <section class="why">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Yang bisa kamu pegang</span>
+        <h2>Empat hal yang kami jaga.</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-it">
+          <span class="ic" style="background:var(--violet-tint);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 13.5a4 4 0 005.7 0l3-3a4 4 0 10-5.7-5.7L12 6.3"/><path d="M13.5 10.5a4 4 0 00-5.7 0l-3 3a4 4 0 105.7 5.7L12 17.7"/></svg></span>
+          <h3>Link tidak kedaluwarsa</h3>
+          <p>Suratnya tetap bisa dibuka lagi kapan saja, bukan cuma beberapa hari setelah dikirim.</p>
         </div>
-        <div class="step">
-          <span class="n">02</span>
-          <h3>Bayar di Lynk.id</h3>
-          <p>Pakai metode yang tersedia di sana, seperti QRIS atau e-wallet.</p>
+        <div class="why-it">
+          <span class="ic" style="background:var(--blush-tint);color:#C95A6B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h7M7 13h10M7 17h5"/></svg></span>
+          <h3>Pesanmu tidak diubah</h3>
+          <p>Kata-katamu dipasang persis seperti yang kamu tulis, termasuk ejaan dan tanda bacanya.</p>
         </div>
-        <div class="step">
-          <span class="n">03</span>
-          <h3>Isi formulir</h3>
-          <p>Setelah bayar kamu dapat link formulir. Isi nama, pesan, foto, lagu, dan tanggal yang kamu butuhkan.</p>
+        <div class="why-it">
+          <span class="ic" style="background:#FDF3DC;color:#B8860B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v1.5M12 16v1.5"/></svg></span>
+          <h3>Bayar <span data-v="harga">Rp15.000</span>, selesai</h3>
+          <p>Tidak ada biaya admin, tidak ada paket tambahan, tidak ada fitur yang dikunci.</p>
         </div>
-        <div class="step">
-          <span class="n">04</span>
-          <h3>Terima linknya</h3>
-          <p>Kami kirim ke WhatsApp-mu <span data-v="turnaround">maks. 1x24 jam</span> setelah formulir lengkap. Kamu yang meneruskannya ke dia.</p>
+        <div class="why-it">
+          <span class="ic" style="background:#E6F6EC;color:#1E8E4E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z"/></svg></span>
+          <h3>Dibalas orang, bukan bot</h3>
+          <p>Ada kendala atau pertanyaan? Chat kami di WhatsApp dan kamu dibalas langsung.</p>
         </div>
       </div>
     </div>
@@ -571,22 +456,20 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
         <span class="eyebrow">Harga</span>
         <h2>Satu harga untuk semua tema.</h2>
       </div>
-
       <div class="price">
         <div class="left">
           <span class="lbl">Per surat</span>
           <div class="amt" data-v="harga">Rp15.000</div>
-          <p class="per">Momen dan tema apa pun yang tersedia.</p>
-          <a id="ctaPrice" class="btn btn-main" href="#" target="_blank" rel="noopener">Pesan sekarang</a>
+          <p class="per">Yang kamu bayar ya segitu. Tidak ada biaya admin tambahan.</p>
+          <a class="btn btn-main" href="#momen">Pilih momen</a>
         </div>
         <div class="right">
           <ul>
             <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Satu surat dengan tema pilihanmu</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Dirangkai manual dari bahan yang kamu kirim</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Link pribadi dengan kode acak, dikirim ke WhatsApp-mu</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Link tetap bisa dibuka, tidak kedaluwarsa</li>
             <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span><span data-v="revisi">1x revisi gratis</span>, paling lambat <span data-v="batasRevisi">3 hari</span> setelah link dikirim</span></li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Satu link yang bisa dibuka di HP mana pun, tanpa install aplikasi</li>
           </ul>
-          <p class="small">Butuh untuk tanggal yang mepet? Chat kami dulu sebelum bayar supaya bisa dipastikan sempat.</p>
         </div>
       </div>
     </div>
@@ -599,54 +482,53 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
         <span class="eyebrow">FAQ</span>
         <h2>Pertanyaan yang sering masuk.</h2>
       </div>
-
       <div class="faq">
         <details open>
-          <summary>Kenapa nggak langsung jadi?</summary>
-          <p>Karena tiap surat dirangkai manual, bukan dibuat otomatis oleh sistem. Kamu nggak perlu ngedit apa-apa, tapi butuh waktu: <span data-v="turnaround">maks. 1x24 jam</span> setelah formulirmu lengkap.</p>
+          <summary>Berapa lama link-nya sampai?</summary>
+          <p>Dalam <span data-v="waktuKirim">beberapa menit</span> setelah pembayaranmu berhasil, link-nya masuk ke WhatsApp yang kamu tulis di formulir.</p>
         </details>
         <details>
-          <summary>Pesannya ditulis siapa?</summary>
-          <p>Kamu. Kami pakai kata-katamu sendiri. Yang kami lakukan cuma membetulkan typo dan membagi pesanmu ke bagian-bagian surat supaya pas di temanya.</p>
+          <summary>Pesanku bakal diubah?</summary>
+          <p>Tidak. Pesanmu dipasang persis seperti yang kamu tulis, termasuk ejaan dan tanda bacanya. Jadi baca ulang sekali lagi sebelum mengirim formulir. Tiap kolom punya batas karakter supaya tampilannya tetap rapi di layar HP.</p>
         </details>
         <details>
           <summary>Bisa dikirim pas jam 12 malam?</summary>
-          <p>Bisa. Linknya kami kirim ke kamu dulu, jadi kamu bebas meneruskannya ke dia kapan saja, termasuk tepat tengah malam. Tulis tanggal yang kamu butuhkan di formulir supaya linknya siap sebelum hari itu.</p>
+          <p>Bisa. Link-nya dikirim ke kamu dulu, jadi kamu bebas meneruskannya ke dia kapan saja, termasuk tepat tengah malam.</p>
         </details>
         <details>
           <summary>Kalau ada yang mau diubah setelah jadi?</summary>
-          <p>Ada <span data-v="revisi">1x revisi gratis</span>, misalnya typo, foto yang ketukar, atau kalimat yang mau diganti. Mintanya paling lambat <span data-v="batasRevisi">3 hari</span> setelah link kami kirim.</p>
+          <p>Ada <span data-v="revisi">1x revisi gratis</span>, misalnya typo, foto yang ketukar, atau kalimat yang mau diganti. Chat kami di WhatsApp paling lambat <span data-v="batasRevisi">3 hari</span> setelah link dikirim.</p>
         </details>
         <details>
           <summary>Bayarnya lewat apa?</summary>
-          <p>Lewat halaman Lynk.id kami. Kami nggak pernah minta transfer ke rekening pribadi lewat chat. Kalau ada yang mengaku Foreverse dan minta itu, abaikan dan kabari kami.</p>
+          <p>QRIS atau e-wallet, di halaman pembayaran yang muncul setelah kamu mengisi formulir. Yang kamu bayar <span data-v="harga">Rp15.000</span>, tanpa biaya admin tambahan. Kami tidak pernah minta transfer ke rekening pribadi lewat chat. Kalau ada yang mengaku Foreverse dan minta itu, abaikan dan kabari kami.</p>
         </details>
         <details>
           <summary>Foto dan pesan saya dipakai untuk apa?</summary>
-          <p>Hanya untuk membuat suratmu. Isinya nggak kami pakai sebagai contoh dan nggak kami bagikan ke siapa pun. Linknya hanya kami kirim ke kamu. Detailnya ada di <a href="/kebijakan-privasi.html" style="color:var(--violet)">Kebijakan Privasi</a>.</p>
+          <p>Hanya untuk membuat suratmu. Isinya tidak kami pakai sebagai contoh dan tidak kami bagikan ke siapa pun. Link-nya memakai kode acak dan hanya dikirim ke kamu. Detailnya ada di <a href="/kebijakan-privasi.html">Kebijakan Privasi</a>.</p>
         </details>
         <details>
-          <summary>Linknya bisa dibuka sampai kapan?</summary>
-          <p>Linknya tetap aktif dan bisa dibuka lagi kapan saja. Kalau kamu mau linknya dihapus, bilang saja lewat WhatsApp. Kalau suatu saat Foreverse berhenti beroperasi, kami kabari jauh-jauh hari.</p>
+          <summary>Link-nya bisa dibuka sampai kapan?</summary>
+          <p>Tidak ada masa berlaku. Suratnya tetap bisa dibuka lagi kapan saja. Kalau kamu mau link-nya dihapus, bilang saja lewat WhatsApp. Kalau suatu saat Foreverse berhenti beroperasi, kami kabari jauh-jauh hari.</p>
         </details>
         <details>
           <summary>Dia perlu install aplikasi?</summary>
-          <p>Nggak. Linknya dibuka langsung di browser HP, Android maupun iPhone.</p>
+          <p>Tidak. Link-nya dibuka langsung di browser HP, Android maupun iPhone.</p>
         </details>
         <details>
           <summary>Momen saya belum ada temanya.</summary>
-          <p>Beberapa momen memang masih ditandai "Segera hadir". Kalau kamu butuh salah satunya, kabari kami lewat WhatsApp. Tema berikutnya kami kerjakan dari yang paling banyak diminta.</p>
+          <p>Tema baru terus ditambahkan. Kalau kamu butuh salah satu momen yang masih "segera hadir", kabari kami lewat WhatsApp. Momen yang paling banyak diminta kami kerjakan duluan.</p>
         </details>
       </div>
     </div>
   </section>
 
   <!-- ═════ PENUTUP ═════ -->
-  <section class="final center" id="kontak">
+  <section class="final" id="kontak">
     <div class="wrap">
       <span class="eyebrow">Mulai dari sini</span>
-      <h2 style="margin-top:12px;max-width:18ch">Sudah tahu momennya? Tinggal pilih temanya.</h2>
-      <p class="lede" style="margin-top:16px;max-width:46ch">Kalau masih ragu, tanya dulu lewat WhatsApp. Dibalas langsung oleh kami, bukan bot.</p>
+      <h2>Sudah tahu momennya? Tinggal pilih temanya.</h2>
+      <p class="lede">Masih ragu? Tanya dulu lewat WhatsApp.</p>
       <div class="final-cta">
         <a href="#momen" class="btn btn-main">Pilih momen</a>
         <a id="waFinal" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Tanya lewat WhatsApp</a>
@@ -658,7 +540,7 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
 
 <footer>
   <div class="wrap foot">
-    <span class="fb"><img src="/foreverse-logo.png" alt="">Foreverse · Surat digital, dirangkai manual. © 2026</span>
+    <span class="fb"><img src="/foreverse-logo.png" alt="">Foreverse © 2026</span>
     <div class="fl">
       <a id="fIg" href="#" target="_blank" rel="noopener">Instagram</a>
       <a id="fTt" href="#" target="_blank" rel="noopener">TikTok</a>
@@ -677,106 +559,73 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
 <script>
 (function(){
   "use strict";
-  var C = FOREVERSE_SITE, T = C.tema || {}, M = C.momen || [];
-
+  var C=FOREVERSE_SITE, T=C.tema||{}, M=C.momen||[];
   function $(id){ return document.getElementById(id); }
-  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
-    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
-  function wa(text){ return "https://wa.me/"+C.whatsapp+(text?"?text="+encodeURIComponent(text):""); }
-  function href(id,url){ var e=$(id); if(e&&url) e.href=url; }
-
-  /* angka di seluruh halaman */
-  document.querySelectorAll("[data-v]").forEach(function(el){
-    var v=C[el.getAttribute("data-v")]; if(v) el.textContent=v;
-  });
-
-  /* link */
-  href("ctaPrice",C.lynkOrder); href("pvOrder",C.lynkOrder);
-  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("fWa",wa(""));
-  href("float",wa("Halo Foreverse, saya mau tanya."));
-  href("fIg",C.instagram); href("fTt",C.tiktok);
-  href("fPrivasi",C.privasi); href("fSyarat",C.syarat);
-
-  function bg(el,t){
-    el.style.background="linear-gradient(150deg,"+t.warna[0]+","+t.warna[1]+")";
-    if(t.cover){ el.style.backgroundImage="url('"+t.cover+"')"; el.style.backgroundSize="cover"; el.style.backgroundPosition="center"; }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function wa(t){ return "https://wa.me/"+C.whatsapp+(t?"?text="+encodeURIComponent(t):""); }
+  function href(id,u){ var e=$(id); if(e&&u) e.href=u; }
+  function orderLink(temaId,momen){
+    var t=T[temaId]||{};
+    if(C.formPesan){
+      var q="tema="+encodeURIComponent(t.nama||"")+"&momen="+encodeURIComponent(momen||"");
+      return C.formPesan+(C.formPesan.indexOf("?")>-1?"&":"?")+q;
+    }
+    return wa("Halo Foreverse, saya mau pesan tema "+(t.nama||"")+(momen?" untuk momen "+momen:"")+".");
   }
 
-  /* hero: tumpukan sampul */
-  var stack=$("heroStack");
-  Object.keys(T).slice(0,3).forEach(function(k){
-    var d=document.createElement("div"); d.className="pc"; bg(d,T[k]); stack.appendChild(d);
-  });
+  document.querySelectorAll("[data-v]").forEach(function(el){ var v=C[el.getAttribute("data-v")]; if(v) el.textContent=v; });
+  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("fWa",wa("")); href("float",wa("Halo Foreverse, saya mau tanya."));
+  href("fIg",C.instagram); href("fTt",C.tiktok); href("fPrivasi",C.privasi); href("fSyarat",C.syarat);
 
   /* strip momen */
   var s=M.map(function(m){ return "<span>"+m.emoji+" "+esc(m.nama)+"</span>"; }).join("");
   $("strip").innerHTML=s+s;
 
-  /* contoh (preview) */
-  var current=null, keys=Object.keys(T);
-  var sw=$("pvSwitch");
-  keys.forEach(function(k){
-    var b=document.createElement("button"); b.type="button"; b.textContent=T[k].nama;
-    b.setAttribute("data-k",k); b.addEventListener("click",function(){ show(k); });
-    sw.appendChild(b);
-  });
-  function show(k){
-    var t=T[k]; if(!t||k===current) return; current=k;
+  /* contoh */
+  var current=null, currentMomen=M[0]?M[0].nama:"";
+  function show(k,momen){
+    var t=T[k]; if(!t) return;
+    if(momen) currentMomen=momen;
+    $("pvOrder").href=orderLink(k,currentMomen);
+    if(k===current) return; current=k;
     $("pvFrame").src=t.file; $("pvFrame").title="Contoh tema "+t.nama;
     $("pvFull").href=t.file; $("pvName").textContent=t.nama;
     $("pvFlow").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
-    sw.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-k")===k ? "true":"false"); });
   }
 
   /* momen → tema */
   var tabs=$("tabs"), cards=$("cards"), line=$("momentLine");
-
-  function card(k){
+  function card(k,momen){
     var t=T[k];
-    return '<article class="card">'+
-      '<div class="cov" data-k="'+k+'"></div>'+
-      '<div class="body">'+
-        '<span class="nm">'+esc(t.nama)+'</span>'+
-        '<p class="ds">'+esc(t.ringkas)+'</p>'+
-        '<div class="chips">'+t.isi.map(function(i){ return "<span>"+esc(i)+"</span>"; }).join("")+'</div>'+
-        '<div class="acts">'+
-          '<button type="button" class="btn btn-ghost" data-try="'+k+'">Coba contoh</button>'+
-          '<a class="btn btn-main" href="'+esc(C.lynkOrder)+'" target="_blank" rel="noopener">Pesan</a>'+
-        '</div>'+
-      '</div></article>';
+    return '<article class="card"><div class="cov" style="background-image:url(\''+esc(t.cover)+'\')"><span class="badge">Siap dipesan</span></div>'+
+      '<div class="body"><span class="nm">'+esc(t.nama)+'</span><p class="ds">'+esc(t.ringkas)+'</p>'+
+      '<div class="chips">'+t.isi.map(function(i){ return "<span>"+esc(i)+"</span>"; }).join("")+'</div>'+
+      '<div class="acts"><button type="button" class="btn btn-ghost" data-try="'+k+'">Coba contoh</button>'+
+      '<a class="btn btn-main" href="'+esc(orderLink(k,momen))+'" target="_blank" rel="noopener">Pesan</a></div></div></article>';
   }
-
-  function pick(i, focus){
+  function pick(i,focus){
     var m=M[i];
-    tabs.querySelectorAll(".tab").forEach(function(b,j){
-      b.setAttribute("aria-selected", j===i ? "true":"false"); b.tabIndex = j===i ? 0 : -1;
-    });
+    tabs.querySelectorAll(".tab").forEach(function(b,j){ b.setAttribute("aria-selected",j===i?"true":"false"); b.tabIndex=j===i?0:-1; });
     if(focus) tabs.children[i].focus();
-
     var n=m.tema.length;
-    line.innerHTML='<strong>'+m.emoji+' '+esc(m.nama)+'</strong><span>'+esc(m.baris)+
-      (n ? ' '+n+' tema tersedia.' : '')+'</span>';
-
+    line.innerHTML='<strong>'+m.emoji+' '+esc(m.nama)+'</strong><span>'+esc(m.baris)+(n?' '+n+' tema tersedia.':'')+'</span>';
     if(n){
-      cards.innerHTML=m.tema.map(card).join("");
-      cards.querySelectorAll(".cov").forEach(function(c){ bg(c,T[c.getAttribute("data-k")]); });
+      cards.innerHTML=m.tema.map(function(k){ return card(k,m.nama); }).join("")+
+        '<article class="card empty"><div class="cov">✨</div><div class="body"><span class="nm">Tema berikutnya</span>'+
+        '<p class="ds">Tema lain untuk '+esc(m.nama)+' sedang disiapkan. Punya ide? Ceritakan ke kami.</p>'+
+        '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
+        esc(wa("Halo Foreverse, saya punya ide tema untuk momen "+m.nama+"."))+'">Kirim ide</a></div></div></article>';
       cards.querySelectorAll("[data-try]").forEach(function(b){
-        b.addEventListener("click",function(){
-          show(b.getAttribute("data-try"));
-          $("contoh").scrollIntoView({behavior:"smooth",block:"start"});
-        });
+        b.addEventListener("click",function(){ show(b.getAttribute("data-try"),m.nama); $("contoh").scrollIntoView({behavior:"smooth",block:"start"}); });
       });
-      show(m.tema[0]);
+      show(m.tema[0],m.nama);
     } else {
       cards.innerHTML='<article class="card empty"><div class="cov">'+m.emoji+'</div><div class="body">'+
-        '<span class="nm">Segera hadir</span>'+
-        '<p class="ds">Tema untuk '+esc(m.nama)+' belum tersedia. Kalau kamu butuh, kabari kami. Momen yang paling banyak diminta kami kerjakan duluan.</p>'+
+        '<span class="nm">Segera hadir</span><p class="ds">Tema untuk '+esc(m.nama)+' sedang disiapkan. Kalau kamu butuh, kabari kami. Momen yang paling banyak diminta kami kerjakan duluan.</p>'+
         '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
-        esc(wa("Halo Foreverse, saya butuh tema untuk momen "+m.nama+"."))+'">Kabari saya</a></div>'+
-        '</div></article>';
+        esc(wa("Halo Foreverse, saya butuh tema untuk momen "+m.nama+"."))+'">Kabari saya</a></div></div></article>';
     }
   }
-
   M.forEach(function(m,i){
     var b=document.createElement("button");
     b.type="button"; b.className="tab"; b.setAttribute("role","tab");
@@ -790,13 +639,10 @@ footer{background:var(--ink-deep);color:rgba(251,250,247,.6);padding:40px 0 96px
   });
   if(M.length) pick(0);
 
-  /* tombol WA mengambang disembunyikan di bagian penutup */
+  /* WA mengambang disembunyikan di bagian penutup */
   var fl=$("float"), fin=$("kontak");
-  if("IntersectionObserver" in window && fl && fin){
-    new IntersectionObserver(function(es){ fl.classList.toggle("gone", es[0].isIntersecting); },{threshold:.2}).observe(fin);
-  }
+  if("IntersectionObserver" in window){ new IntersectionObserver(function(es){ fl.classList.toggle("gone",es[0].isIntersecting); },{threshold:.25}).observe(fin); }
 })();
 </script>
-
 </body>
 </html>
