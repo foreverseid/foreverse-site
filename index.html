@@ -35,7 +35,7 @@
 const FOREVERSE_SITE = {
 
   /* --- Link --- */
-  formPesan: "",                  // link formulir Tally. Kosong = tombol "Pesan" membuka WhatsApp
+  formPesan: "/pesan",            // halaman pemesanan sendiri. Kosong = tombol "Pesan" membuka WhatsApp
   whatsapp:  "6289512385393",     // format 62..., tanpa + dan spasi
   instagram: "https://instagram.com/foreverse.id",
   tiktok:    "https://tiktok.com/@foreverse.id",
@@ -391,7 +391,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
           <p class="lbl">Urutannya:</p>
           <ol class="flow" id="pvFlow"></ol>
           <div class="pv-acts">
-            <a id="pvOrder" class="btn btn-main" href="#" target="_blank" rel="noopener">Pesan tema ini</a>
+            <a id="pvOrder" class="btn btn-main" href="#">Pesan tema ini</a>
             <a id="pvFull" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
           </div>
           <p class="pv-fine">Nama dan pesan di contoh ini karangan (Amira &amp; Fatah), dan fotonya diganti ilustrasi. Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
@@ -567,7 +567,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   function orderLink(temaId,momen){
     var t=T[temaId]||{};
     if(C.formPesan){
-      var q="tema="+encodeURIComponent(t.nama||"")+"&momen="+encodeURIComponent(momen||"");
+      var q="tema="+encodeURIComponent(temaId)+"&momen="+encodeURIComponent(momen||"");
       return C.formPesan+(C.formPesan.indexOf("?")>-1?"&":"?")+q;
     }
     return wa("Halo Foreverse, saya mau pesan tema "+(t.nama||"")+(momen?" untuk momen "+momen:"")+".");
@@ -601,7 +601,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       '<div class="body"><span class="nm">'+esc(t.nama)+'</span><p class="ds">'+esc(t.ringkas)+'</p>'+
       '<div class="chips">'+t.isi.map(function(i){ return "<span>"+esc(i)+"</span>"; }).join("")+'</div>'+
       '<div class="acts"><button type="button" class="btn btn-ghost" data-try="'+k+'">Coba contoh</button>'+
-      '<a class="btn btn-main" href="'+esc(orderLink(k,momen))+'" target="_blank" rel="noopener">Pesan</a></div></div></article>';
+      '<a class="btn btn-main" href="'+esc(orderLink(k,momen))+'">Pesan</a></div></div></article>';
   }
   function pick(i,focus){
     var m=M[i];

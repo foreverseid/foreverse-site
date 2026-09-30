@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Suratmu sudah jadi · Foreverse</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FBFAF7">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#16161A; --ink-soft:#4A4852; --ink-faint:#83808C;
+  --cream:#FBFAF7; --cream-lift:#F5F3EE; --paper:#FFFFFF; --stone:#E4E2DC;
+  --violet:#3B3168; --violet-deep:#2C2450; --violet-soft:#6F63B8; --violet-tint:#EEEBF7;
+  --coral:#E8734A; --coral-deep:#C95A33; --gold:#F2C14E;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6}
+.wrap{max-width:38rem;margin:0 auto;padding:clamp(28px,7vw,64px) clamp(18px,5vw,28px) 80px}
+
+.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;margin-bottom:clamp(24px,6vw,44px)}
+
+/* ══ menunggu ══ */
+.tahap{display:none}
+.tahap.on{display:block}
+
+.putar{width:38px;height:38px;border:3px solid var(--stone);border-top-color:var(--violet);border-radius:50%;animation:putar .8s linear infinite}
+@keyframes putar{to{transform:rotate(360deg)}}
+.tunggu{text-align:center;padding:40px 0}
+.tunggu .putar{margin:0 auto 20px}
+.tunggu h1{font-family:var(--serif);font-weight:400;font-size:1.5rem;margin:0 0 8px}
+.tunggu p{margin:0;color:var(--ink-soft);font-size:.94rem}
+
+/* ══ berhasil ══ */
+.pita{
+  width:58px;height:58px;border-radius:50%;background:var(--violet-tint);
+  display:grid;place-items:center;margin-bottom:20px;
+}
+h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2.3rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 10px}
+.lede{margin:0 0 26px;color:var(--ink-soft);font-size:1.02rem}
+
+.kartu{background:var(--paper);border:1px solid var(--stone);border-radius:18px;padding:clamp(18px,4vw,24px);margin-bottom:14px}
+.kartu h2{font-size:.82rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px}
+
+.tautan{
+  display:flex;align-items:center;gap:10px;background:var(--cream);border:1.5px solid var(--stone);
+  border-radius:12px;padding:12px 14px;font-size:.95rem;word-break:break-all;line-height:1.45;
+}
+.tautan span{flex:1;min-width:0;font-weight:500}
+.salin{
+  flex:none;background:var(--violet);color:#fff;border:0;font:inherit;font-weight:600;font-size:.84rem;
+  padding:9px 15px;border-radius:9px;cursor:pointer;transition:background .16s;
+}
+.salin:hover{background:var(--violet-deep)}
+.salin.sudah{background:#2E8B57}
+
+.aksi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media (max-width:460px){ .aksi{grid-template-columns:1fr} }
+.tbl{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;font-size:.94rem;
+  border:0;border-radius:12px;padding:13px 18px;cursor:pointer;text-decoration:none;transition:background .16s,transform .12s;
+}
+.tbl:active{transform:translateY(1px)}
+.tbl-wa{background:#25D366;color:#fff}
+.tbl-wa:hover{background:#1FB855}
+.tbl-lihat{background:var(--coral);color:#fff}
+.tbl-lihat:hover{background:var(--coral-deep)}
+.tbl-garis{background:transparent;color:var(--violet);border:1.5px solid var(--stone)}
+.tbl-garis:hover{background:var(--cream-lift)}
+
+#qr[hidden]{display:none}
+#qr{display:grid;place-items:center;padding:16px;background:#fff;border-radius:12px;border:1px solid var(--stone);margin-top:14px}
+#qr canvas,#qr img{display:block}
+.qr-buka{background:none;border:0;font:inherit;font-size:.86rem;color:var(--violet);cursor:pointer;padding:10px 0 0;text-decoration:underline;text-underline-offset:3px}
+
+.tip{margin:0;font-size:.86rem;color:var(--ink-soft);line-height:1.6}
+.tip + .tip{margin-top:8px}
+.kecil{font-size:.8rem;color:var(--ink-faint);line-height:1.6}
+.kode{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--cream-lift);padding:2px 7px;border-radius:5px;font-size:.88em}
+
+.gagal-kotak{background:#FDECEA;border:1px solid #F2B8B1;color:#8C2B20;border-radius:14px;padding:18px 20px}
+.gagal-kotak h1{font-family:var(--serif);font-weight:400;font-size:1.35rem;margin:0 0 8px;color:#8C2B20}
+.gagal-kotak p{margin:0 0 14px;font-size:.94rem}
+
+.kaki{margin-top:30px;text-align:center}
+.kaki a{color:var(--violet);font-size:.88rem}
+@media (prefers-reduced-motion: reduce){ .putar{animation-duration:2.4s} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="merk" href="/">
+    <svg viewBox="0 0 64 48" width="26" height="20" aria-hidden="true">
+      <rect x="2" y="6" width="60" height="40" rx="6" fill="none" stroke="#3B3168" stroke-width="3.4"/>
+      <path d="M2 10l30 22 30-22" fill="none" stroke="#3B3168" stroke-width="3.4" stroke-linejoin="round"/>
+      <path d="M32 30c-5-5-11-8-11-14 0-4 3-6 6-6 2.4 0 4 1.3 5 3 1-1.7 2.6-3 5-3 3 0 6 2 6 6 0 6-6 9-11 14z" fill="#E8734A"/>
+    </svg>
+    Foreverse
+  </a>
+
+  <!-- ════ menunggu pembayaran ════ -->
+  <section class="tahap on" id="tMenunggu">
+    <div class="tunggu">
+      <div class="putar"></div>
+      <h1>Menunggu pembayaranmu</h1>
+      <p id="tekstunggu">Kalau sudah dibayar, halaman ini berubah sendiri. Tidak perlu di-refresh.</p>
+    </div>
+  </section>
+
+  <!-- ════ berhasil ════ -->
+  <section class="tahap" id="tJadi">
+    <div class="pita">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#3B3168" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+    <h1 class="judul">Suratnya sudah jadi.</h1>
+    <p class="lede">Tinggal kirim tautan di bawah ini ke <strong id="namaDia">dia</strong>.</p>
+
+    <div class="kartu">
+      <h2>Tautan suratmu</h2>
+      <div class="tautan">
+        <span id="tautanTeks"></span>
+        <button class="salin" id="tblSalin" type="button">Salin</button>
+      </div>
+      <div class="aksi">
+        <a class="tbl tbl-wa" id="tblWa" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.1-.7.1-.8 1-1 1.2-.4.2-.7.1a8 8 0 01-2.4-1.5 9 9 0 01-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4a3 3 0 00-.9 2.2c0 1.3.9 2.5 1 2.7s1.9 2.9 4.6 4a15 15 0 001.5.6c.7.2 1.3.2 1.7.1.6-.1 1.8-.7 2-1.4s.2-1.3.2-1.4-.2-.2-.4-.3zM12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1112 20.2z"/></svg>
+          Kirim lewat WhatsApp
+        </a>
+        <a class="tbl tbl-lihat" id="tblLihat" target="_blank" rel="noopener">Lihat dulu suratnya</a>
+      </div>
+      <button class="qr-buka" id="qrBuka" type="button">Tampilkan kode QR</button>
+      <div id="qr" hidden></div>
+    </div>
+
+    <div class="kartu" id="kartuEdit">
+      <h2>Kalau mau diubah</h2>
+      <p class="tip">Ada salah ketik atau mau ganti foto? Pakai tautan ini — khusus untukmu, berlaku 3 hari, boleh dipakai berkali-kali. Tautan suratnya tidak berubah.</p>
+      <div class="tautan" style="margin-top:12px">
+        <span id="editTeks"></span>
+        <button class="salin" id="tblSalinEdit" type="button">Salin</button>
+      </div>
+      <div class="aksi">
+        <a class="tbl tbl-garis" id="tblEdit">Ubah sekarang</a>
+      </div>
+      <p class="tip" style="margin-top:14px"><strong>Jangan kirim tautan edit ini ke dia</strong> — nanti kejutannya ketahuan.</p>
+    </div>
+
+    <div class="kartu">
+      <h2>Simpan juga</h2>
+      <p class="tip">Kedua tautan tadi sudah kami kirim ke <strong id="emailTeks">emailmu</strong>. Cek folder spam kalau tidak ketemu.</p>
+      <p class="tip">Kode pesananmu <span class="kode" id="kodeTeks"></span> — sebutkan ini kalau menghubungi kami.</p>
+    </div>
+
+    <p class="kecil" style="text-align:center;margin-top:22px">Terima kasih sudah memercayakan momen ini ke Foreverse.</p>
+  </section>
+
+  <!-- ════ gagal / belum ketemu ════ -->
+  <section class="tahap" id="tGagal">
+    <div class="gagal-kotak">
+      <h1>Belum bisa kami tampilkan</h1>
+      <p id="gagalPesan">Pesanan ini tidak ditemukan.</p>
+      <a class="tbl tbl-garis" href="/pesan" style="background:#fff">Kembali ke formulir</a>
+    </div>
+    <p class="kecil" style="margin-top:18px">Kalau kamu sudah membayar tapi halaman ini tetap begini, hubungi kami lewat WhatsApp dengan menyebutkan kode pesananmu. Uangmu aman dan suratnya tetap kami buatkan.</p>
+  </section>
+
+  <div class="kaki"><a href="/">← Kembali ke Foreverse</a></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var kode = new URLSearchParams(location.search).get("kode") || "";
+  var asal = location.origin;
+  var coba = 0;
+
+  function tahap(id){
+    ["tMenunggu","tJadi","tGagal"].forEach(function(t){ $(t).classList.toggle("on", t === id); });
+  }
+  function gagal(t){ $("gagalPesan").textContent = t; tahap("tGagal"); }
+
+  if(!kode){ gagal("Alamat halaman ini tidak lengkap, kode pesanannya tidak terbaca."); return; }
+
+  function selesai(data){
+    var tautan = asal + "/s/" + data.kode;
+
+    /* token edit hanya ada di peramban pembeli, bukan dari server —
+       supaya penerima yang memegang tautan surat tidak bisa mengubahnya */
+    var token = "";
+    try{ token = localStorage.getItem("fv-edit-" + data.kode) || ""; }catch(_){}
+    var edit = token ? asal + "/edit/" + token : "";
+
+    $("tautanTeks").textContent = tautan;
+    $("tblLihat").href = tautan;
+    $("tblWa").href = "https://wa.me/?text=" + encodeURIComponent("Ada sesuatu untukmu. Buka pelan-pelan, ya.\n" + tautan);
+    $("kodeTeks").textContent = data.kode;
+    if(data.penerima) $("namaDia").textContent = data.penerima;
+
+    if(edit){
+      $("editTeks").textContent = edit;
+      $("tblEdit").href = edit;
+    }else{
+      $("kartuEdit").innerHTML =
+        '<h2>Kalau mau diubah</h2>' +
+        '<p class="tip">Tautan untuk mengubah isi surat sudah kami kirim ke emailmu, berlaku 3 hari. ' +
+        'Tautan itu tidak kami tampilkan di sini karena halaman ini bisa terbuka di HP siapa saja yang memegang tautan suratnya.</p>';
+    }
+    tahap("tJadi");
+    siapkanQr(tautan);
+  }
+
+  function salinKe(tombol, teks){
+    tombol.addEventListener("click", function(){
+      var isi = teks();
+      function sudah(){
+        tombol.textContent = "Tersalin"; tombol.classList.add("sudah");
+        setTimeout(function(){ tombol.textContent = "Salin"; tombol.classList.remove("sudah"); }, 1800);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(isi).then(sudah, cadangan);
+      } else cadangan();
+      function cadangan(){
+        var t = document.createElement("textarea");
+        t.value = isi; t.style.position = "fixed"; t.style.opacity = "0";
+        document.body.appendChild(t); t.select();
+        try{ document.execCommand("copy"); sudah(); }catch(_){ prompt("Salin tautan ini:", isi); }
+        t.remove();
+      }
+    });
+  }
+  salinKe($("tblSalin"), function(){ return $("tautanTeks").textContent; });
+  salinKe($("tblSalinEdit"), function(){ return $("editTeks").textContent; });
+
+  /* kode QR dibuat di HP-mu sendiri, tidak dikirim ke mana-mana */
+  function siapkanQr(tautan){
+    $("qrBuka").addEventListener("click", function(){
+      var kotak = $("qr");
+      if(!kotak.hidden){ kotak.hidden = true; this.textContent = "Tampilkan kode QR"; return; }
+      kotak.hidden = false; this.textContent = "Sembunyikan kode QR";
+      if(kotak.dataset.jadi) return;
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+      s.onload = function(){
+        new QRCode(kotak, { text: tautan, width: 188, height: 188, correctLevel: QRCode.CorrectLevel.M });
+        kotak.dataset.jadi = "1";
+      };
+      s.onerror = function(){ kotak.textContent = "Kode QR tidak bisa dimuat. Pakai tautannya saja, ya."; };
+      document.head.appendChild(s);
+    });
+  }
+
+  function cek(){
+    fetch("/api/status?kode=" + encodeURIComponent(kode))
+      .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+      .then(function(h){
+        if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Pesanan tidak ditemukan.");
+        if(h.j.status === "lunas"){ selesai(h.j); return; }
+        if(h.j.status === "gagal"){
+          gagal("Pembayarannya tidak jadi atau kedaluwarsa. Isian kamu masih tersimpan — silakan pesan ulang.");
+          return;
+        }
+        coba++;
+        if(coba === 6) $("tekstunggu").textContent = "Masih menunggu konfirmasi dari bank. Biasanya di bawah satu menit.";
+        if(coba === 20) $("tekstunggu").textContent = "Agak lama, tapi jangan tutup halaman ini dulu. Kalau sudah terbayar, tautannya akan muncul di sini.";
+        if(coba > 60){
+          gagal("Pembayarannya belum terkonfirmasi sampai sekarang. Kalau uangmu sudah terpotong, hubungi kami lewat WhatsApp dengan kode pesanan " + kode + ".");
+          return;
+        }
+        setTimeout(cek, coba < 10 ? 2500 : 5000);
+      })
+      .catch(function(e){ gagal(e.message || "Pesanan tidak ditemukan."); });
+  }
+  cek();
+})();
+</script>
+</body>
+</html>

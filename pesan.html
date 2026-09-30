@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Isi suratmu · Foreverse</title>
+<meta name="description" content="Tulis pesanmu, pilih fotonya, lihat hasilnya langsung, lalu bayar Rp15.000.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FBFAF7">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#16161A; --ink-soft:#4A4852; --ink-faint:#83808C;
+  --cream:#FBFAF7; --cream-lift:#F5F3EE; --paper:#FFFFFF; --stone:#E4E2DC;
+  --violet:#3B3168; --violet-deep:#2C2450; --violet-soft:#6F63B8; --violet-tint:#EEEBF7;
+  --coral:#E8734A; --coral-deep:#C95A33; --blush:#E8A5B0; --blush-tint:#FBEDEF; --gold:#F2C14E;
+  --merah:#C0392B;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --r:16px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+
+/* ══ kepala ══ */
+.bar{
+  position:sticky;top:0;z-index:40;background:rgba(251,250,247,.9);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);
+}
+.bar-in{max-width:1200px;margin:0 auto;padding:12px clamp(16px,4vw,32px);display:flex;align-items:center;gap:14px}
+.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;letter-spacing:-.01em}
+.merk svg{display:block}
+.bar-sisa{margin-left:auto;display:flex;align-items:center;gap:14px}
+.harga-cip{
+  font-size:.82rem;font-weight:600;background:var(--violet-tint);color:var(--violet-deep);
+  padding:5px 12px;border-radius:999px;white-space:nowrap;
+}
+
+/* ══ tata letak ══ */
+.wrap{max-width:1200px;margin:0 auto;padding:clamp(20px,4vw,40px) clamp(16px,4vw,32px) 120px}
+.kepala{max-width:34rem;margin-bottom:clamp(20px,4vw,34px)}
+.kepala h1{
+  font-family:var(--serif);font-weight:400;font-size:clamp(1.65rem,4.6vw,2.4rem);
+  line-height:1.15;letter-spacing:-.02em;margin:0 0 10px;
+}
+.kepala p{margin:0;color:var(--ink-soft);font-size:clamp(.95rem,2.3vw,1.02rem)}
+.duo{display:grid;grid-template-columns:1fr;gap:clamp(20px,4vw,40px)}
+@media (min-width:1000px){ .duo{grid-template-columns:minmax(0,1fr) 400px} }
+
+/* ══ kartu ══ */
+.blok{
+  background:var(--paper);border:1px solid var(--stone);border-radius:var(--r);
+  padding:clamp(18px,3.4vw,26px);margin-bottom:16px;
+}
+.blok > h2{
+  font-family:var(--serif);font-weight:400;font-size:1.22rem;letter-spacing:-.01em;
+  margin:0 0 4px;display:flex;align-items:center;gap:10px;
+}
+.blok > h2 .n{
+  flex:none;width:26px;height:26px;border-radius:50%;background:var(--violet);color:#fff;
+  font-family:var(--sans);font-size:.78rem;font-weight:600;display:grid;place-items:center;
+}
+.blok > .jelas{margin:0 0 18px 36px;color:var(--ink-faint);font-size:.88rem;line-height:1.55}
+@media (max-width:520px){ .blok > .jelas{margin-left:0} }
+
+/* ══ isian ══ */
+.baris{margin-bottom:16px}
+.baris:last-child{margin-bottom:0}
+.dua{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){ .dua{grid-template-columns:1fr} }
+label{display:block;font-size:.87rem;font-weight:600;margin-bottom:5px}
+.bantu{font-size:.8rem;color:var(--ink-faint);margin:4px 0 0;line-height:1.5}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=url],textarea{
+  width:100%;font:inherit;font-size:1rem;color:var(--ink);background:var(--cream);
+  border:1.5px solid var(--stone);border-radius:11px;padding:11px 13px;
+  transition:border-color .16s,background .16s;
+}
+input:focus,textarea:focus{outline:none;border-color:var(--violet-soft);background:var(--paper)}
+textarea{resize:vertical;min-height:88px;line-height:1.6}
+.hitung{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:5px}
+.hitung .angka{font-size:.78rem;color:var(--ink-faint);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hitung .angka.dekat{color:var(--coral-deep)}
+.hitung .angka.penuh{color:var(--merah);font-weight:600}
+.galat{color:var(--merah);font-size:.82rem;margin-top:5px;display:none}
+.salah input,.salah textarea{border-color:var(--merah)}
+.salah .galat{display:block}
+
+/* ══ foto ══ */
+.fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:520px){ .fotos{grid-template-columns:1fr} }
+.fotokartu{border:1.5px dashed var(--stone);border-radius:13px;padding:10px;background:var(--cream)}
+.fotokartu.isi{border-style:solid;border-color:var(--violet-soft);background:var(--paper)}
+.jendela{
+  position:relative;aspect-ratio:3/3.6;border-radius:9px;overflow:hidden;background:var(--cream-lift);
+  display:grid;place-items:center;cursor:pointer;
+}
+.jendela img{width:100%;height:100%;object-fit:cover;display:block}
+.jendela .ajak{text-align:center;color:var(--ink-faint);font-size:.8rem;padding:10px;line-height:1.45}
+.jendela .ajak b{display:block;color:var(--violet);font-size:.86rem;margin-bottom:3px}
+.ganti{
+  position:absolute;right:6px;bottom:6px;background:rgba(22,22,26,.78);color:#fff;border:0;
+  font:inherit;font-size:.72rem;font-weight:600;padding:5px 9px;border-radius:7px;cursor:pointer;
+}
+.fotokartu input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.fotokartu .ket{margin-top:8px}
+.fotokartu .ket input{padding:8px 10px;font-size:.88rem}
+.sibuk{position:absolute;inset:0;background:rgba(255,255,255,.82);display:grid;place-items:center;font-size:.8rem;color:var(--violet)}
+
+/* ══ setuju ══ */
+.setuju{display:flex;gap:11px;align-items:flex-start;background:var(--violet-tint);border-radius:12px;padding:14px 15px}
+.setuju input{margin:3px 0 0;width:17px;height:17px;flex:none;accent-color:var(--violet)}
+.setuju label{font-weight:400;font-size:.88rem;line-height:1.55;margin:0;color:var(--ink-soft)}
+.setuju a{color:var(--violet)}
+
+/* ══ tombol ══ */
+.tbl{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;
+  border:0;border-radius:12px;padding:14px 22px;cursor:pointer;text-decoration:none;
+  transition:transform .12s,background .16s,box-shadow .16s;
+}
+.tbl:active{transform:translateY(1px)}
+.tbl-utama{background:var(--coral);color:#fff;box-shadow:0 5px 16px -6px rgba(232,115,74,.65)}
+.tbl-utama:hover{background:var(--coral-deep)}
+.tbl-utama[disabled]{background:var(--stone);color:var(--ink-faint);box-shadow:none;cursor:not-allowed}
+.tbl-garis{background:transparent;color:var(--violet);border:1.5px solid var(--stone)}
+.tbl-lebar{width:100%}
+
+/* ══ kirim ══ */
+.kirim{background:var(--paper);border:1px solid var(--stone);border-radius:var(--r);padding:clamp(18px,3.4vw,26px)}
+.rincian{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--cream-lift);font-size:.92rem}
+.rincian:last-of-type{border:0;padding-bottom:16px}
+.rincian .rp{font-weight:600;font-variant-numeric:tabular-nums}
+.rincian.total{font-size:1.06rem;padding-top:14px;border-top:1.5px solid var(--stone);border-bottom:0}
+.rincian.total .rp{font-size:1.24rem;color:var(--violet-deep)}
+.catatan-kirim{margin:12px 0 0;font-size:.8rem;color:var(--ink-faint);line-height:1.55;text-align:center}
+.pesan-galat{
+  background:#FDECEA;border:1px solid #F2B8B1;color:#8C2B20;border-radius:11px;
+  padding:12px 14px;font-size:.88rem;line-height:1.55;margin-bottom:14px;display:none;
+}
+.pesan-galat.tampil{display:block}
+.pesan-oke{background:#E8F6EE;border:1px solid #A8DCC0;color:#1E6B42;border-radius:11px;padding:12px 14px;font-size:.88rem;margin-bottom:14px;display:none}
+.pesan-oke.tampil{display:block}
+
+/* ══ pratinjau ══ */
+.sisi{position:relative}
+@media (min-width:1000px){ .sisi-in{position:sticky;top:84px} }
+.sisi h2{font-family:var(--serif);font-weight:400;font-size:1.1rem;margin:0 0 4px}
+.sisi .jelas{margin:0 0 14px;color:var(--ink-faint);font-size:.84rem;line-height:1.5}
+.hp{
+  position:relative;margin:0 auto;width:100%;max-width:310px;aspect-ratio:9/18.6;
+  background:#16161A;border-radius:34px;padding:9px;box-shadow:0 22px 50px -24px rgba(22,22,26,.5);
+}
+.hp iframe{width:100%;height:100%;border:0;border-radius:26px;background:var(--cream);display:block}
+.hp .poni{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:84px;height:18px;background:#16161A;border-radius:0 0 11px 11px;z-index:2}
+.pv-kaki{margin:12px 0 0;text-align:center;font-size:.78rem;color:var(--ink-faint);line-height:1.5}
+
+/* pratinjau di HP: lembar penuh */
+.buka-pv{
+  display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:45;
+  background:var(--violet);color:#fff;border:0;font:inherit;font-weight:600;font-size:.9rem;
+  padding:13px 22px;border-radius:999px;box-shadow:0 10px 26px -8px rgba(59,49,104,.7);cursor:pointer;
+}
+@media (max-width:999px){
+  .buka-pv{display:inline-flex;align-items:center;gap:8px}
+  .sisi{
+    position:fixed;inset:0;z-index:60;background:var(--cream);padding:16px;overflow:auto;
+    transform:translateY(100%);transition:transform .3s ease;visibility:hidden;
+  }
+  .sisi.buka{transform:none;visibility:visible}
+  .tutup-pv{
+    display:block;position:sticky;top:0;z-index:2;margin:0 0 12px auto;
+    background:var(--violet);color:#fff;border:0;font:inherit;font-weight:600;font-size:.86rem;
+    padding:10px 18px;border-radius:999px;cursor:pointer;
+  }
+  .hp{max-width:290px}
+}
+@media (min-width:1000px){ .tutup-pv{display:none} }
+
+/* ══ tirai memuat ══ */
+.tirai{position:fixed;inset:0;z-index:80;background:rgba(251,250,247,.94);display:none;place-items:center;text-align:center;padding:24px}
+.tirai.tampil{display:grid}
+.tirai p{margin:14px 0 0;color:var(--ink-soft);font-size:.94rem}
+.putar{width:34px;height:34px;border:3px solid var(--stone);border-top-color:var(--violet);border-radius:50%;animation:putar .8s linear infinite;margin:0 auto}
+@keyframes putar{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){ .putar{animation-duration:2s} .sisi{transition:none} }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="merk" href="/">
+      <svg viewBox="0 0 64 48" width="26" height="20" aria-hidden="true">
+        <rect x="2" y="6" width="60" height="40" rx="6" fill="none" stroke="#3B3168" stroke-width="3.4"/>
+        <path d="M2 10l30 22 30-22" fill="none" stroke="#3B3168" stroke-width="3.4" stroke-linejoin="round"/>
+        <path d="M32 30c-5-5-11-8-11-14 0-4 3-6 6-6 2.4 0 4 1.3 5 3 1-1.7 2.6-3 5-3 3 0 6 2 6 6 0 6-6 9-11 14z" fill="#E8734A"/>
+      </svg>
+      Foreverse
+    </a>
+    <div class="bar-sisa">
+      <span class="harga-cip" id="cipHarga">Rp15.000</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="kepala">
+    <h1 id="judul">Isi kotak kejutannya</h1>
+    <p id="subjudul">Tulis apa adanya. Yang kamu ketik dipasang persis seperti itu, dan hasilnya langsung kelihatan di sebelah.</p>
+  </div>
+
+  <div class="duo">
+    <!-- ════════ kolom formulir ════════ -->
+    <form id="form" novalidate>
+
+      <section class="blok">
+        <h2><span class="n">1</span> Nama kalian berdua</h2>
+        <p class="jelas">Nama panggilan lebih hangat daripada nama lengkap.</p>
+        <div class="dua">
+          <div class="baris" data-f="penerima">
+            <label for="penerima">Nama dia</label>
+            <input id="penerima" type="text" maxlength="20" autocomplete="off" placeholder="Amira">
+            <div class="hitung"><span></span><span class="angka"></span></div>
+            <p class="galat">Nama dia belum diisi.</p>
+          </div>
+          <div class="baris" data-f="pengirim">
+            <label for="pengirim">Nama kamu</label>
+            <input id="pengirim" type="text" maxlength="20" autocomplete="off" placeholder="Fatah">
+            <div class="hitung"><span></span><span class="angka"></span></div>
+            <p class="galat">Nama kamu belum diisi.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="blok">
+        <h2><span class="n">2</span> Pesanmu</h2>
+        <p class="jelas">Tiga bagian, muncul satu per satu di kartu ucapan. Enter untuk baris baru juga dipakai persis.</p>
+        <div class="baris" data-f="pesan1">
+          <label for="pesan1">Bagian 1 — pembuka</label>
+          <textarea id="pesan1" maxlength="220" placeholder="Selamat ulang tahun, …"></textarea>
+          <div class="hitung"><span></span><span class="angka"></span></div>
+          <p class="galat">Bagian 1 belum diisi.</p>
+        </div>
+        <div class="baris" data-f="pesan2">
+          <label for="pesan2">Bagian 2 — isi <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <textarea id="pesan2" maxlength="220" placeholder="Tahun ini kamu banyak berjuang, dan aku lihat semuanya…"></textarea>
+          <div class="hitung"><span></span><span class="angka"></span></div>
+        </div>
+        <div class="baris" data-f="pesan3">
+          <label for="pesan3">Bagian 3 — penutup <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <textarea id="pesan3" maxlength="220" placeholder="Di umur yang baru, semoga…"></textarea>
+          <div class="hitung"><span></span><span class="angka"></span></div>
+        </div>
+      </section>
+
+      <section class="blok">
+        <h2><span class="n">3</span> Tiga foto</h2>
+        <p class="jelas">Foto tegak paling bagus. Fotonya dikecilkan otomatis di HP-mu sebelum dikirim, jadi tidak boros kuota. Minimal satu foto.</p>
+        <div class="fotos" id="fotos"></div>
+        <p class="galat" id="galatFoto" style="display:none">Paling tidak satu foto harus dipilih.</p>
+      </section>
+
+      <section class="blok">
+        <h2><span class="n">4</span> Tanggal</h2>
+        <p class="jelas">Dipakai untuk menghitung umurnya dan berapa hari yang sudah dia jalani.</p>
+        <div class="dua">
+          <div class="baris" data-f="lahir">
+            <label for="lahir">Tanggal lahir dia</label>
+            <input id="lahir" type="date">
+            <p class="galat">Tanggal lahir belum diisi.</p>
+          </div>
+          <div class="baris" data-f="kenal">
+            <label for="kenal">Sejak kapan kalian kenal? <span style="font-weight:400;color:var(--ink-faint)">(opsional)</span></label>
+            <input id="kenal" type="date">
+            <p class="bantu">Kalau diisi, muncul hitungan "… hari di antaranya, kita saling kenal".</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="blok">
+        <h2><span class="n">5</span> Harapan dan pesan rahasia</h2>
+        <p class="jelas">Harapan muncul setelah dia memejamkan mata. Pesan rahasia tersembunyi di balik kartu terakhir.</p>
+        <div class="baris" data-f="harapan">
+          <label for="harapan">Harapanmu untuk dia</label>
+          <input id="harapan" type="text" maxlength="80" placeholder="Semoga yang kamu semogakan tahun ini jadi nyata.">
+          <div class="hitung"><span></span><span class="angka"></span></div>
+        </div>
+        <div class="baris" data-f="rahasia">
+          <label for="rahasia">Pesan rahasia di balik kartu</label>
+          <textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Kado aslinya aku kasih pas kita ketemu nanti."></textarea>
+          <div class="hitung"><span></span><span class="angka"></span></div>
+        </div>
+      </section>
+
+      <section class="blok">
+        <h2><span class="n">6</span> Lagu <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
+        <p class="jelas">Tempel link YouTube-nya. Pemutar lagunya muncul di bagian akhir surat.</p>
+        <div class="baris" data-f="lagu">
+          <label for="lagu">Link lagu dari YouTube</label>
+          <input id="lagu" type="url" maxlength="200" inputmode="url" placeholder="https://youtu.be/...">
+          <p class="bantu">Kalau dikosongkan, surat tetap punya musik kotak musik bawaan yang bisa dimatikan.</p>
+        </div>
+      </section>
+
+      <section class="blok" id="blokKontak">
+        <h2><span class="n">7</span> Ke mana tautannya dikirim?</h2>
+        <p class="jelas">Tautan suratnya langsung muncul di layar setelah bayar. Salinannya juga kami kirim ke email ini, supaya tidak hilang.</p>
+        <div class="baris" data-f="email">
+          <label for="email">Email kamu</label>
+          <input id="email" type="email" maxlength="120" inputmode="email" autocomplete="email" placeholder="kamu@email.com">
+          <p class="galat">Email belum benar.</p>
+        </div>
+        <div class="baris" data-f="wa">
+          <label for="wa">Nomor WhatsApp <span style="font-weight:400;color:var(--ink-faint)">(opsional)</span></label>
+          <input id="wa" type="tel" maxlength="24" inputmode="tel" placeholder="0812xxxxxxx">
+          <p class="bantu">Hanya dipakai kalau ada kendala dengan pesananmu.</p>
+        </div>
+      </section>
+
+      <section class="blok" id="blokSetuju">
+        <div class="setuju">
+          <input id="setuju" type="checkbox">
+          <label for="setuju">Aku sudah membaca ulang semuanya, paham pesanku dipasang persis seperti yang kutulis, dan setuju dengan <a href="/syarat-ketentuan.html" target="_blank" rel="noopener">Syarat &amp; Ketentuan</a> serta <a href="/kebijakan-privasi.html" target="_blank" rel="noopener">Kebijakan Privasi</a> Foreverse.</label>
+        </div>
+      </section>
+
+      <section class="kirim">
+        <div class="pesan-galat" id="kabarGalat"></div>
+        <div class="pesan-oke" id="kabarOke"></div>
+
+        <div id="rincianBayar">
+          <div class="rincian"><span>Surat digital — Kotak Kejutan</span><span class="rp">Rp15.000</span></div>
+          <div class="rincian"><span>Biaya layanan &amp; pembayaran</span><span class="rp" style="color:var(--violet-soft)">Ditanggung kami</span></div>
+          <div class="rincian total"><span>Yang kamu bayar</span><span class="rp">Rp15.000</span></div>
+        </div>
+
+        <button class="tbl tbl-utama tbl-lebar" id="tblKirim" type="submit" style="margin-top:18px">Lanjut ke pembayaran</button>
+        <p class="catatan-kirim" id="catatanKirim">Pembayaran lewat QRIS — bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa pun. Jendelanya muncul di halaman ini juga.</p>
+      </section>
+    </form>
+
+    <!-- ════════ kolom pratinjau ════════ -->
+    <aside class="sisi" id="sisi">
+      <button class="tutup-pv" type="button" id="tutupPv">Tutup contoh</button>
+      <div class="sisi-in">
+        <h2>Begini jadinya</h2>
+        <p class="jelas">Berubah sendiri saat kamu mengetik. Coba tarik pitanya.</p>
+        <div class="hp">
+          <span class="poni"></span>
+          <iframe id="pv" src="/surat.html#pratinjau" title="Contoh surat"></iframe>
+        </div>
+        <p class="pv-kaki">Ini contoh yang bisa dipakai beneran. Setelah bayar, isinya sama persis.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<button class="buka-pv" id="bukaPv" type="button">
+  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+  Lihat contohnya
+</button>
+
+<div class="tirai" id="tirai">
+  <div>
+    <div class="putar"></div>
+    <p id="tiraiPesan">Menyiapkan pembayaran…</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var BATAS = { penerima:20, pengirim:20, pesan:220, ket:40, harapan:80, rahasia:120 };
+  var MODE_EDIT = /^\/edit\//.test(location.pathname);
+  var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
+
+  /* ══ 1 · kartu foto ══ */
+  var FOTO = [null,null,null];          // {data, mime, ket} atau null
+  var FOTO_ADA = [null,null,null];      // src lama dari server saat mode edit
+
+  (function buatFoto(){
+    var bungkus = $("fotos");
+    for(var i=0;i<3;i++){
+      var d = document.createElement("div");
+      d.className = "fotokartu"; d.dataset.i = i;
+      d.innerHTML =
+        '<div class="jendela" data-buka="'+i+'">'+
+          '<div class="ajak"><b>Foto '+(i+1)+'</b>Ketuk untuk pilih</div>'+
+        '</div>'+
+        '<input type="file" accept="image/*" data-file="'+i+'">'+
+        '<div class="ket"><input type="text" maxlength="40" placeholder="Keterangan (opsional)" data-ket="'+i+'"></div>';
+      bungkus.appendChild(d);
+    }
+    bungkus.addEventListener("click", function(e){
+      var t = e.target.closest("[data-buka]");
+      if(t) bungkus.querySelector('[data-file="'+t.dataset.buka+'"]').click();
+    });
+    bungkus.addEventListener("change", function(e){
+      var f = e.target.closest("[data-file]");
+      if(f && f.files && f.files[0]) ambilFoto(+f.dataset.file, f.files[0]);
+    });
+    bungkus.addEventListener("input", function(e){
+      if(e.target.closest("[data-ket]")) dorong();
+    });
+  })();
+
+  function kartu(i){ return document.querySelector('.fotokartu[data-i="'+i+'"]'); }
+
+  function ambilFoto(i, berkas){
+    if(!/^image\//.test(berkas.type)){ pesanGalat("File itu bukan gambar. Pilih foto, ya."); return; }
+    var k = kartu(i), jend = k.querySelector(".jendela");
+    var sibuk = document.createElement("div"); sibuk.className = "sibuk"; sibuk.textContent = "Mengecilkan…";
+    jend.appendChild(sibuk);
+
+    kecilkan(berkas, function(hasil, galat){
+      sibuk.remove();
+      if(galat){ pesanGalat("Fotonya tidak bisa dibaca. Coba foto lain."); return; }
+      FOTO[i] = { data: hasil, mime: "image/jpeg", ket: "" };
+      FOTO_ADA[i] = null;
+      jend.innerHTML = '<img src="'+hasil+'" alt=""><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
+      k.classList.add("isi");
+      $("galatFoto").style.display = "none";
+      dorong();
+    });
+  }
+
+  /* kecilkan foto di HP: sisi terpanjang 1400px, mutu 0.82 */
+  function kecilkan(berkas, sudah){
+    var url = URL.createObjectURL(berkas);
+    var img = new Image();
+    img.onload = function(){
+      var MAKS = 1400, w = img.naturalWidth, h = img.naturalHeight;
+      var s = Math.min(1, MAKS / Math.max(w,h));
+      var c = document.createElement("canvas");
+      c.width = Math.round(w*s); c.height = Math.round(h*s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      var mutu = 0.82, out = c.toDataURL("image/jpeg", mutu);
+      while(out.length > 900000 && mutu > 0.45){ mutu -= 0.1; out = c.toDataURL("image/jpeg", mutu); }
+      sudah(out);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); sudah(null, true); };
+    img.src = url;
+  }
+
+  /* ══ 2 · penghitung karakter ══ */
+  var berhitung = [
+    ["penerima", BATAS.penerima], ["pengirim", BATAS.pengirim],
+    ["pesan1", BATAS.pesan], ["pesan2", BATAS.pesan], ["pesan3", BATAS.pesan],
+    ["harapan", BATAS.harapan], ["rahasia", BATAS.rahasia]
+  ];
+  berhitung.forEach(function(p){
+    var el = $(p[0]), maks = p[1];
+    var tampil = el.closest(".baris").querySelector(".angka");
+    function segar(){
+      var n = el.value.length;
+      tampil.textContent = n + " / " + maks;
+      tampil.className = "angka" + (n >= maks ? " penuh" : n > maks*0.88 ? " dekat" : "");
+    }
+    el.addEventListener("input", segar); segar();
+  });
+
+  /* ══ 3 · pratinjau langsung ══ */
+  var pv = $("pv"), pvSiap = false, tunda = null;
+
+  addEventListener("message", function(e){
+    if(e.data && e.data.jenis === "foreverse-siap"){ pvSiap = true; kirimKePv(); }
+  });
+
+  function isiSekarang(){
+    return {
+      penerima: $("penerima").value.trim() || "Nama dia",
+      pengirim: $("pengirim").value.trim() || "Nama kamu",
+      pesan: [$("pesan1").value, $("pesan2").value, $("pesan3").value],
+      foto: [0,1,2].map(function(i){
+        var ket = (document.querySelector('[data-ket="'+i+'"]')||{}).value || "";
+        if(FOTO[i]) return { src: FOTO[i].data, ket: ket };
+        if(FOTO_ADA[i]) return { src: FOTO_ADA[i], ket: ket };
+        return null;
+      }).filter(Boolean),
+      tanggalLahir: $("lahir").value || "",
+      tanggalKenal: $("kenal").value || "",
+      harapan: $("harapan").value,
+      rahasia: $("rahasia").value,
+      lagu: { file:"", youtube: $("lagu").value.trim(), mulai:0 }
+    };
+  }
+
+  function kirimKePv(){
+    if(!pvSiap || !pv.contentWindow) return;
+    var isi = isiSekarang();
+    if(!isi.foto.length) isi.foto = [
+      { src:"demo:pantai", ket:"Fotomu muncul di sini" },
+      { src:"demo:kopi",   ket:"Geser untuk lihat berikutnya" },
+      { src:"demo:hujan",  ket:"Tiga foto, tiga cerita" }
+    ];
+    if(!isi.tanggalLahir) isi.tanggalLahir = "DEMO-24";
+    pv.contentWindow.postMessage({ jenis:"foreverse-isi", isi: isi }, "*");
+  }
+
+  function dorong(){ clearTimeout(tunda); tunda = setTimeout(kirimKePv, 350); }
+  $("form").addEventListener("input", dorong);
+  $("form").addEventListener("change", dorong);
+
+  /* pratinjau di layar kecil */
+  $("bukaPv").addEventListener("click", function(){ $("sisi").classList.add("buka"); document.body.style.overflow="hidden"; });
+  $("tutupPv").addEventListener("click", function(){ $("sisi").classList.remove("buka"); document.body.style.overflow=""; });
+
+  /* ══ 4 · kabar ══ */
+  function pesanGalat(t){
+    var b = $("kabarGalat"); b.textContent = t; b.classList.add("tampil");
+    $("kabarOke").classList.remove("tampil");
+    b.scrollIntoView({ behavior:"smooth", block:"center" });
+  }
+  function pesanOke(t){
+    var b = $("kabarOke"); b.textContent = t; b.classList.add("tampil");
+    $("kabarGalat").classList.remove("tampil");
+  }
+  function bersihKabar(){ $("kabarGalat").classList.remove("tampil"); $("kabarOke").classList.remove("tampil"); }
+  function tirai(on, t){ $("tirai").classList.toggle("tampil", !!on); if(t) $("tiraiPesan").textContent = t; }
+
+  /* ══ 5 · periksa isian ══ */
+  function tandai(nama, salah){
+    var b = document.querySelector('.baris[data-f="'+nama+'"]');
+    if(b) b.classList.toggle("salah", !!salah);
+  }
+
+  function periksa(){
+    var kurang = [];
+    [["penerima","penerima"],["pengirim","pengirim"],["pesan1","pesan1"],["lahir","lahir"]].forEach(function(p){
+      var kosong = !$(p[0]).value.trim();
+      tandai(p[1], kosong);
+      if(kosong) kurang.push(p[1]);
+    });
+
+    var adaFoto = FOTO.some(Boolean) || FOTO_ADA.some(Boolean);
+    $("galatFoto").style.display = adaFoto ? "none" : "block";
+    if(!adaFoto) kurang.push("foto");
+
+    if(!MODE_EDIT){
+      var em = $("email").value.trim();
+      var emOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em);
+      tandai("email", !emOk);
+      if(!emOk) kurang.push("email");
+
+      if(!$("setuju").checked) kurang.push("setuju");
+    }
+
+    if(kurang.length){
+      var pertama = document.querySelector(".baris.salah") || (kurang[0]==="foto" ? $("fotos") : $("blokSetuju"));
+      if(pertama) pertama.scrollIntoView({ behavior:"smooth", block:"center" });
+      pesanGalat(kurang.indexOf("setuju") > -1 && kurang.length === 1
+        ? "Centang dulu persetujuannya di atas, ya."
+        : "Masih ada yang belum diisi. Bagian yang bertanda merah perlu dilengkapi.");
+      return false;
+    }
+    bersihKabar();
+    return true;
+  }
+
+  /* ══ 6 · badan kiriman ══ */
+  function badan(){
+    var q = new URLSearchParams(location.search);
+    return {
+      tema: q.get("tema") || "kotak-kejutan",
+      momen: q.get("momen") || "Ulang tahun",
+      email: $("email").value.trim(),
+      whatsapp: $("wa").value.trim(),
+      isi: {
+        penerima: $("penerima").value.trim(),
+        pengirim: $("pengirim").value.trim(),
+        pesan: [$("pesan1").value, $("pesan2").value, $("pesan3").value],
+        tanggalLahir: $("lahir").value,
+        tanggalKenal: $("kenal").value,
+        harapan: $("harapan").value,
+        rahasia: $("rahasia").value,
+        lagu: { youtube: $("lagu").value.trim() }
+      },
+      foto: [0,1,2].map(function(i){
+        var ket = (document.querySelector('[data-ket="'+i+'"]')||{}).value || "";
+        return FOTO[i] ? { data: FOTO[i].data, mime: FOTO[i].mime, ket: ket } : { ket: ket };
+      })
+    };
+  }
+
+  async function kirimJson(alamat, isi){
+    var r = await fetch(alamat, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(isi)
+    });
+    var j = await r.json().catch(function(){ return {}; });
+    if(!r.ok || !j.ok) throw new Error(j.pesan || "Ada kendala di server. Coba lagi sebentar lagi.");
+    return j;
+  }
+
+  function muatSnap(alamat, clientKey){
+    return new Promise(function(lanjut, tolak){
+      if(window.snap) return lanjut();
+      var s = document.createElement("script");
+      s.src = alamat; s.setAttribute("data-client-key", clientKey);
+      s.onload = lanjut;
+      s.onerror = function(){ tolak(new Error("Jendela pembayaran tidak bisa dimuat. Periksa koneksimu.")); };
+      document.head.appendChild(s);
+    });
+  }
+
+  /* ══ 7 · kirim ══ */
+  $("form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    if(!periksa()) return;
+
+    var tbl = $("tblKirim");
+    tbl.disabled = true;
+
+    try{
+      if(MODE_EDIT){
+        tirai(true, "Menyimpan perubahan…");
+        var h = await kirimJson("/api/simpan", Object.assign({ token: TOKEN }, badan()));
+        tirai(false);
+        pesanOke("Tersimpan. Suratnya sudah berubah — buka ulang tautannya untuk melihat hasilnya.");
+        tbl.disabled = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      tirai(true, "Menyiapkan pesananmu…");
+      var draf = await kirimJson("/api/draf", badan());
+
+      /* tautan edit disimpan di peramban pembeli saja — tidak pernah
+         dikirim lewat alamat surat, supaya penerima tidak bisa mengeditnya */
+      try{ localStorage.setItem("fv-edit-" + draf.kode, draf.token); }catch(_){}
+
+      tirai(true, "Membuka pembayaran…");
+      var bayar = await kirimJson("/api/bayar", { kode: draf.kode });
+
+      if(bayar.sudah){ location.href = "/selesai?kode=" + draf.kode; return; }
+
+      await muatSnap(bayar.snap, bayar.client_key);
+      tirai(false);
+
+      window.snap.pay(bayar.token, {
+        onSuccess: function(){ location.href = "/selesai?kode=" + draf.kode; },
+        onPending: function(){ location.href = "/selesai?kode=" + draf.kode; },
+        onError:   function(){ tbl.disabled = false; pesanGalat("Pembayaran gagal diproses. Pesananmu masih tersimpan — coba tekan tombolnya lagi."); },
+        onClose:   function(){ tbl.disabled = false; pesanGalat("Jendela pembayaran ditutup. Pesananmu masih tersimpan, tinggal tekan tombolnya lagi kalau mau lanjut."); }
+      });
+
+    }catch(err){
+      tirai(false);
+      tbl.disabled = false;
+      pesanGalat(err.message || "Ada kendala. Coba lagi sebentar lagi.");
+    }
+  });
+
+  /* ══ 8 · mode edit ══ */
+  if(MODE_EDIT){
+    document.title = "Ubah suratmu · Foreverse";
+    $("judul").textContent = "Ubah isi suratmu";
+    $("subjudul").textContent = "Simpan sebanyak yang kamu mau. Tautan suratnya tetap sama, jadi kalau sudah terlanjur dikirim pun tidak masalah.";
+    $("blokKontak").hidden = true;
+    $("blokSetuju").hidden = true;
+    $("rincianBayar").hidden = true;
+    $("cipHarga").hidden = true;
+    $("tblKirim").textContent = "Simpan perubahan";
+    $("catatanKirim").textContent = "Perubahan langsung berlaku di tautan yang sama.";
+
+    tirai(true, "Mengambil suratmu…");
+    fetch("/api/draf?token=" + encodeURIComponent(TOKEN))
+      .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+      .then(function(h){
+        tirai(false);
+        if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Tautan edit tidak dikenal.");
+        var i = h.j.isi || {};
+        $("penerima").value = i.penerima || "";
+        $("pengirim").value = i.pengirim || "";
+        $("pesan1").value = (i.pesan||[])[0] || "";
+        $("pesan2").value = (i.pesan||[])[1] || "";
+        $("pesan3").value = (i.pesan||[])[2] || "";
+        $("lahir").value  = i.tanggalLahir || "";
+        $("kenal").value  = i.tanggalKenal || "";
+        $("harapan").value = i.harapan || "";
+        $("rahasia").value = i.rahasia || "";
+        $("lagu").value = (i.lagu && i.lagu.youtube) || "";
+        (i.foto||[]).forEach(function(f, n){
+          if(n > 2 || !f || !f.src) return;
+          FOTO_ADA[n] = f.src;
+          var k = kartu(n);
+          k.querySelector(".jendela").innerHTML = '<img src="'+f.src+'" alt=""><button class="ganti" type="button" data-buka="'+n+'">Ganti</button>';
+          k.classList.add("isi");
+          k.querySelector('[data-ket="'+n+'"]').value = f.ket || "";
+        });
+        berhitung.forEach(function(p){ $(p[0]).dispatchEvent(new Event("input")); });
+        if(h.j.batas_edit){
+          var sisa = Math.max(0, Math.ceil((h.j.batas_edit - Date.now())/86400000));
+          $("catatanKirim").textContent = "Tautan edit ini masih berlaku sekitar " + sisa + " hari lagi.";
+        }
+        dorong();
+      })
+      .catch(function(e){
+        tirai(false);
+        pesanGalat(e.message || "Tautan edit tidak bisa dibuka.");
+        $("tblKirim").disabled = true;
+      });
+  }
+
+  /* dorong pertama kali supaya contohnya langsung hidup */
+  setTimeout(dorong, 400);
+})();
+</script>
+</body>
+</html>
