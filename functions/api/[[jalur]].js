@@ -63,14 +63,29 @@ async function sha512(s) {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-function sandbox(kunci) { return String(kunci || "").startsWith("SB-"); }
-
-function basisMidtrans(serverKey) {
-  return sandbox(serverKey) ? "https://api.sandbox.midtrans.com" : "https://api.midtrans.com";
+/* Mode Midtrans ditentukan oleh MIDTRANS_MODE, bukan ditebak dari kuncinya.
+   Midtrans sudah tidak selalu memberi awalan "SB-" pada kunci Sandbox, jadi
+   menebak dari awalan itu berbahaya: bisa mengirim pembayaran uji coba ke
+   server uang sungguhan. Awalan hanya dipakai sebagai cadangan terakhir
+   kalau MIDTRANS_MODE belum diisi. */
+function modeSandbox(env) {
+  const m = String(env.MIDTRANS_MODE || "").trim().toLowerCase();
+  if (["sandbox", "uji", "ujicoba", "uji coba", "test"].includes(m)) return true;
+  if (["production", "produksi", "live", "sungguhan"].includes(m)) return false;
+  return String(env.MIDTRANS_SERVER_KEY || "").startsWith("SB-");
 }
 
-function snapJs(clientKey) {
-  return sandbox(clientKey)
+function modeDitegaskan(env) {
+  const m = String(env.MIDTRANS_MODE || "").trim().toLowerCase();
+  return ["sandbox","uji","ujicoba","uji coba","test","production","produksi","live","sungguhan"].includes(m);
+}
+
+function basisMidtrans(env) {
+  return modeSandbox(env) ? "https://api.sandbox.midtrans.com" : "https://api.midtrans.com";
+}
+
+function snapJs(env) {
+  return modeSandbox(env)
     ? "https://app.sandbox.midtrans.com/snap/snap.js"
     : "https://app.midtrans.com/snap/snap.js";
 }
@@ -299,7 +314,7 @@ export async function onRequest(ctx) {
       const isi = JSON.parse(b.isi || "{}");
       const orderId = "FV-" + kode + "-" + Date.now().toString(36);
 
-      const r = await fetch(basisMidtrans(sk) + "/snap/v1/transactions", {
+      const r = await fetch(basisMidtrans(env) + "/snap/v1/transactions", {
         method: "POST",
         headers: {
           authorization: "Basic " + btoa(sk + ":"),
@@ -324,7 +339,7 @@ export async function onRequest(ctx) {
         return salah("Midtrans menolak: " + JSON.stringify(hasil.error_messages || hasil).slice(0, 300), 502);
       }
       await db.prepare(`UPDATE pesanan SET order_id=? WHERE kode=?`).bind(orderId, kode).run();
-      return jwb({ ok: true, token: hasil.token, client_key: ck, snap: snapJs(ck), order_id: orderId });
+      return jwb({ ok: true, token: hasil.token, client_key: ck, snap: snapJs(env), order_id: orderId });
     }
 
     /* ── pemberitahuan dari Midtrans (webhook) ───────────────── */
@@ -361,7 +376,7 @@ export async function onRequest(ctx) {
 
       if (b.status !== "lunas" && b.order_id && env.MIDTRANS_SERVER_KEY) {
         const sk = env.MIDTRANS_SERVER_KEY;
-        const r = await fetch(basisMidtrans(sk) + "/v2/" + encodeURIComponent(b.order_id) + "/status", {
+        const r = await fetch(basisMidtrans(env) + "/v2/" + encodeURIComponent(b.order_id) + "/status", {
           headers: { authorization: "Basic " + btoa(sk + ":"), accept: "application/json" }
         });
         const h = await r.json().catch(() => ({}));
@@ -468,7 +483,8 @@ export async function onRequest(ctx) {
           r2: !!env.FOTO,
           resend: !!env.RESEND_API_KEY,
           midtrans: !!env.MIDTRANS_SERVER_KEY && !!env.MIDTRANS_CLIENT_KEY,
-          mode: sandbox(env.MIDTRANS_SERVER_KEY) ? "Sandbox (uji coba)" : "Production (sungguhan)",
+          mode: (modeSandbox(env) ? "Sandbox (uji coba)" : "Production (sungguhan)")
+                + (modeDitegaskan(env) ? "" : " — ditebak, isi MIDTRANS_MODE"),
           pengirim: env.EMAIL_PENGIRIM || "(belum diisi)"
         });
       }
