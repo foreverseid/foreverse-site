@@ -16,6 +16,34 @@
 import { onRequest as tanganiApi } from "./functions/api/[[jalur]].js";
 import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
 
+/* Ambil satu halaman statis TANPA membiarkan pengalihan sampai ke browser.
+
+   Cloudflare menjawab permintaan "/surat.html" dengan pengalihan 307 ke
+   "/surat". Kalau pengalihan itu diteruskan ke browser, alamat berubah dari
+   "/s/nyk67z" menjadi "/surat" — kodenya hilang, dan suratnya tidak bisa
+   dibuka. Jadi pengalihannya diikuti di sini, di server, dan browser hanya
+   menerima isi halamannya. */
+async function ambilHalaman(env, asal, nama, request) {
+  async function minta(alamat) {
+    let r = await env.ASSETS.fetch(new Request(alamat, request));
+    for (let i = 0; i < 3 && r.status >= 300 && r.status < 400; i++) {
+      const tujuan = r.headers.get("location");
+      if (!tujuan) break;
+      r = await env.ASSETS.fetch(new Request(new URL(tujuan, asal).toString(), request));
+    }
+    return r;
+  }
+
+  let r = await minta(asal + "/" + nama);
+  if (r.status !== 200) r = await minta(asal + "/" + nama + ".html");
+
+  const kepala = new Headers(r.headers);
+  kepala.delete("location");
+  kepala.set("cache-control", "no-store");
+  kepala.set("content-type", "text/html; charset=utf-8");
+  return new Response(r.body, { status: r.status, headers: kepala });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -41,18 +69,12 @@ export default {
         });
       }
 
-      /* ── alamat pendek: /s/<kode> dan /edit/<kode> ── */
+      /* ── alamat pendek: /s/<kode> dan /edit/<token> ── */
       let halaman = null;
-      if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) halaman = "/surat.html";
-      else if (/^\/edit\/[A-Za-z0-9]{8,40}\/?$/.test(p)) halaman = "/pesan.html";
+      if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) halaman = "surat";
+      else if (/^\/edit\/[A-Za-z0-9]{8,40}\/?$/.test(p)) halaman = "pesan";
 
-      if (halaman) {
-        const r = await env.ASSETS.fetch(new Request(url.origin + halaman, request));
-        return new Response(r.body, {
-          status: r.status,
-          headers: { ...Object.fromEntries(r.headers), "cache-control": "no-store" }
-        });
-      }
+      if (halaman) return await ambilHalaman(env, url.origin, halaman, request);
 
       /* ── sisanya: file biasa ── */
       return await env.ASSETS.fetch(request);
