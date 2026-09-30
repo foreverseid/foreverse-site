@@ -1,14 +1,30 @@
 {
-  // Pengaturan Worker Foreverse.
-  // File inilah yang membuat Cloudflare mengizinkan Bindings & Secrets.
   "name": "foreverse-site",
   "main": "worker.js",
   "compatibility_date": "2026-09-01",
+  "keep_vars": true,
+
   "assets": {
     "directory": ".",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "foreverse-db",
+      "database_id": "a2630269-5bd5-43a2-b032-ff57abdbd4d4"
+    }
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "FOTO",
+      "bucket_name": "foreverse-foto"
+    }
+  ],
+
   "observability": { "enabled": true }
 }
