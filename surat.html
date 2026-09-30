@@ -195,8 +195,27 @@ body.wish #s5 .kick{color:#FFE2A8} body.wish #s5 .sub{color:rgba(255,255,255,.85
 .front small{position:absolute;bottom:26px;font-size:12.5px;color:var(--ink-soft)}
 .back{background:var(--violet);color:#fff;transform:rotateY(180deg);box-shadow:0 20px 40px rgba(59,49,104,.3)}
 .back p{font-family:var(--hand);font-size:27px;line-height:1.3;margin:0;white-space:pre-line;overflow-wrap:anywhere}
-.yt{width:100%;margin-top:24px;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:16/9}
-.yt iframe{width:100%;height:100%;border:0;display:block}
+/* ─── pemutar lagu YouTube ───
+   Aturan YouTube: pemutar minimal 200×200 px, harus terlihat selama lagu
+   berputar, dan tidak boleh tertutup elemen lain. */
+.dock{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:40;
+  width:min(calc(100vw - 20px),420px);background:var(--paper);border-radius:16px;padding:8px;
+  box-shadow:0 10px 30px rgba(27,27,47,.18);display:flex;flex-direction:column;gap:6px;
+  animation:dockNaik .5s cubic-bezier(.2,.8,.3,1)}
+.dock[hidden]{display:none}
+@keyframes dockNaik{from{transform:translate(-50%,24px);opacity:0}}
+.dock-atas{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px}
+.dock-judul{font-size:13px;color:var(--ink-soft);line-height:1.3}
+.dock-judul b{color:var(--ink);font-weight:600}
+.dock-sembunyi{flex:none;border:1px solid rgba(27,27,47,.12);background:none;border-radius:100px;padding:5px 11px;font-size:12px;cursor:pointer}
+.dock-layar{width:100%;aspect-ratio:16/9;min-height:200px;border-radius:10px;overflow:hidden;background:#000}
+.dock-layar iframe{width:100%;height:100%;border:0;display:block}
+.dock-pil{position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:40;border:0;cursor:pointer;
+  background:var(--violet);color:#fff;border-radius:100px;padding:10px 16px;font-size:13.5px;font-weight:600;
+  box-shadow:0 8px 20px rgba(59,49,104,.3)}
+.dock-pil[hidden]{display:none}
+body.ada-lagu .scene{padding-bottom:calc(max(200px, min(calc(100vw - 20px),420px) * .5625) + 70px)}
+body.ada-pil .scene{padding-bottom:80px}
 .made{margin-top:26px;font-size:12px;color:var(--ink-soft);text-decoration:none;opacity:.75}
 
 canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:30}
@@ -227,6 +246,15 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:30}
 <div class="dust" id="dust" aria-hidden="true"></div>
 <div class="dusk"></div>
 <canvas id="fx"></canvas>
+
+<div class="dock" id="dock" hidden>
+  <div class="dock-atas">
+    <span class="dock-judul"><span id="dockStatus">Ketuk ▶ untuk memutar</span> lagu dari <b data-f="pengirim"></b></span>
+    <button type="button" class="dock-sembunyi" id="dockSembunyi">Sembunyikan</button>
+  </div>
+  <div class="dock-layar" id="dockLayar"></div>
+</div>
+<button type="button" class="dock-pil" id="dockPil" hidden>♪ Lagu dari <span data-f="pengirim"></span></button>
 
 <div class="dots" id="dots" aria-hidden="true"></div>
 <button class="music" id="music" aria-label="Matikan atau nyalakan musik">
@@ -320,7 +348,6 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:30}
         <div class="face back"><p data-f="rahasia"></p></div>
       </div>
     </button>
-    <div class="yt" id="yt" hidden></div>
     <button class="btn ghost" id="replay">Buka dari awal</button>
     <a class="made" href="https://foreverse.id" target="_blank" rel="noopener">dibuat di foreverse.id</a>
   </div>
@@ -363,8 +390,19 @@ function FV_MULAI(){
 
   /* ── musik ── */
   var musicBtn=$("music"), audio=null, synth=null, playing=false;
+  /* iPhone: suara Web Audio ikut mati kalau HP dalam mode senyap —
+     ini meminta iPhone memperlakukannya sebagai pemutaran musik */
+  try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(_){}
+  /* browser baru mengizinkan suara setelah jari DIANGKAT (bukan saat
+     menyentuh). Setiap ketukan berikutnya mencoba menyalakan ulang. */
+  function bangunkan(){
+    if(synth && synth.ctx.state==="suspended") synth.ctx.resume().catch(function(){});
+    if(audio && audio.paused && !musicBtn.classList.contains("off")) audio.play().catch(function(){});
+  }
+  document.addEventListener("click",bangunkan,true);
+  document.addEventListener("touchend",bangunkan,true);
   function startMusic(){
-    if(playing) return;
+    if(playing){ bangunkan(); return; }
     if(K.lagu && K.lagu.file){
       audio=new Audio(K.lagu.file); audio.loop=true; audio.volume=.6;
       if(K.lagu.mulai) audio.currentTime=K.lagu.mulai;
@@ -375,12 +413,16 @@ function FV_MULAI(){
   }
   musicBtn.addEventListener("click",function(){
     var off=musicBtn.classList.toggle("off");
-    if(audio){ off?audio.pause():audio.play(); }
-    if(synth){ synth.gain.gain.setTargetAtTime(off?0:.11, synth.ctx.currentTime, .2); }
+    if(audio){ off?audio.pause():audio.play().catch(function(){}); }
+    if(synth){
+      if(!off && synth.ctx.state==="suspended") synth.ctx.resume().catch(function(){});
+      synth.gain.gain.setTargetAtTime(off?0:.11, synth.ctx.currentTime, .2);
+    }
   });
   function musicBox(){
     var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
     var ctx=new AC(), gain=ctx.createGain(); gain.gain.value=.11; gain.connect(ctx.destination);
+    if(ctx.state==="suspended") ctx.resume().catch(function(){});
     var notes=[72,76,79,84,79,76, 74,77,81,86,81,77, 72,76,79,83,79,76, 71,74,79,83,86,83];
     var step=.34, t0=ctx.currentTime+.1;
     function ping(midi,t){
@@ -403,7 +445,6 @@ function FV_MULAI(){
   tag.addEventListener("pointerdown",function(e){
     if(opened) return; dragging=true; startY=e.clientY; tag.setPointerCapture(e.pointerId);
     tag.classList.remove("hint"); tag.style.transition="none"; tail.style.transition="none"; lid.style.transition="none";
-    startMusic();
   });
   tag.addEventListener("pointermove",function(e){
     if(!dragging) return;
@@ -419,7 +460,8 @@ function FV_MULAI(){
     lid.style.transition="transform .45s ease";
     tag.style.transform="translate(-50%,0)"; tail.style.height="34px"; lid.style.transform="";
   }
-  tag.addEventListener("pointerup",release); tag.addEventListener("pointercancel",release);
+  tag.addEventListener("pointerup",function(){ startMusic(); release(); });
+  tag.addEventListener("pointercancel",release);
   tag.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); startMusic(); open(); }});
   $("tapOpen").addEventListener("click",function(){ startMusic(); open(); });
 
@@ -429,7 +471,7 @@ function FV_MULAI(){
     stage.classList.add("opened");
     if(navigator.vibrate) navigator.vibrate(30);
     setTimeout(function(){ confetti(160); },250);
-    setTimeout(function(){ go(1); revealPara(); },1900);
+    setTimeout(function(){ go(1); revealPara(); tampilkanDock(); },1900);
   }
 
   /* ── 2 · surat bertahap ── */
@@ -521,13 +563,57 @@ function FV_MULAI(){
 
   /* ── 6 · penutup ── */
   $("flip").addEventListener("click",function(){ this.classList.toggle("turn"); });
-  var ytId=(function(v){ if(!v) return ""; var m=String(v).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m?m[1]:(/^[\w-]{11}$/.test(v)?v:""); })(K.lagu&&K.lagu.youtube);
-  if(ytId){
-    var yt=$("yt"), f=document.createElement("iframe");
-    f.src="https://www.youtube-nocookie.com/embed/"+ytId+(K.lagu.mulai?"?start="+(+K.lagu.mulai):"");
-    f.title="Lagu untukmu"; f.allow="autoplay; encrypted-media"; f.allowFullscreen=true;
-    yt.appendChild(f); yt.hidden=false;
+
+  /* ── lagu YouTube: pemutar terlihat di bawah layar, diketuk sekali ──
+     Muncul setelah kado dibuka, tetap ada di semua bagian surat supaya
+     lagunya terus berputar. "Sembunyikan" menjeda lagu dulu, baru menutup
+     pemutarnya — lagu tidak pernah berputar dari pemutar yang tersembunyi. */
+  var dock=$("dock"), pil=$("dockPil"), dockStatus=$("dockStatus"),
+      yt=null, ytId="", dockTerbuka=false;
+  function muatApiYt(cb){
+    if(window.YT && YT.Player) return cb();
+    var lama=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(lama) lama(); cb(); };
+    if(!document.getElementById("ytApi")){
+      var s=document.createElement("script"); s.id="ytApi"; s.src="https://www.youtube.com/iframe_api";
+      document.head.appendChild(s);
+    }
   }
+  function pasangLagu(){
+    var id=idYoutube(K.lagu && K.lagu.youtube);
+    if(id===ytId) return;
+    ytId=id;
+    if(yt){ try{ yt.destroy(); }catch(_){} yt=null; }
+    $("dockLayar").innerHTML='<div id="ytPlayer"></div>';
+    dockStatus.textContent="Ketuk ▶ untuk memutar";
+    if(!id){ dock.hidden=true; pil.hidden=true; document.body.classList.remove("ada-lagu","ada-pil"); return; }
+    muatApiYt(function(){
+      if(ytId!==id) return;
+      yt=new YT.Player("ytPlayer",{
+        host:"https://www.youtube-nocookie.com", videoId:id, width:"100%", height:"100%",
+        playerVars:{ playsinline:1, rel:0, start:(+(K.lagu&&K.lagu.mulai)||0) },
+        events:{ onStateChange:function(e){
+          if(e.data===1) dockStatus.textContent="Sedang memutar";
+          else if(e.data===2 || e.data===0) dockStatus.textContent="Ketuk ▶ untuk memutar";
+        }}
+      });
+    });
+    if(dockTerbuka) tampilkanDock();
+  }
+  function tampilkanDock(){
+    dockTerbuka=true;
+    if(!ytId) return;
+    dock.hidden=false; pil.hidden=true;
+    document.body.classList.remove("ada-pil"); document.body.classList.add("ada-lagu");
+  }
+  $("dockSembunyi").addEventListener("click",function(){
+    try{ if(yt && yt.pauseVideo) yt.pauseVideo(); }catch(_){}
+    dock.hidden=true; pil.hidden=false;
+    document.body.classList.remove("ada-lagu"); document.body.classList.add("ada-pil");
+  });
+  pil.addEventListener("click",tampilkanDock);
+  pasangLagu();
+
   $("replay").addEventListener("click",function(){
     opened=false; stage.classList.remove("opened"); tag.classList.add("hint");
     tag.style.transform=""; tail.style.height=""; tag.style.transition=tail.style.transition="";
@@ -620,14 +706,12 @@ function FV_MULAI(){
     $("daysTogether").textContent=bareng.toLocaleString("id-ID");
 
     /* lagu */
-    var yt=$("yt"); yt.innerHTML=""; yt.hidden=true;
-    var id=(function(v){ if(!v) return ""; var m=String(v).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m?m[1]:(/^[\w-]{11}$/.test(v)?v:""); })(K.lagu&&K.lagu.youtube);
-    if(id){
-      var fr=document.createElement("iframe");
-      fr.src="https://www.youtube-nocookie.com/embed/"+id+(K.lagu.mulai?"?start="+(+K.lagu.mulai):"");
-      fr.title="Lagu untukmu"; fr.allow="autoplay; encrypted-media"; fr.allowFullscreen=true;
-      yt.appendChild(fr); yt.hidden=false;
-    }
+    pasangLagu();
+  }
+  function idYoutube(v){
+    if(!v) return "";
+    var m=String(v).match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/);
+    return m ? m[1] : (/^[\w-]{11}$/.test(v) ? v : "");
   }
   window.FV_PERBARUI = perbarui;
 }
@@ -658,7 +742,8 @@ function FV_MULAI(){
       tanggalLahir:"", tanggalKenal:"", harapan:"", rahasia:"",
       lagu:{file:"",youtube:"",mulai:0}
     }, data || {});
-    KADO.demo = !(KADO.lagu && KADO.lagu.file);
+    /* musik kotak bawaan hanya dipakai kalau tidak ada lagu sama sekali */
+    KADO.demo = !(KADO.lagu && (KADO.lagu.file || KADO.lagu.youtube));
     if(window.FV_PERBARUI) window.FV_PERBARUI();
   }
 
@@ -680,13 +765,30 @@ function FV_MULAI(){
 
   if(!kode){ gagal("Tautan ini tidak lengkap. Minta tautan yang benar ke pengirimnya, ya."); return; }
 
+  /* unduh semua foto dulu di balik tirai, supaya tidak muncul sepotong-sepotong.
+     Batas tunggu 12 detik — kalau sinyal sangat lambat, surat tetap dibuka. */
+  function siapkanFoto(daftar){
+    var tugas = (daftar || []).filter(function(f){ return f && f.src; }).map(function(f){
+      return new Promise(function(beres){
+        var im = new Image();
+        im.onload = function(){ (im.decode ? im.decode() : Promise.resolve()).then(beres, beres); };
+        im.onerror = beres;
+        im.src = f.src;
+      });
+    });
+    var batas = new Promise(function(beres){ setTimeout(beres, 12000); });
+    return Promise.race([Promise.all(tugas), batas]);
+  }
+
   fetch("/api/surat?kode=" + encodeURIComponent(kode))
     .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
     .then(function(h){
       if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Surat tidak ditemukan.");
-      FV_MULAI();
-      pasang(h.j.isi);
-      tutupTirai();
+      return siapkanFoto(h.j.isi && h.j.isi.foto).then(function(){
+        FV_MULAI();
+        pasang(h.j.isi);
+        tutupTirai();
+      });
     })
     .catch(function(e){ gagal(e.message || "Suratnya tidak bisa dibuka sekarang."); });
 })();

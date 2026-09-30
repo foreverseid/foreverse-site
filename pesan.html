@@ -304,7 +304,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">6</span> Lagu <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
-        <p class="jelas">Tempel link YouTube-nya. Pemutar lagunya muncul di bagian akhir surat.</p>
+        <p class="jelas">Tempel link YouTube-nya. Begitu kado dibuka, pemutarnya muncul di bawah layar. Dia cukup ketuk sekali, lalu lagunya menemani sampai akhir.</p>
         <div class="baris" data-f="lagu">
           <label for="lagu">Link lagu dari YouTube</label>
           <input id="lagu" type="url" maxlength="200" inputmode="url" placeholder="https://youtu.be/...">
@@ -436,19 +436,20 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     });
   }
 
-  /* kecilkan foto di HP: sisi terpanjang 1400px, mutu 0.82 */
+  /* kecilkan foto di HP: sisi terpanjang 1080px (polaroid tampil ±290px,
+     jadi ini tetap tajam di layar HP paling rapat), target ±250 KB */
   function kecilkan(berkas, sudah){
     var url = URL.createObjectURL(berkas);
     var img = new Image();
     img.onload = function(){
-      var MAKS = 1400, w = img.naturalWidth, h = img.naturalHeight;
+      var MAKS = 1080, w = img.naturalWidth, h = img.naturalHeight;
       var s = Math.min(1, MAKS / Math.max(w,h));
       var c = document.createElement("canvas");
       c.width = Math.round(w*s); c.height = Math.round(h*s);
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
-      var mutu = 0.82, out = c.toDataURL("image/jpeg", mutu);
-      while(out.length > 900000 && mutu > 0.45){ mutu -= 0.1; out = c.toDataURL("image/jpeg", mutu); }
+      var mutu = 0.8, out = c.toDataURL("image/jpeg", mutu);
+      while(out.length > 340000 && mutu > 0.5){ mutu -= 0.08; out = c.toDataURL("image/jpeg", mutu); }
       sudah(out);
     };
     img.onerror = function(){ URL.revokeObjectURL(url); sudah(null, true); };
