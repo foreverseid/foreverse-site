@@ -168,6 +168,7 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
     <div class="gagal-kotak">
       <h1>Belum bisa kami tampilkan</h1>
       <p id="gagalPesan">Pesanan ini tidak ditemukan.</p>
+      <button class="tbl" id="tblLanjut" type="button" hidden>Lanjutkan pembayaran</button>
       <a class="tbl tbl-garis" href="/pesan" style="background:#fff">Kembali ke formulir</a>
     </div>
     <p class="kecil" style="margin-top:18px">Kalau kamu sudah membayar tapi halaman ini tetap begini, hubungi kami lewat WhatsApp dengan menyebutkan kode pesananmu. Uangmu aman dan suratnya tetap kami buatkan.</p>
@@ -187,7 +188,35 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
   function tahap(id){
     ["tMenunggu","tJadi","tGagal"].forEach(function(t){ $(t).classList.toggle("on", t === id); });
   }
-  function gagal(t){ $("gagalPesan").textContent = t; tahap("tGagal"); }
+  function gagal(t, bolehLanjut){ 
+    $("gagalPesan").textContent = t;
+    $("tblLanjut").hidden = !bolehLanjut;
+    tahap("tGagal");
+  }
+
+  /* Pembeli yang menutup tab di halaman DOKU bisa melanjutkan dari
+     draf yang sama — isiannya tidak perlu diketik ulang.           */
+  $("tblLanjut").addEventListener("click", function(){
+    var tbl = this;
+    tbl.disabled = true;
+    tbl.textContent = "Membuka pembayaran…";
+    fetch("/api/bayar", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ kode: kode })
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.sudah){ location.reload(); return; }
+        if(!j || !j.ok || !j.url) throw new Error(j && j.pesan);
+        location.href = j.url;
+      })
+      .catch(function(e){
+        tbl.disabled = false;
+        tbl.textContent = "Lanjutkan pembayaran";
+        $("gagalPesan").textContent = (e && e.message) || "Halaman pembayaran belum bisa dibuka. Coba lagi sebentar lagi.";
+      });
+  });
 
   if(!kode){ gagal("Alamat halaman ini tidak lengkap, kode pesanannya tidak terbaca."); return; }
 
@@ -266,14 +295,14 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
         if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Pesanan tidak ditemukan.");
         if(h.j.status === "lunas"){ selesai(h.j); return; }
         if(h.j.status === "gagal"){
-          gagal("Pembayarannya tidak jadi atau kedaluwarsa. Isian kamu masih tersimpan — silakan pesan ulang.");
+          gagal("Pembayarannya tidak jadi atau kedaluwarsa. Isian kamu masih tersimpan — tinggal lanjutkan.", true);
           return;
         }
         coba++;
         if(coba === 6) $("tekstunggu").textContent = "Masih menunggu konfirmasi dari bank. Biasanya di bawah satu menit.";
         if(coba === 20) $("tekstunggu").textContent = "Agak lama, tapi jangan tutup halaman ini dulu. Kalau sudah terbayar, tautannya akan muncul di sini.";
         if(coba > 60){
-          gagal("Pembayarannya belum terkonfirmasi sampai sekarang. Kalau uangmu sudah terpotong, hubungi kami lewat WhatsApp dengan kode pesanan " + kode + ".");
+          gagal("Pembayarannya belum terkonfirmasi sampai sekarang. Kalau uangmu sudah terpotong, hubungi kami lewat WhatsApp dengan kode pesanan " + kode + ". Kalau belum sempat membayar, lanjutkan saja di bawah.", true);
           return;
         }
         setTimeout(cek, coba < 10 ? 2500 : 5000);

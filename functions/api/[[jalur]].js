@@ -9,7 +9,7 @@
                                              foto disimpan di D1)
 
    Kunci rahasia (Settings → Variables and Secrets):
-     MIDTRANS_SERVER_KEY, MIDTRANS_CLIENT_KEY,
+     DOKU_CLIENT_ID, DOKU_SECRET_KEY, DOKU_MODE,
      RESEND_API_KEY, ADMIN_PASSWORD, EMAIL_PENGIRIM
    ══════════════════════════════════════════════════════════════════ */
 
@@ -59,36 +59,138 @@ function tanggalSah(v) {
   return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : "";
 }
 
-async function sha512(s) {
-  const buf = await crypto.subtle.digest("SHA-512", new TextEncoder().encode(s));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-}
+/* ══════════════════ DOKU ══════════════════
+   Semua yang mungkin perlu disesuaikan ada di sini, di satu tempat.
+   Jangan menyebar nilai-nilai ini ke bawah.                        */
 
-/* Mode Midtrans ditentukan oleh MIDTRANS_MODE, bukan ditebak dari kuncinya.
-   Midtrans sudah tidak selalu memberi awalan "SB-" pada kunci Sandbox, jadi
-   menebak dari awalan itu berbahaya: bisa mengirim pembayaran uji coba ke
-   server uang sungguhan. Awalan hanya dipakai sebagai cadangan terakhir
-   kalau MIDTRANS_MODE belum diisi. */
+const DOKU = {
+  /* Metode pembayaran yang boleh muncul di halaman DOKU.
+     Dikunci ke QRIS saja. QRIS sudah bisa dibayar dari DANA, OVO,
+     ShopeePay, GoPay, dan semua m-banking, jadi menambah e-wallet
+     terpisah tidak menambah satu pembeli pun — hanya menambah biaya. */
+  metode: ["QRIS"],
+
+  /* Cadangan, belum dipakai. Catatan: identifier ShopeePay berbeda di
+     dua halaman dokumentasi DOKU (EMONEY_SHOPEEPAY di contoh request,
+     EMONEY_SHOPEE_PAY di daftar metode). Kalau nanti diaktifkan, uji
+     satu per satu di Sandbox dulu sebelum dipakai sungguhan.         */
+  ewallet: ["EMONEY_DANA", "EMONEY_OVO"],
+
+  jatuhTempoMenit: 60,                    // umur halaman pembayaran
+  jalurCheckout: "/checkout/v1/payment",
+  jalurStatus: "/orders/v1/status/",
+  jalurNotifikasi: "/api/notifikasi-doku", // harus sama dengan yang diisi di Back Office
+
+  /* Batas umur notifikasi yang masih diterima. Sengaja longgar:
+     DOKU mencoba ulang pada menit ke-30, jam ke-6, dan jam ke-12
+     kalau balasan kita gagal. Jendela sempit justru akan menolak
+     percobaan ulang yang sah. Perlindungan dari pengiriman ulang
+     datang dari idempotensi di bawah, bukan dari jendela waktu ini. */
+  maksUsiaJam: 25
+};
+
+/* Mode ditentukan oleh DOKU_MODE, tidak pernah ditebak dari kuncinya.
+   Kunci DOKU tidak punya awalan yang bisa dipercaya. Kalau DOKU_MODE
+   belum diisi, kita jatuh ke Sandbox — bukan Production. Salah ke
+   Sandbox hanya membuat pembayaran gagal dan ketahuan langsung;
+   salah ke Production membuat uji coba memotong uang sungguhan.     */
 function modeSandbox(env) {
-  const m = String(env.MIDTRANS_MODE || "").trim().toLowerCase();
-  if (["sandbox", "uji", "ujicoba", "uji coba", "test"].includes(m)) return true;
+  const m = String(env.DOKU_MODE || "").trim().toLowerCase();
   if (["production", "produksi", "live", "sungguhan"].includes(m)) return false;
-  return String(env.MIDTRANS_SERVER_KEY || "").startsWith("SB-");
+  return true;
 }
 
 function modeDitegaskan(env) {
-  const m = String(env.MIDTRANS_MODE || "").trim().toLowerCase();
+  const m = String(env.DOKU_MODE || "").trim().toLowerCase();
   return ["sandbox","uji","ujicoba","uji coba","test","production","produksi","live","sungguhan"].includes(m);
 }
 
-function basisMidtrans(env) {
-  return modeSandbox(env) ? "https://api.sandbox.midtrans.com" : "https://api.midtrans.com";
+function basisDoku(env) {
+  return modeSandbox(env) ? "https://api-sandbox.doku.com" : "https://api.doku.com";
 }
 
-function snapJs(env) {
-  return modeSandbox(env)
-    ? "https://app.sandbox.midtrans.com/snap/snap.js"
-    : "https://app.midtrans.com/snap/snap.js";
+/* ── tanda tangan DOKU ──
+   Susunannya: Client-Id, Request-Id, Request-Timestamp, Request-Target,
+   lalu Digest khusus POST. Digabung dengan \n, TANPA newline di akhir.
+   Hasilnya "HMACSHA256=" + base64. Rumus ini sama untuk permintaan
+   yang kita kirim maupun notifikasi yang kita terima.               */
+
+function keBase64(bytes) {
+  let s = "";
+  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+  return btoa(s);
+}
+
+async function digestDoku(badanMentah) {
+  const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(badanMentah || ""));
+  return keBase64(new Uint8Array(h));
+}
+
+async function hmacDoku(rahasia, pesan) {
+  const kunci = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(rahasia),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const t = await crypto.subtle.sign("HMAC", kunci, new TextEncoder().encode(pesan));
+  return "HMACSHA256=" + keBase64(new Uint8Array(t));
+}
+
+function rangkaiTandaTangan(clientId, requestId, stempel, sasaran, digest) {
+  const baris = [
+    "Client-Id:" + clientId,
+    "Request-Id:" + requestId,
+    "Request-Timestamp:" + stempel,
+    "Request-Target:" + sasaran
+  ];
+  if (digest) baris.push("Digest:" + digest);
+  return baris.join("\n");
+}
+
+/* ISO8601 UTC tanpa milidetik, persis seperti contoh DOKU. */
+function stempelUtc() {
+  return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
+/* Perbandingan waktu-konstan: lamanya tidak bergantung pada isi, jadi
+   tidak bocor berapa karakter awal yang kebetulan sudah benar.      */
+function samaAman(a, b) {
+  const x = new TextEncoder().encode(String(a == null ? "" : a));
+  const y = new TextEncoder().encode(String(b == null ? "" : b));
+  if (x.length !== y.length) return false;
+  let beda = 0;
+  for (let i = 0; i < x.length; i++) beda |= x[i] ^ y[i];
+  return beda === 0;
+}
+
+/* Satu pintu untuk semua panggilan ke DOKU. Secret Key tidak pernah
+   ikut keluar dari fungsi ini — tidak ke log, tidak ke respons.     */
+async function panggilDoku(env, pilihan) {
+  const metode = pilihan.metode, sasaran = pilihan.sasaran;
+  const clientId = env.DOKU_CLIENT_ID;
+  const requestId = crypto.randomUUID();
+  const stempel = stempelUtc();
+  const mentah = pilihan.badan ? JSON.stringify(pilihan.badan) : "";
+  const digest = metode === "POST" ? await digestDoku(mentah) : "";
+  const tanda = await hmacDoku(env.DOKU_SECRET_KEY,
+    rangkaiTandaTangan(clientId, requestId, stempel, sasaran, digest));
+
+  const kepala = {
+    "Client-Id": clientId,
+    "Request-Id": requestId,
+    "Request-Timestamp": stempel,
+    "Signature": tanda,
+    accept: "application/json"
+  };
+  if (metode === "POST") kepala["content-type"] = "application/json";
+
+  const r = await fetch(basisDoku(env) + sasaran, {
+    method: metode,
+    headers: kepala,
+    body: metode === "POST" ? mentah : undefined
+  });
+  const hasil = await r.json().catch(() => ({}));
+  /* DOKU membungkus jawabannya di "response" pada sebagian endpoint
+     dan tidak pada sebagian lain. Terima dua-duanya.                */
+  return { ok: r.ok, isi: (hasil && hasil.response) || hasil, asli: hasil };
 }
 
 /* ══════════════════ database ══════════════════ */
@@ -349,7 +451,11 @@ export async function onRequest(ctx) {
   try {
     await siapkan(env.DB);
     const db = env.DB;
-    const badan = request.method === "POST" ? await request.json().catch(() => ({})) : {};
+    /* Badan mentah disimpan karena Digest notifikasi DOKU dihitung
+       dari teks aslinya, bukan dari hasil JSON.stringify ulang.    */
+    const mentah = request.method === "POST" ? await request.text() : "";
+    let badan = {};
+    if (mentah) { try { badan = JSON.parse(mentah) || {}; } catch (_) { badan = {}; } }
 
     /* ── buat atau perbarui draf ─────────────────────────────── */
     if (jalur === "draf" && request.method === "POST") {
@@ -369,10 +475,10 @@ export async function onRequest(ctx) {
       return jwb({ ok: true, kode, token, jumlah: HARGA });
     }
 
-    /* ── minta jendela pembayaran ────────────────────────────── */
+    /* ── minta halaman pembayaran DOKU ───────────────────────── */
     if (jalur === "bayar" && request.method === "POST") {
-      const sk = env.MIDTRANS_SERVER_KEY, ck = env.MIDTRANS_CLIENT_KEY;
-      if (!sk || !ck) return salah("Kunci Midtrans belum dipasang di Cloudflare.", 500);
+      if (!env.DOKU_CLIENT_ID || !env.DOKU_SECRET_KEY)
+        return salah("Kunci DOKU belum dipasang di Cloudflare.", 500);
 
       const kode = teks(badan.kode, 12);
       const b = await db.prepare(`SELECT * FROM pesanan WHERE kode=?`).bind(kode).first();
@@ -382,57 +488,93 @@ export async function onRequest(ctx) {
       const isi = JSON.parse(b.isi || "{}");
       const orderId = "FV-" + kode + "-" + Date.now().toString(36);
 
-      const r = await fetch(basisMidtrans(env) + "/snap/v1/transactions", {
-        method: "POST",
-        headers: {
-          authorization: "Basic " + btoa(sk + ":"),
-          "content-type": "application/json",
-          accept: "application/json"
-        },
-        body: JSON.stringify({
-          transaction_details: { order_id: orderId, gross_amount: HARGA },
-          item_details: [{ id: b.tema || "surat", price: HARGA, quantity: 1, name: "Surat digital Foreverse" }],
-          customer_details: {
-            first_name: (isi.pengirim || "Pembeli").slice(0, 20),
+      const r = await panggilDoku(env, {
+        metode: "POST",
+        sasaran: DOKU.jalurCheckout,
+        badan: {
+          order: {
+            amount: HARGA,
+            invoice_number: orderId,
+            currency: "IDR",
+            /* tempat pembeli mendarat setelah membayar */
+            callback_url: asal + "/selesai?kode=" + kode,
+            auto_redirect: true,
+            line_items: [{ name: "Surat digital Foreverse", quantity: 1, price: HARGA }]
+          },
+          payment: {
+            payment_due_date: DOKU.jatuhTempoMenit,
+            /* lapis kedua pengunci metode, selain centang di Back Office */
+            payment_method_types: DOKU.metode
+          },
+          customer: {
+            name: (isi.pengirim || "Pembeli").slice(0, 50),
             email: b.email || undefined,
             phone: b.whatsapp || undefined
-          },
-          callbacks: { finish: asal + "/selesai?kode=" + kode },
-          expiry: { unit: "hour", duration: 2 }
-        })
+          }
+        }
       });
 
-      const hasil = await r.json().catch(() => ({}));
-      if (!r.ok || !hasil.token) {
-        return salah("Midtrans menolak: " + JSON.stringify(hasil.error_messages || hasil).slice(0, 300), 502);
+      const urlBayar = r.isi && r.isi.payment && r.isi.payment.url;
+      if (!r.ok || !urlBayar) {
+        const kabar = (r.asli && (r.asli.error_messages || r.asli.message)) || r.asli;
+        return salah("DOKU menolak: " + JSON.stringify(kabar).slice(0, 300), 502);
       }
+
       await db.prepare(`UPDATE pesanan SET order_id=? WHERE kode=?`).bind(orderId, kode).run();
-      return jwb({ ok: true, token: hasil.token, client_key: ck, snap: snapJs(env), order_id: orderId });
+      return jwb({ ok: true, url: urlBayar, order_id: orderId });
     }
 
-    /* ── pemberitahuan dari Midtrans (webhook) ───────────────── */
-    if (jalur === "notifikasi" && request.method === "POST") {
-      const sk = env.MIDTRANS_SERVER_KEY;
-      if (!sk) return salah("Belum siap.", 500);
+    /* ── pemberitahuan dari DOKU (webhook) ───────────────────────
+       Alamat ini yang diisi di Back Office DOKU sebagai Notification
+       URL: https://foreverse.id/api/notifikasi-doku                 */
+    if (jalur === "notifikasi-doku" && request.method === "POST") {
+      if (!env.DOKU_CLIENT_ID || !env.DOKU_SECRET_KEY) return salah("Belum siap.", 500);
 
-      const tandaTangan = await sha512(
-        String(badan.order_id) + String(badan.status_code) + String(badan.gross_amount) + sk);
-      if (tandaTangan !== badan.signature_key) return salah("Tanda tangan tidak cocok.", 403);
+      const kepalaId    = request.headers.get("Client-Id") || "";
+      const kepalaReq   = request.headers.get("Request-Id") || "";
+      const kepalaWaktu = request.headers.get("Request-Timestamp") || "";
+      const kepalaTanda = request.headers.get("Signature") || "";
 
-      const b = await db.prepare(`SELECT kode FROM pesanan WHERE order_id=?`).bind(badan.order_id).first();
+      if (!samaAman(kepalaId, env.DOKU_CLIENT_ID))
+        return salah("Client-Id tidak dikenal.", 403);
+
+      const waktu = Date.parse(kepalaWaktu);
+      if (!waktu || Math.abs(Date.now() - waktu) > DOKU.maksUsiaJam * 3600 * 1000)
+        return salah("Waktu notifikasi di luar batas.", 403);
+
+      /* Digest dihitung dari teks asli badan, bukan dari hasil
+         JSON.stringify ulang — satu spasi beda pun akan menggagalkan. */
+      const digest = await digestDoku(mentah);
+      const harusnya = await hmacDoku(env.DOKU_SECRET_KEY,
+        rangkaiTandaTangan(kepalaId, kepalaReq, kepalaWaktu, url.pathname, digest));
+      if (!samaAman(kepalaTanda, harusnya))
+        return salah("Tanda tangan tidak cocok.", 403);
+
+      const pesananDoku = badan.order || {};
+      const transaksi   = badan.transaction || {};
+      const faktur = teks(pesananDoku.invoice_number, 64);
+      if (!faktur) return jwb({ ok: true, catatan: "Tanpa nomor faktur." });
+
+      const b = await db.prepare(`SELECT kode,status FROM pesanan WHERE order_id=?`)
+        .bind(faktur).first();
       if (!b) return jwb({ ok: true, catatan: "Pesanan tidak dikenal." });
 
-      const st = badan.transaction_status, penipuan = badan.fraud_status;
-      if (st === "capture" && penipuan === "accept") await lunasi(env, db, b.kode, asal);
-      else if (st === "settlement") await lunasi(env, db, b.kode, asal);
-      else if (st === "pending") await db.prepare(`UPDATE pesanan SET status='menunggu' WHERE kode=? AND status='draf'`).bind(b.kode).run();
-      else if (["deny", "cancel", "expire", "failure"].includes(st))
-        await db.prepare(`UPDATE pesanan SET status='gagal' WHERE kode=? AND status<>'lunas'`).bind(b.kode).run();
+      /* Hanya SUCCESS yang diproses. FAILED diabaikan: di Checkout,
+         pembeli masih boleh mencoba lagi di halaman yang sama, jadi
+         menandai pesanan gagal justru akan salah.                    */
+      if (transaksi.status !== "SUCCESS")
+        return jwb({ ok: true, catatan: "Belum lunas." });
 
+      if (Number(pesananDoku.amount) !== HARGA)
+        return salah("Jumlah pembayaran tidak sesuai harga.", 403);
+
+      /* Idempoten: lunasi() berhenti sendiri kalau sudah lunas, jadi
+         notifikasi dobel tidak pernah mengirim email dua kali.       */
+      await lunasi(env, db, b.kode, asal);
       return jwb({ ok: true });
     }
 
-    /* ── cek status; kalau perlu, tanya langsung ke Midtrans ───
+    /* ── cek status; kalau perlu, tanya langsung ke DOKU ───────
        Catatan penting: kode surat itu umum — dikirim ke penerima.
        Jadi jawaban di sini TIDAK BOLEH memuat token edit.        */
     if (jalur === "status") {
@@ -442,14 +584,17 @@ export async function onRequest(ctx) {
 
       const penerima = (JSON.parse(b.isi || "{}").penerima) || "";
 
-      if (b.status !== "lunas" && b.order_id && env.MIDTRANS_SERVER_KEY) {
-        const sk = env.MIDTRANS_SERVER_KEY;
-        const r = await fetch(basisMidtrans(env) + "/v2/" + encodeURIComponent(b.order_id) + "/status", {
-          headers: { authorization: "Basic " + btoa(sk + ":"), accept: "application/json" }
+      /* Cadangan kalau notifikasi telat atau tidak sampai: tanya
+         langsung ke DOKU. Dokumentasi menyarankan menunggu 60 detik
+         setelah pembayaran sebelum jawabannya bisa dipercaya.      */
+      if (b.status !== "lunas" && b.order_id && env.DOKU_CLIENT_ID && env.DOKU_SECRET_KEY) {
+        const r = await panggilDoku(env, {
+          metode: "GET",
+          sasaran: DOKU.jalurStatus + encodeURIComponent(b.order_id)
         });
-        const h = await r.json().catch(() => ({}));
-        if (h.transaction_status === "settlement" ||
-           (h.transaction_status === "capture" && h.fraud_status === "accept")) {
+        const t = (r.isi && r.isi.transaction) || {};
+        const o = (r.isi && r.isi.order) || {};
+        if (t.status === "SUCCESS" && Number(o.amount) === HARGA) {
           await lunasi(env, db, b.kode, asal);
           return jwb({ ok: true, status: "lunas", kode: b.kode, penerima });
         }
@@ -562,9 +707,10 @@ export async function onRequest(ctx) {
           d1: true,
           r2: !!env.FOTO,
           resend: !!env.RESEND_API_KEY,
-          midtrans: !!env.MIDTRANS_SERVER_KEY && !!env.MIDTRANS_CLIENT_KEY,
+          doku: !!env.DOKU_CLIENT_ID && !!env.DOKU_SECRET_KEY,
+          metode: DOKU.metode.join(", "),
           mode: (modeSandbox(env) ? "Sandbox (uji coba)" : "Production (sungguhan)")
-                + (modeDitegaskan(env) ? "" : " — ditebak, isi MIDTRANS_MODE"),
+                + (modeDitegaskan(env) ? "" : " — DOKU_MODE belum diisi, dianggap Sandbox"),
           sandbox: modeSandbox(env),
           mode_tegas: modeDitegaskan(env),
           pengirim: env.EMAIL_PENGIRIM || "(belum diisi)",

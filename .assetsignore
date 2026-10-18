@@ -4,3 +4,5 @@ wrangler.jsonc
 functions/
 *.md
 _redirects
+sim.mjs
+uji.mjs

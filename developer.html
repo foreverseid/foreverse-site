@@ -537,7 +537,7 @@ a.tautan:hover{text-decoration:underline}
     $("modeNama").textContent = uji ? "Sandbox" : "Production";
     $("modeKet").textContent = uji
       ? "Uang tidak benar-benar masuk. Ganti ke Production sebelum jualan."
-      : (p.mode_tegas ? "Pembayaran sungguhan aktif." : "Aktif, tapi MIDTRANS_MODE belum diisi tegas.");
+      : (p.mode_tegas ? "Pembayaran sungguhan aktif." : "Aktif, tapi DOKU_MODE belum diisi tegas.");
   }
 
   /* ── ubin angka ── */
@@ -583,7 +583,7 @@ a.tautan:hover{text-decoration:underline}
 
     if(DATA.periksa.sandbox) t.push({ tingkat:"gawat", n:1, ikon:"!",
       judul: "Pembayaran masih mode Sandbox",
-      ket: "Semua transaksi hanya uji coba — uangnya tidak masuk. Isi <code>MIDTRANS_MODE=production</code> di Cloudflare setelah akun Midtrans disetujui." });
+      ket: "Semua transaksi hanya uji coba — uangnya tidak masuk. Isi <code>DOKU_MODE=production</code> di Cloudflare setelah kredensial Production DOKU keluar." });
 
     var editHabis = b.filter(function(x){
       return x.status==="lunas" && x.batas_edit && x.batas_edit > now && (x.batas_edit - now) < 48*3600000; });
@@ -746,7 +746,7 @@ a.tautan:hover{text-decoration:underline}
       sb("Database (D1)", p.d1, "tersambung", "mati") +
       sb("Penyimpanan foto & lagu (R2)", p.r2, "tersambung", "belum — foto disimpan di D1") +
       sb("Pengiriman email (Resend)", p.resend, "tersambung", "belum dipasang") +
-      sb("Pembayaran (Midtrans)", p.midtrans, "tersambung", "kunci belum lengkap") +
+      sb("Pembayaran (DOKU)", p.doku, "tersambung", "kunci belum lengkap") +
       sbNetral("Email pengirim", p.pengirim || "(belum diisi)");
 
     $("aturan").innerHTML =

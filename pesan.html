@@ -607,17 +607,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     return j;
   }
 
-  function muatSnap(alamat, clientKey){
-    return new Promise(function(lanjut, tolak){
-      if(window.snap) return lanjut();
-      var s = document.createElement("script");
-      s.src = alamat; s.setAttribute("data-client-key", clientKey);
-      s.onload = lanjut;
-      s.onerror = function(){ tolak(new Error("Jendela pembayaran tidak bisa dimuat. Periksa koneksimu.")); };
-      document.head.appendChild(s);
-    });
-  }
-
   /* ══ 7 · kirim ══ */
   $("form").addEventListener("submit", async function(e){
     e.preventDefault();
@@ -648,16 +637,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       var bayar = await kirimJson("/api/bayar", { kode: draf.kode });
 
       if(bayar.sudah){ location.href = "/selesai?kode=" + draf.kode; return; }
+      if(!bayar.url) throw new Error("Halaman pembayaran tidak bisa dibuka. Pesananmu tersimpan — coba tekan tombolnya lagi.");
 
-      await muatSnap(bayar.snap, bayar.client_key);
-      tirai(false);
+      /* Kode pesanan disimpan supaya pembeli yang menutup tab di
+         halaman DOKU masih bisa melanjutkan nanti tanpa mengisi ulang. */
+      try{ localStorage.setItem("fv-pesanan-terakhir", draf.kode); }catch(_){}
 
-      window.snap.pay(bayar.token, {
-        onSuccess: function(){ location.href = "/selesai?kode=" + draf.kode; },
-        onPending: function(){ location.href = "/selesai?kode=" + draf.kode; },
-        onError:   function(){ tbl.disabled = false; pesanGalat("Pembayaran gagal diproses. Pesananmu masih tersimpan — coba tekan tombolnya lagi."); },
-        onClose:   function(){ tbl.disabled = false; pesanGalat("Jendela pembayaran ditutup. Pesananmu masih tersimpan, tinggal tekan tombolnya lagi kalau mau lanjut."); }
-      });
+      tirai(true, "Mengalihkan ke halaman pembayaran…");
+      location.href = bayar.url;
 
     }catch(err){
       tirai(false);
