@@ -259,9 +259,13 @@ async function hapusFoto(env, db, kode) {
 /* ══════════════════ isi surat ══════════════════ */
 
 /* ══════════════════ lagu ══════════════════
-   Dua sumber: "galeri" (file di folder /lagu, daftarnya di
-   /lagu/daftar.json) atau "unggah" (file pembeli, disimpan di R2).
-   Mulai/Selesai = bagian lagu yang diputar, dalam detik.            */
+   Dua kemungkinan saja, tidak lebih:
+     1. Pembeli tidak mengunggah apa pun → surat memakai kotak musik
+        bawaan Foreverse, yang dibangkitkan browser sendiri tanpa
+        berkas. Tidak ada lisensi yang bisa bermasalah, tidak ada
+        berkas yang bisa hilang, dan halamannya tidak bertambah berat.
+     2. Pembeli mengunggah MP3/M4A miliknya → disimpan di R2.
+   Mulai/Selesai = potongan lagu yang diputar berulang, dalam detik. */
 
 const JENIS_LAGU = {
   "audio/mpeg": ["mp3", "audio/mpeg"], "audio/mp3": ["mp3", "audio/mpeg"],
@@ -269,62 +273,43 @@ const JENIS_LAGU = {
   "audio/aac": ["aac", "audio/aac"]
 };
 
-async function daftarGaleri(env, asal) {
-  if (!env.ASSETS) return [];
-  try {
-    const r = await env.ASSETS.fetch(new Request(asal + "/lagu/daftar.json"));
-    if (!r.ok) return [];
-    const d = await r.json();
-    return Array.isArray(d) ? d.filter(x => x && /^[\w.-]+\.(mp3|m4a)$/i.test(String(x.file || ""))) : [];
-  } catch (_) { return []; }
-}
-
 async function hapusUnggahanLama(env, kode, lama) {
-  if (env.FOTO && lama && lama.sumber === "unggah" && typeof lama.file === "string"
+  if (env.FOTO && lama && typeof lama.file === "string"
       && lama.file.startsWith("/f/" + kode + "/")) {
     try { await env.FOTO.delete(lama.file.slice(3)); } catch (_) {}
   }
 }
 
-async function rapikanLagu(env, kode, masuk, lama, asal) {
+async function rapikanLagu(env, kode, masuk, lama) {
   const m = masuk || {};
   const detik = v => { const n = Math.round((+v || 0) * 10) / 10; return n > 0 && n < 3600 ? n : 0; };
   const mulai = detik(m.mulai);
   let selesai = detik(m.selesai);
-  if (selesai && selesai < mulai + 3) selesai = 0;          // bagian terlalu pendek → putar sampai habis
+  if (selesai && selesai < mulai + 3) selesai = 0;   // potongan terlalu pendek → putar sampai habis
   const kosong = { sumber: "", file: "", judul: "", mulai: 0, selesai: 0 };
 
-  if (m.sumber === "galeri") {
-    const pilih = teks(m.galeri, 120);
-    const lagu = (await daftarGaleri(env, asal)).find(x => x.file === pilih);
-    if (!lagu) throw new Error("Lagu dari galeri tidak ditemukan. Pilih ulang, ya.");
+  /* berkas baru diunggah */
+  if (m.data && String(m.data).length > 32) {
+    if (!env.FOTO) throw new Error("Unggah lagu sedang tidak bisa dipakai. Kosongkan saja — suratnya tetap bermusik.");
+    const jenis = JENIS_LAGU[String(m.mime || "").toLowerCase()];
+    if (!jenis) throw new Error("Format lagu harus MP3 atau M4A.");
+    const bytes = dariBase64(m.data);
+    if (bytes.length > MAKS_LAGU) throw new Error("File lagu terlalu besar. Maksimal 10 MB.");
+    const kunci = kode + "/lagu-" + acak(6) + "." + jenis[0];
+    await env.FOTO.put(kunci, bytes, { httpMetadata: { contentType: jenis[1] } });
     await hapusUnggahanLama(env, kode, lama);
-    return { sumber: "galeri", galeri: lagu.file, judul: teks(lagu.judul, BATAS.judulLagu),
-             file: "/lagu/" + lagu.file, mulai, selesai };
+    return { sumber: "unggah", judul: teks(m.judul, BATAS.judulLagu), file: "/f/" + kunci, mulai, selesai };
   }
 
-  if (m.sumber === "unggah") {
-    if (m.data && String(m.data).length > 32) {
-      if (!env.FOTO) throw new Error("Unggah lagu sedang tidak bisa dipakai. Pilih dari galeri atau hubungi kami.");
-      const jenis = JENIS_LAGU[String(m.mime || "").toLowerCase()];
-      if (!jenis) throw new Error("Format lagu harus MP3 atau M4A.");
-      const bytes = dariBase64(m.data);
-      if (bytes.length > MAKS_LAGU) throw new Error("File lagu terlalu besar. Maksimal 10 MB.");
-      const kunci = kode + "/lagu-" + acak(6) + "." + jenis[0];
-      await env.FOTO.put(kunci, bytes, { httpMetadata: { contentType: jenis[1] } });
-      await hapusUnggahanLama(env, kode, lama);
-      return { sumber: "unggah", judul: teks(m.judul, BATAS.judulLagu), file: "/f/" + kunci, mulai, selesai };
-    }
-    if (lama && lama.sumber === "unggah" && lama.file)       // edit tanpa ganti file
-      return { sumber: "unggah", judul: lama.judul || "", file: lama.file, mulai, selesai };
-    throw new Error("File lagu belum dipilih.");
-  }
+  /* mengedit tanpa mengganti berkas: lagu yang lama dipertahankan */
+  if (m.pakaiLama && lama && lama.file)
+    return { sumber: "unggah", judul: lama.judul || "", file: lama.file, mulai, selesai };
 
-  await hapusUnggahanLama(env, kode, lama);                  // tanpa lagu
+  await hapusUnggahanLama(env, kode, lama);
   return kosong;
 }
 
-async function rapikanIsi(env, kode, badan, lamaIsi, asal) {
+async function rapikanIsi(env, kode, badan, lamaIsi) {
   const p = badan.isi || {};
   const isi = {
     penerima: teks(p.penerima, BATAS.penerima),
@@ -357,7 +342,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, asal) {
     }
   }
   if (isi.foto.length < 1) throw new Error("Minimal satu foto harus diunggah.");
-  isi.lagu = await rapikanLagu(env, kode, p.lagu, lamaIsi && lamaIsi.lagu, asal);
+  isi.lagu = await rapikanLagu(env, kode, p.lagu, lamaIsi && lamaIsi.lagu);
   return isi;
 }
 
@@ -461,7 +446,7 @@ export async function onRequest(ctx) {
     if (jalur === "draf" && request.method === "POST") {
       ctx.waitUntil(bersihkan(db, env));
       const kode = acak(6), token = acak(22), skr = Date.now();
-      const isi = await rapikanIsi(env, kode, badan, null, asal);
+      const isi = await rapikanIsi(env, kode, badan, null);
       await db.prepare(`INSERT INTO pesanan
         (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif)
         VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1)`).bind(
@@ -638,7 +623,7 @@ export async function onRequest(ctx) {
       if (b.batas_edit && Date.now() > b.batas_edit) return salah("Masa edit sudah lewat.", 403);
 
       const lama = JSON.parse(b.isi || "{}");
-      const isi = await rapikanIsi(env, b.kode, badan, lama, asal);
+      const isi = await rapikanIsi(env, b.kode, badan, lama);
       await db.prepare(`UPDATE pesanan SET isi=?, email=? WHERE kode=?`)
         .bind(JSON.stringify(isi), teks(badan.email, BATAS.email) || b.email, b.kode).run();
       return jwb({ ok: true, kode: b.kode });
@@ -668,7 +653,7 @@ export async function onRequest(ctx) {
             pengirim: i.pengirim || "",
             foto_n: Array.isArray(i.foto) ? i.foto.length : 0,
             pesan_n: Array.isArray(i.pesan) ? i.pesan.filter(x => x).length : 0,
-            lagu_sumber: l.sumber || "",              // "galeri" | "unggah" | "" (tanpa lagu)
+            lagu_sumber: l.sumber || "",              // "unggah" | "" (kotak musik bawaan)
             lagu_judul: l.judul || "",
             punya_rahasia: !!i.rahasia,
             punya_harapan: !!i.harapan

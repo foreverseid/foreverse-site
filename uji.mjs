@@ -515,6 +515,135 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
     harus(!t.includes(hilang), "masih memanggil " + hilang);
 });
 
+
+/* ═══════════ lagu ═══════════ */
+judul("Lagu");
+
+const MP3 = (n = 2000) => "data:audio/mpeg;base64," + Buffer.alloc(n, 7).toString("base64");
+
+async function drafLagu(L, lagu, token) {
+  const isi = isiDraf();
+  isi.isi.lagu = lagu;
+  if (token) {
+    const r = await L.panggil("/api/simpan", { method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ token, ...isi }) });
+    return await r.json();
+  }
+  const r = await L.panggil("/api/draf", { method: "POST",
+    headers: { "content-type": "application/json" }, body: JSON.stringify(isi) });
+  return await r.json();
+}
+
+async function laguTersimpan(L, kode) {
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(kode).first();
+  return JSON.parse(b.isi).lagu;
+}
+
+await uji("tanpa unggahan, lagu kosong — surat memakai kotak musik bawaan", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { mulai: 0, selesai: 0 });
+  harus(j.ok, "draf gagal");
+  const l = await laguTersimpan(L, j.kode);
+  sama(l.file, "", "file harus kosong");
+  sama(l.sumber, "", "sumber harus kosong");
+});
+
+await uji("MP3 yang diunggah tersimpan dan bisa diputar", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { data: MP3(), mime: "audio/mpeg", judul: "lagu kami" });
+  harus(j.ok, "draf gagal: " + j.pesan);
+  const l = await laguTersimpan(L, j.kode);
+  sama(l.sumber, "unggah", "sumber");
+  sama(l.judul, "lagu kami", "judul");
+  harus(l.file.startsWith("/f/" + j.kode + "/lagu-"), "alamat berkas salah: " + l.file);
+  harus(/\.mp3$/.test(l.file), "akhiran berkas harus .mp3");
+  harus([...L.env.FOTO._isi.keys()].some(k => k.includes("/lagu-")), "berkas tidak masuk ke R2");
+});
+
+await uji("M4A juga diterima", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { data: MP3(), mime: "audio/x-m4a", judul: "m4a" });
+  harus(j.ok, "draf gagal: " + j.pesan);
+  harus(/\.m4a$/.test((await laguTersimpan(L, j.kode)).file), "akhiran harus .m4a");
+});
+
+await uji("format selain MP3/M4A ditolak dengan pesan yang jelas", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { data: MP3(), mime: "audio/wav" });
+  sama(j.ok, false, "harus ditolak");
+  harus(/MP3 atau M4A/.test(j.pesan), "pesan galat kurang jelas: " + j.pesan);
+});
+
+await uji("berkas lebih dari 10 MB ditolak", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { data: MP3(11 * 1024 * 1024), mime: "audio/mpeg" });
+  sama(j.ok, false, "harus ditolak");
+  harus(/10 MB/.test(j.pesan), "pesan galat harus menyebut 10 MB: " + j.pesan);
+});
+
+await uji("potongan mulai–selesai tersimpan apa adanya", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { data: MP3(), mime: "audio/mpeg", mulai: 30, selesai: 75 });
+  const l = await laguTersimpan(L, j.kode);
+  sama(l.mulai, 30, "mulai"); sama(l.selesai, 75, "selesai");
+});
+
+await uji("potongan kurang dari 3 detik diabaikan, lagu diputar sampai habis", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { data: MP3(), mime: "audio/mpeg", mulai: 30, selesai: 31 });
+  sama((await laguTersimpan(L, j.kode)).selesai, 0, "selesai harus dinolkan");
+});
+
+await uji("mengedit tanpa mengganti berkas mempertahankan lagu lama", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  await L.notifikasi(notifSukses(p.faktur)); await L.tunggu();
+  await drafLagu(L, { data: MP3(), mime: "audio/mpeg", judul: "asli" }, p.token);
+  const sebelum = await laguTersimpan(L, p.kode);
+  await drafLagu(L, { pakaiLama: true, mulai: 12, selesai: 40 }, p.token);
+  const sesudah = await laguTersimpan(L, p.kode);
+  sama(sesudah.file, sebelum.file, "berkas harus sama");
+  sama(sesudah.judul, "asli", "judul harus ikut bertahan");
+  sama(sesudah.mulai, 12, "mulai boleh berubah");
+});
+
+await uji("menghapus lagu saat edit juga membuang berkasnya dari penyimpanan", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  await L.notifikasi(notifSukses(p.faktur)); await L.tunggu();
+  await drafLagu(L, { data: MP3(), mime: "audio/mpeg" }, p.token);
+  harus([...L.env.FOTO._isi.keys()].some(k => k.includes("/lagu-")), "berkas belum masuk");
+  await drafLagu(L, { mulai: 0, selesai: 0 }, p.token);
+  sama((await laguTersimpan(L, p.kode)).file, "", "lagu harus kosong");
+  harus(![...L.env.FOTO._isi.keys()].some(k => k.includes("/lagu-")), "berkas lagu masih tertinggal di R2");
+});
+
+await uji("jalur YouTube benar-benar dicabut, bukan sekadar disembunyikan", async () => {
+  const L = await buatLingkungan();
+  const j = await drafLagu(L, { youtube: "https://youtu.be/dQw4w9WgXcQ" });
+  harus(j.ok, "draf gagal");
+  const l = await laguTersimpan(L, j.kode);
+  sama(l.file, "", "tidak boleh ada berkas");
+  harus(!("youtube" in l), "field youtube masih tersimpan");
+  for (const berkas of ["functions/api/[[jalur]].js", "pesan.html", "surat.html"]) {
+    const t = await readFile("./" + berkas, "utf8");
+    harus(!/youtube|ytPlayer|dockLayar/i.test(t), berkas + " masih menyebut YouTube");
+  }
+});
+
+await uji("jalur galeri dicabut — folder lagu/ memang tidak pernah ada", async () => {
+  const t = await readFile("./functions/api/[[jalur]].js", "utf8");
+  harus(!/daftarGaleri|galeri/i.test(t), "masih ada sisa kode galeri");
+});
+
+await uji("surat.html memutar kotak musik bawaan kalau tidak ada berkas", async () => {
+  const t = await readFile("./surat.html", "utf8");
+  harus(/synth=musicBox\(\)/.test(t), "musicBox tidak dipanggil");
+  harus(!/K\.demo/.test(t), "masih bergantung pada penanda demo");
+  harus(/audio\.currentTime=mulai/.test(t), "potongan mulai/selesai tidak dihormati");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

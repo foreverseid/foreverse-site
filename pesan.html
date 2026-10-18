@@ -304,11 +304,22 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">6</span> Lagu <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
-        <p class="jelas">Tempel link YouTube-nya. Begitu kado dibuka, pemutarnya muncul di bawah layar. Dia cukup ketuk sekali, lalu lagunya menemani sampai akhir.</p>
+        <p class="jelas">Kosongkan saja kalau tidak perlu — suratnya tetap bermusik, ada kotak musik lembut bawaan Foreverse yang bisa dimatikan kapan saja. Mau lagu kalian sendiri? Unggah berkasnya di sini.</p>
         <div class="baris" data-f="lagu">
-          <label for="lagu">Link lagu dari YouTube</label>
-          <input id="lagu" type="url" maxlength="200" inputmode="url" placeholder="https://youtu.be/...">
-          <p class="bantu">Kalau dikosongkan, surat tetap punya musik kotak musik bawaan yang bisa dimatikan.</p>
+          <label for="laguBerkas">Berkas lagu</label>
+          <input id="laguBerkas" type="file" accept="audio/mpeg,audio/mp4,audio/x-m4a,audio/aac,.mp3,.m4a">
+          <p class="bantu" id="laguNama" hidden></p>
+          <p class="bantu">Format <b>MP3</b> atau <b>M4A</b>, maksimal <b>10 MB</b>. Pastikan lagunya boleh kamu pakai — kami tidak menyediakan lagu berlisensi.</p>
+        </div>
+        <div class="baris">
+          <label for="laguMulai">Putar dari detik ke- <span style="font-weight:400;color:var(--ink-faint)">opsional</span></label>
+          <input id="laguMulai" type="number" min="0" max="3599" step="1" inputmode="numeric" placeholder="0">
+          <p class="bantu">Kosongkan untuk memutar dari awal.</p>
+        </div>
+        <div class="baris">
+          <label for="laguSelesai">Sampai detik ke- <span style="font-weight:400;color:var(--ink-faint)">opsional</span></label>
+          <input id="laguSelesai" type="number" min="0" max="3599" step="1" inputmode="numeric" placeholder="sampai habis">
+          <p class="bantu">Kalau diisi, potongan itu yang diulang terus. Minimal 3 detik lebih panjang dari waktu mulai.</p>
         </div>
       </section>
 
@@ -418,6 +429,59 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
   function kartu(i){ return document.querySelector('.fotokartu[data-i="'+i+'"]'); }
 
+  /* ── lagu ──
+     LAGU     = berkas baru yang dipilih di sesi ini
+     LAGU_ADA = lagu yang sudah tersimpan di server (hanya saat mode edit) */
+  var LAGU = null, LAGU_ADA = null;
+  var LAGU_JENIS = { "audio/mpeg":1, "audio/mp3":1, "audio/mp4":1, "audio/x-m4a":1, "audio/m4a":1, "audio/aac":1 };
+  var LAGU_MAKS = 10 * 1024 * 1024;
+
+  function namaLagu(t){
+    var el = $("laguNama");
+    el.textContent = t || "";
+    el.hidden = !t;
+  }
+
+  $("laguBerkas").addEventListener("change", function(){
+    var berkas = this.files && this.files[0];
+    if(!berkas) return;
+    var jenis = String(berkas.type || "").toLowerCase();
+    if(!LAGU_JENIS[jenis] && !/\.(mp3|m4a)$/i.test(berkas.name)){
+      this.value = ""; pesanGalat("Format lagunya harus MP3 atau M4A."); return;
+    }
+    if(berkas.size > LAGU_MAKS){
+      this.value = "";
+      pesanGalat("Lagunya terlalu besar (" + (berkas.size/1048576).toFixed(1) + " MB). Maksimal 10 MB.");
+      return;
+    }
+    namaLagu("Membaca berkas…");
+    var baca = new FileReader();
+    baca.onerror = function(){ namaLagu(""); pesanGalat("Berkas lagunya tidak bisa dibaca. Coba berkas lain."); };
+    baca.onload = function(){
+      LAGU = {
+        data: baca.result,
+        mime: LAGU_JENIS[jenis] ? jenis : (/\.mp3$/i.test(berkas.name) ? "audio/mpeg" : "audio/mp4"),
+        judul: berkas.name.replace(/\.[^.]+$/, "").slice(0, 80)
+      };
+      LAGU_ADA = null;
+      namaLagu("Terpilih: " + berkas.name);
+      dorong();
+    };
+    baca.readAsDataURL(berkas);
+  });
+
+  function detikLagu(id){
+    var n = parseInt($(id).value, 10);
+    return (isFinite(n) && n > 0 && n < 3600) ? n : 0;
+  }
+
+  function laguUntukServer(){
+    var mulai = detikLagu("laguMulai"), selesai = detikLagu("laguSelesai");
+    if(LAGU) return { data: LAGU.data, mime: LAGU.mime, judul: LAGU.judul, mulai: mulai, selesai: selesai };
+    if(LAGU_ADA) return { pakaiLama: true, mulai: mulai, selesai: selesai };
+    return { mulai: 0, selesai: 0 };
+  }
+
   function ambilFoto(i, berkas){
     if(!/^image\//.test(berkas.type)){ pesanGalat("File itu bukan gambar. Pilih foto, ya."); return; }
     var k = kartu(i), jend = k.querySelector(".jendela");
@@ -495,7 +559,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       tanggalKenal: $("kenal").value || "",
       harapan: $("harapan").value,
       rahasia: $("rahasia").value,
-      lagu: { file:"", youtube: $("lagu").value.trim(), mulai:0 }
+      lagu: {
+        file: (LAGU && LAGU.data) || LAGU_ADA || "",
+        mulai: detikLagu("laguMulai"), selesai: detikLagu("laguSelesai")
+      }
     };
   }
 
@@ -587,7 +654,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tanggalKenal: $("kenal").value,
         harapan: $("harapan").value,
         rahasia: $("rahasia").value,
-        lagu: { youtube: $("lagu").value.trim() }
+        lagu: laguUntukServer()
       },
       foto: [0,1,2].map(function(i){
         var ket = (document.querySelector('[data-ket="'+i+'"]')||{}).value || "";
@@ -681,7 +748,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         $("kenal").value  = i.tanggalKenal || "";
         $("harapan").value = i.harapan || "";
         $("rahasia").value = i.rahasia || "";
-        $("lagu").value = (i.lagu && i.lagu.youtube) || "";
+        var lagu = i.lagu || {};
+        LAGU_ADA = lagu.file || null;
+        $("laguMulai").value = lagu.mulai || "";
+        $("laguSelesai").value = lagu.selesai || "";
+        namaLagu(LAGU_ADA ? "Lagu tersimpan: " + (lagu.judul || "berkas kamu") + " — pilih berkas baru kalau mau mengganti."
+                          : "");
         (i.foto||[]).forEach(function(f, n){
           if(n > 2 || !f || !f.src) return;
           FOTO_ADA[n] = f.src;

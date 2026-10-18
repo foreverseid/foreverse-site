@@ -1,6 +1,6 @@
 # Foreverse — Panduan Pasang & Cutover ke DOKU
 
-18 Oktober 2026 · 52 uji lulus di simulator
+18 Oktober 2026 · 64 uji lulus di simulator
 
 Midtrans sudah dicabut sepenuhnya. Tidak ada sisa kodenya di mana pun.
 
@@ -15,7 +15,8 @@ Midtrans sudah dicabut sepenuhnya. Tidak ada sisa kodenya di mana pun.
 | `selesai.html` | Tombol **Lanjutkan pembayaran** untuk pembeli yang menutup tab |
 | `developer.html` | Tab Sistem menyebut DOKU, bukan Midtrans |
 | `syarat-ketentuan.html` | DOKU sebagai pemroses; metode QRIS |
-| `kebijakan-privasi.html` | DOKU sebagai pemroses |
+| `kebijakan-privasi.html` | DOKU sebagai pemroses; butir lagu disesuaikan |
+| `surat.html` | Pemutar YouTube dicabut; kotak musik bawaan jadi lagu bawaan; potongan mulai–selesai dihormati |
 | `.assetsignore` | `sim.mjs` & `uji.mjs` tidak ikut tersaji ke publik |
 | `sim.mjs`, `uji.mjs` | **Baru.** Simulator & uji otomatis, hanya untuk di komputer |
 
@@ -87,12 +88,15 @@ Saya tidak punya akses push, jadi ini kamu sendiri lewat web GitHub. Ganti 6 ber
 ```
 functions/api/[[jalur]].js
 pesan.html
+surat.html
 selesai.html
 developer.html
 syarat-ketentuan.html
 kebijakan-privasi.html
 .assetsignore
 ```
+
+Delapan berkas. `surat.html` masuk karena perubahan lagu, bukan karena pembayaran.
 
 `sim.mjs` dan `uji.mjs` boleh ikut diunggah (berguna kalau nanti ada perubahan), boleh juga tidak — keduanya sudah dikecualikan dari yang tersaji ke publik.
 
@@ -106,6 +110,8 @@ Tunggu sampai deploy Cloudflare hijau.
 4. Pastikan mendarat kembali di halaman selesai, lalu statusnya berubah jadi lunas sendiri.
 5. Cek email masuk, tautan suratnya bisa dibuka, dan pesanannya muncul di tab **Pesanan** di `/developer`.
 6. Buka tab **Sistem** di `/developer`: baris "Pembayaran (DOKU)" harus **tersambung**.
+
+Uji juga lagunya: sekali tanpa mengunggah apa pun (harus terdengar kotak musik bawaan), sekali dengan mengunggah MP3 (harus terdengar lagumu). Coba juga isi "putar dari detik ke-" untuk memastikan potongannya benar.
 
 Lalu uji satu kasus gagal: buat pesanan baru, sampai halaman DOKU **tutup tabnya tanpa membayar**. Buka `/selesai?kode=<kode pesananmu>` — tombol **Lanjutkan pembayaran** harus muncul dan membawamu kembali ke halaman bayar tanpa mengetik ulang apa pun.
 
@@ -153,7 +159,7 @@ Kalau nanti ada yang diubah di bagian pembayaran, jalankan ini sebelum unggah:
 node uji.mjs
 ```
 
-52 uji harus lulus semua. Isinya antara lain: tanda tangan yang kita kirim diperiksa ulang oleh pustaka kripto yang berbeda, susunan komponennya dicocokkan dengan contoh resmi di dokumentasi DOKU, notifikasi palsu ditolak, notifikasi dobel tidak mengirim email dua kali, dan jumlah bayar yang tidak cocok ditolak.
+64 uji harus lulus semua. Isinya antara lain: tanda tangan yang kita kirim diperiksa ulang oleh pustaka kripto yang berbeda, susunan komponennya dicocokkan dengan contoh resmi di dokumentasi DOKU, notifikasi palsu ditolak, notifikasi dobel tidak mengirim email dua kali, dan jumlah bayar yang tidak cocok ditolak.
 
 Untuk mencoba situsnya di komputer: `node sim.mjs`, lalu buka `http://localhost:8787`.
 
