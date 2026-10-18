@@ -644,6 +644,37 @@ await uji("surat.html memutar kotak musik bawaan kalau tidak ada berkas", async 
   harus(/audio\.currentTime=mulai/.test(t), "potongan mulai/selesai tidak dihormati");
 });
 
+
+/* ═══════════ ketukan pemeriksaan DOKU ═══════════ */
+judul("Ketukan pemeriksaan alamat notifikasi");
+
+await uji("GET ke alamat notifikasi dijawab 200 (dipakai DOKU saat menyimpan URL)", async () => {
+  const L = await buatLingkungan();
+  const r = await L.panggil("/api/notifikasi-doku");
+  sama(r.status, 200, "status");
+  const j = await r.json();
+  sama(j.ok, true, "ok");
+});
+
+await uji("POST tanpa tanda tangan dijawab 200 tapi tidak memproses apa pun", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  const r = await L.panggil("/api/notifikasi-doku", {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify(notifSukses(p.faktur)) });
+  sama(r.status, 200, "status");
+  await L.tunggu();
+  const st = await (await L.panggil("/api/status?kode=" + p.kode)).json();
+  harus(st.status !== "lunas", "pesanan TIDAK boleh lunas tanpa tanda tangan");
+  sama(L.catatan.email.length, 0, "tidak boleh ada email");
+});
+
+await uji("tanda tangan palsu tetap ditolak 403, bukan ikut dijawab 200", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  sama((await L.notifikasi(notifSukses(p.faktur), { rusak: true })).status, 403, "status");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

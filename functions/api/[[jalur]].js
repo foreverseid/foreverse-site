@@ -509,6 +509,17 @@ export async function onRequest(ctx) {
       return jwb({ ok: true, url: urlBayar, order_id: orderId });
     }
 
+    /* ── ketukan pemeriksaan dari DOKU ───────────────────────────
+       Back Office DOKU menguji alamat notifikasi sebelum mau
+       menyimpannya, dan ketukan itu tidak bertanda tangan. Dijawab
+       200 di sini supaya lolos pemeriksaan. Tidak ada apa pun yang
+       diproses: pelunasan hanya terjadi lewat jalur bertanda tangan
+       di bawah, dan itu tidak berubah sedikit pun.                 */
+    if (jalur === "notifikasi-doku" &&
+        (request.method !== "POST" || !request.headers.get("Signature"))) {
+      return jwb({ ok: true, layanan: "notifikasi-doku", siap: true });
+    }
+
     /* ── pemberitahuan dari DOKU (webhook) ───────────────────────
        Alamat ini yang diisi di Back Office DOKU sebagai Notification
        URL: https://foreverse.id/api/notifikasi-doku                 */
