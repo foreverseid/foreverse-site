@@ -26,7 +26,7 @@ function isiDraf() {
     tema: "bait", momen: "birthday",
     email: "pembeli@contoh.id", whatsapp: "6281234567890",
     isi: {
-      penerima: "Sofia", pengirim: "Avero",
+      penerima: "Amira", pengirim: "Adriel",
       pesan: ["Selamat ulang tahun.", "Semoga sehat selalu.", "Sampai jumpa."],
       tanggalLahir: "2001-05-14", harapan: "Semoga lekas tercapai.",
       rahasia: "Aku menunggu di halaman terakhir."
@@ -164,7 +164,7 @@ await uji("surat baru bisa dibuka setelah lunas", async () => {
   const r = await L.panggil("/api/surat?kode=" + p.kode);
   sama(r.status, 200, "setelah lunas harus 200");
   const j = await r.json();
-  sama(j.isi.penerima, "Sofia", "isi surat");
+  sama(j.isi.penerima, "Amira", "isi surat");
 });
 
 /* ═══════════ c · tanda tangan salah ═══════════ */
@@ -441,7 +441,7 @@ await uji("daftar pesanan tampil dengan status yang benar", async () => {
   sama(j.pendapatan, 15000, "pendapatan");
   const baris = j.baris.find(b => b.kode === p.kode);
   sama(baris.status, "lunas", "status baris");
-  sama(baris.penerima, "Sofia", "penerima");
+  sama(baris.penerima, "Amira", "penerima");
   harus(!("isi" in baris), "isi mentah tidak boleh ikut");
 });
 
