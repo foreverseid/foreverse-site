@@ -26,9 +26,9 @@ function isiDraf() {
     tema: "bait", momen: "birthday",
     email: "pembeli@contoh.id", whatsapp: "6281234567890",
     isi: {
-      penerima: "Amira", pengirim: "Adriel",
-      pesan: ["Selamat ulang tahun.", "Semoga sehat selalu.", "Sampai jumpa."],
-      tanggalLahir: "2001-05-14", harapan: "Semoga lekas tercapai.",
+      penerima: "Amira", pengirim: "Adriel", ucapan: "selamat",
+      surat: ["Selamat ulang tahun.", "Semoga sehat selalu.", "Sampai jumpa."],
+      tanggalLahir: "2001-05-14", sembunyikanUmur: false,
       rahasia: "Aku menunggu di halaman terakhir."
     },
     foto: [{ data: FOTO, mime: "image/jpeg", ket: "foto pertama" }]
@@ -497,7 +497,7 @@ async function skripHalaman(berkas) {
   return potong;
 }
 
-for (const berkas of ["pesan.html", "selesai.html", "developer.html"]) {
+for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
     const { writeFileSync, rmSync } = await import("node:fs");
@@ -640,11 +640,13 @@ await uji("jalur galeri dicabut — folder lagu/ memang tidak pernah ada", async
   harus(!/daftarGaleri|galeri/i.test(t), "masih ada sisa kode galeri");
 });
 
-await uji("surat.html memutar kotak musik bawaan kalau tidak ada berkas", async () => {
+await uji("surat.html memutar kotak musik bawaan kalau tidak ada lagu, dan menghormati potongan mulai/selesai kalau ada", async () => {
   const t = await readFile("./surat.html", "utf8");
-  harus(/synth=musicBox\(\)/.test(t), "musicBox tidak dipanggil");
+  harus(/function musicBox\(/.test(t), "musicBox tidak didefinisikan");
+  harus(/synth=musicBox\(\)/.test(t), "musicBox tidak dipanggil sebagai cadangan");
   harus(!/K\.demo/.test(t), "masih bergantung pada penanda demo");
-  harus(/audio\.currentTime=mulai/.test(t), "potongan mulai/selesai tidak dihormati");
+  harus(/L\.mulai/.test(t) && /L\.selesai/.test(t), "potongan mulai/selesai tidak dibaca dari data lagu");
+  harus(/audio\.currentTime=st/.test(t), "potongan mulai tidak diterapkan ke audio");
 });
 
 

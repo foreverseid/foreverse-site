@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Isi suratmu · Foreverse</title>
-<meta name="description" content="Tulis pesanmu, pilih fotonya, lihat hasilnya langsung, lalu bayar Rp15.000.">
+<meta name="description" content="Tulis suratmu, pilih fotonya, lihat pratinjaunya, lalu bayar Rp15.000.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FBFAF7">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -156,15 +156,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 @media (min-width:1000px){ .sisi-in{position:sticky;top:84px} }
 .sisi h2{font-family:var(--serif);font-weight:400;font-size:1.1rem;margin:0 0 4px}
 .sisi .jelas{margin:0 0 14px;color:var(--ink-faint);font-size:.84rem;line-height:1.5}
-.hp{
-  position:relative;margin:0 auto;width:100%;max-width:310px;aspect-ratio:9/18.6;
-  background:#16161A;border-radius:34px;padding:9px;box-shadow:0 22px 50px -24px rgba(22,22,26,.5);
+.pv-card{
+  background:var(--violet-tint);border-radius:14px;padding:18px 16px;text-align:center;
 }
-.hp iframe{width:100%;height:100%;border:0;border-radius:26px;background:var(--cream);display:block}
-.hp .poni{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:84px;height:18px;background:#16161A;border-radius:0 0 11px 11px;z-index:2}
+.pv-card svg{display:block;margin:0 auto 10px;opacity:.85}
 .pv-kaki{margin:12px 0 0;text-align:center;font-size:.78rem;color:var(--ink-faint);line-height:1.5}
 
-/* pratinjau di HP: lembar penuh */
+/* tombol pratinjau mengambang, muncul juga di HP supaya tidak perlu
+   gulir sampai bawah untuk membukanya */
 .buka-pv{
   display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:45;
   background:var(--violet);color:#fff;border:0;font:inherit;font-weight:600;font-size:.9rem;
@@ -172,19 +171,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 }
 @media (max-width:999px){
   .buka-pv{display:inline-flex;align-items:center;gap:8px}
-  .sisi{
-    position:fixed;inset:0;z-index:60;background:var(--cream);padding:16px;overflow:auto;
-    transform:translateY(100%);transition:transform .3s ease;visibility:hidden;
-  }
-  .sisi.buka{transform:none;visibility:visible}
-  .tutup-pv{
-    display:block;position:sticky;top:0;z-index:2;margin:0 0 12px auto;
-    background:var(--violet);color:#fff;border:0;font:inherit;font-weight:600;font-size:.86rem;
-    padding:10px 18px;border-radius:999px;cursor:pointer;
-  }
-  .hp{max-width:290px}
 }
-@media (min-width:1000px){ .tutup-pv{display:none} }
 
 /* ══ tirai memuat ══ */
 .tirai{position:fixed;inset:0;z-index:80;background:rgba(251,250,247,.94);display:none;place-items:center;text-align:center;padding:24px}
@@ -215,8 +202,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
 <main class="wrap">
   <div class="kepala">
-    <h1 id="judul">Isi kotak kejutannya</h1>
-    <p id="subjudul">Tulis apa adanya. Yang kamu ketik dipasang persis seperti itu, dan hasilnya langsung kelihatan di sebelah.</p>
+    <h1 id="judul">Tulis suratnya</h1>
+    <p id="subjudul">Tulis apa adanya — yang kamu ketik dipasang persis seperti itu. Isi dulu, lalu buka pratinjau penuhnya kapan saja untuk melihat hasilnya.</p>
   </div>
 
   <div class="duo">
@@ -235,7 +222,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           </div>
           <div class="baris" data-f="pengirim">
             <label for="pengirim">Nama kamu</label>
-            <input id="pengirim" type="text" maxlength="20" autocomplete="off" placeholder="Fatah">
+            <input id="pengirim" type="text" maxlength="20" autocomplete="off" placeholder="Adriel">
             <div class="hitung"><span></span><span class="angka"></span></div>
             <p class="galat">Nama kamu belum diisi.</p>
           </div>
@@ -243,22 +230,22 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       </section>
 
       <section class="blok">
-        <h2><span class="n">2</span> Pesanmu</h2>
-        <p class="jelas">Tiga bagian, muncul satu per satu di kartu ucapan. Enter untuk baris baru juga dipakai persis.</p>
-        <div class="baris" data-f="pesan1">
-          <label for="pesan1">Bagian 1 — pembuka</label>
-          <textarea id="pesan1" maxlength="220" placeholder="Selamat ulang tahun, …"></textarea>
+        <h2><span class="n">2</span> Suratmu</h2>
+        <p class="jelas">Tiga paragraf, muncul satu per satu setelah dua permainannya selesai. Enter untuk baris baru juga dipakai persis.</p>
+        <div class="baris" data-f="surat1">
+          <label for="surat1">Paragraf 1 — pembuka</label>
+          <textarea id="surat1" maxlength="220" placeholder="Selamat ulang tahun, …"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
-          <p class="galat">Bagian 1 belum diisi.</p>
+          <p class="galat">Paragraf 1 belum diisi.</p>
         </div>
-        <div class="baris" data-f="pesan2">
-          <label for="pesan2">Bagian 2 — isi <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
-          <textarea id="pesan2" maxlength="220" placeholder="Tahun ini kamu banyak berjuang, dan aku lihat semuanya…"></textarea>
+        <div class="baris" data-f="surat2">
+          <label for="surat2">Paragraf 2 — isi <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <textarea id="surat2" maxlength="220" placeholder="Tahun ini kamu banyak berjuang, dan aku lihat semuanya…"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
-        <div class="baris" data-f="pesan3">
-          <label for="pesan3">Bagian 3 — penutup <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
-          <textarea id="pesan3" maxlength="220" placeholder="Di umur yang baru, semoga…"></textarea>
+        <div class="baris" data-f="surat3">
+          <label for="surat3">Paragraf 3 — penutup <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <textarea id="surat3" maxlength="220" placeholder="Di umur yang baru, semoga…"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
       </section>
@@ -271,32 +258,36 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       </section>
 
       <section class="blok">
-        <h2><span class="n">4</span> Tanggal</h2>
-        <p class="jelas">Dipakai untuk menghitung umurnya dan berapa hari yang sudah dia jalani.</p>
+        <h2><span class="n">4</span> Ucapan dan tanggal</h2>
+        <p class="jelas">Tanggal lahirnya dipakai untuk adegan stempel umur di tengah surat.</p>
+        <div class="baris" data-f="ucapan">
+          <label for="ucapan">Gaya ucapannya</label>
+          <select id="ucapan">
+            <option value="selamat">Selamat ulang tahun</option>
+            <option value="barakallah">Barakallah fii umrik</option>
+            <option value="happy">Happy birthday</option>
+          </select>
+        </div>
         <div class="dua">
           <div class="baris" data-f="lahir">
             <label for="lahir">Tanggal lahir dia</label>
             <input id="lahir" type="date">
             <p class="galat">Tanggal lahir belum diisi.</p>
           </div>
-          <div class="baris" data-f="kenal">
-            <label for="kenal">Sejak kapan kalian kenal? <span style="font-weight:400;color:var(--ink-faint)">(opsional)</span></label>
-            <input id="kenal" type="date">
-            <p class="bantu">Kalau diisi, muncul hitungan "… hari di antaranya, kita saling kenal".</p>
+          <div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">
+            <div class="setuju" style="width:100%">
+              <input id="sembunyikanUmur" type="checkbox">
+              <label for="sembunyikanUmur">Sembunyikan umurnya — tampilkan tahunnya saja, bukan angka umur.</label>
+            </div>
           </div>
         </div>
       </section>
 
       <section class="blok">
-        <h2><span class="n">5</span> Harapan dan pesan rahasia</h2>
-        <p class="jelas">Harapan muncul setelah dia memejamkan mata. Pesan rahasia tersembunyi di balik kartu terakhir.</p>
-        <div class="baris" data-f="harapan">
-          <label for="harapan">Harapanmu untuk dia</label>
-          <input id="harapan" type="text" maxlength="80" placeholder="Semoga yang kamu semogakan tahun ini jadi nyata.">
-          <div class="hitung"><span></span><span class="angka"></span></div>
-        </div>
+        <h2><span class="n">5</span> Pesan rahasia</h2>
+        <p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>
         <div class="baris" data-f="rahasia">
-          <label for="rahasia">Pesan rahasia di balik kartu</label>
+          <label for="rahasia">Pesan rahasianya</label>
           <textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Kado aslinya aku kasih pas kita ketemu nanti."></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
@@ -350,7 +341,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <div class="pesan-oke" id="kabarOke"></div>
 
         <div id="rincianBayar">
-          <div class="rincian"><span>Surat digital — Kotak Kejutan</span><span class="rp">Rp15.000</span></div>
+          <div class="rincian"><span>Surat digital — Bait</span><span class="rp">Rp15.000</span></div>
           <div class="rincian"><span>Biaya transaksi QRIS</span><span class="rp">Rp560</span></div>
           <div class="rincian total"><span>Yang kamu bayar</span><span class="rp">Rp15.560</span></div>
         </div>
@@ -362,15 +353,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
     <!-- ════════ kolom pratinjau ════════ -->
     <aside class="sisi" id="sisi">
-      <button class="tutup-pv" type="button" id="tutupPv">Tutup contoh</button>
       <div class="sisi-in">
-        <h2>Begini jadinya</h2>
-        <p class="jelas">Berubah sendiri saat kamu mengetik. Coba tarik pitanya.</p>
-        <div class="hp">
-          <span class="poni"></span>
-          <iframe id="pv" src="/surat.html#pratinjau" title="Contoh surat"></iframe>
+        <h2>Lihat hasilnya</h2>
+        <p class="jelas">Suratnya punya dua permainan dan beberapa animasi — paling pas dilihat di layar penuh, bukan di kotak kecil. Buka kapan saja sambil mengisi; tab barunya selalu memuat isian yang terbaru.</p>
+        <div class="pv-card">
+          <svg viewBox="0 0 64 48" width="34" height="26" aria-hidden="true"><rect x="2" y="6" width="60" height="40" rx="6" fill="none" stroke="#3B3168" stroke-width="3.4"/><path d="M2 10l30 22 30-22" fill="none" stroke="#3B3168" stroke-width="3.4" stroke-linejoin="round"/></svg>
+          <button class="tbl tbl-utama tbl-lebar" type="button" id="btnPratinjau">Lihat pratinjau penuh ↗</button>
         </div>
-        <p class="pv-kaki">Ini contoh yang bisa dipakai beneran. Setelah bayar, isinya sama persis.</p>
+        <p class="pv-kaki">Bagian yang belum kamu isi tidak ditampilkan di pratinjau — bukan diganti contoh.</p>
       </div>
     </aside>
   </div>
@@ -378,7 +368,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
 <button class="buka-pv" id="bukaPv" type="button">
   <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-  Lihat contohnya
+  Lihat pratinjau penuh
 </button>
 
 <div class="tirai" id="tirai">
@@ -393,7 +383,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   "use strict";
 
   var $ = function(id){ return document.getElementById(id); };
-  var BATAS = { penerima:20, pengirim:20, pesan:220, ket:40, harapan:80, rahasia:120 };
+  var BATAS = { penerima:20, pengirim:20, surat:220, ket:40, rahasia:120 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -421,9 +411,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     bungkus.addEventListener("change", function(e){
       var f = e.target.closest("[data-file]");
       if(f && f.files && f.files[0]) ambilFoto(+f.dataset.file, f.files[0]);
-    });
-    bungkus.addEventListener("input", function(e){
-      if(e.target.closest("[data-ket]")) dorong();
     });
   })();
 
@@ -465,7 +452,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       };
       LAGU_ADA = null;
       namaLagu("Terpilih: " + berkas.name);
-      dorong();
     };
     baca.readAsDataURL(berkas);
   });
@@ -496,7 +482,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       jend.innerHTML = '<img src="'+hasil+'" alt=""><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
       k.classList.add("isi");
       $("galatFoto").style.display = "none";
-      dorong();
     });
   }
 
@@ -523,8 +508,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   /* ══ 2 · penghitung karakter ══ */
   var berhitung = [
     ["penerima", BATAS.penerima], ["pengirim", BATAS.pengirim],
-    ["pesan1", BATAS.pesan], ["pesan2", BATAS.pesan], ["pesan3", BATAS.pesan],
-    ["harapan", BATAS.harapan], ["rahasia", BATAS.rahasia]
+    ["surat1", BATAS.surat], ["surat2", BATAS.surat], ["surat3", BATAS.surat],
+    ["rahasia", BATAS.rahasia]
   ];
   berhitung.forEach(function(p){
     var el = $(p[0]), maks = p[1];
@@ -537,54 +522,41 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     el.addEventListener("input", segar); segar();
   });
 
-  /* ══ 3 · pratinjau langsung ══ */
-  var pv = $("pv"), pvSiap = false, tunda = null;
-
-  addEventListener("message", function(e){
-    if(e.data && e.data.jenis === "foreverse-siap"){ pvSiap = true; kirimKePv(); }
-  });
-
-  function isiSekarang(){
+  /* ══ 3 · pratinjau penuh ══
+     Tema Bait terkunci-game dan penuh animasi — tidak masuk akal
+     ditampilkan ulang di kotak kecil setiap kali mengetik, seperti
+     Kotak Kejutan yang lama. Jadi pratinjau dibuka sebagai tab baru,
+     memuat ulang /surat.html dari awal dengan isian saat itu, lewat
+     sessionStorage (bukan postMessage yang terus-menerus). */
+  function isiUntukPratinjau(){
     return {
-      penerima: $("penerima").value.trim() || "Nama dia",
-      pengirim: $("pengirim").value.trim() || "Nama kamu",
-      pesan: [$("pesan1").value, $("pesan2").value, $("pesan3").value],
+      penerima: $("penerima").value.trim() || "Amira",
+      pengirim: $("pengirim").value.trim() || "Adriel",
+      ucapan: $("ucapan").value || "selamat",
+      tanggalLahir: $("lahir").value || "2000-01-01",
+      sembunyikanUmur: $("sembunyikanUmur").checked,
+      surat: [$("surat1").value, $("surat2").value, $("surat3").value],
+      rahasia: $("rahasia").value,
       foto: [0,1,2].map(function(i){
         var ket = (document.querySelector('[data-ket="'+i+'"]')||{}).value || "";
         if(FOTO[i]) return { src: FOTO[i].data, ket: ket };
         if(FOTO_ADA[i]) return { src: FOTO_ADA[i], ket: ket };
         return null;
       }).filter(Boolean),
-      tanggalLahir: $("lahir").value || "",
-      tanggalKenal: $("kenal").value || "",
-      harapan: $("harapan").value,
-      rahasia: $("rahasia").value,
+      waPengirim: $("wa").value.trim(),
       lagu: {
-        file: (LAGU && LAGU.data) || LAGU_ADA || "",
+        src: (LAGU && LAGU.data) || LAGU_ADA || "",
         mulai: detikLagu("laguMulai"), selesai: detikLagu("laguSelesai")
       }
     };
   }
 
-  function kirimKePv(){
-    if(!pvSiap || !pv.contentWindow) return;
-    var isi = isiSekarang();
-    if(!isi.foto.length) isi.foto = [
-      { src:"demo:pantai", ket:"Fotomu muncul di sini" },
-      { src:"demo:kopi",   ket:"Geser untuk lihat berikutnya" },
-      { src:"demo:hujan",  ket:"Tiga foto, tiga cerita" }
-    ];
-    if(!isi.tanggalLahir) isi.tanggalLahir = "DEMO-24";
-    pv.contentWindow.postMessage({ jenis:"foreverse-isi", isi: isi }, "*");
+  function previewPenuh(){
+    try{ sessionStorage.setItem("fv-pratinjau", JSON.stringify(isiUntukPratinjau())); }catch(_){}
+    window.open("/surat.html#pratinjau", "_blank");
   }
-
-  function dorong(){ clearTimeout(tunda); tunda = setTimeout(kirimKePv, 350); }
-  $("form").addEventListener("input", dorong);
-  $("form").addEventListener("change", dorong);
-
-  /* pratinjau di layar kecil */
-  $("bukaPv").addEventListener("click", function(){ $("sisi").classList.add("buka"); document.body.style.overflow="hidden"; });
-  $("tutupPv").addEventListener("click", function(){ $("sisi").classList.remove("buka"); document.body.style.overflow=""; });
+  $("btnPratinjau").addEventListener("click", previewPenuh);
+  $("bukaPv").addEventListener("click", previewPenuh);
 
   /* ══ 4 · kabar ══ */
   function pesanGalat(t){
@@ -607,7 +579,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
   function periksa(){
     var kurang = [];
-    [["penerima","penerima"],["pengirim","pengirim"],["pesan1","pesan1"],["lahir","lahir"]].forEach(function(p){
+    [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]].forEach(function(p){
       var kosong = !$(p[0]).value.trim();
       tandai(p[1], kosong);
       if(kosong) kurang.push(p[1]);
@@ -642,17 +614,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   function badan(){
     var q = new URLSearchParams(location.search);
     return {
-      tema: q.get("tema") || "kotak-kejutan",
+      tema: q.get("tema") || "bait",
       momen: q.get("momen") || "Ulang tahun",
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: {
         penerima: $("penerima").value.trim(),
         pengirim: $("pengirim").value.trim(),
-        pesan: [$("pesan1").value, $("pesan2").value, $("pesan3").value],
+        ucapan: $("ucapan").value,
         tanggalLahir: $("lahir").value,
-        tanggalKenal: $("kenal").value,
-        harapan: $("harapan").value,
+        sembunyikanUmur: $("sembunyikanUmur").checked,
+        surat: [$("surat1").value, $("surat2").value, $("surat3").value],
         rahasia: $("rahasia").value,
         lagu: laguUntukServer()
       },
@@ -741,12 +713,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         var i = h.j.isi || {};
         $("penerima").value = i.penerima || "";
         $("pengirim").value = i.pengirim || "";
-        $("pesan1").value = (i.pesan||[])[0] || "";
-        $("pesan2").value = (i.pesan||[])[1] || "";
-        $("pesan3").value = (i.pesan||[])[2] || "";
+        $("ucapan").value = i.ucapan || "selamat";
+        $("surat1").value = (i.surat||[])[0] || "";
+        $("surat2").value = (i.surat||[])[1] || "";
+        $("surat3").value = (i.surat||[])[2] || "";
         $("lahir").value  = i.tanggalLahir || "";
-        $("kenal").value  = i.tanggalKenal || "";
-        $("harapan").value = i.harapan || "";
+        $("sembunyikanUmur").checked = !!i.sembunyikanUmur;
         $("rahasia").value = i.rahasia || "";
         var lagu = i.lagu || {};
         LAGU_ADA = lagu.file || null;
@@ -767,7 +739,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           var sisa = Math.max(0, Math.ceil((h.j.batas_edit - Date.now())/86400000));
           $("catatanKirim").textContent = "Tautan edit ini masih berlaku sekitar " + sisa + " hari lagi.";
         }
-        dorong();
       })
       .catch(function(e){
         tirai(false);
@@ -775,9 +746,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         $("tblKirim").disabled = true;
       });
   }
-
-  /* dorong pertama kali supaya contohnya langsung hidup */
-  setTimeout(dorong, 400);
 })();
 </script>
 </body>

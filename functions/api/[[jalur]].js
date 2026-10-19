@@ -27,12 +27,15 @@ const JAM_DRAF = 24;                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
 const MAKS_LAGU = 10 * 1024 * 1024;  // batas file lagu yang diunggah
 
-/* ── batas karakter; dijaga di server juga, bukan cuma di formulir ── */
+/* ── batas karakter; dijaga di server juga, bukan cuma di formulir ──
+   Tema Bait × Birthday — lihat claude/bait-birthday-panduan.md.       */
 const BATAS = {
   penerima: 20, pengirim: 20,
-  pesan: 220, ket: 40, harapan: 80, rahasia: 120,
+  surat: 220, ket: 40, rahasia: 120,
   email: 120, whatsapp: 24, judulLagu: 80
 };
+
+const UCAPAN_SAH = ["selamat", "barakallah", "happy"];
 
 /* ══════════════════ alat bantu ══════════════════ */
 
@@ -322,18 +325,22 @@ async function rapikanIsi(env, kode, badan, lamaIsi) {
   const isi = {
     penerima: teks(p.penerima, BATAS.penerima),
     pengirim: teks(p.pengirim, BATAS.pengirim),
-    pesan: [0, 1, 2].map(i => teks((p.pesan || [])[i], BATAS.pesan)),
+    ucapan: UCAPAN_SAH.includes(p.ucapan) ? p.ucapan : "selamat",
     tanggalLahir: tanggalSah(p.tanggalLahir),
-    tanggalKenal: tanggalSah(p.tanggalKenal),
-    harapan: teks(p.harapan, BATAS.harapan),
+    sembunyikanUmur: !!p.sembunyikanUmur,
     rahasia: teks(p.rahasia, BATAS.rahasia),
+    surat: [0, 1, 2].map(i => teks((p.surat || [])[i], BATAS.surat)),
+    /* waPengirim dipakai Bait untuk tombol balas WhatsApp penerima.
+       Diisi dari nomor WA pembeli (kolom "whatsapp" di pesanan) —
+       pembeli hampir selalu juga pengirimnya sendiri. */
+    waPengirim: teks(badan.whatsapp, BATAS.whatsapp),
     lagu: null,
     foto: []
   };
 
   if (!isi.penerima) throw new Error("Nama penerima belum diisi.");
   if (!isi.pengirim) throw new Error("Nama pengirim belum diisi.");
-  if (!isi.pesan[0]) throw new Error("Pesan bagian 1 belum diisi.");
+  if (!isi.surat[0]) throw new Error("Surat bagian 1 belum diisi.");
   if (!isi.tanggalLahir) throw new Error("Tanggal lahir belum diisi.");
 
   const fotoLama = (lamaIsi && lamaIsi.foto) || [];
@@ -459,7 +466,7 @@ export async function onRequest(ctx) {
         (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif)
         VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1)`).bind(
         kode, token,
-        teks(badan.tema, 40) || "kotak-kejutan",
+        teks(badan.tema, 40) || "bait",
         teks(badan.momen, 40),
         teks(badan.email, BATAS.email),
         teks(badan.whatsapp, BATAS.whatsapp),
@@ -674,11 +681,11 @@ export async function onRequest(ctx) {
             penerima: i.penerima || "",
             pengirim: i.pengirim || "",
             foto_n: Array.isArray(i.foto) ? i.foto.length : 0,
-            pesan_n: Array.isArray(i.pesan) ? i.pesan.filter(x => x).length : 0,
+            surat_n: Array.isArray(i.surat) ? i.surat.filter(x => x).length : 0,
             lagu_sumber: l.sumber || "",              // "unggah" | "" (kotak musik bawaan)
             lagu_judul: l.judul || "",
             punya_rahasia: !!i.rahasia,
-            punya_harapan: !!i.harapan
+            sembunyikan_umur: !!i.sembunyikanUmur
           };
         });
         const hit = await db.prepare(

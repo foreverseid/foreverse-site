@@ -720,23 +720,23 @@ a.tautan:hover{text-decoration:underline}
   function gambarProduk(){
     var lunas = DATA.baris.filter(function(b){ return b.status==="lunas"; });
 
-    var lagu = { "": 0, galeri: 0, unggah: 0 };
+    var lagu = { "": 0, unggah: 0 };
     lunas.forEach(function(b){ var s = b.lagu_sumber || ""; if(s in lagu) lagu[s]++; });
-    var namaLagu = { "":"Tanpa lagu (pakai lagu bawaan)", galeri:"Dari galeri Foreverse", unggah:"Unggah lagu sendiri" };
+    var namaLagu = { "":"Tanpa unggahan (pakai kotak musik bawaan)", unggah:"Unggah lagu sendiri" };
     var totL = lunas.length;
     $("rLagu").innerHTML = totL
       ? Object.keys(lagu).map(function(k){ return alur(namaLagu[k], lagu[k], totL); }).join("")
       : '<p class="catatan" style="margin:0">Belum ada surat lunas.</p>';
 
     var f3 = lunas.filter(function(b){ return b.foto_n >= 3; }).length;
-    var p3 = lunas.filter(function(b){ return b.pesan_n >= 3; }).length;
+    var s3 = lunas.filter(function(b){ return b.surat_n >= 3; }).length;
     var rhs = lunas.filter(function(b){ return b.punya_rahasia; }).length;
-    var hrp = lunas.filter(function(b){ return b.punya_harapan; }).length;
+    var smb = lunas.filter(function(b){ return b.sembunyikan_umur; }).length;
     $("rIsi").innerHTML = totL
       ? alur("Pakai 3 foto (maksimal)", f3, totL) +
-        alur("Isi 3 bagian pesan", p3, totL) +
-        alur("Menulis pesan rahasia", rhs, totL) +
-        alur("Menulis harapan", hrp, totL)
+        alur("Isi 3 paragraf surat", s3, totL) +
+        alur("Menulis tinta rahasia", rhs, totL) +
+        alur("Menyembunyikan umur", smb, totL)
       : '<p class="catatan" style="margin:0">Belum ada surat lunas.</p>';
   }
 
@@ -812,8 +812,7 @@ a.tautan:hover{text-decoration:underline}
     baris.forEach(function(b){
       var st = b.status || "draf";
       var sisaEdit = b.batas_edit ? b.batas_edit - now : 0;
-      var namaLagu = b.lagu_sumber === "galeri" ? (b.lagu_judul || "galeri")
-                   : b.lagu_sumber === "unggah" ? (b.lagu_judul || "lagu sendiri")
+      var namaLagu = b.lagu_sumber === "unggah" ? (b.lagu_judul || "lagu sendiri")
                    : "lagu bawaan";
 
       html += '<tr class="' + (b.aktif ? "" : "mati") + '">' +
@@ -832,7 +831,7 @@ a.tautan:hover{text-decoration:underline}
             ? '<br><span class="redup" style="color:' + (b.email_terkirim ? "var(--baik)" : "var(--gawat)") + '">email ' +
               (b.email_terkirim ? "terkirim" : "belum") + '</span>'
             : "") + '</td>' +
-        '<td class="redup" style="white-space:nowrap">' + b.foto_n + ' foto · ' + b.pesan_n + ' pesan<br>' +
+        '<td class="redup" style="white-space:nowrap">' + b.foto_n + ' foto · ' + b.surat_n + ' paragraf<br>' +
           esc(namaLagu) + '</td>' +
         '<td>' + (st === "lunas"
             ? '<a class="tautan kode-tautan" href="/s/' + esc(b.kode) + '" target="_blank" rel="noopener">/s/' + esc(b.kode) + '</a>' +
