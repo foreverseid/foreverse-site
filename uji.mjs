@@ -51,7 +51,7 @@ async function buatPesanan(L) {
   return { kode: j.kode, token: j.token, faktur: jb.order_id, url: jb.url };
 }
 
-function notifSukses(faktur, jumlah = 15000) {
+function notifSukses(faktur, jumlah = 15560) {
   return {
     order: { invoice_number: faktur, amount: jumlah },
     transaction: { status: "SUCCESS", date: new Date().toISOString() },
@@ -105,11 +105,14 @@ await uji("metode pembayaran dikunci ke QRIS saja", async () => {
   sama(JSON.stringify(p.badan.payment.payment_method_types), '["QRIS"]', "daftar metode");
 });
 
-await uji("jumlah yang dikirim ke DOKU persis Rp15.000", async () => {
+await uji("jumlah yang dikirim ke DOKU adalah harga + biaya transaksi (Rp15.560)", async () => {
   const L = await buatLingkungan();
   await buatPesanan(L);
   const p = L.catatan.panggilan.find(x => x.jalur === "/checkout/v1/payment");
-  sama(p.badan.order.amount, 15000, "jumlah");
+  sama(p.badan.order.amount, 15560, "jumlah");
+  sama(p.badan.order.line_items.length, 2, "jumlah rincian");
+  sama(p.badan.order.line_items[0].price, 15000, "harga surat di rincian");
+  sama(p.badan.order.line_items[1].price, 560, "biaya transaksi di rincian");
 });
 
 await uji("DOKU_MODE=sandbox memakai host sandbox", async () => {

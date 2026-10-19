@@ -13,7 +13,15 @@
      RESEND_API_KEY, ADMIN_PASSWORD, EMAIL_PENGIRIM
    ══════════════════════════════════════════════════════════════════ */
 
-const HARGA = 15000;                 // rupiah, sudah bersih untuk pembeli
+const HARGA = 15000;                 // rupiah, bersih yang masuk ke Foreverse
+/* Biaya transaksi DOKU (QRIS, Rp500 + PPN 12%) dibebankan ke pembeli,
+   ditambahkan di atas HARGA saat checkout — bukan dipotong dari HARGA.
+   Sumber: balasan email DOKU 20-10-2026 ("DOKU Fee Rp500 per transaksi,
+   belum termasuk PPN"). PPN 12% adalah tarif umum berlaku 2026, belum
+   dikonfirmasi langsung oleh DOKU untuk biaya ini — perlu dicek ulang
+   di nota transaksi sungguhan nanti.                                  */
+const BIAYA_TRANSAKSI = 560;
+const TOTAL_BAYAR = HARGA + BIAYA_TRANSAKSI;   // yang sungguh ditagihkan ke pembeli
 const HARI_EDIT = 3;                 // masa berlaku tautan edit
 const JAM_DRAF = 24;                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
@@ -478,13 +486,16 @@ export async function onRequest(ctx) {
         sasaran: DOKU.jalurCheckout,
         badan: {
           order: {
-            amount: HARGA,
+            amount: TOTAL_BAYAR,
             invoice_number: orderId,
             currency: "IDR",
             /* tempat pembeli mendarat setelah membayar */
             callback_url: asal + "/selesai?kode=" + kode,
             auto_redirect: true,
-            line_items: [{ name: "Surat digital Foreverse", quantity: 1, price: HARGA }]
+            line_items: [
+              { name: "Surat digital Foreverse", quantity: 1, price: HARGA },
+              { name: "Biaya transaksi", quantity: 1, price: BIAYA_TRANSAKSI }
+            ]
           },
           payment: {
             payment_due_date: DOKU.jatuhTempoMenit,
@@ -561,7 +572,7 @@ export async function onRequest(ctx) {
       if (transaksi.status !== "SUCCESS")
         return jwb({ ok: true, catatan: "Belum lunas." });
 
-      if (Number(pesananDoku.amount) !== HARGA)
+      if (Number(pesananDoku.amount) !== TOTAL_BAYAR)
         return salah("Jumlah pembayaran tidak sesuai harga.", 403);
 
       /* Idempoten: lunasi() berhenti sendiri kalau sudah lunas, jadi
@@ -590,7 +601,7 @@ export async function onRequest(ctx) {
         });
         const t = (r.isi && r.isi.transaction) || {};
         const o = (r.isi && r.isi.order) || {};
-        if (t.status === "SUCCESS" && Number(o.amount) === HARGA) {
+        if (t.status === "SUCCESS" && Number(o.amount) === TOTAL_BAYAR) {
           await lunasi(env, db, b.kode, asal);
           return jwb({ ok: true, status: "lunas", kode: b.kode, penerima });
         }

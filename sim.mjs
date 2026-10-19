@@ -200,7 +200,7 @@ export function buatDoku(catatan) {
       const st = catatan.status[faktur] || "PENDING";
       return new Response(JSON.stringify({
         response: {
-          order: { invoice_number: faktur, amount: catatan.jumlah[faktur] ?? 15000 },
+          order: { invoice_number: faktur, amount: catatan.jumlah[faktur] ?? 15560 },
           transaction: { status: st, date: new Date().toISOString() }
         }
       }), { status: 200 });
