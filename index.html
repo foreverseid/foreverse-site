@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://foreverse.id">
 <meta property="og:title" content="Foreverse — Surat Digital untuk Orang yang Kamu Sayang">
 <meta property="og:description" content="Tulis pesanmu, pilih fotonya, bayar Rp15.000. Link-nya masuk ke WhatsApp-mu.">
-<meta property="og:image" content="https://foreverse.id/og-kotak-kejutan.png">
+<meta property="og:image" content="https://foreverse.id/og-bait.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FBFAF7">
 
@@ -51,13 +51,13 @@ const FOREVERSE_SITE = {
   /* ═══ TEMA ═══
      Tema = bentuk suratnya. Satu tema bisa dipakai di beberapa momen. */
   tema: {
-    "kotak-kejutan": {
-      nama:    "Kotak Kejutan",
-      file:    "/kotak-kejutan-demo.html",
-      cover:   "/cover-kotak-kejutan.jpg",
-      ringkas: "Kotak kado yang dibuka dengan menarik pitanya. Di dalamnya ada kartu ucapan, foto, hitungan umur, dan satu permintaan.",
-      isi:     ["Tarik pita", "3 foto", "Hitungan umur", "Musik"],
-      alur:    ["Kotak kado dibuka dengan menarik pitanya", "Kartu ucapan tiga bagian, muncul satu per satu", "Tiga foto polaroid yang bisa digeser", "Hitungan umur dan jumlah hari yang sudah dijalani", "Pejamkan mata, buat permintaan, lalu harapan darimu muncul", "Kartu penutup yang bisa dibalik, berisi pesan rahasia"]
+    "bait": {
+      nama:    "Bait",
+      file:    "/bait-demo.html",
+      cover:   "/cover-bait.jpg",
+      ringkas: "Amplop bersegel bertema pos — ditarik segelnya, ditiup lilinnya, distempel umurnya, dan digosok tinta rahasianya.",
+      isi:     ["Tarik segel", "3 foto", "2 game pos", "Tinta rahasia"],
+      alur:    ["Amplop bersegel ditarik lalu dibuka, kartu pop-up berdiri dengan kue — usap untuk meniup lilinnya", "Sortir kotak pos: tangkap amplop warna, hindari tagihan dan brosur", "Tiga perangko foto, diketuk untuk melihat utuh dan cap tanggalnya", "Stempel pos ditarik, umur lama berganti umur baru dengan cap bertanggal", "Susun potongan surat yang sobek sampai kalimatnya terbaca", "Gosok tinta rahasia sampai pesan tersembunyi muncul", "Surat tiga paragraf muncul bertahap, dengan perangko foto dan tanda tangan", "Segel penutup ditarik, lilin menetes mengeras jadi logo Foreverse"]
     }
   },
 
@@ -65,7 +65,7 @@ const FOREVERSE_SITE = {
      tema: [] kosong = tampil "Segera hadir".
      Tema baru jadi? Tambahkan namanya di kurung siku momen yang cocok. */
   momen: [
-    { nama:"Birthday",           emoji:"🎂", baris:"Untuk hari ulang tahunnya.",                       tema:["kotak-kejutan"] },
+    { nama:"Birthday",           emoji:"🎂", baris:"Untuk hari ulang tahunnya.",                       tema:["bait"] },
     { nama:"Anniversary",        emoji:"🥂", baris:"Untuk hari jadi kalian.",                          tema:[] },
     { nama:"LDR",                emoji:"✈️", baris:"Untuk yang lagi jauh.",                            tema:[] },
     { nama:"Graduation",         emoji:"🎓", baris:"Untuk yang baru lulus.",                           tema:[] },
@@ -382,7 +382,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       <div class="head">
         <span class="eyebrow">Coba dulu</span>
         <h2>Begini yang dia lihat waktu buka linknya.</h2>
-        <p class="lede">Contohnya bisa langsung kamu mainkan di sini. Tarik pitanya.</p>
+        <p class="lede">Contohnya bisa langsung kamu mainkan di sini. Tarik segelnya.</p>
       </div>
       <div class="pv-grid">
         <div class="phone"><div class="screen"><iframe id="pvFrame" title="Contoh tema" loading="lazy"></iframe></div></div>
@@ -394,7 +394,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
             <a id="pvOrder" class="btn btn-main" href="#">Pesan tema ini</a>
             <a id="pvFull" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
           </div>
-          <p class="pv-fine">Nama dan pesan di contoh ini karangan (Amira &amp; Fatah), dan fotonya diganti ilustrasi. Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
+          <p class="pv-fine">Nama dan pesan di contoh ini karangan (Amira &amp; Adriel), dan fotonya diganti ilustrasi. Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
         </div>
       </div>
     </div>
