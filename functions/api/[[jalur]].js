@@ -28,14 +28,26 @@ const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
 const MAKS_LAGU = 10 * 1024 * 1024;  // batas file lagu yang diunggah
 
 /* ── batas karakter; dijaga di server juga, bukan cuma di formulir ──
-   Tema Bait × Birthday — lihat claude/bait-birthday-panduan.md.       */
+   Isian dasar sama untuk semua tema Birthday (lihat claude/bait-
+   birthday-panduan.md untuk Bait). Isian khas tema (rahasia / kupon /
+   kuis+harapan) beda per tema — lihat TEMA_SKEMA di bawah.            */
 const BATAS = {
   penerima: 20, pengirim: 20,
-  surat: 220, ket: 40, rahasia: 120,
-  email: 120, whatsapp: 24, judulLagu: 80
+  surat: 220, caption: 40, rahasia: 120,
+  kupon: 50, harapan: 90, kuisTanya: 70, kuisPilihan: 30,
+  email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
 const UCAPAN_SAH = ["selamat", "barakallah", "happy"];
+
+/* Tema yang bisa dipesan, dan jumlah foto wajibnya. Tema baru = tambah
+   satu baris di sini, lalu tangani isian khasnya di rapikanIsi(). */
+const TEMA_SKEMA = {
+  "bait":           { nfoto: 3 },
+  "kado-riang":      { nfoto: 3 },
+  "langit-harapan":  { nfoto: 4 }
+};
+function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
 /* ══════════════════ alat bantu ══════════════════ */
 
@@ -285,19 +297,23 @@ const JENIS_LAGU = {
 };
 
 async function hapusUnggahanLama(env, kode, lama) {
-  if (env.FOTO && lama && typeof lama.file === "string"
-      && lama.file.startsWith("/f/" + kode + "/")) {
-    try { await env.FOTO.delete(lama.file.slice(3)); } catch (_) {}
+  var jalurLama = lama && (lama.src || lama.file);
+  if (env.FOTO && typeof jalurLama === "string" && jalurLama.startsWith("/f/" + kode + "/")) {
+    try { await env.FOTO.delete(jalurLama.slice(3)); } catch (_) {}
   }
 }
 
+/* Skema lagu: {src, judul, artis, mulai, selesai} — src kosong berarti
+   kotak musik bawaan. Semua mesin tema (surat.html, kado-riang.html,
+   langit-harapan.html) membaca field ini. */
 async function rapikanLagu(env, kode, masuk, lama) {
   const m = masuk || {};
   const detik = v => { const n = Math.round((+v || 0) * 10) / 10; return n > 0 && n < 3600 ? n : 0; };
   const mulai = detik(m.mulai);
   let selesai = detik(m.selesai);
   if (selesai && selesai < mulai + 3) selesai = 0;   // potongan terlalu pendek → putar sampai habis
-  const kosong = { sumber: "", file: "", judul: "", mulai: 0, selesai: 0 };
+  const artis = teks(m.artis, BATAS.artisLagu);
+  const kosong = { src: "", judul: "", artis: "", mulai: 0, selesai: 0 };
 
   /* berkas baru diunggah */
   if (m.data && String(m.data).length > 32) {
@@ -309,18 +325,19 @@ async function rapikanLagu(env, kode, masuk, lama) {
     const kunci = kode + "/lagu-" + acak(6) + "." + jenis[0];
     await env.FOTO.put(kunci, bytes, { httpMetadata: { contentType: jenis[1] } });
     await hapusUnggahanLama(env, kode, lama);
-    return { sumber: "unggah", judul: teks(m.judul, BATAS.judulLagu), file: "/f/" + kunci, mulai, selesai };
+    return { judul: teks(m.judul, BATAS.judulLagu), artis, src: "/f/" + kunci, mulai, selesai };
   }
 
   /* mengedit tanpa mengganti berkas: lagu yang lama dipertahankan */
-  if (m.pakaiLama && lama && lama.file)
-    return { sumber: "unggah", judul: lama.judul || "", file: lama.file, mulai, selesai };
+  var srcLama = lama && (lama.src || lama.file);
+  if (m.pakaiLama && srcLama)
+    return { judul: (lama && lama.judul) || "", artis: (lama && lama.artis) || artis, src: srcLama, mulai, selesai };
 
   await hapusUnggahanLama(env, kode, lama);
   return kosong;
 }
 
-async function rapikanIsi(env, kode, badan, lamaIsi) {
+async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   const p = badan.isi || {};
   const isi = {
     penerima: teks(p.penerima, BATAS.penerima),
@@ -328,12 +345,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi) {
     ucapan: UCAPAN_SAH.includes(p.ucapan) ? p.ucapan : "selamat",
     tanggalLahir: tanggalSah(p.tanggalLahir),
     sembunyikanUmur: !!p.sembunyikanUmur,
-    rahasia: teks(p.rahasia, BATAS.rahasia),
     surat: [0, 1, 2].map(i => teks((p.surat || [])[i], BATAS.surat)),
-    /* waPengirim dipakai Bait untuk tombol balas WhatsApp penerima.
-       Diisi dari nomor WA pembeli (kolom "whatsapp" di pesanan) —
-       pembeli hampir selalu juga pengirimnya sendiri. */
-    waPengirim: teks(badan.whatsapp, BATAS.whatsapp),
     lagu: null,
     foto: []
   };
@@ -343,17 +355,44 @@ async function rapikanIsi(env, kode, badan, lamaIsi) {
   if (!isi.surat[0]) throw new Error("Surat bagian 1 belum diisi.");
   if (!isi.tanggalLahir) throw new Error("Tanggal lahir belum diisi.");
 
+  /* ── isian khas tema ──
+     waPengirim dipakai Bait & Langit Harapan untuk tombol balas
+     WhatsApp penerima. Diisi dari nomor WA pembeli (kolom "whatsapp"
+     di pesanan) — pembeli hampir selalu juga pengirimnya sendiri. */
+  if (tema === "kado-riang") {
+    isi.kupon = [0, 1, 2].map(i => teks((p.kupon || [])[i], BATAS.kupon));
+    if (!isi.kupon[0] || !isi.kupon[1] || !isi.kupon[2]) throw new Error("Ketiga kupon belum diisi.");
+  } else if (tema === "langit-harapan") {
+    isi.kuis = [0, 1, 2].map(i => {
+      const q = (p.kuis || [])[i] || {};
+      return {
+        tanya: teks(q.tanya, BATAS.kuisTanya),
+        pilihan: [0, 1, 2].map(j => teks((q.pilihan || [])[j], BATAS.kuisPilihan)),
+        benar: [0, 1, 2].includes(+q.benar) ? +q.benar : 0
+      };
+    });
+    if (isi.kuis.some(q => !q.tanya || !q.pilihan[0] || !q.pilihan[1] || !q.pilihan[2]))
+      throw new Error("Kuis belum lengkap — tiap soal perlu pertanyaan dan 3 pilihan.");
+    isi.harapan = [0, 1, 2].map(i => teks((p.harapan || [])[i], BATAS.harapan));
+    if (!isi.harapan[0] || !isi.harapan[1] || !isi.harapan[2]) throw new Error("Ketiga harapan belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else {
+    isi.rahasia = teks(p.rahasia, BATAS.rahasia);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  }
+
+  const nfoto = (TEMA_SKEMA[tema] || TEMA_SKEMA.bait).nfoto;
   const fotoLama = (lamaIsi && lamaIsi.foto) || [];
   const masuk = Array.isArray(badan.foto) ? badan.foto : [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < nfoto; i++) {
     const f = masuk[i] || {};
-    const ket = teks(f.ket, BATAS.ket);
+    const caption = teks(f.caption, BATAS.caption);
     if (f.data && String(f.data).length > 32) {
       const mime = /^image\/(png|webp|jpeg)$/.test(f.mime || "") ? f.mime : "image/jpeg";
-      isi.foto.push({ src: await simpanFoto(env, kode, i + 1, f.data, mime), ket });
+      isi.foto.push({ src: await simpanFoto(env, kode, i + 1, f.data, mime), caption });
     } else if (fotoLama[i] && fotoLama[i].src) {
-      isi.foto.push({ src: fotoLama[i].src, ket });
+      isi.foto.push({ src: fotoLama[i].src, caption });
     }
   }
   if (isi.foto.length < 1) throw new Error("Minimal satu foto harus diunggah.");
@@ -461,12 +500,13 @@ export async function onRequest(ctx) {
     if (jalur === "draf" && request.method === "POST") {
       ctx.waitUntil(bersihkan(db, env));
       const kode = acak(6), token = acak(22), skr = Date.now();
-      const isi = await rapikanIsi(env, kode, badan, null);
+      const tema = temaSah(teks(badan.tema, 40));
+      const isi = await rapikanIsi(env, kode, badan, null, tema);
       await db.prepare(`INSERT INTO pesanan
         (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif)
         VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1)`).bind(
         kode, token,
-        teks(badan.tema, 40) || "bait",
+        tema,
         teks(badan.momen, 40),
         teks(badan.email, BATAS.email),
         teks(badan.whatsapp, BATAS.whatsapp),
@@ -652,7 +692,9 @@ export async function onRequest(ctx) {
       if (b.batas_edit && Date.now() > b.batas_edit) return salah("Masa edit sudah lewat.", 403);
 
       const lama = JSON.parse(b.isi || "{}");
-      const isi = await rapikanIsi(env, b.kode, badan, lama);
+      /* tema dikunci dari pesanan asli, bukan dari badan kiriman klien —
+         tema tidak boleh berubah lewat edit. */
+      const isi = await rapikanIsi(env, b.kode, badan, lama, temaSah(b.tema));
       await db.prepare(`UPDATE pesanan SET isi=?, email=? WHERE kode=?`)
         .bind(JSON.stringify(isi), teks(badan.email, BATAS.email) || b.email, b.kode).run();
       return jwb({ ok: true, kode: b.kode });
@@ -682,7 +724,8 @@ export async function onRequest(ctx) {
             pengirim: i.pengirim || "",
             foto_n: Array.isArray(i.foto) ? i.foto.length : 0,
             surat_n: Array.isArray(i.surat) ? i.surat.filter(x => x).length : 0,
-            lagu_sumber: l.sumber || "",              // "unggah" | "" (kotak musik bawaan)
+            tema: b.tema || "bait",
+            lagu_sumber: l.src ? "unggah" : "",       // "unggah" | "" (kotak musik bawaan)
             lagu_judul: l.judul || "",
             punya_rahasia: !!i.rahasia,
             sembunyikan_umur: !!i.sembunyikanUmur

@@ -251,7 +251,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       </section>
 
       <section class="blok">
-        <h2><span class="n">3</span> Tiga foto</h2>
+        <h2><span class="n">3</span> <span id="judulFoto">Foto</span></h2>
         <p class="jelas">Foto tegak paling bagus. Fotonya dikecilkan otomatis di HP-mu sebelum dikirim, jadi tidak boros kuota. Minimal satu foto.</p>
         <div class="fotos" id="fotos"></div>
         <p class="galat" id="galatFoto" style="display:none">Paling tidak satu foto harus dipilih.</p>
@@ -283,15 +283,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         </div>
       </section>
 
-      <section class="blok">
-        <h2><span class="n">5</span> Pesan rahasia</h2>
-        <p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>
-        <div class="baris" data-f="rahasia">
-          <label for="rahasia">Pesan rahasianya</label>
-          <textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Kado aslinya aku kasih pas kita ketemu nanti."></textarea>
-          <div class="hitung"><span></span><span class="angka"></span></div>
-        </div>
-      </section>
+      <section class="blok" id="blokKhusus"></section>
 
       <section class="blok">
         <h2><span class="n">6</span> Lagu <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
@@ -341,7 +333,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <div class="pesan-oke" id="kabarOke"></div>
 
         <div id="rincianBayar">
-          <div class="rincian"><span>Surat digital — Bait</span><span class="rp">Rp15.000</span></div>
+          <div class="rincian"><span id="labelSurat">Surat digital</span><span class="rp">Rp15.000</span></div>
           <div class="rincian"><span>Biaya transaksi QRIS</span><span class="rp">Rp560</span></div>
           <div class="rincian total"><span>Yang kamu bayar</span><span class="rp">Rp15.560</span></div>
         </div>
@@ -383,17 +375,35 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   "use strict";
 
   var $ = function(id){ return document.getElementById(id); };
-  var BATAS = { penerima:20, pengirim:20, surat:220, ket:40, rahasia:120 };
+  var BATAS = { penerima:20, pengirim:20, surat:220, caption:40, rahasia:120, kupon:50, harapan:90, kuisTanya:70, kuisPilihan:30 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
-  /* ══ 1 · kartu foto ══ */
-  var FOTO = [null,null,null];          // {data, mime, ket} atau null
-  var FOTO_ADA = [null,null,null];      // src lama dari server saat mode edit
+  /* ══ 0 · tema pesanan ══
+     Pesanan baru: tema datang dari query string (?tema=...) saat halaman
+     dibuka, langsung diketahui. Mode edit: tema baru diketahui setelah
+     /api/draf membalas, jadi bagian yang bergantung pada tema (jumlah
+     foto, blok isian ke-5, label harga, tautan pratinjau) dibangun lewat
+     siapkanTema(), dipanggil langsung untuk pesanan baru atau menyusul
+     setelah data edit datang. */
+  var TEMA_INFO = {
+    "bait":           { nama:"Bait",           nfoto:3, mesin:"/surat.html" },
+    "kado-riang":      { nama:"Kado Riang",      nfoto:3, mesin:"/kado-riang.html" },
+    "langit-harapan":  { nama:"Langit Harapan",  nfoto:4, mesin:"/langit-harapan.html" }
+  };
+  var TEMA = (new URLSearchParams(location.search).get("tema")) || "bait";
+  if(!TEMA_INFO[TEMA]) TEMA = "bait";
+  var NFOTO = TEMA_INFO[TEMA].nfoto;
 
-  (function buatFoto(){
+  /* ══ 1 · kartu foto ══ */
+  var FOTO = [], FOTO_ADA = [];         // {data, mime, caption} atau null · src lama dari server saat mode edit
+
+  function buatFoto(n){
+    FOTO = new Array(n).fill(null);
+    FOTO_ADA = new Array(n).fill(null);
     var bungkus = $("fotos");
-    for(var i=0;i<3;i++){
+    bungkus.innerHTML = "";
+    for(var i=0;i<n;i++){
       var d = document.createElement("div");
       d.className = "fotokartu"; d.dataset.i = i;
       d.innerHTML =
@@ -401,7 +411,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<div class="ajak"><b>Foto '+(i+1)+'</b>Ketuk untuk pilih</div>'+
         '</div>'+
         '<input type="file" accept="image/*" data-file="'+i+'">'+
-        '<div class="ket"><input type="text" maxlength="40" placeholder="Keterangan (opsional)" data-ket="'+i+'"></div>';
+        '<div class="ket"><input type="text" maxlength="40" placeholder="Keterangan (opsional)" data-caption="'+i+'"></div>';
       bungkus.appendChild(d);
     }
     bungkus.addEventListener("click", function(e){
@@ -412,7 +422,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       var f = e.target.closest("[data-file]");
       if(f && f.files && f.files[0]) ambilFoto(+f.dataset.file, f.files[0]);
     });
-  })();
+    $("judulFoto").textContent = n===3 ? "Tiga foto" : n + " foto";
+  }
 
   function kartu(i){ return document.querySelector('.fotokartu[data-i="'+i+'"]'); }
 
@@ -477,7 +488,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     kecilkan(berkas, function(hasil, galat){
       sibuk.remove();
       if(galat){ pesanGalat("Fotonya tidak bisa dibaca. Coba foto lain."); return; }
-      FOTO[i] = { data: hasil, mime: "image/jpeg", ket: "" };
+      FOTO[i] = { data: hasil, mime: "image/jpeg", caption: "" };
       FOTO_ADA[i] = null;
       jend.innerHTML = '<img src="'+hasil+'" alt=""><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
       k.classList.add("isi");
@@ -505,14 +516,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     img.src = url;
   }
 
-  /* ══ 2 · penghitung karakter ══ */
-  var berhitung = [
-    ["penerima", BATAS.penerima], ["pengirim", BATAS.pengirim],
-    ["surat1", BATAS.surat], ["surat2", BATAS.surat], ["surat3", BATAS.surat],
-    ["rahasia", BATAS.rahasia]
-  ];
-  berhitung.forEach(function(p){
-    var el = $(p[0]), maks = p[1];
+  /* ══ 2 · penghitung karakter ══
+     pasangHitung dipakai juga untuk isian yang dibangun belakangan oleh
+     renderBlokKhusus() (kupon, kuis, harapan) — bukan cuma yang statis
+     di HTML. */
+  function pasangHitung(id, maks){
+    var el = $(id); if(!el) return;
     var tampil = el.closest(".baris").querySelector(".angka");
     function segar(){
       var n = el.value.length;
@@ -520,7 +529,102 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       tampil.className = "angka" + (n >= maks ? " penuh" : n > maks*0.88 ? " dekat" : "");
     }
     el.addEventListener("input", segar); segar();
-  });
+  }
+  [["penerima", BATAS.penerima], ["pengirim", BATAS.pengirim],
+   ["surat1", BATAS.surat], ["surat2", BATAS.surat], ["surat3", BATAS.surat]
+  ].forEach(function(p){ pasangHitung(p[0], p[1]); });
+
+  /* ══ 2b · blok ke-5: beda per tema ══
+     Bait = pesan rahasia. Kado Riang = 3 kupon. Langit Harapan = kuis
+     "seberapa kenal" + 3 harapan. Dibangun sekali per tema diketahui. */
+  function renderBlokKhusus(tema){
+    var b = $("blokKhusus"), html = "";
+    if(tema === "kado-riang"){
+      html = '<h2><span class="n">5</span> Tiga kupon</h2>' +
+        '<p class="jelas">Hadiah yang bisa ditukar langsung, muncul sebagai kupon gosok di suratnya.</p>';
+      for(var i=0;i<3;i++){
+        html += '<div class="baris" data-f="kupon'+i+'"><label for="kupon'+i+'">Kupon '+(i+1)+'</label>' +
+          '<input id="kupon'+i+'" type="text" maxlength="50" placeholder="Ditraktir martabak manis, topping bebas">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Kupon '+(i+1)+' belum diisi.</p></div>';
+      }
+    } else if(tema === "langit-harapan"){
+      html = '<h2><span class="n">5</span> Kuis "Seberapa kenal kamu sama aku?"</h2>' +
+        '<p class="jelas">3 soal, 3 pilihan jawaban. Tandai satu yang benar di tiap soal.</p>';
+      for(var q=0;q<3;q++){
+        html += '<div class="baris" data-f="kuis'+q+'tanya"><label for="kuis'+q+'tanya">Soal '+(q+1)+'</label>' +
+          '<input id="kuis'+q+'tanya" type="text" maxlength="70" placeholder="Minuman yang selalu aku pesan kalau kita ke kafe?">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Soal '+(q+1)+' belum diisi.</p></div>';
+        for(var p=0;p<3;p++){
+          html += '<div class="baris" style="margin-top:6px" data-f="kuis'+q+'p'+p+'">' +
+            '<label for="kuis'+q+'p'+p+'" style="font-weight:400;font-size:.85rem">Pilihan '+(p+1)+'</label>' +
+            '<div style="display:flex;gap:8px;align-items:center">' +
+            '<input type="radio" name="kuis'+q+'benar" value="'+p+'" id="kuis'+q+'benar'+p+'"'+(p===0?" checked":"")+' style="width:18px;height:18px;flex:none">' +
+            '<input id="kuis'+q+'p'+p+'" type="text" maxlength="30" placeholder="Pilihan jawaban" style="flex:1">' +
+            '</div><p class="galat">Pilihan '+(p+1)+' belum diisi.</p></div>';
+        }
+      }
+      html += '<p class="jelas" style="margin-top:4px">Lingkaran di kiri menandai jawaban yang benar.</p>' +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Tiga harapan</h2>' +
+        '<p class="jelas">Muncul satu per satu saat bintang harapan diketuk.</p>';
+      for(var h=0;h<3;h++){
+        html += '<div class="baris" data-f="harapan'+h+'"><label for="harapan'+h+'">Harapan '+(h+1)+'</label>' +
+          '<textarea id="harapan'+h+'" maxlength="90" placeholder="Semoga kamu selalu sehat…"></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Harapan '+(h+1)+' belum diisi.</p></div>';
+      }
+    } else { // bait
+      html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
+        '<p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>' +
+        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Kado aslinya aku kasih pas kita ketemu nanti."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    }
+    b.innerHTML = html;
+    if(tema === "kado-riang"){
+      for(var ki=0;ki<3;ki++) pasangHitung("kupon"+ki, BATAS.kupon);
+    } else if(tema === "langit-harapan"){
+      for(var kq=0;kq<3;kq++){
+        pasangHitung("kuis"+kq+"tanya", BATAS.kuisTanya);
+        for(var kp=0;kp<3;kp++) pasangHitung("kuis"+kq+"p"+kp, BATAS.kuisPilihan);
+      }
+      for(var kh=0;kh<3;kh++) pasangHitung("harapan"+kh, BATAS.harapan);
+    } else {
+      pasangHitung("rahasia", BATAS.rahasia);
+    }
+  }
+
+  /* ══ 2c · bagian yang bergantung pada tema, disatukan ══ */
+  function siapkanTema(tema){
+    TEMA = TEMA_INFO[tema] ? tema : "bait";
+    NFOTO = TEMA_INFO[TEMA].nfoto;
+    buatFoto(NFOTO);
+    renderBlokKhusus(TEMA);
+    $("labelSurat").textContent = "Surat digital — " + TEMA_INFO[TEMA].nama;
+  }
+  if(!MODE_EDIT) siapkanTema(TEMA);
+
+  /* ══ isi khusus tema, dipakai pratinjau & pengiriman ══ */
+  function isiKhusus(){
+    if(TEMA === "kado-riang"){
+      return { kupon: [0,1,2].map(function(i){ return $("kupon"+i).value; }) };
+    }
+    if(TEMA === "langit-harapan"){
+      return {
+        kuis: [0,1,2].map(function(q){
+          return {
+            tanya: $("kuis"+q+"tanya").value,
+            pilihan: [0,1,2].map(function(p){ return $("kuis"+q+"p"+p).value; }),
+            benar: +(document.querySelector('input[name="kuis'+q+'benar"]:checked')||{}).value || 0
+          };
+        }),
+        harapan: [0,1,2].map(function(h){ return $("harapan"+h).value; })
+      };
+    }
+    return { rahasia: $("rahasia").value };
+  }
+  function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau penuh ══
      Tema Bait terkunci-game dan penuh animasi — tidak masuk akal
@@ -529,18 +633,18 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      memuat ulang /surat.html dari awal dengan isian saat itu, lewat
      sessionStorage (bukan postMessage yang terus-menerus). */
   function isiUntukPratinjau(){
-    return {
+    return Object.assign({
+      tema: TEMA,
       penerima: $("penerima").value.trim() || "Amira",
       pengirim: $("pengirim").value.trim() || "Adriel",
       ucapan: $("ucapan").value || "selamat",
       tanggalLahir: $("lahir").value || "2000-01-01",
       sembunyikanUmur: $("sembunyikanUmur").checked,
       surat: [$("surat1").value, $("surat2").value, $("surat3").value],
-      rahasia: $("rahasia").value,
-      foto: [0,1,2].map(function(i){
-        var ket = (document.querySelector('[data-ket="'+i+'"]')||{}).value || "";
-        if(FOTO[i]) return { src: FOTO[i].data, ket: ket };
-        if(FOTO_ADA[i]) return { src: FOTO_ADA[i], ket: ket };
+      foto: fotoRange().map(function(i){
+        var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
+        if(FOTO[i]) return { src: FOTO[i].data, caption: caption };
+        if(FOTO_ADA[i]) return { src: FOTO_ADA[i], caption: caption };
         return null;
       }).filter(Boolean),
       waPengirim: $("wa").value.trim(),
@@ -548,12 +652,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         src: (LAGU && LAGU.data) || LAGU_ADA || "",
         mulai: detikLagu("laguMulai"), selesai: detikLagu("laguSelesai")
       }
-    };
+    }, isiKhusus());
   }
 
   function previewPenuh(){
     try{ sessionStorage.setItem("fv-pratinjau", JSON.stringify(isiUntukPratinjau())); }catch(_){}
-    window.open("/surat.html#pratinjau", "_blank");
+    window.open(TEMA_INFO[TEMA].mesin + "#pratinjau", "_blank");
   }
   $("btnPratinjau").addEventListener("click", previewPenuh);
   $("bukaPv").addEventListener("click", previewPenuh);
@@ -589,6 +693,30 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     $("galatFoto").style.display = adaFoto ? "none" : "block";
     if(!adaFoto) kurang.push("foto");
 
+    if(TEMA === "kado-riang"){
+      [0,1,2].forEach(function(i){
+        var kosong = !$("kupon"+i).value.trim();
+        tandai("kupon"+i, kosong);
+        if(kosong) kurang.push("kupon"+i);
+      });
+    } else if(TEMA === "langit-harapan"){
+      [0,1,2].forEach(function(q){
+        var kosongT = !$("kuis"+q+"tanya").value.trim();
+        tandai("kuis"+q+"tanya", kosongT);
+        if(kosongT) kurang.push("kuis"+q+"tanya");
+        [0,1,2].forEach(function(p){
+          var kosongP = !$("kuis"+q+"p"+p).value.trim();
+          tandai("kuis"+q+"p"+p, kosongP);
+          if(kosongP) kurang.push("kuis"+q+"p"+p);
+        });
+      });
+      [0,1,2].forEach(function(h){
+        var kosongH = !$("harapan"+h).value.trim();
+        tandai("harapan"+h, kosongH);
+        if(kosongH) kurang.push("harapan"+h);
+      });
+    }
+
     if(!MODE_EDIT){
       var em = $("email").value.trim();
       var emOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em);
@@ -614,23 +742,23 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   function badan(){
     var q = new URLSearchParams(location.search);
     return {
-      tema: q.get("tema") || "bait",
+      tema: TEMA || q.get("tema") || "bait",
       momen: q.get("momen") || "Ulang tahun",
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
-      isi: {
+      isi: Object.assign({
         penerima: $("penerima").value.trim(),
         pengirim: $("pengirim").value.trim(),
         ucapan: $("ucapan").value,
         tanggalLahir: $("lahir").value,
         sembunyikanUmur: $("sembunyikanUmur").checked,
         surat: [$("surat1").value, $("surat2").value, $("surat3").value],
-        rahasia: $("rahasia").value,
+        waPengirim: $("wa").value.trim(),
         lagu: laguUntukServer()
-      },
-      foto: [0,1,2].map(function(i){
-        var ket = (document.querySelector('[data-ket="'+i+'"]')||{}).value || "";
-        return FOTO[i] ? { data: FOTO[i].data, mime: FOTO[i].mime, ket: ket } : { ket: ket };
+      }, isiKhusus()),
+      foto: fotoRange().map(function(i){
+        var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
+        return FOTO[i] ? { data: FOTO[i].data, mime: FOTO[i].mime, caption: caption } : { caption: caption };
       })
     };
   }
@@ -711,6 +839,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tirai(false);
         if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Tautan edit tidak dikenal.");
         var i = h.j.isi || {};
+        siapkanTema(h.j.tema || "bait");
         $("penerima").value = i.penerima || "";
         $("pengirim").value = i.pengirim || "";
         $("ucapan").value = i.ucapan || "selamat";
@@ -719,22 +848,36 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         $("surat3").value = (i.surat||[])[2] || "";
         $("lahir").value  = i.tanggalLahir || "";
         $("sembunyikanUmur").checked = !!i.sembunyikanUmur;
-        $("rahasia").value = i.rahasia || "";
+        $("wa").value = i.waPengirim || "";
+        if(TEMA === "kado-riang"){
+          (i.kupon||[]).forEach(function(v,n){ if($("kupon"+n)) $("kupon"+n).value = v || ""; });
+        } else if(TEMA === "langit-harapan"){
+          (i.kuis||[]).forEach(function(k,q){
+            if(!$("kuis"+q+"tanya")) return;
+            $("kuis"+q+"tanya").value = k.tanya || "";
+            (k.pilihan||[]).forEach(function(v,p){ if($("kuis"+q+"p"+p)) $("kuis"+q+"p"+p).value = v || ""; });
+            var r = document.getElementById("kuis"+q+"benar"+(k.benar||0));
+            if(r) r.checked = true;
+          });
+          (i.harapan||[]).forEach(function(v,n){ if($("harapan"+n)) $("harapan"+n).value = v || ""; });
+        } else {
+          $("rahasia").value = i.rahasia || "";
+        }
         var lagu = i.lagu || {};
-        LAGU_ADA = lagu.file || null;
+        LAGU_ADA = lagu.src || null;
         $("laguMulai").value = lagu.mulai || "";
         $("laguSelesai").value = lagu.selesai || "";
         namaLagu(LAGU_ADA ? "Lagu tersimpan: " + (lagu.judul || "berkas kamu") + " — pilih berkas baru kalau mau mengganti."
                           : "");
         (i.foto||[]).forEach(function(f, n){
-          if(n > 2 || !f || !f.src) return;
+          if(n >= NFOTO || !f || !f.src) return;
           FOTO_ADA[n] = f.src;
           var k = kartu(n);
           k.querySelector(".jendela").innerHTML = '<img src="'+f.src+'" alt=""><button class="ganti" type="button" data-buka="'+n+'">Ganti</button>';
           k.classList.add("isi");
-          k.querySelector('[data-ket="'+n+'"]').value = f.ket || "";
+          k.querySelector('[data-caption="'+n+'"]').value = f.caption || "";
         });
-        berhitung.forEach(function(p){ $(p[0]).dispatchEvent(new Event("input")); });
+        document.querySelectorAll("#form input, #form textarea").forEach(function(el){ el.dispatchEvent(new Event("input")); });
         if(h.j.batas_edit){
           var sisa = Math.max(0, Math.ceil((h.j.batas_edit - Date.now())/86400000));
           $("catatanKirim").textContent = "Tautan edit ini masih berlaku sekitar " + sisa + " hari lagi.";

@@ -69,12 +69,48 @@ export default {
         });
       }
 
-      /* ── alamat pendek: /s/<kode> dan /edit/<token> ── */
-      let halaman = null;
-      if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) halaman = "surat";
-      else if (/^\/edit\/[A-Za-z0-9]{8,40}\/?$/.test(p)) halaman = "pesan";
+      /* ── alamat pendek: /edit/<token> ── */
+      if (/^\/edit\/[A-Za-z0-9]{8,40}\/?$/.test(p))
+        return await ambilHalaman(env, url.origin, "pesan", request);
 
-      if (halaman) return await ambilHalaman(env, url.origin, halaman, request);
+      /* ── alamat pendek: /s/<kode> ──
+         Tiga mesin tema (surat.html = Bait, kado-riang.html,
+         langit-harapan.html) berbagi alamat /s/<kode> yang sama.
+         Temanya dilihat dulu di D1, baru file yang cocok disajikan.
+         Bait tetap mengambil datanya sendiri lewat fetch client-side
+         (lihat surat.html) — dua mesin baru datanya ditulis langsung
+         di sini, karena mesinnya membaca data secara serentak (tanpa
+         fetch) saat halamannya baru dibuka. */
+      if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) {
+        const kode = p.split("/")[2];
+        let baris = null;
+        try { baris = env.DB && await env.DB.prepare("SELECT tema,isi,status,aktif FROM pesanan WHERE kode=?").bind(kode).first(); }
+        catch (_) { baris = null; }
+
+        if (!baris || baris.status !== "lunas" || !baris.aktif) {
+          return new Response(
+            "<!doctype html><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\">" +
+            "<body style=\"font-family:system-ui;background:#FAF3E8;color:#1B1B2F;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;text-align:center\">" +
+            "<p>Surat ini tidak ditemukan atau belum aktif.</p></body>",
+            { status: 404, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } }
+          );
+        }
+
+        const tema = baris.tema;
+        const nama = tema === "kado-riang" ? "kado-riang" : tema === "langit-harapan" ? "langit-harapan" : "surat";
+        const r = await ambilHalaman(env, url.origin, nama, request);
+
+        if (nama === "surat") return r;   // Bait: ambil datanya sendiri lewat /api/surat
+
+        const html = await r.text();
+        const aman = JSON.stringify(JSON.parse(baris.isi || "{}")).replace(/<\/script/gi, "<\\/script");
+        const ditulis = html.replace(
+          /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/,
+          "$1" + aman + "$2"
+        );
+        const kepala = new Headers(r.headers);
+        return new Response(ditulis, { status: r.status, headers: kepala });
+      }
 
       /* ── sisanya: file biasa ── */
       return await env.ASSETS.fetch(request);

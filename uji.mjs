@@ -31,8 +31,26 @@ function isiDraf() {
       tanggalLahir: "2001-05-14", sembunyikanUmur: false,
       rahasia: "Aku menunggu di halaman terakhir."
     },
-    foto: [{ data: FOTO, mime: "image/jpeg", ket: "foto pertama" }]
+    foto: [{ data: FOTO, mime: "image/jpeg", caption: "foto pertama" }]
   };
+}
+
+function isiDrafTema(tema) {
+  const d = isiDraf();
+  d.tema = tema;
+  if (tema === "kado-riang") {
+    delete d.isi.rahasia;
+    d.isi.kupon = ["Kupon satu", "Kupon dua", "Kupon tiga"];
+  } else if (tema === "langit-harapan") {
+    delete d.isi.rahasia;
+    d.isi.kuis = [
+      { tanya: "Soal satu?", pilihan: ["A", "B", "C"], benar: 0 },
+      { tanya: "Soal dua?", pilihan: ["A", "B", "C"], benar: 1 },
+      { tanya: "Soal tiga?", pilihan: ["A", "B", "C"], benar: 2 }
+    ];
+    d.isi.harapan = ["Harapan satu.", "Harapan dua.", "Harapan tiga."];
+  }
+  return d;
 }
 
 async function buatPesanan(L) {
@@ -492,12 +510,13 @@ judul("Skrip di dalam halaman");
 
 async function skripHalaman(berkas) {
   const t = await readFile("./" + berkas, "utf8");
-  const potong = [...t.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  const potong = [...t.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*type="application\/json")[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
   harus(potong.length, "tidak ada skrip di " + berkas);
   return potong;
 }
 
-for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html"]) {
+for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html",
+                      "kado-riang.html", "langit-harapan.html", "index.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
     const { writeFileSync, rmSync } = await import("node:fs");
@@ -548,8 +567,7 @@ await uji("tanpa unggahan, lagu kosong — surat memakai kotak musik bawaan", as
   const j = await drafLagu(L, { mulai: 0, selesai: 0 });
   harus(j.ok, "draf gagal");
   const l = await laguTersimpan(L, j.kode);
-  sama(l.file, "", "file harus kosong");
-  sama(l.sumber, "", "sumber harus kosong");
+  sama(l.src, "", "src harus kosong");
 });
 
 await uji("MP3 yang diunggah tersimpan dan bisa diputar", async () => {
@@ -557,10 +575,10 @@ await uji("MP3 yang diunggah tersimpan dan bisa diputar", async () => {
   const j = await drafLagu(L, { data: MP3(), mime: "audio/mpeg", judul: "lagu kami" });
   harus(j.ok, "draf gagal: " + j.pesan);
   const l = await laguTersimpan(L, j.kode);
-  sama(l.sumber, "unggah", "sumber");
+  sama(l.src.length > 0, true, "src harus terisi");
   sama(l.judul, "lagu kami", "judul");
-  harus(l.file.startsWith("/f/" + j.kode + "/lagu-"), "alamat berkas salah: " + l.file);
-  harus(/\.mp3$/.test(l.file), "akhiran berkas harus .mp3");
+  harus(l.src.startsWith("/f/" + j.kode + "/lagu-"), "alamat berkas salah: " + l.src);
+  harus(/\.mp3$/.test(l.src), "akhiran berkas harus .mp3");
   harus([...L.env.FOTO._isi.keys()].some(k => k.includes("/lagu-")), "berkas tidak masuk ke R2");
 });
 
@@ -568,7 +586,7 @@ await uji("M4A juga diterima", async () => {
   const L = await buatLingkungan();
   const j = await drafLagu(L, { data: MP3(), mime: "audio/x-m4a", judul: "m4a" });
   harus(j.ok, "draf gagal: " + j.pesan);
-  harus(/\.m4a$/.test((await laguTersimpan(L, j.kode)).file), "akhiran harus .m4a");
+  harus(/\.m4a$/.test((await laguTersimpan(L, j.kode)).src), "akhiran harus .m4a");
 });
 
 await uji("format selain MP3/M4A ditolak dengan pesan yang jelas", async () => {
@@ -606,7 +624,7 @@ await uji("mengedit tanpa mengganti berkas mempertahankan lagu lama", async () =
   const sebelum = await laguTersimpan(L, p.kode);
   await drafLagu(L, { pakaiLama: true, mulai: 12, selesai: 40 }, p.token);
   const sesudah = await laguTersimpan(L, p.kode);
-  sama(sesudah.file, sebelum.file, "berkas harus sama");
+  sama(sesudah.src, sebelum.src, "berkas harus sama");
   sama(sesudah.judul, "asli", "judul harus ikut bertahan");
   sama(sesudah.mulai, 12, "mulai boleh berubah");
 });
@@ -618,7 +636,7 @@ await uji("menghapus lagu saat edit juga membuang berkasnya dari penyimpanan", a
   await drafLagu(L, { data: MP3(), mime: "audio/mpeg" }, p.token);
   harus([...L.env.FOTO._isi.keys()].some(k => k.includes("/lagu-")), "berkas belum masuk");
   await drafLagu(L, { mulai: 0, selesai: 0 }, p.token);
-  sama((await laguTersimpan(L, p.kode)).file, "", "lagu harus kosong");
+  sama((await laguTersimpan(L, p.kode)).src, "", "lagu harus kosong");
   harus(![...L.env.FOTO._isi.keys()].some(k => k.includes("/lagu-")), "berkas lagu masih tertinggal di R2");
 });
 
@@ -627,7 +645,7 @@ await uji("jalur YouTube benar-benar dicabut, bukan sekadar disembunyikan", asyn
   const j = await drafLagu(L, { youtube: "https://youtu.be/dQw4w9WgXcQ" });
   harus(j.ok, "draf gagal");
   const l = await laguTersimpan(L, j.kode);
-  sama(l.file, "", "tidak boleh ada berkas");
+  sama(l.src, "", "tidak boleh ada berkas");
   harus(!("youtube" in l), "field youtube masih tersimpan");
   for (const berkas of ["functions/api/[[jalur]].js", "pesan.html", "surat.html"]) {
     const t = await readFile("./" + berkas, "utf8");
@@ -678,6 +696,71 @@ await uji("tanda tangan palsu tetap ditolak 403, bukan ikut dijawab 200", async 
   const L = await buatLingkungan();
   const p = await buatPesanan(L);
   sama((await L.notifikasi(notifSukses(p.faktur), { rusak: true })).status, 403, "status");
+});
+
+/* ═══════════ tema Kado Riang & Langit Harapan ═══════════ */
+judul("Tema Kado Riang & Langit Harapan");
+
+async function draf(L, isi) {
+  const r = await L.panggil("/api/draf", {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify(isi)
+  });
+  return r.json();
+}
+
+for (const tema of ["kado-riang", "langit-harapan"]) {
+  await uji(tema + " · pesanan lengkap diterima dan tersimpan dengan tema yang benar", async () => {
+    const L = await buatLingkungan();
+    const j = await draf(L, isiDrafTema(tema));
+    harus(j.ok, "draf gagal: " + JSON.stringify(j));
+    const b = await L.env.DB.prepare("SELECT tema,isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+    sama(b.tema, tema, "tema tersimpan");
+    const isi = JSON.parse(b.isi);
+    sama(isi.foto[0].caption, "foto pertama", "caption foto ikut tersimpan");
+  });
+}
+
+await uji("kado-riang · kupon yang belum lengkap ditolak", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("kado-riang");
+  d.isi.kupon = ["Kupon satu", "", "Kupon tiga"];
+  const j = await draf(L, d);
+  harus(!j.ok, "seharusnya ditolak karena kupon kedua kosong");
+});
+
+await uji("langit-harapan · kuis yang belum lengkap ditolak", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("langit-harapan");
+  d.isi.kuis[1].pilihan[2] = "";
+  const j = await draf(L, d);
+  harus(!j.ok, "seharusnya ditolak karena pilihan jawaban kosong");
+});
+
+await uji("langit-harapan · harapan yang belum lengkap ditolak", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("langit-harapan");
+  d.isi.harapan[2] = "";
+  const j = await draf(L, d);
+  harus(!j.ok, "seharusnya ditolak karena harapan ketiga kosong");
+});
+
+await uji("tema terkunci — tidak bisa diganti lewat edit", async () => {
+  const L = await buatLingkungan();
+  const j = await draf(L, isiDrafTema("kado-riang"));
+  const b1 = await L.env.DB.prepare("SELECT token FROM pesanan WHERE kode=?").bind(j.kode).first();
+  await L.env.DB.prepare("UPDATE pesanan SET status='lunas' WHERE kode=?").bind(j.kode).run();
+  const d2 = isiDrafTema("kado-riang");
+  d2.tema = "bait";                             // coba selundupkan tema lain lewat /simpan
+  const r = await L.panggil("/api/simpan", {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify(Object.assign({ token: b1.token }, d2))
+  });
+  const jr = await r.json();
+  harus(jr.ok, "simpan seharusnya tetap berhasil (isian kado-riang tetap lengkap): " + JSON.stringify(jr));
+  const b2 = await L.env.DB.prepare("SELECT tema,isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  sama(b2.tema, "kado-riang", "tema tidak boleh berubah lewat edit");
+  harus(!!JSON.parse(b2.isi).kupon, "isian kupon (milik kado-riang) harus tetap ada, bukan ketiban isian bait");
 });
 
 /* ═══════════ hasil ═══════════ */
