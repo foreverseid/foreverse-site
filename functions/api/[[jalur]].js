@@ -356,12 +356,14 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   if (!isi.tanggalLahir) throw new Error("Tanggal lahir belum diisi.");
 
   /* ── isian khas tema ──
-     waPengirim dipakai Bait & Langit Harapan untuk tombol balas
-     WhatsApp penerima. Diisi dari nomor WA pembeli (kolom "whatsapp"
-     di pesanan) — pembeli hampir selalu juga pengirimnya sendiri. */
+     waPengirim dipakai semua tema untuk tombol balas WhatsApp
+     penerima di penutup. Diisi dari nomor WA pembeli (kolom
+     "whatsapp" di pesanan) — pembeli hampir selalu juga pengirimnya
+     sendiri. */
   if (tema === "kado-riang") {
     isi.kupon = [0, 1, 2].map(i => teks((p.kupon || [])[i], BATAS.kupon));
     if (!isi.kupon[0] || !isi.kupon[1] || !isi.kupon[2]) throw new Error("Ketiga kupon belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "langit-harapan") {
     isi.kuis = [0, 1, 2].map(i => {
       const q = (p.kuis || [])[i] || {};

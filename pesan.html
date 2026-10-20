@@ -157,10 +157,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .sisi h2{font-family:var(--serif);font-weight:400;font-size:1.1rem;margin:0 0 4px}
 .sisi .jelas{margin:0 0 14px;color:var(--ink-faint);font-size:.84rem;line-height:1.5}
 .pv-card{
-  background:var(--violet-tint);border-radius:14px;padding:18px 16px;text-align:center;
+  background:var(--violet-tint);border-radius:14px;padding:14px;text-align:center;
 }
-.pv-card svg{display:block;margin:0 auto 10px;opacity:.85}
-.pv-kaki{margin:12px 0 0;text-align:center;font-size:.78rem;color:var(--ink-faint);line-height:1.5}
+.pv-frame-wrap{position:relative;width:100%;height:520px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(59,49,104,.14);margin-bottom:12px}
+.pv-frame{width:100%;height:100%;border:0;display:block}
+.pv-frame-kosong{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:.86rem;color:var(--ink-faint);background:#fff}
+.pv-frame-memuat{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(251,250,247,.88);font-size:.8rem;color:var(--violet);font-weight:600}
+.pv-frame-memuat.tampil{display:flex}
+.pv-kaki{margin:0;text-align:center;font-size:.78rem;color:var(--ink-faint);line-height:1.5}
 
 /* tombol pratinjau mengambang, muncul juga di HP supaya tidak perlu
    gulir sampai bawah untuk membukanya */
@@ -347,10 +351,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     <aside class="sisi" id="sisi">
       <div class="sisi-in">
         <h2>Lihat hasilnya</h2>
-        <p class="jelas">Suratnya punya dua permainan dan beberapa animasi — paling pas dilihat di layar penuh, bukan di kotak kecil. Buka kapan saja sambil mengisi; tab barunya selalu memuat isian yang terbaru.</p>
+        <p class="jelas">Pratinjau di bawah ini otomatis memperbarui sesuai isianmu. Permainan dan animasinya tetap lebih nyaman dicoba di layar penuh.</p>
         <div class="pv-card">
-          <svg viewBox="0 0 64 48" width="34" height="26" aria-hidden="true"><rect x="2" y="6" width="60" height="40" rx="6" fill="none" stroke="#3B3168" stroke-width="3.4"/><path d="M2 10l30 22 30-22" fill="none" stroke="#3B3168" stroke-width="3.4" stroke-linejoin="round"/></svg>
-          <button class="tbl tbl-utama tbl-lebar" type="button" id="btnPratinjau">Lihat pratinjau penuh ↗</button>
+          <div class="pv-frame-wrap">
+            <iframe id="pvFrame" class="pv-frame" title="Pratinjau surat" loading="lazy" hidden></iframe>
+            <div class="pv-frame-kosong" id="pvKosong">Mulai isi di sebelah kiri, pratinjaunya langsung muncul di sini.</div>
+            <div class="pv-frame-memuat" id="pvMemuat">memuat…</div>
+          </div>
+          <button class="tbl tbl-utama tbl-lebar" type="button" id="btnPratinjau">Buka layar penuh ↗</button>
         </div>
         <p class="pv-kaki">Bagian yang belum kamu isi tidak ditampilkan di pratinjau — bukan diganti contoh.</p>
       </div>
@@ -626,12 +634,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   }
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
-  /* ══ 3 · pratinjau penuh ══
-     Tema Bait terkunci-game dan penuh animasi — tidak masuk akal
-     ditampilkan ulang di kotak kecil setiap kali mengetik, seperti
-     Kotak Kejutan yang lama. Jadi pratinjau dibuka sebagai tab baru,
-     memuat ulang /surat.html dari awal dengan isian saat itu, lewat
-     sessionStorage (bukan postMessage yang terus-menerus). */
+  /* ══ 3 · pratinjau ══
+     Panel kanan memuat mesin tema di dalam iframe dan memuatnya ulang
+     tiap isian berubah (lewat sessionStorage, sama seperti tombol
+     "layar penuh") — jadi animasi/game ikut mengulang dari awal
+     setiap kali diketik, bukan postMessage yang menyambung di tengah
+     jalan. Dibuat agak jarang (debounce) supaya tidak memuat ulang di
+     setiap ketukan huruf. */
   function isiUntukPratinjau(){
     return Object.assign({
       tema: TEMA,
@@ -655,12 +664,42 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     }, isiKhusus());
   }
 
-  function previewPenuh(){
+  function simpanPratinjauKeStorage(){
+    var ada = !!($("penerima").value.trim() || $("pengirim").value.trim() || $("surat1").value.trim());
     try{ sessionStorage.setItem("fv-pratinjau", JSON.stringify(isiUntukPratinjau())); }catch(_){}
+    return ada;
+  }
+
+  function previewPenuh(){
+    simpanPratinjauKeStorage();
     window.open(TEMA_INFO[TEMA].mesin + "#pratinjau", "_blank");
   }
   $("btnPratinjau").addEventListener("click", previewPenuh);
   $("bukaPv").addEventListener("click", previewPenuh);
+
+  /* ── pratinjau hidup di panel kanan ── */
+  var pvTimer = null;
+  function muatPratinjauLive(){
+    var ada = simpanPratinjauKeStorage();
+    var frame = $("pvFrame"), kosong = $("pvKosong"), memuat = $("pvMemuat");
+    if(!ada){
+      frame.hidden = true; kosong.style.display = "flex"; memuat.classList.remove("tampil");
+      return;
+    }
+    kosong.style.display = "none";
+    frame.hidden = false;
+    memuat.classList.add("tampil");
+    frame.src = TEMA_INFO[TEMA].mesin + "?pv=" + Date.now() + "#pratinjau";
+  }
+  $("pvFrame").addEventListener("load", function(){ $("pvMemuat").classList.remove("tampil"); });
+  function jadwalkanPratinjauLive(){
+    clearTimeout(pvTimer);
+    if(!$("pvFrame").hidden) $("pvMemuat").classList.add("tampil");
+    pvTimer = setTimeout(muatPratinjauLive, 700);
+  }
+  $("form").addEventListener("input", jadwalkanPratinjauLive);
+  $("form").addEventListener("change", jadwalkanPratinjauLive);
+  muatPratinjauLive();
 
   /* ══ 4 · kabar ══ */
   function pesanGalat(t){

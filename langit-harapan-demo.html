@@ -397,7 +397,7 @@ h2{font-weight:600}
   <div class="g-clock" id="gClock">00.00</div>
   <div class="g-date" id="gDate"></div>
   <div class="g-notif"><div class="app">💌</div><div><b data-f="pengirim"></b><small>sekarang</small><p id="gMsg"></p></div></div>
-  <div class="g-label">Masukkan kode</div>
+  <div class="g-label">Masukkan kode <small style="opacity:.75;font-weight:600">(demo: 1010)</small></div>
   <div class="pin" id="pin"><i></i><i></i><i></i><i></i></div>
   <div class="keypad" id="keypad"><button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button class="blank" tabindex="-1"></button><button data-k="0">0</button><button class="del" data-k="del">Hapus</button></div>
   <p class="g-help" id="gHelp">petunjuk: tanggal &amp; bulan lahirmu</p>
@@ -1207,9 +1207,12 @@ F.bind();
 function stars(box, n){ for(let i=0;i<n;i++){ const s = el('i'); s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${(Math.random()*2.6).toFixed(1)}s;transform:scale(${(.5+Math.random()).toFixed(2)})`; box.appendChild(s); } }
 stars($('#gStars'), 26); stars($('#eStars'), 30);
 
-/* ---------- 1. layar kunci (kode = tanggal & bulan lahir) ---------- */
-const bd = new Date((D.tanggalLahir||'2000-01-01') + 'T00:00:00');
-const CODE = String(bd.getDate()).padStart(2,'0') + String(bd.getMonth()+1).padStart(2,'0');
+/* ---------- 1. layar kunci ----------
+   Di mesin asli (langit-harapan.html) kodenya = tanggal & bulan lahir
+   penerima sendiri — selalu bisa dijawab karena itu tanggal lahirnya
+   sendiri. Demo ini bukan pesanan sungguhan, jadi kodenya tetap 1010
+   dan ditampilkan langsung di layar (lihat label "Masukkan kode"). */
+const CODE = '1010';
 $('#gMsg').textContent = `Ada sesuatu buat kamu, ${D.penerima}. Dibuka ya 💌`;
 function tick(){ if(!$('#gClock')) return clearInterval(clk); const d = new Date(); $('#gClock').textContent = String(d.getHours()).padStart(2,'0') + '.' + String(d.getMinutes()).padStart(2,'0'); $('#gDate').textContent = d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'}); }
 const clk = setInterval(tick, 15000); tick();

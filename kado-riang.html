@@ -37,6 +37,7 @@
     "",
     ""
   ],
+  "waPengirim": "",
   "lagu": {
     "src": "",
     "judul": "",
@@ -45,7 +46,8 @@
     "selesai": 0
   },
   "foreverseUrl": "https://foreverse.id"
-}</script>
+}
+</script>
 <script>
 /* pratinjau dari /pesan: isi datang dari sessionStorage (ditulis oleh
    tombol "Lihat pratinjau penuh"), dibaca di sini SEBELUM mesin tema
@@ -334,10 +336,32 @@ h2{font-weight:800}
 .cr-end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px}
 .cr-end.show{display:flex;animation:pop .8s both}
 .cr-end h3{font-family:var(--disp);font-weight:800;font-size:2.6rem;letter-spacing:.06em;color:#fff}
-.cr-end p{font-family:var(--hand);font-size:1.5rem;margin:4px 0 24px;max-width:300px;line-height:1.2}
+.cr-end p{font-family:var(--hand);font-size:1.5rem;margin:4px 0 6px;max-width:300px;line-height:1.2}
 #crRead{background:#fff;color:var(--p);box-shadow:0 4px 0 rgba(0,0,0,.15)}
-.cr-btns{display:flex;flex-direction:column;gap:12px;width:min(270px,100%)}
+.cr-btns{display:none;flex-direction:column;gap:12px;width:min(270px,100%);margin-top:18px}
+.cr-btns.show{display:flex;animation:fin 1s}
 .cr-btns .btn.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4)}
+.cr-btns .reply-box{width:100%;background:#fff;border-radius:16px;padding:13px;text-align:left}
+.cr-btns .reply-box label{display:block;font-size:.8rem;font-weight:800;margin-bottom:7px;color:var(--ink)}
+.cr-btns .reply-box textarea{width:100%;min-height:68px;border:0;border-radius:11px;padding:10px 12px;font:inherit;font-size:.9rem;color:var(--ink);background:var(--soft);resize:none}
+.cr-btns .wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#25B864;color:#fff;font-weight:800;font-size:.92rem;padding:12px 22px;border-radius:999px;box-shadow:0 4px 0 #1A8A4A;text-decoration:none}
+
+/* ---------- segel penutup ---------- */
+.grab{cursor:grab;touch-action:none}
+.grab.grabbing{cursor:grabbing}
+.nudge{animation:nudge .45s ease}
+.wax{position:relative;width:100px;height:100px;margin:16px auto 0}
+.wax-drop{position:absolute;left:50%;top:0;width:15px;height:15px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--soft);transform:translateX(-50%);opacity:0}
+.wax.drip .wax-drop{animation:drip .9s ease-in forwards}
+@keyframes drip{0%{opacity:1;transform:translate(-50%,-48px) scale(.7,1.25)}70%{opacity:1;transform:translate(-50%,36px) scale(1.15,.8)}100%{opacity:0;transform:translate(-50%,40px) scale(1.5,.5)}}
+.wax-pool{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);width:100%;height:100%;border-radius:46% 54% 50% 50%/52% 48% 52% 48%;background:radial-gradient(circle at 36% 32%,#fff,var(--soft) 58%,#E8B99C);box-shadow:0 7px 16px rgba(0,0,0,.22);transition:transform .5s cubic-bezier(.2,.9,.3,1.3)}
+.wax.pooled .wax-pool{transform:translate(-50%,-50%) scale(1)}
+.wax-mark{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transform:scale(1.35);transition:opacity .4s,transform .4s}
+.wax.sealed .wax-mark{opacity:1;transform:scale(1)}
+.wax-mark svg{width:46px;height:46px;filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
+.wax-hint{text-align:center;font-size:.8rem;font-weight:800;color:#fff;opacity:.9;margin:12px 0 0;min-height:1.3em}
+.sealed-note{display:none;text-align:center;font-family:var(--hand);font-size:1.25rem;color:#fff;margin-top:10px;line-height:1.4}
+.sealed-note.show{display:block;animation:fin .8s}
 </style>
 </head>
 <body class="locked">
@@ -484,7 +508,24 @@ h2{font-weight:800}
   <div class="cr-end" id="crEnd">
     <h3>KADO DITERIMA 🎁</h3>
     <p id="crEndTxt"></p>
-    <div class="cr-btns">
+    <div class="wax grab" id="wax" role="button" tabindex="0" aria-label="Tarik segel ke bawah">
+      <div class="wax-drop"></div>
+      <div class="wax-pool"></div>
+      <div class="wax-mark">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M6 9c0 8 4.5 13 10 16" stroke="#2B2240" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M26 9c0 8-4.5 13-10 16" stroke="#2B2240" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <p class="wax-hint" id="waxHint">tarik segelnya ke bawah, supaya kadonya tidak kemana-mana ↓</p>
+    <p class="sealed-note" id="sealedNote"></p>
+    <div class="cr-btns" id="crBtns">
+      <div class="reply-box" id="replyBox" hidden>
+        <label for="replyTxt" id="replyLbl"></label>
+        <textarea id="replyTxt" maxlength="300"></textarea>
+      </div>
+      <a class="wa" id="waBtn" target="_blank" rel="noopener" hidden>Balas lewat WhatsApp</a>
       <button class="btn" id="crRead">💌 Baca suratnya lagi</button>
       <button class="btn ghost" id="crAgain">🔁 Ulangi dari awal</button>
     </div>
@@ -1320,6 +1361,85 @@ $('#crRead').onclick = () => { $('#credits').classList.remove('show'); $('#lette
 $('#crAgain').onclick = () => location.reload();
 const fu = D.foreverseUrl || 'https://foreverse.id';
 $('#madeBy').href = fu + (fu.includes('?') ? '&' : '?') + 'ref=kado-riang';
+
+/* ---------- segel penutup (ritual tanda tangan Foreverse) ----------
+   Dipasang sekali di sini, hanya dipakai di kartu kado ini — bukan
+   bagian dari F.* yang dipakai tema lain. */
+function drag(node, o){
+  let on = false, sy = 0, travel = 0, done = false;
+  function reset(){ on = false; travel = 0; node.classList.remove('grabbing'); }
+  function down(e){
+    if(on || done || node.dataset.off) return;
+    e.preventDefault(); F.ac();
+    on = true; sy = e.clientY; travel = 0;
+    node.classList.add('grabbing');
+    try{ node.setPointerCapture(e.pointerId); }catch(err){}
+    o.onMove && o.onMove(0);
+  }
+  function move(e){
+    if(!on || done) return;
+    e.preventDefault();
+    const d = Math.max(0, e.clientY - sy); travel = d;
+    const p = Math.min(1, travel / o.dist);
+    o.onMove && o.onMove(p);
+    if(p >= 1){ done = true; reset(); o.onDone && o.onDone(); }
+  }
+  function up(){
+    if(!on) return;
+    const moved = travel > 8;
+    reset();
+    if(done) return;
+    o.onMove && o.onMove(0);
+    if(!moved && o.onTap) o.onTap(); else o.onCancel && o.onCancel();
+  }
+  node.addEventListener('pointerdown', down);
+  node.addEventListener('pointermove', move);
+  node.addEventListener('pointerup', up);
+  node.addEventListener('pointercancel', () => { if(on){ reset(); if(!done){ o.onMove && o.onMove(0); o.onCancel && o.onCancel(); } } });
+  node.addEventListener('keydown', e => {
+    if((e.key === 'Enter' || e.key === ' ') && !done){ e.preventDefault(); done = true; F.ac(); o.onMove && o.onMove(1); o.onDone && o.onDone(); }
+  });
+}
+(function(){
+  const wax = $('#wax'), hint = $('#waxHint');
+  let sealed = false;
+  drag(wax, {
+    dist: 56,
+    onMove(p){
+      if(sealed) return;
+      wax.style.transform = `translateY(${(p*14).toFixed(1)}px)`;
+      hint.textContent = p > .1 ? 'terus…' : 'tarik segelnya ke bawah, supaya kadonya tidak kemana-mana ↓';
+    },
+    onTap(){ if(sealed) return; wax.classList.remove('nudge'); void wax.offsetWidth; wax.classList.add('nudge'); },
+    onCancel(){ if(!sealed){ wax.style.transform = ''; hint.textContent = 'tarik segelnya ke bawah, supaya kadonya tidak kemana-mana ↓'; } },
+    onDone(){
+      if(sealed) return; sealed = true;
+      wax.dataset.off = '1'; wax.style.transform = '';
+      wax.classList.add('drip'); F.sfx.puff();
+      setTimeout(() => { wax.classList.add('pooled'); F.sfx.melt(); F.buzz(50); }, 780);
+      setTimeout(() => {
+        wax.classList.add('sealed'); F.sfx.chime(); F.buzz([30,40,30]);
+        const r = wax.getBoundingClientRect(); F.fx.burst(r.left + r.width/2, r.top + r.height*.3, 70, 11);
+        hint.textContent = 'tersegel';
+        $('#sealedNote').textContent = `Kadonya tersegel lagi, ${D.penerima}. Supaya tidak kemana-mana.`;
+        $('#sealedNote').classList.add('show');
+      }, 1320);
+      setTimeout(() => $('#crBtns').classList.add('show'), 2100);
+    }
+  });
+})();
+
+const wa = String(D.waPengirim || '').replace(/\D/g, '');
+const waNomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
+if(waNomor.length >= 10){
+  $('#replyBox').hidden = false; $('#waBtn').hidden = false;
+  $('#replyLbl').textContent = `Mau balas ke ${D.pengirim || ''}?`;
+  $('#replyTxt').value = `Makasih kadonya, ${D.pengirim || ''} 🤍`;
+  $('#waBtn').addEventListener('click', function(){
+    this.href = `https://wa.me/${waNomor}?text=${encodeURIComponent($('#replyTxt').value)}`;
+  });
+  $('#waBtn').href = `https://wa.me/${waNomor}`;
+}
 
 F.reveal();
 })();

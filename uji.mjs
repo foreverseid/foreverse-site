@@ -537,6 +537,24 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
     harus(!t.includes(hilang), "masih memanggil " + hilang);
 });
 
+/* worker.js menulis data pesanan asli ke blok <script id="foreverse-data">
+   kado-riang.html & langit-harapan.html dengan regex yang mensyaratkan
+   newline persis sebelum "</script>". Kalau berkasnya diedit dan baris
+   penutup berubah jadi "}</script>" tanpa newline, regexnya tetap
+   "match" — tapi mencaplok sampai </script> SKRIP BERIKUTNYA, menghapus
+   skrip bootstrap pratinjau. Uji ini memastikan match-nya selalu pas
+   satu skrip saja. */
+for (const berkas of ["kado-riang.html", "langit-harapan.html"]) {
+  await uji(berkas + " · pola sisip data worker.js pas satu skrip, tidak mencaplok skrip berikutnya", async () => {
+    const t = await readFile("./" + berkas, "utf8");
+    const re = /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/;
+    const m = t.match(re);
+    harus(!!m, "regex tidak menemukan blok data sama sekali");
+    const isiBlok = m[0];
+    harus(!/<script>[\s\S]*\(function/.test(isiBlok), "match mencaplok skrip berikutnya juga — baris penutup data kemungkinan hilang newline-nya");
+  });
+}
+
 
 /* ═══════════ lagu ═══════════ */
 judul("Lagu");
