@@ -806,7 +806,7 @@ F.cake = (() => {
       chars.forEach((ch, i) => {
         const x = startX + i*gap, col = i % 2 ? colB : colA, id = `${hidden?'nw':'ol'}${i}`;
         out += `<div class="fCandle ${hidden?'':'hint'}" data-id="${id}" data-i="${i}" role="${hidden?'':'button'}" ${hidden?'':'tabindex="0"'} aria-label="lilin angka ${esc(ch)}"
-          style="left:${pct(x-14,VW)};top:${pct(108,VH)};width:${pct(28,VW)};height:${pct(70,VH)}${hidden?';opacity:0':''}">
+          style="left:${pct(x-14,VW)};top:${pct(108,VH)};width:${pct(28,VW)};height:${pct(70,VH)}${hidden?';opacity:0;pointer-events:none':''}">
           <div class="ly" id="${id}" data-w="28" data-h="70" style="position:absolute;left:0;top:0;width:100%;height:100%;transform:${hidden?'translateY(26%) scale(1,.3)':'translateY(0) scale(1,1)'};transform-origin:50% 100%">
             <svg viewBox="${x-14} 108 28 70" style="position:absolute;left:0;top:0;width:100%;height:100%" aria-hidden="true">
               <rect x="${x-7}" y="138" width="14" height="38" rx="4" fill="${col}" ${S} stroke-width="2"/>
