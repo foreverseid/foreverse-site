@@ -97,7 +97,10 @@ export default {
         }
 
         const tema = baris.tema;
-        const nama = tema === "kado-riang" ? "kado-riang" : tema === "langit-harapan" ? "langit-harapan" : "surat";
+        const nama = tema === "kado-riang" ? "kado-riang"
+          : tema === "langit-harapan" ? "langit-harapan"
+          : tema === "peta-perjalanan" ? "peta-perjalanan"
+          : "surat";
         const r = await ambilHalaman(env, url.origin, nama, request);
 
         if (nama === "surat") return r;   // Bait: ambil datanya sendiri lewat /api/surat

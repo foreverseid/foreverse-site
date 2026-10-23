@@ -261,31 +261,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <p class="galat" id="galatFoto" style="display:none">Paling tidak satu foto harus dipilih.</p>
       </section>
 
-      <section class="blok">
-        <h2><span class="n">4</span> Ucapan dan tanggal</h2>
-        <p class="jelas">Tanggal lahirnya dipakai untuk adegan stempel umur di tengah surat.</p>
-        <div class="baris" data-f="ucapan">
-          <label for="ucapan">Gaya ucapannya</label>
-          <select id="ucapan">
-            <option value="selamat">Selamat ulang tahun</option>
-            <option value="barakallah">Barakallah fii umrik</option>
-            <option value="happy">Happy birthday</option>
-          </select>
-        </div>
-        <div class="dua">
-          <div class="baris" data-f="lahir">
-            <label for="lahir">Tanggal lahir dia</label>
-            <input id="lahir" type="date">
-            <p class="galat">Tanggal lahir belum diisi.</p>
-          </div>
-          <div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">
-            <div class="setuju" style="width:100%">
-              <input id="sembunyikanUmur" type="checkbox">
-              <label for="sembunyikanUmur">Sembunyikan umurnya — tampilkan tahunnya saja, bukan angka umur.</label>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section class="blok" id="blokDasar"></section>
 
       <section class="blok" id="blokKhusus"></section>
 
@@ -395,13 +371,15 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      siapkanTema(), dipanggil langsung untuk pesanan baru atau menyusul
      setelah data edit datang. */
   var TEMA_INFO = {
-    "bait":           { nama:"Bait",           nfoto:3, mesin:"/surat.html" },
-    "kado-riang":      { nama:"Kado Riang",      nfoto:3, mesin:"/kado-riang.html" },
-    "langit-harapan":  { nama:"Langit Harapan",  nfoto:4, mesin:"/langit-harapan.html" }
+    "bait":            { nama:"Bait",            nfoto:3, mesin:"/surat.html",            momen:"birthday" },
+    "kado-riang":      { nama:"Kado Riang",      nfoto:3, mesin:"/kado-riang.html",       momen:"birthday" },
+    "langit-harapan":  { nama:"Langit Harapan",  nfoto:4, mesin:"/langit-harapan.html",   momen:"birthday" },
+    "peta-perjalanan": { nama:"Peta Perjalanan", nfoto:3, mesin:"/peta-perjalanan.html",  momen:"anniversary" }
   };
   var TEMA = (new URLSearchParams(location.search).get("tema")) || "bait";
   if(!TEMA_INFO[TEMA]) TEMA = "bait";
   var NFOTO = TEMA_INFO[TEMA].nfoto;
+  var MOMEN_GRUP = TEMA_INFO[TEMA].momen;
 
   /* ══ 1 · kartu foto ══ */
   var FOTO = [], FOTO_ADA = [];         // {data, mime, caption} atau null · src lama dari server saat mode edit
@@ -542,6 +520,51 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
    ["surat1", BATAS.surat], ["surat2", BATAS.surat], ["surat3", BATAS.surat]
   ].forEach(function(p){ pasangHitung(p[0], p[1]); });
 
+  /* ══ 2a½ · blok ke-4: isian dasar, beda per MOMEN (bukan per tema) ══
+     Birthday = ucapan + tanggal lahir + sembunyikan umur.
+     Anniversary = jenis hari jadi + tanggal mulai + sembunyikan tahun. */
+  function renderBlokDasar(momen){
+    var b = $("blokDasar"), html = "";
+    if(momen === "anniversary"){
+      html = '<h2><span class="n">4</span> Hari jadi dan tanggal</h2>' +
+        '<p class="jelas">Tanggal mulainya dipakai untuk adegan pin bertanggal di tengah surat.</p>' +
+        '<div class="baris" data-f="jenisHariJadi"><label for="jenisHariJadi">Jenis hari jadinya</label>' +
+        '<select id="jenisHariJadi">' +
+        '<option value="pacaran">Pacaran</option>' +
+        '<option value="tunangan">Tunangan</option>' +
+        '<option value="menikah">Menikah</option>' +
+        '</select></div>' +
+        '<div class="dua">' +
+        '<div class="baris" data-f="mulai"><label for="mulai">Tanggal mulainya</label>' +
+        '<input id="mulai" type="date">' +
+        '<p class="galat">Tanggal mulai belum diisi.</p></div>' +
+        '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
+        '<div class="setuju" style="width:100%">' +
+        '<input id="sembunyikanTahun" type="checkbox">' +
+        '<label for="sembunyikanTahun">Sembunyikan jumlah tahunnya — tampilkan tanggalnya saja, bukan tahun ke berapa.</label>' +
+        '</div></div></div>';
+    } else {
+      html = '<h2><span class="n">4</span> Ucapan dan tanggal</h2>' +
+        '<p class="jelas">Tanggal lahirnya dipakai untuk adegan stempel umur di tengah surat.</p>' +
+        '<div class="baris" data-f="ucapan"><label for="ucapan">Gaya ucapannya</label>' +
+        '<select id="ucapan">' +
+        '<option value="selamat">Selamat ulang tahun</option>' +
+        '<option value="barakallah">Barakallah fii umrik</option>' +
+        '<option value="happy">Happy birthday</option>' +
+        '</select></div>' +
+        '<div class="dua">' +
+        '<div class="baris" data-f="lahir"><label for="lahir">Tanggal lahir dia</label>' +
+        '<input id="lahir" type="date">' +
+        '<p class="galat">Tanggal lahir belum diisi.</p></div>' +
+        '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
+        '<div class="setuju" style="width:100%">' +
+        '<input id="sembunyikanUmur" type="checkbox">' +
+        '<label for="sembunyikanUmur">Sembunyikan umurnya — tampilkan tahunnya saja, bukan angka umur.</label>' +
+        '</div></div></div>';
+    }
+    b.innerHTML = html;
+  }
+
   /* ══ 2b · blok ke-5: beda per tema ══
      Bait = pesan rahasia. Kado Riang = 3 kupon. Langit Harapan = kuis
      "seberapa kenal" + 3 harapan. Dibangun sekali per tema diketahui. */
@@ -582,6 +605,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<div class="hitung"><span></span><span class="angka"></span></div>' +
           '<p class="galat">Harapan '+(h+1)+' belum diisi.</p></div>';
       }
+    } else if(tema === "peta-perjalanan"){
+      html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
+        '<p class="jelas">Tersembunyi di balik lapisan "debu di kompas" — baru terlihat setelah digosok.</p>' +
+        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Destinasi berikutnya, kamu yang pilih."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
         '<p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>' +
@@ -607,7 +636,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   function siapkanTema(tema){
     TEMA = TEMA_INFO[tema] ? tema : "bait";
     NFOTO = TEMA_INFO[TEMA].nfoto;
+    MOMEN_GRUP = TEMA_INFO[TEMA].momen;
     buatFoto(NFOTO);
+    renderBlokDasar(MOMEN_GRUP);
     renderBlokKhusus(TEMA);
     $("labelSurat").textContent = "Surat digital — " + TEMA_INFO[TEMA].nama;
   }
@@ -641,14 +672,25 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      setiap kali diketik, bukan postMessage yang menyambung di tengah
      jalan. Dibuat agak jarang (debounce) supaya tidak memuat ulang di
      setiap ketukan huruf. */
+  function isiDasarUntuk(sumber){
+    if(MOMEN_GRUP === "anniversary"){
+      return {
+        jenisHariJadi: $("jenisHariJadi").value || "pacaran",
+        tanggalMulai: $("mulai").value || (sumber==="pratinjau" ? "2020-01-01" : ""),
+        sembunyikanTahun: $("sembunyikanTahun").checked
+      };
+    }
+    return {
+      ucapan: $("ucapan").value || "selamat",
+      tanggalLahir: $("lahir").value || (sumber==="pratinjau" ? "2000-01-01" : ""),
+      sembunyikanUmur: $("sembunyikanUmur").checked
+    };
+  }
   function isiUntukPratinjau(){
     return Object.assign({
       tema: TEMA,
       penerima: $("penerima").value.trim() || "Amira",
       pengirim: $("pengirim").value.trim() || "Adriel",
-      ucapan: $("ucapan").value || "selamat",
-      tanggalLahir: $("lahir").value || "2000-01-01",
-      sembunyikanUmur: $("sembunyikanUmur").checked,
       surat: [$("surat1").value, $("surat2").value, $("surat3").value],
       foto: fotoRange().map(function(i){
         var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
@@ -661,7 +703,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         src: (LAGU && LAGU.data) || LAGU_ADA || "",
         mulai: detikLagu("laguMulai"), selesai: detikLagu("laguSelesai")
       }
-    }, isiKhusus());
+    }, isiDasarUntuk("pratinjau"), isiKhusus());
   }
 
   function simpanPratinjauKeStorage(){
@@ -722,7 +764,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
   function periksa(){
     var kurang = [];
-    [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]].forEach(function(p){
+    var wajibDasar = MOMEN_GRUP === "anniversary"
+      ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["mulai","mulai"]]
+      : [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]];
+    wajibDasar.forEach(function(p){
       var kosong = !$(p[0]).value.trim();
       tandai(p[1], kosong);
       if(kosong) kurang.push(p[1]);
@@ -782,19 +827,16 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || "Ulang tahun",
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: Object.assign({
         penerima: $("penerima").value.trim(),
         pengirim: $("pengirim").value.trim(),
-        ucapan: $("ucapan").value,
-        tanggalLahir: $("lahir").value,
-        sembunyikanUmur: $("sembunyikanUmur").checked,
         surat: [$("surat1").value, $("surat2").value, $("surat3").value],
         waPengirim: $("wa").value.trim(),
         lagu: laguUntukServer()
-      }, isiKhusus()),
+      }, isiDasarUntuk("kirim"), isiKhusus()),
       foto: fotoRange().map(function(i){
         var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
         return FOTO[i] ? { data: FOTO[i].data, mime: FOTO[i].mime, caption: caption } : { caption: caption };
@@ -881,12 +923,18 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         siapkanTema(h.j.tema || "bait");
         $("penerima").value = i.penerima || "";
         $("pengirim").value = i.pengirim || "";
-        $("ucapan").value = i.ucapan || "selamat";
         $("surat1").value = (i.surat||[])[0] || "";
         $("surat2").value = (i.surat||[])[1] || "";
         $("surat3").value = (i.surat||[])[2] || "";
-        $("lahir").value  = i.tanggalLahir || "";
-        $("sembunyikanUmur").checked = !!i.sembunyikanUmur;
+        if(MOMEN_GRUP === "anniversary"){
+          $("jenisHariJadi").value = i.jenisHariJadi || "pacaran";
+          $("mulai").value = i.tanggalMulai || "";
+          $("sembunyikanTahun").checked = !!i.sembunyikanTahun;
+        } else {
+          $("ucapan").value = i.ucapan || "selamat";
+          $("lahir").value  = i.tanggalLahir || "";
+          $("sembunyikanUmur").checked = !!i.sembunyikanUmur;
+        }
         $("wa").value = i.waPengirim || "";
         if(TEMA === "kado-riang"){
           (i.kupon||[]).forEach(function(v,n){ if($("kupon"+n)) $("kupon"+n).value = v || ""; });

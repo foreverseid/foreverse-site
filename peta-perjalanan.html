@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3EAD6">
+<meta name="robots" content="noindex, nofollow">
+<title>Rutenya sudah siap untukmu</title>
+<meta property="og:title" content="Ada perjalanan untukmu">
+<meta property="og:description" content="Buka pelan-pelan, ya.">
+<meta property="og:image" content="https://foreverse.id/cover-peta-perjalanan.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- =====================================================================
+     FOREVERSE · Anniversary · Tema "Peta Perjalanan"
+     Semua isi pesanan ada di blok DATA di bawah. Tidak perlu menyentuh
+     bagian lain. (Form pesanan cukup menulis ulang blok ini.)
+     ===================================================================== -->
+<script id="foreverse-data" type="application/json">
+{
+  "tema": "peta-perjalanan",
+  "penerima": "",
+  "pengirim": "",
+  "jenisHariJadi": "pacaran",
+  "tanggalMulai": "",
+  "sembunyikanTahun": false,
+  "foto": [],
+  "surat": [
+    "",
+    "",
+    ""
+  ],
+  "rahasia": "",
+  "waPengirim": "",
+  "lagu": {
+    "src": "",
+    "judul": "",
+    "artis": "",
+    "mulai": 0,
+    "selesai": 0
+  },
+  "foreverseUrl": "https://foreverse.id"
+}
+</script>
+<script>
+/* pratinjau dari /pesan: isi datang dari sessionStorage, dibaca di sini
+   SEBELUM mesin tema jalan. Untuk surat sungguhan di /s/<kode>, blok
+   data di atas sudah ditulis ulang di server (lihat worker.js). */
+(function(){
+  try{
+    if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
+      var mentah = sessionStorage.getItem("fv-pratinjau");
+      if(mentah) document.getElementById("foreverse-data").textContent = mentah;
+    }
+  }catch(e){}
+})();
+</script>
+
+<style>
+/* =====================================================================
+   PALET TEMA — Peta Perjalanan: kertas peta tua, teal & terakota.
+   Beda total dari palet merek (Bait): bukan cream/coral/navy/blush.
+   ===================================================================== */
+:root{
+  --bg:#F3EAD6;           /* dasar halaman — kertas peta tua */
+  --card:#FFFBF2;         /* kartu & panel */
+  --ink:#2B2117;          /* teks & garis — coklat tua, bukan navy */
+  --muted:rgba(43,33,23,.62);
+  --faint:rgba(43,33,23,.26);
+  --hair:rgba(43,33,23,.13);
+  --p:#2F6F6B;            /* teal — aksi utama */
+  --p-dk:#1E4D4A;
+  --a1:#C97A46;           /* terakota — pin, rute */
+  --a1-dk:#A15E33;
+  --soft:#E7D9BC;         /* sand — isian lembut */
+  --soft-lt:#F1E6CC;
+  --disp:'Fraunces',Georgia,serif;
+  --hand:'Caveat',cursive;
+  --sans:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--ink);background:var(--bg);overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden;height:100vh}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{max-width:520px;margin:0 auto;padding:0 20px}
+section{position:relative;padding:50px 0}
+.center{text-align:center}
+.eyebrow{font-family:var(--hand);font-size:1.3rem;color:var(--p);display:block;line-height:1.1;margin-bottom:2px}
+h2{font-family:var(--disp);font-weight:600;font-size:clamp(1.42rem,5.6vw,1.85rem);line-height:1.18;margin-bottom:7px}
+.lead{font-size:.93rem;color:var(--muted)}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.rule{width:38px;height:1px;background:var(--faint);margin:14px auto}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 22px;border-radius:999px;background:var(--p);color:#fff;font-weight:800;font-size:.94rem;box-shadow:0 3px 0 var(--p-dk);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--p-dk)}
+.btn.ghost{background:var(--card);color:var(--p);box-shadow:0 3px 0 var(--soft),inset 0 0 0 1px var(--hair)}
+.btn.small{padding:9px 17px;font-size:.85rem}
+.btn[disabled]{opacity:.42;filter:grayscale(.55);pointer-events:none}
+
+#toast{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;z-index:300;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:.86rem;max-width:84vw;text-align:center;transition:.3s;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#music{position:fixed;right:13px;bottom:calc(13px + env(safe-area-inset-bottom));z-index:150;width:42px;height:42px;border-radius:50%;background:var(--card);box-shadow:0 4px 14px rgba(43,33,23,.16);display:none;place-items:center;font-size:1rem}
+body.opened #music.on{display:grid}
+
+/* gerakan tarik: tak ada yang perlu ditahan diam */
+.grab{position:relative;touch-action:none;user-select:none;-webkit-user-select:none;
+  -webkit-touch-callout:none;cursor:grab}
+.grab.grabbing{cursor:grabbing}
+.btn,.press,.pcard,.torn{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
+.nudge{animation:nudge .45s ease}
+@keyframes nudge{30%{transform:translateY(5px)}60%{transform:translateY(-2px)}}
+.hint-flash{animation:hintFlash .7s ease 2}
+@keyframes hintFlash{50%{opacity:.25}}
+
+/* =====================================================================
+   SLOT 1 — PEMBUKA: Peta Terlipat
+   ===================================================================== */
+#open{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:30px 22px calc(30px + env(safe-area-inset-bottom));background:radial-gradient(120% 80% at 50% 12%,#FFFBF2 0%,var(--bg) 62%,#E9DCBE 100%);transition:opacity .8s ease,visibility .8s}
+#open.gone{opacity:0;visibility:hidden;pointer-events:none}
+.op-to{text-align:center;animation:up .9s .1s both}
+.op-to small{display:block;font-size:.66rem;font-weight:900;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.op-to b{font-family:var(--disp);font-weight:600;font-size:clamp(1.6rem,7.6vw,2.15rem);line-height:1.1;word-break:break-word}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+
+.mapwrap{position:relative;width:min(300px,80vw);aspect-ratio:3/2;animation:up .9s .3s both}
+.mw-sh{position:absolute;left:8%;right:8%;bottom:-13px;height:16px;border-radius:50%;background:rgba(43,33,23,.14);filter:blur(7px)}
+.mw-back{position:absolute;inset:0;border-radius:5px;background:linear-gradient(165deg,#E3D2AE,var(--soft) 58%,#CBB688)}
+.mw-front{position:absolute;inset:0;z-index:3;border-radius:5px;overflow:hidden;background:linear-gradient(170deg,#EFE2C4,#E3D2AE)}
+.mw-flap{position:absolute;left:0;right:0;top:0;height:64%;z-index:4;background:linear-gradient(180deg,#EADABB,var(--soft));clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transition:transform 1s cubic-bezier(.5,-.2,.3,1.15);backface-visibility:hidden}
+.mapwrap.open .mw-flap{transform:rotateX(-168deg);z-index:1}
+.mw-card{position:absolute;left:9%;right:9%;top:9%;height:82%;z-index:2;border-radius:4px;background:linear-gradient(180deg,#FFFDF5,var(--card));box-shadow:0 -5px 16px rgba(43,33,23,.16);transform:translateY(16%);opacity:0;transition:transform 1s cubic-bezier(.22,.9,.25,1) .35s,opacity .35s .35s}
+.mapwrap.open .mw-card{transform:translateY(-48%);opacity:1}
+.mw-card svg{width:100%;height:100%;display:block}
+
+.knot{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:66px;height:66px;z-index:6;border-radius:50%;cursor:pointer}
+.knot-body{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 30%,#5A8E8A,var(--p) 56%,#1B4A47);box-shadow:0 5px 14px rgba(43,33,23,.3),inset 0 -3px 6px rgba(0,0,0,.22);display:grid;place-items:center;transition:transform .2s}
+.knot-body svg{width:28px;height:28px}
+.knot.pressing .knot-body{transform:scale(.93)}
+.mapwrap.open .knot{animation:knotUndo .5s forwards}
+@keyframes knotUndo{to{transform:translate(-50%,-50%) rotate(30deg) scale(.7);opacity:0}}
+.knot-hint{text-align:center;font-size:.76rem;font-weight:800;color:var(--muted);margin-top:4px}
+#open.gone .knot-hint{opacity:0}
+
+.op-kompas{text-align:center;min-height:118px}
+.kompas-pad{position:relative;overflow:hidden;background:var(--card);box-shadow:inset 0 0 0 1px var(--hair),0 3px 12px rgba(43,33,23,.08);border-radius:999px;padding:13px 26px;min-width:min(290px,84vw);text-align:center}
+.kompas-pad span{position:relative;z-index:2;font-weight:800;font-size:.9rem;color:var(--p)}
+.kompas-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--soft-lt);z-index:1}
+.needle-wrap{width:58px;height:58px;margin:0 auto 10px}
+
+/* =====================================================================
+   SLOT 2 — GAME 1: Kemas Koper
+   ===================================================================== */
+#koper{background:linear-gradient(180deg,var(--bg),var(--card))}
+.card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 5px 22px rgba(43,33,23,.07),inset 0 0 0 1px var(--hair);margin-top:16px}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-head .ic{width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex:none}
+.card-head .ic svg{width:21px;height:21px}
+.card-head h3{font-family:var(--disp);font-weight:600;font-size:1.03rem;line-height:1.2}
+.card-head p{font-size:.76rem;color:var(--muted)}
+.tag{margin-left:auto;flex:none;font-size:.68rem;font-weight:900;padding:4px 10px;border-radius:99px;background:var(--bg);color:var(--faint)}
+.tag.on{background:var(--p);color:#fff}
+.stage{position:relative;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#EFE2C4,#E3D2AE)}
+.stage canvas{display:block;width:100%;height:360px;touch-action:none}
+.stage-over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;background:rgba(243,234,214,.9);backdrop-filter:blur(2px)}
+.stage-over h4{font-family:var(--disp);font-weight:600;font-size:1.2rem;margin-bottom:5px}
+.stage-over p{font-size:.84rem;color:var(--muted);max-width:250px;margin-bottom:14px}
+
+/* =====================================================================
+   SLOT 3 — INTERAKTIF 1: Kartu Pos
+   ===================================================================== */
+#kartupos{background:var(--card)}
+.pcards{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.pcard{position:relative;width:104px;padding:7px;background:var(--bg);border:1px solid var(--hair);border-radius:3px;transition:transform .2s}
+.pcard:active{transform:scale(.96) rotate(-1.5deg)}
+.pcard .corner{position:absolute;top:-4px;right:-4px;width:22px;height:22px;background-image:radial-gradient(circle at 5px 5px,var(--card) 3.4px,transparent 3.6px);background-size:8px 8px}
+.pcard img{width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--soft-lt)}
+.pcard .val{position:absolute;right:11px;top:11px;font-family:var(--disp);font-weight:700;font-size:.62rem;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.pcard .tap{display:block;font-size:.62rem;font-weight:800;color:var(--muted);margin-top:5px;letter-spacing:.04em}
+.pcard.seen .tap{color:var(--p)}
+
+#pview{position:fixed;inset:0;z-index:190;background:rgba(43,33,23,.88);display:none;align-items:center;justify-content:center;padding:24px}
+#pview.show{display:flex;animation:fin .3s}
+@keyframes fin{from{opacity:0}}
+.pv-card{position:relative;background:var(--card);border-radius:4px;padding:11px 11px 14px;max-width:320px;width:100%;animation:popIn .45s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes popIn{from{opacity:0;transform:scale(.88) rotate(-2deg)}}
+.pv-card img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px}
+.pv-card figcaption{font-family:var(--hand);font-size:1.3rem;color:var(--ink);text-align:center;margin-top:9px;line-height:1.15}
+.pv-mark{position:absolute;right:-6px;top:-6px;width:74px;height:74px;opacity:.82;transform:rotate(-14deg)}
+.pv-x{display:block;margin:16px auto 0;color:var(--bg);font-size:.84rem;font-weight:800;text-decoration:underline;text-underline-offset:4px}
+
+/* =====================================================================
+   SLOT 4 — MOMEN KHAS: Stempel Perjalanan
+   ===================================================================== */
+#stempel{background:linear-gradient(180deg,var(--card),var(--bg))}
+.scene{position:relative;max-width:360px;margin:16px auto 0}
+.scene.shake{animation:shk .42s}
+@keyframes shk{20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}80%{transform:translate(3px,-1px)}}
+.scene svg{width:100%;height:auto;display:block;overflow:hidden;border-radius:6px}
+.stamp-btn{display:block;width:100%;margin-top:6px;text-align:center}
+.stamp-hit{position:absolute;left:50%;transform:translateX(-50%);top:-6px;
+  width:52%;height:36%;z-index:3;display:flex;align-items:flex-end;justify-content:center}
+.stamp-cue{margin-bottom:6px;font-size:.7rem;font-weight:900;letter-spacing:.04em;
+  color:var(--p);background:var(--bg);border-radius:99px;padding:3px 10px;
+  box-shadow:0 2px 8px rgba(43,33,23,.1);white-space:nowrap;transition:opacity .25s;
+  animation:cueBob 1.8s ease-in-out infinite;pointer-events:none}
+@keyframes cueBob{50%{transform:translateY(4px)}}
+.stamp-msg{text-align:center;font-family:var(--hand);font-size:1.4rem;color:var(--p);min-height:1.4em;line-height:1.2;margin-top:4px}
+.press:active{transform:translateY(1px)}
+
+/* =====================================================================
+   SLOT 5 — GAME 2: Peta yang Robek
+   ===================================================================== */
+#robek{background:var(--bg)}
+.torn-slot{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;min-height:62px;padding:14px 10px;background:var(--bg);border-radius:12px;box-shadow:inset 0 0 0 1px var(--hair)}
+.torn{position:relative;background:var(--card);padding:11px 13px;font-family:var(--disp);font-size:1.05rem;font-weight:500;color:var(--ink);box-shadow:0 3px 9px rgba(43,33,23,.1);transition:transform .16s,box-shadow .16s;line-height:1.2}
+.torn:active{transform:scale(.95)}
+.torn.sel{transform:translateY(-5px) rotate(-2deg);box-shadow:0 7px 16px rgba(47,111,107,.3);outline:2px solid var(--p);outline-offset:-2px}
+.torn.ok{background:#F2FBF9}
+.torn-info{text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);margin-top:11px}
+.torn-done{display:none;text-align:center;font-family:var(--hand);font-size:1.5rem;color:var(--p);margin-top:11px;line-height:1.2}
+.torn-done.show{display:block;animation:fin .5s}
+
+/* =====================================================================
+   SLOT 6 — INTERAKTIF 2: Debu di Kompas
+   ===================================================================== */
+#kompasRahasia{background:linear-gradient(180deg,var(--bg),var(--card))}
+.dust-sheet{position:relative;margin-top:18px;background:var(--card);border-radius:3px;padding:24px 22px;box-shadow:0 7px 24px rgba(43,33,23,.09),inset 0 0 0 1px var(--hair);overflow:hidden}
+.dust-sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:repeating-linear-gradient(90deg,var(--soft) 0 9px,var(--a1) 9px 18px);opacity:.5}
+.dust-head{font-family:var(--hand);font-size:1.2rem;color:var(--muted);margin-bottom:10px}
+.dust-area{position:relative;min-height:96px;display:flex;align-items:center;touch-action:none}
+.dust-txt{font-family:var(--hand);font-size:1.5rem;line-height:1.3;color:#6B4A2E}
+.dust-cv{position:absolute;inset:-10px;width:calc(100% + 20px);height:calc(100% + 20px);touch-action:none;cursor:grab}
+.dust-foot{font-size:.74rem;color:var(--faint);margin-top:12px;text-align:right;font-style:italic}
+
+/* =====================================================================
+   SLOT 7 — SURAT
+   ===================================================================== */
+#surat{background:var(--card)}
+.lock{text-align:center;margin-top:18px;background:var(--bg);border-radius:20px;padding:24px 20px;box-shadow:inset 0 0 0 1px var(--hair)}
+.lock .ic{font-size:1.7rem}
+.lock h3{font-family:var(--disp);font-weight:600;font-size:1.1rem;margin-top:6px}
+.lock p{font-size:.84rem;color:var(--muted);margin-top:4px}
+.chips{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:13px 0 14px}
+.chips span{font-size:.75rem;font-weight:800;padding:5px 11px;border-radius:99px;background:var(--card);color:var(--faint);box-shadow:inset 0 0 0 1px var(--hair)}
+.chips span.on{background:var(--p);color:#fff;box-shadow:none}
+.skip{display:block;margin:12px auto 0;font-size:.78rem;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+.letter{display:none;position:relative;margin-top:20px;background:var(--card);border-radius:3px;padding:52px 22px 28px;box-shadow:0 14px 36px rgba(43,33,23,.14),inset 0 0 0 1px var(--hair)}
+.letter.show{display:block;animation:unfold .9s cubic-bezier(.2,.9,.3,1) both}
+@keyframes unfold{from{opacity:0;transform:translateY(18px) scaleY(.92);transform-origin:top center}}
+.letter::before{content:"";position:absolute;left:22px;right:22px;top:0;height:1px;background:var(--hair)}
+.lt-stamp{position:absolute;right:18px;top:-16px;width:60px;padding:4px;background:var(--bg);box-shadow:0 3px 10px rgba(43,33,23,.14)}
+.lt-stamp img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.lt-hello{font-family:var(--hand);font-size:1.75rem;color:var(--p);line-height:1.1;margin-bottom:12px}
+.letter p.par{font-family:var(--disp);font-weight:500;font-size:1.02rem;line-height:1.78;margin-bottom:15px;white-space:pre-line;opacity:0;transform:translateY(8px);transition:opacity 1s,transform 1s}
+.letter p.par.in{opacity:1;transform:none}
+.lt-sign{text-align:right;margin-top:18px;opacity:0;transition:opacity 1s}
+.lt-sign.in{opacity:1}
+.lt-sign small{display:block;font-size:.68rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.lt-sign b{font-family:var(--hand);font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1.1}
+
+/* =====================================================================
+   SLOT 8 — PENUTUP: Segel Foreverse (satu-satunya tempat merek muncul)
+   Ritual wajib di setiap tema/momen: pecahkan segel di pembuka, tekan
+   segel baru di sini. Mark dua-busur Foreverse-nya identik di semua
+   tema — hanya warna lilinnya yang menyesuaikan palet tema ini.
+   ===================================================================== */
+#segel{background:linear-gradient(180deg,var(--card),var(--bg));padding-bottom:86px}
+.wax{position:relative;width:118px;height:118px;margin:22px auto 0}
+.wax-drop{position:absolute;left:50%;top:0;width:17px;height:17px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--p);transform:translateX(-50%);opacity:0}
+.wax.drip .wax-drop{animation:drip 1s ease-in forwards}
+@keyframes drip{0%{opacity:1;transform:translate(-50%,-56px) scale(.7,1.25)}70%{opacity:1;transform:translate(-50%,42px) scale(1.15,.8)}100%{opacity:0;transform:translate(-50%,46px) scale(1.5,.5)}}
+.wax-pool{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);width:100%;height:100%;border-radius:46% 54% 50% 50%/52% 48% 52% 48%;background:radial-gradient(circle at 36% 32%,#4A8D88,var(--p) 58%,#143531);box-shadow:0 7px 18px rgba(43,33,23,.26);transition:transform .5s cubic-bezier(.2,.9,.3,1.3)}
+.wax.pooled .wax-pool{transform:translate(-50%,-50%) scale(1)}
+.wax-mark{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transform:scale(1.35);transition:opacity .45s,transform .45s}
+.wax.sealed .wax-mark{opacity:1;transform:scale(1)}
+.wax-mark svg{width:58px;height:58px;filter:drop-shadow(0 1px 0 rgba(0,0,0,.22))}
+.wax-hint{text-align:center;font-size:.8rem;font-weight:800;color:var(--muted);margin-top:14px;min-height:1.3em}
+.sealed-note{display:none;text-align:center;font-family:var(--disp);font-style:italic;font-size:1.12rem;color:var(--ink);margin-top:16px;line-height:1.5}
+.sealed-note.show{display:block;animation:fin .8s}
+
+.end-acts{display:none;flex-direction:column;align-items:center;gap:11px;margin-top:26px}
+.end-acts.show{display:flex;animation:fin 1s}
+.wa{display:inline-flex;align-items:center;gap:8px;background:#25B864;color:#fff;font-weight:800;font-size:.92rem;padding:12px 22px;border-radius:999px;box-shadow:0 3px 0 #1A8A4A;text-decoration:none}
+.reply-box{width:min(330px,100%);background:var(--card);border-radius:16px;padding:13px;box-shadow:inset 0 0 0 1px var(--hair)}
+.reply-box label{display:block;font-size:.8rem;font-weight:800;margin-bottom:7px}
+.reply-box textarea{width:100%;min-height:72px;border:0;border-radius:11px;padding:10px 12px;font:inherit;font-size:.92rem;color:var(--ink);background:var(--bg);resize:none}
+.made{display:block;margin-top:30px;text-align:center;font-size:.76rem;color:var(--faint);text-decoration:none;line-height:1.6}
+.made b{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
+/* =====================================================================
+   TIRAI PEMUAT
+   ===================================================================== */
+.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:var(--bg);transition:opacity .4s}
+.memuat.pergi{opacity:0;pointer-events:none}
+.memuat-in{text-align:center;padding:24px;max-width:22rem}
+.memuat-in svg{opacity:.55;animation:mnaik 1.6s ease-in-out infinite}
+@keyframes mnaik{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.memuat-in p{margin:14px 0 0;font-size:.95rem;color:var(--muted);line-height:1.6;font-family:var(--sans)}
+.memuat.gagal svg{animation:none;opacity:.3}
+@media (prefers-reduced-motion: reduce){ .memuat-in svg{animation:none} }
+</style>
+</head>
+<body class="locked">
+
+<div id="memuat" class="memuat">
+  <div class="memuat-in">
+    <svg viewBox="0 0 64 48" width="52" height="39" aria-hidden="true">
+      <circle cx="32" cy="24" r="19" fill="none" stroke="#2B2117" stroke-width="3"/>
+      <path d="M32 11v6M32 31v6M19 24h6M41 24h6" stroke="#2B2117" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M32 24l7-9-3 11z" fill="#C97A46"/>
+    </svg>
+    <p id="memuatPesan">Membuka petanya…</p>
+  </div>
+</div>
+
+<div id="toast"></div>
+<button id="music" aria-label="Suara">🔊</button>
+
+<!-- ============ SLOT 1 — PEMBUKA: PETA TERLIPAT ============ -->
+<div id="open">
+  <div class="op-to"><small>Untuk</small><b data-f="penerima"></b></div>
+
+  <div class="mapwrap" id="mapwrap">
+    <div class="mw-sh"></div>
+    <div class="mw-back"></div>
+    <div class="mw-card" id="mwCard">
+      <svg viewBox="0 0 200 120" aria-hidden="true">
+        <g id="mapScene">
+          <ellipse cx="100" cy="104" rx="52" ry="5" fill="#2B2117" opacity=".08"/>
+          <rect x="56" y="70" width="88" height="32" rx="4" fill="#F1E6CC" stroke="#2B2117" stroke-width="2"/>
+          <path d="M60,96 q14,-14 26,-4 q14,12 28,-2 q12,-11 24,3" fill="none" stroke="#C97A46" stroke-width="2" stroke-dasharray="3 4"/>
+          <circle cx="60" cy="96" r="3.4" fill="#2F6F6B"/>
+          <circle cx="138" cy="93" r="3.4" fill="#C97A46"/>
+          <g id="needleWrap" transform="translate(100,45)">
+            <circle r="22" fill="#FFFBF2" stroke="#2B2117" stroke-width="2"/>
+            <circle r="17" fill="none" stroke="#2B2117" stroke-width="1" opacity=".3"/>
+            <g id="needle"><path d="M0,-15 L5,0 L0,15 L-5,0 Z" fill="#C97A46"/><path d="M0,-15 L5,0 L0,0 Z" fill="#2F6F6B"/></g>
+            <circle r="2.6" fill="#2B2117"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="mw-front"></div>
+    <div class="mw-flap"></div>
+    <div class="knot grab" id="knot" role="button" tabindex="0" aria-label="Tarik ikatan petanya ke bawah">
+      <div class="knot-body">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M9 20c0-7 4-9 7-6 3-3 7-1 7 6" stroke="#FFF8ED" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="16" cy="23" r="1.8" fill="#FFF8ED"/>
+        </svg>
+      </div>
+    </div>
+    <div class="knot-hint" id="knotHint">tarik ikatannya ke bawah ↓</div>
+  </div>
+
+  <div class="op-kompas" id="kompasBox"></div>
+</div>
+
+<main>
+<!-- ============ SLOT 2 — GAME 1: KEMAS KOPER ============ -->
+<section id="koper">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">sebelum berangkat, kemasi dulu</span>
+      <h2>Kemas Koper</h2>
+      <p class="lead">Barang-barang jatuh dari atas. Tangkap yang perlu dibawa, biarkan yang lain lewat.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C97A46" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M9 8V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></span>
+        <div><h3>Tangkap 10 barang</h3><p>Geser jari untuk menggerakkan kopernya</p></div>
+        <span class="tag" id="tagKoper">belum</span>
+      </div>
+      <div class="stage">
+        <canvas id="koperCv"></canvas>
+        <div class="stage-over" id="koperOver">
+          <h4>Kopernya sudah penuh</h4>
+          <p>Tangkap perlengkapan perjalanan, hindari barang yang bukan buat dibawa.</p>
+          <button class="btn" id="koperStart" type="button">Mulai mengemas</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 3 — INTERAKTIF 1: KARTU POS ============ -->
+<section id="kartupos">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">tiga titik singgah dalam perjalanan kalian</span>
+      <h2>Kartu Pos</h2>
+      <p class="lead">Masing-masing menyimpan satu momen. Ketuk satu per satu.</p>
+    </div>
+    <div class="pcards reveal" id="pcards"></div>
+  </div>
+</section>
+
+<!-- ============ SLOT 4 — MOMEN KHAS: STEMPEL PERJALANAN ============ -->
+<section id="stempel">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">rute ini terus bertambah</span>
+      <h2 id="stH"></h2>
+      <p class="lead">Tarik pin barunya turun ke peta. Lepaskan kalau belum siap.</p>
+    </div>
+    <div class="scene reveal" id="scene"></div>
+    <p class="stamp-msg" id="stMsg"></p>
+    <div class="stamp-btn">
+      <div style="margin-top:12px"><button class="btn ghost small" id="stReplay" hidden type="button">Ulangi adegannya</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 5 — GAME 2: PETA YANG ROBEK ============ -->
+<section id="robek">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">terlipat terlalu lama di saku, petanya robek</span>
+      <h2>Peta yang Robek</h2>
+      <p class="lead">Potongannya tertukar. Ketuk dua potongan untuk menukar posisinya sampai kalimatnya kembali terbaca.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C97A46" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6z"/><path d="M15 3v5h5"/><path d="M8 13l3 2-3 2"/></svg></span>
+        <div><h3>Susun ulang kalimatnya</h3><p>Ketuk dua potongan</p></div>
+        <span class="tag" id="tagRobek">belum</span>
+      </div>
+      <div class="torn-slot" id="tornSlot"></div>
+      <p class="torn-info" id="tornInfo">Langkah: 0</p>
+      <p class="torn-done" id="tornDone"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 6 — INTERAKTIF 2: DEBU DI KOMPAS ============ -->
+<section id="kompasRahasia">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">ada yang sengaja ditulis di balik debu perjalanan</span>
+      <h2>Debu di Kompas</h2>
+      <p class="lead">Bagian ini terlihat kosong. Gosok pelan dengan jarimu.</p>
+    </div>
+    <div class="dust-sheet reveal">
+      <div class="dust-head">P.S. —</div>
+      <div class="dust-area" id="dustArea">
+        <div class="dust-txt" data-f="rahasia"></div>
+      </div>
+      <div class="dust-foot" id="dustFoot">gosok di sini</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 7 — SURAT ============ -->
+<section id="surat">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">dan ini bagian yang sebenarnya</span>
+      <h2>Suratnya</h2>
+    </div>
+    <div class="lock reveal" id="lock">
+      <div class="ic">🗺️</div>
+      <h3>Suratnya masih terlipat</h3>
+      <p>Selesaikan dua permainan di atas untuk membukanya.</p>
+      <div class="chips"><span id="cKoper">Kemas koper</span><span id="cRobek">Peta yang robek</span></div>
+      <button class="btn" id="openLetter" type="button" disabled>Buka suratnya</button>
+      <button class="skip" id="skipGames" type="button">lewati permainan, langsung baca</button>
+    </div>
+    <article class="letter" id="letter">
+      <figure class="lt-stamp"><img id="ltStamp" alt=""></figure>
+      <div class="lt-hello" id="ltHello"></div>
+      <div id="ltPars"></div>
+      <div class="lt-sign" id="ltSign"><small>Dari</small><b data-f="pengirim"></b></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ SLOT 8 — PENUTUP: SEGEL FOREVERSE ============ -->
+<section id="segel" hidden>
+  <div class="wrap center">
+    <div class="reveal in">
+      <span class="eyebrow">supaya tidak hilang</span>
+      <h2>Segel suratnya</h2>
+      <p class="lead">Tarik segelnya turun ke lilin yang masih hangat.</p>
+    </div>
+    <div class="wax grab" id="wax" role="button" tabindex="0" aria-label="Tarik segel ke lilin">
+      <div class="wax-drop"></div>
+      <div class="wax-pool"></div>
+      <div class="wax-mark">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M6 9c0 8 4.5 13 10 16" stroke="#FFF8ED" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M26 9c0 8-4.5 13-10 16" stroke="#FFF8ED" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <p class="wax-hint" id="waxHint">tarik segelnya ke bawah ↓</p>
+    <p class="sealed-note" id="sealedNote"></p>
+
+    <div class="end-acts" id="endActs">
+      <div class="reply-box" id="replyBox" hidden>
+        <label for="replyTxt" id="replyLbl"></label>
+        <textarea id="replyTxt" maxlength="300"></textarea>
+      </div>
+      <a class="wa" id="waBtn" target="_blank" rel="noopener">Balas lewat WhatsApp</a>
+      <button class="btn ghost small" id="again" type="button">Baca lagi dari awal</button>
+      <a class="made" id="made" target="_blank" rel="noopener">Halaman ini dibuat dengan Foreverse<br><b>foreverse.id</b></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Mesin tema Peta Perjalanan × Anniversary. Dipanggil sekali
+   (FV_MULAI()) setelah data (dari splice server atau pratinjau)
+   siap di variabel KADO.
+   ═══════════════════════════════════════════════════════════════ */
+function FV_MULAI(){
+'use strict';
+var D = KADO || {};
+D.lagu = D.lagu || {};
+D.lagu.src = D.lagu.src || D.lagu.file || "";
+D.foto = (D.foto || []).map(function(f){ return { src: f.src, caption: f.caption || f.ket || "" }; });
+
+var $=function(s,r){ return (r||document).querySelector(s); };
+var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
+var wait=function(ms){ return new Promise(function(r){ setTimeout(r,ms); }); };
+var rand=function(a,b){ return a+Math.random()*(b-a); };
+var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
+
+$$('[data-f]').forEach(function(n){
+  var v=n.dataset.f.split('.').reduce(function(o,k){ return o==null?o:o[k]; },D);
+  if(v!=null) n.textContent=v;
+});
+
+/* ---- tahun bersama: hari jadi terdekat, supaya tetap benar walau dibuka H-2 ---- */
+var A=(function(){
+  var m=new Date((D.tanggalMulai||'2020-01-01')+'T00:00:00');
+  var now=new Date(); now.setHours(0,0,0,0);
+  var best=null;
+  [-1,0,1].forEach(function(o){
+    var d=new Date(now.getFullYear()+o,m.getMonth(),m.getDate());
+    if(!best||Math.abs(d-now)<Math.abs(best-now)) best=d;
+  });
+  var tahun=best.getFullYear()-m.getFullYear(), hide=!!D.sembunyikanTahun;
+  return { hide:hide, tahun:tahun, date:best,
+    baru: hide?String(best.getFullYear()):String(Math.max(tahun,0)),
+    lama: hide?String(best.getFullYear()-1):String(Math.max(tahun-1,0)) };
+})();
+var G=({
+  pacaran:   {label:'JADIAN',    short:'Selamat hari jadian',      small:'sejak kalian jadian'},
+  tunangan:  {label:'TUNANGAN',  short:'Selamat hari pertunangan',  small:'sejak kalian bertunangan'},
+  menikah:   {label:'PERNIKAHAN',short:'Selamat hari pernikahan',   small:'sejak kalian menikah'}
+})[D.jenisHariJadi]||{label:'JADIAN',short:'Selamat hari jadian',small:'sejak kalian jadian'};
+var TGL=A.date.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+var TGL_PENDEK=A.date.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; });
+
+/* ---- suara dibuat browser, tanpa file ---- */
+var AC=null, muted=false;
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C) AC=new C(); } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||muted) return;
+  var t=a.currentTime+(o.when||0), v=o.vol||.14, osc=a.createOscillator(), g=a.createGain();
+  osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
+  if(o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide,t+dur);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t+dur+.05);
+}
+function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
+  var n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*dur,a.sampleRate), d=b.getChannelData(0);
+  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5);
+  var f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=freq;
+  var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.destination); n.start();
+}
+var SFX={
+  crack:function(){ noise(.3,2600,.3); tone(180,.14,{type:'square',vol:.1}); },
+  paper:function(){ noise(.22,4200,.14); },
+  pop:function(){ tone(620,.08,{type:'sine',vol:.2}); tone(940,.1,{type:'sine',vol:.1,when:.05}); },
+  good:function(){ tone(660,.13); tone(880,.18,{when:.09}); },
+  bad:function(){ tone(185,.2,{type:'sawtooth',vol:.06}); },
+  thud:function(){ tone(120,.16,{type:'square',vol:.17}); tone(70,.22,{type:'sine',vol:.22,when:.02}); noise(.2,900,.3); },
+  whoosh:function(){ tone(700,.45,{type:'sine',vol:.07,slide:220}); },
+  chime:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.45,{when:i*.08,vol:.11}); }); },
+  blow:function(){ noise(.5,800,.2); },
+  win:function(){ [523,659,784,659,784,1046].forEach(function(f,i){ tone(f,.26,{when:i*.11}); }); }
+};
+function lagu(){
+  var N={G4:392,A4:440,B4:493.9,C5:523.3,D5:587.3,E5:659.3,F5:698.5,G5:784};
+  var s=[['C5',1],['D5',1],['E5',1],['G5',1.5],['E5',.5],['D5',1],['C5',2],
+         ['A4',1],['C5',1],['D5',1],['F5',1.5],['D5',.5],['C5',1],['B4',2],
+         ['C5',1],['E5',1],['G5',1],['C5',2],['B4',1],['A4',1],['G4',3]];
+  duck(true); var t=0;
+  s.forEach(function(p){ tone(N[p[0]],p[1]*.38,{when:t,vol:.2}); t+=p[1]*.4; });
+  setTimeout(function(){ duck(false); }, t*1000+300);
+}
+
+/* ---- lagu latar: unggahan pembeli, atau kotak musik bawaan ---- */
+function musicBox(){
+  var a=ac(); if(!a) return null;
+  var gain=a.createGain(); gain.gain.value=.11; gain.connect(a.destination);
+  var notes=[67,71,74,79,74,71, 69,72,76,81,76,72, 67,71,74,78,74,71, 65,69,74,78,81,78];
+  var step=.36, t0=a.currentTime+.1, n=0, timer=null, berhenti=false;
+  function ping(midi,t){
+    var o=a.createOscillator(), g=a.createGain();
+    o.type='sine'; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.9,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+1.4);
+    o.connect(g); g.connect(gain); o.start(t); o.stop(t+1.5);
+  }
+  (function loop(){
+    if(berhenti) return;
+    while(t0 < a.currentTime+1.2){ ping(notes[n%notes.length],t0); t0+=step; n++; }
+    timer=setTimeout(loop,300);
+  })();
+  return { gain:gain, stop:function(){ berhenti=true; clearTimeout(timer); } };
+}
+var MU=(function(){
+  var L=D.lagu||{}, has=!!(L.src&&String(L.src).trim()), audio=has?new Audio():null;
+  var st=+L.mulai||0, en=+L.selesai||0, vol=.72, playing=false, synth=null;
+  if(audio){ audio.src=L.src; audio.preload='auto'; audio.loop=!en;
+    audio.addEventListener('timeupdate',function(){ if(en>st&&audio.currentTime>=en) audio.currentTime=st; });
+    audio.addEventListener('ended',function(){ audio.currentTime=st; audio.play().catch(function(){}); }); }
+  return { has:has, audio:audio,
+    play:function(){
+      if(audio){
+        try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+        if(!playing){ try{ audio.currentTime=st; }catch(e){} }
+        audio.volume=0; audio.muted=muted;
+        audio.play().then(function(){ playing=true; var v=0, t=setInterval(function(){ v+=.05; if(v>=vol){v=vol;clearInterval(t);} audio.volume=v; },90); }).catch(function(){});
+        return;
+      }
+      if(!synth) synth=musicBox();
+    },
+    duck:function(on){ if(audio) audio.volume=on?.12:vol; else if(synth) synth.gain.gain.value=on?.03:.11; } };
+})();
+function duck(on){ MU.duck(on); }
+$('#music').onclick=function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; if(MU.audio) MU.audio.muted=muted; try{ if(AC) muted?AC.suspend():AC.resume(); }catch(e){} };
+if(MU.has) $('#music').classList.add('on');
+
+var tt;
+function toast(m,ms){ var t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){ t.classList.remove('show'); }, ms||2400); }
+
+/* ---- konfeti ---- */
+var FX=(function(){
+  var cv,ctx,P=[],run=false,W,H;
+  var COL=['#2F6F6B','#C97A46','#FFFBF2','#2B2117','#E7D9BC','#86B4AE'];
+  function ensure(){ if(cv) return; cv=el('canvas'); cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:250;display:none'; document.body.appendChild(cv); }
+  function start(){ ensure(); if(run) return; run=true;
+    var d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
+    cv.width=W*d; cv.height=H*d; cv.style.display='block'; ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
+    requestAnimationFrame(loop); }
+  function loop(){ ctx.clearRect(0,0,W,H);
+    P=P.filter(function(p){ return p.life>0&&p.y<H+40; });
+    P.forEach(function(p){ p.vx*=.99; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.life--;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.globalAlpha=Math.min(1,p.life/40); ctx.fillStyle=p.c;
+      if(p.s2===0) ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);
+      else { ctx.beginPath(); ctx.arc(0,0,p.s/3,0,7); ctx.fill(); }
+      ctx.restore(); });
+    if(P.length) return requestAnimationFrame(loop);
+    run=false; cv.style.display='none'; cv.width=1; cv.height=1; }
+  function add(a){ P=P.concat(a).slice(-160); start(); }
+  return {
+    burst:function(x,y,n,pw){ n=n||70; pw=pw||8; var a=[];
+      for(var i=0;i<Math.min(n,90);i++){ var t=rand(0,Math.PI*2), s=rand(pw*.3,pw);
+        a.push({x:x,y:y,vx:Math.cos(t)*s,vy:Math.sin(t)*s-3,g:.22,s:rand(5,9),r:rand(0,6),vr:rand(-.25,.25),c:COL[i%COL.length],s2:i%2,life:rand(80,140)}); }
+      add(a); },
+    shower:function(n){ n=n||100; var a=[];
+      for(var i=0;i<Math.min(n,110);i++) a.push({x:rand(0,innerWidth),y:rand(-innerHeight*.6,-10),vx:rand(-1,1),vy:rand(2,5),g:.05,s:rand(6,10),r:rand(0,6),vr:rand(-.2,.2),c:COL[i%COL.length],s2:i%2,life:240});
+      add(a); },
+    at:function(node,n){ var r=node.getBoundingClientRect(); this.burst(r.left+r.width/2,r.top+r.height/2,n||70,10); }
+  };
+})();
+
+/* ---- muncul saat discroll ---- */
+var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+$$('.reveal').forEach(function(n){ io.observe(n); });
+
+/* ---- GERAKAN TARIK (pengganti tekan & tahan) ---- */
+function noMenu(node){
+  node.addEventListener('contextmenu',function(e){ e.preventDefault(); return false; });
+}
+function drag(node, o){
+  var on=false, sx=0, sy=0, travel=0, done=false, pid=null;
+  noMenu(node);
+  function pos(e){ return o.axis==='x' ? e.clientX : e.clientY; }
+  function reset(){ on=false; pid=null; travel=0; node.classList.remove('grabbing'); }
+  function down(e){
+    if(on||done||node.dataset.off) return;
+    e.preventDefault(); ac();
+    on=true; sx=e.clientX; sy=e.clientY; travel=0;
+    node.classList.add('grabbing');
+    try{ node.setPointerCapture(e.pointerId); pid=e.pointerId; }catch(err){}
+    o.onMove&&o.onMove(0);
+  }
+  function move(e){
+    if(!on||done) return;
+    e.preventDefault();
+    var d;
+    if(o.axis==='x'){ d=Math.abs(e.clientX-sx); sx=e.clientX; travel+=d; }
+    else { d=pos(e)-sy; travel=Math.max(0,d); }
+    var p=Math.min(1,travel/o.dist);
+    o.onMove&&o.onMove(p);
+    if(p>=1){ done=true; reset(); o.onDone&&o.onDone(); }
+  }
+  function up(){
+    if(!on) return;
+    var moved=travel>8;
+    reset();
+    if(done) return;
+    o.onMove&&o.onMove(0);
+    if(!moved && o.onTap) o.onTap(); else o.onCancel&&o.onCancel();
+  }
+  node.addEventListener('pointerdown',down);
+  node.addEventListener('pointermove',move);
+  node.addEventListener('pointerup',up);
+  node.addEventListener('pointercancel',function(){ if(on){ reset(); if(!done){ o.onMove&&o.onMove(0); o.onCancel&&o.onCancel(); } } });
+  node.addEventListener('keydown',function(e){
+    if((e.key==='Enter'||e.key===' ')&&!done){ e.preventDefault(); done=true; ac(); o.onMove&&o.onMove(1); o.onDone&&o.onDone(); }
+  });
+  return { reset:function(){ done=false; reset(); o.onMove&&o.onMove(0); } };
+}
+document.addEventListener('contextmenu',function(e){
+  var t=e.target;
+  if(t&&t.closest&&t.closest('.btn,.press,.grab,.pcard,.torn,.stage,.scene,.dust-sheet,.wax,.mapwrap,canvas,img,svg')){
+    e.preventDefault();
+  }
+},true);
+document.addEventListener('dragstart',function(e){
+  if(e.target&&e.target.tagName==='IMG') e.preventDefault();
+},true);
+
+/* =====================================================================
+   SLOT 1 — PEMBUKA: PETA TERLIPAT
+   ===================================================================== */
+(function(){
+  var map=$('#mapwrap'), knot=$('#knot'), kompasBox=$('#kompasBox'), opened=false;
+  drag(knot,{ axis:'y', dist:52,
+    onMove:function(p){
+      knot.style.transform='translate(-50%,calc(-50% + '+(p*30).toFixed(1)+'px)) rotate('+(p*14).toFixed(1)+'deg)';
+      knot.style.opacity=String(1-p*0.15);
+    },
+    onTap:function(){ knot.classList.remove('nudge'); void knot.offsetWidth; knot.classList.add('nudge');
+      $('#knotHint').classList.remove('hint-flash'); void $('#knotHint').offsetWidth; $('#knotHint').classList.add('hint-flash'); },
+    onDone:function(){
+    if(opened) return; opened=true;
+    knot.style.transform='';
+    SFX.crack(); buzz([18,26,18]);
+    map.classList.add('open');
+    knot.dataset.off='1';
+    MU.play();
+    setTimeout(askKompas,1150);
+  }});
+  function askKompas(){
+    kompasBox.innerHTML='';
+    var p=el('p',null,'jarumnya belum tenang —');
+    var b=el('div','kompas-pad grab');
+    b.setAttribute('role','button'); b.setAttribute('tabindex','0');
+    b.innerHTML='<span>usap ke samping supaya jarumnya pulang</span><i class="kompas-fill"></i>';
+    kompasBox.append(p,b);
+    var fill=b.querySelector('.kompas-fill');
+    var needle=$('#needle');
+    drag(b,{ axis:'x', dist:170,
+      onMove:function(q){ fill.style.width=(q*100).toFixed(1)+'%';
+        if(needle) needle.style.transform='rotate('+(q*360+Math.sin(q*20)*14).toFixed(1)+'deg)'; },
+      onTap:function(){ b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge'); },
+      onCancel:function(){ if(needle) needle.style.transform=''; },
+      onDone:settled });
+  }
+  function settled(){
+    SFX.blow(); buzz(40);
+    var needle=$('#needle');
+    if(needle){ needle.style.transition='transform .5s cubic-bezier(.2,.8,.3,1.3)'; needle.style.transform='rotate(0deg)'; }
+    kompasBox.innerHTML='<p>perjalanan baru dimulai 🤍</p>';
+    setTimeout(function(){
+      FX.burst(innerWidth/2,innerHeight*.42,100,10); FX.shower(90); SFX.chime();
+    },350);
+    setTimeout(function(){
+      $('#open').classList.add('gone');
+      document.body.classList.remove('locked');
+      document.body.classList.add('opened');
+    },1700);
+    setTimeout(function(){ var o=$('#open'); o&&o.remove(); },2600);
+  }
+})();
+
+/* =====================================================================
+   SLOT 2 — GAME 1: KEMAS KOPER
+   ===================================================================== */
+var DONE={koper:false,robek:false};
+function markDone(k){
+  if(DONE[k]) return; DONE[k]=true;
+  $(k==='koper'?'#tagKoper':'#tagRobek').textContent='selesai';
+  $(k==='koper'?'#tagKoper':'#tagRobek').classList.add('on');
+  $(k==='koper'?'#cKoper':'#cRobek').classList.add('on');
+  if(DONE.koper&&DONE.robek){ $('#openLetter').disabled=false; $('#skipGames').hidden=true; toast('Suratnya sudah bisa dibuka'); }
+}
+(function(){
+  var cv=$('#koperCv'), over=$('#koperOver'), ctx, W,H, px, items, score, run=false, last=0, spawn=0, notes=[];
+  var GOAL=10;
+  var KATA=(G.short+' '+(D.penerima||'')).split(/\s+/).filter(Boolean);
+  function size(){ var r=cv.getBoundingClientRect(), d=Math.min(devicePixelRatio||1,2);
+    W=r.width; H=r.height; cv.width=W*d; cv.height=H*d; ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0); }
+  function start(){ ac(); size(); px=W/2; items=[]; notes=[]; score=0; spawn=0; last=performance.now(); run=true; over.style.display='none'; requestAnimationFrame(loop); }
+  function barang(x,y,w,good){
+    var h=w*.66;
+    ctx.save(); ctx.translate(x,y);
+    if(good){
+      ctx.fillStyle='#C97A46'; ctx.strokeStyle='#2B2117'; ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.roundRect(-w/2,-h/2,w,h,4); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#2F6F6B'; ctx.beginPath(); ctx.roundRect(-w*.3,-h/2-4,w*.6,6,2); ctx.fill();
+    } else {
+      ctx.fillStyle='#A8A091'; ctx.strokeStyle='#2B2117'; ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.arc(0,0,w*.42,0,7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#7A7363'; ctx.fillRect(-w*.05,-h*.3,w*.1,h*.5);
+    }
+    ctx.restore();
+  }
+  function koper(x,y){
+    ctx.save(); ctx.translate(x,y);
+    ctx.fillStyle='#2B2117'; ctx.beginPath(); ctx.roundRect(-27,-16,54,34,[6,6,10,10]); ctx.fill();
+    ctx.fillStyle='#C97A46'; ctx.fillRect(-15,-6,30,4.5);
+    ctx.fillStyle='#F3EAD6'; ctx.fillRect(-27,14,54,4);
+    ctx.restore();
+  }
+  function loop(t){
+    if(!run) return;
+    var dt=Math.min(50,t-last); last=t; spawn-=dt;
+    if(spawn<=0){ var bad=Math.random()<.34;
+      items.push({x:rand(26,W-26),y:-22,v:rand(.13,.2)+score*.008,bad:bad,w:rand(40,50)});
+      spawn=Math.max(360,860-score*42); }
+    ctx.clearRect(0,0,W,H);
+    var py=H-34;
+    items.forEach(function(it){ it.y+=it.v*dt; barang(it.x,it.y,it.w,!it.bad); });
+    items=items.filter(function(it){
+      if(Math.abs(it.x-px)<34&&Math.abs(it.y-py)<26){
+        if(it.bad){ score=Math.max(0,score-1); SFX.bad(); buzz(45); notes.push({x:it.x,y:py-20,t:0,s:'bukan ini'}); }
+        else { score++; SFX.pop(); buzz(10); notes.push({x:it.x,y:py-20,t:0,s:KATA[(score-1)%KATA.length]}); }
+        return false; }
+      return it.y<H+30; });
+    koper(px,py);
+    notes=notes.filter(function(n){ n.t+=dt; n.y-=dt*.03;
+      ctx.save(); ctx.globalAlpha=Math.max(0,1-n.t/900); ctx.fillStyle='#2B2117';
+      ctx.font='800 13px Nunito, system-ui, sans-serif'; ctx.textAlign='center'; ctx.fillText(n.s,n.x,n.y); ctx.restore();
+      return n.t<900; });
+    ctx.fillStyle='#2B2117'; ctx.font='900 14px Nunito, system-ui, sans-serif'; ctx.textAlign='left';
+    ctx.fillText(score+' / '+GOAL,13,22);
+    if(score>=GOAL){ run=false; SFX.win(); FX.at($('#koper .stage'),80);
+      over.innerHTML='<h4>Kopernya pas!</h4><p>Satu kartu pos terselip di saku depan. Itu yang nanti kamu baca.</p>';
+      var b=el('button','btn ghost small','Main lagi'); b.type='button'; b.onclick=start; over.appendChild(b);
+      over.style.display='flex'; markDone('koper'); return; }
+    requestAnimationFrame(loop);
+  }
+  function move(e){ if(!run) return; var r=cv.getBoundingClientRect(); px=Math.max(26,Math.min(W-26,e.clientX-r.left)); }
+  cv.addEventListener('pointerdown',function(e){ move(e); try{ cv.setPointerCapture(e.pointerId); }catch(x){} });
+  cv.addEventListener('pointermove',move);
+  $('#koperStart').onclick=start;
+})();
+
+/* =====================================================================
+   SLOT 3 — INTERAKTIF 1: KARTU POS
+   ===================================================================== */
+(function(){
+  var box=$('#pcards');
+  if(!FOTO.length){ $('#kartupos').hidden=true; return; }
+  FOTO.slice(0,3).forEach(function(f,i){
+    var b=el('button','pcard'); b.type='button';
+    b.style.transform='rotate('+[-2,1.5,-1][i]+'deg)';
+    var im=el('img'); im.src=f.src; im.alt=''; im.loading='lazy';
+    b.innerHTML='<i class="corner"></i>';
+    b.appendChild(im);
+    b.appendChild(el('span','val','Singgah '+(i+1)));
+    b.appendChild(el('span','tap','ketuk'));
+    b.onclick=function(){ b.classList.add('seen'); open(f); };
+    box.appendChild(b);
+  });
+  var view=$('#pview')||(function(){
+    var v=el('div'); v.id='pview';
+    v.innerHTML='<div><figure class="pv-card"><img alt=""><figcaption></figcaption>'+
+      '<svg class="pv-mark" viewBox="0 0 100 100" aria-hidden="true">'+
+      '<circle cx="50" cy="50" r="44" fill="none" stroke="#2F6F6B" stroke-width="2.6"/>'+
+      '<circle cx="50" cy="50" r="36" fill="none" stroke="#2F6F6B" stroke-width="1.1"/>'+
+      '<text x="50" y="42" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="9" fill="#2F6F6B">SINGGAH</text>'+
+      '<text x="50" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="11" fill="#2F6F6B">'+TGL_PENDEK+'</text>'+
+      '</svg></figure><button class="pv-x" type="button">tutup</button></div>';
+    document.body.appendChild(v); return v;
+  })();
+  view.addEventListener('click',function(e){ if(e.target===view||e.target.classList.contains('pv-x')) view.classList.remove('show'); });
+  function open(f){
+    view.querySelector('img').src=f.src;
+    view.querySelector('figcaption').textContent=f.caption||'';
+    view.classList.add('show'); SFX.paper(); buzz(8);
+  }
+})();
+
+/* =====================================================================
+   SLOT 4 — MOMEN KHAS: STEMPEL PERJALANAN
+   Pin lama ditarik dari peta, pin baru ditancapkan — bertanggal.
+   ===================================================================== */
+(function(){
+  var scene=$('#scene'), msg=$('#stMsg');
+  var BARU=A.baru, LAMA=A.lama;
+  var fsBaru=BARU.length>2?25:38, fsLama=LAMA.length>2?34:56;
+  $('#stH').textContent=A.hide
+    ? 'Pin barunya siap ditancapkan'
+    : 'Pin tahun ke-'+LAMA+' belum tahu apa yang akan terjadi';
+
+  scene.innerHTML=''+
+  '<div class="stamp-hit grab" id="pinHit" role="button" tabindex="0" aria-label="Tarik pin ke bawah">'+
+    '<span class="stamp-cue" id="pinCue">tarik ke bawah &#8595;</span></div>'+
+  '<svg viewBox="0 0 360 236" aria-hidden="true">'+
+    '<rect x="16" y="18" width="328" height="196" rx="5" fill="#FFFBF2" stroke="rgba(43,33,23,.14)" stroke-width="1.4"/>'+
+    '<path d="M40,170 q40,-30 80,-6 q42,26 90,-8 q44,-28 94,10" fill="none" stroke="#E7D9BC" stroke-width="10" stroke-linecap="round"/>'+
+    '<path d="M40,170 q40,-30 80,-6 q42,26 90,-8 q44,-28 94,10" fill="none" stroke="#C97A46" stroke-width="2" stroke-dasharray="3 5"/>'+
+    '<text x="326" y="40" text-anchor="end" font-family="Caveat,cursive" font-size="17" fill="rgba(43,33,23,.3)">'+TGL+'</text>'+
+    '<ellipse id="shadow" cx="110" cy="176" rx="10" ry="4" fill="#2B2117" opacity=".06"/>'+
+    '<g id="n23">'+
+      '<path d="M110,150 L110,172" stroke="#2B2117" stroke-width="3.4" stroke-linecap="round"/>'+
+      '<circle cx="110" cy="146" r="7" fill="#C97A46" stroke="#2B2117" stroke-width="1.6"/>'+
+      '<text x="110" y="156" text-anchor="middle" font-family="Nunito,system-ui,sans-serif" font-weight="900" font-size="'+fsLama+'" fill="#2F6F6B">'+LAMA+'</text>'+
+    '</g>'+
+    '<g id="fiuh" opacity="0"><rect x="140" y="104" width="54" height="24" rx="11" fill="#FFFBF2" stroke="#2B2117" stroke-width="1.6"/>'+
+      '<text x="167" y="121" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="18" fill="#2B2117">fiuh~</text></g>'+
+    '<g id="capG" opacity="0" transform="rotate(-7 110 132)">'+
+      '<circle cx="110" cy="132" r="48" fill="none" stroke="#1E4D4A" stroke-width="3"/>'+
+      '<circle cx="110" cy="132" r="39" fill="none" stroke="#1E4D4A" stroke-width="1.2"/>'+
+      '<text x="110" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="8.6" letter-spacing="1.5" fill="#1E4D4A">HARI JADI</text>'+
+      '<text id="capNum" x="110" y="146" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="'+fsBaru+'" fill="#1E4D4A">'+BARU+'</text>'+
+      '<text x="110" y="164" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="700" font-size="8.4" fill="#1E4D4A">'+TGL_PENDEK+'</text>'+
+    '</g>'+
+    '<g id="ghost" opacity="0">'+
+      '<text x="168" y="186" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="19" fill="#E7D9BC">'+LAMA+'</text>'+
+      '<path d="M181,176 l7,-7" stroke="#E7D9BC" stroke-width="3" stroke-linecap="round"/>'+
+    '</g>'+
+    '<g id="pinG" opacity="1" transform="translate(0,-130)">'+
+      '<path d="M110,18 C92,18 80,32 80,50 C80,72 110,100 110,100 C110,100 140,72 140,50 C140,32 128,18 110,18 Z" fill="#C97A46" stroke="#2B2117" stroke-width="2"/>'+
+      '<circle cx="110" cy="48" r="13" fill="#FFFBF2"/>'+
+    '</g>'+
+  '</svg>';
+
+  var S=function(id){ return scene.querySelector('#'+id); };
+  var pinG=S('pinG'), shadow=S('shadow'), n23=S('n23'), capG=S('capG'), ghost=S('ghost'), fiuh=S('fiuh');
+  var busy=false, done=false;
+
+  var PARK=-130;
+  function setPin(p){
+    pinG.setAttribute('transform','translate(0,'+(PARK+(-PARK)*p).toFixed(1)+')');
+    shadow.setAttribute('rx',(10+40*p).toFixed(1));
+    shadow.setAttribute('ry',(4+9*p).toFixed(1));
+    shadow.setAttribute('opacity',(0.06+0.22*p).toFixed(3));
+  }
+  setPin(0);
+  msg.textContent=A.hide?'pin barunya menggantung di atas…':'pin tahun ke-'+LAMA+' masih tertancap tenang';
+
+  var hit=scene.querySelector('#pinHit'), cue=scene.querySelector('#pinCue'), said={};
+  var ctl=drag(hit,{ axis:'y', dist:150,
+    onMove:function(p){
+      if(done||busy) return;
+      setPin(p*0.92);
+      cue.style.opacity=String(Math.max(0,1-p*2.4));
+      scene.classList.toggle('run',p>.1);
+      scene.classList.toggle('fast',p>.5);
+      if(p>.28&&!said.a){ said.a=1; msg.textContent='eh, pin lama mau digeser dulu—'; }
+      if(p>.68&&!said.b){ said.b=1; msg.textContent='sebentar lagi sampai'; }
+    },
+    onTap:function(){
+      if(done||busy) return;
+      hit.classList.remove('nudge'); void hit.offsetWidth; hit.classList.add('nudge');
+      msg.textContent='tarik pinnya ke bawah';
+    },
+    onCancel:function(){
+      if(done||busy) return;
+      said={}; cue.style.opacity='';
+      scene.classList.remove('run','fast'); setPin(0);
+      fiuh.animate([{opacity:0},{opacity:1},{opacity:1},{opacity:0}],{duration:1400,fill:'forwards'});
+      msg.textContent='belum tega, ya?';
+    },
+    onDone:function(){ said={}; cue.style.opacity='0'; slam(); } });
+
+  function anim(node,frames,opt){ return node.animate(frames,Object.assign({fill:'forwards'},opt)).finished; }
+
+  async function slam(){
+    if(busy||done) return; busy=true;
+    hit.dataset.off='1'; hit.style.pointerEvents='none';
+    scene.classList.remove('run','fast');
+    await wait(140);
+    setPin(1); SFX.thud(); buzz(70);
+    scene.classList.add('shake'); setTimeout(function(){ scene.classList.remove('shake'); },440);
+    msg.textContent='TEK!';
+    n23.style.transition='transform .14s ease-in, opacity .14s';
+    n23.style.transform='scale(1,.2)'; n23.style.opacity='0';
+    await wait(260);
+    anim(pinG,[{transform:'translate(0,0)'},{transform:'translate(0,-230px)'}],{duration:620,easing:'ease-out'});
+    shadow.animate([{rx:'50',ry:'13',opacity:'.28'},{rx:'12',ry:'4',opacity:'.05'}],{duration:620,fill:'forwards',easing:'ease-out'});
+    await wait(240);
+    capG.setAttribute('opacity','1');
+    anim(capG,[{transform:'scale(1.35)',opacity:0},{transform:'scale(1)',opacity:1}],{duration:380,easing:'cubic-bezier(.2,.9,.3,1.3)'});
+    SFX.paper();
+    await wait(620);
+    msg.textContent=A.hide?'tercatat sudah: '+BARU:'tahun ke-'+BARU+', tercatat rapi';
+    await wait(500);
+    anim(capG,[{transform:'scale(1)'},{transform:'scale(1.05)'},{transform:'scale(1)'}],{duration:420,iterations:2});
+    SFX.pop();
+    await wait(500);
+    ghost.setAttribute('opacity','1');
+    anim(ghost,[{transform:'translate(-14px,6px)',opacity:0},{transform:'translate(0,0)',opacity:1}],{duration:420});
+    msg.textContent='pin tahun ke-'+LAMA+' dilipat masuk ke buku catatan perjalanan';
+    SFX.whoosh();
+    await wait(560);
+    await anim(ghost,[{transform:'rotate(0)'},{transform:'rotate(-16deg)'},{transform:'rotate(14deg)'},{transform:'rotate(0)'}],{duration:620,iterations:2});
+    anim(ghost,[{opacity:1,transform:'translate(0,0)'},{opacity:0,transform:'translate(16px,-10px)'}],{duration:900,easing:'ease-in'});
+    await wait(700);
+    msg.textContent=A.hide?'perjalanannya tercatat 🤍':'rutenya terus bertambah 🤍';
+    var r=scene.getBoundingClientRect(); FX.burst(r.left+r.width*.3,r.top+r.height*.5,80,10); FX.shower(70);
+    lagu();
+    await wait(1600);
+    busy=false; done=true; $('#stReplay').hidden=false;
+  }
+
+  $('#stReplay').onclick=function(){
+    if(busy) return;
+    done=false; said={};
+    [pinG,capG,ghost,fiuh].forEach(function(n){ n.getAnimations().forEach(function(a){ a.cancel(); }); });
+    capG.setAttribute('opacity','0'); ghost.setAttribute('opacity','0'); fiuh.setAttribute('opacity','0');
+    n23.style.transition=''; n23.style.transform=''; n23.style.opacity='1';
+    setPin(0);
+    hit.dataset.off=''; hit.style.pointerEvents=''; cue.style.opacity=''; ctl.reset();
+    msg.textContent=A.hide?'pin barunya menggantung di atas…':'pin tahun ke-'+LAMA+' masih tertancap tenang';
+    this.hidden=true;
+  };
+})();
+
+/* =====================================================================
+   SLOT 5 — GAME 2: PETA YANG ROBEK
+   Kalimatnya dibuat otomatis dari jenis hari jadi + nama.
+   ===================================================================== */
+(function(){
+  var slot=$('#tornSlot'), info=$('#tornInfo'), doneEl=$('#tornDone');
+  var kalimat=G.short+', '+(D.penerima||'');
+  var kata=kalimat.split(' ').filter(Boolean);
+  var P=[];
+  if(kata.length<=4) P=kata.slice();
+  else { var n=4, per=Math.ceil(kata.length/n);
+    for(var i=0;i<kata.length;i+=per) P.push(kata.slice(i,i+per).join(' ')); }
+  if(P.length<3) P=kalimat.split('').reduce(function(a,c,i){ var k=Math.floor(i/Math.ceil(kalimat.length/3)); a[k]=(a[k]||'')+c; return a; },[]);
+  var order=[], moves=0, solved=false;
+  function clip(){ var a=rand(2,6).toFixed(1), b=rand(2,6).toFixed(1);
+    return 'polygon(0% '+a+'px, 6% 0%, 22% '+b+'px, 42% 0%, 64% '+a+'px, 84% 0%, 100% '+b+'px, 100% calc(100% - '+b+'px), 82% 100%, 60% calc(100% - '+a+'px), 38% 100%, 18% calc(100% - '+b+'px), 0% 100%)'; }
+  var CLIPS=P.map(clip);
+  function deal(){
+    do { order=P.map(function(_,i){ return i; }).sort(function(){ return Math.random()-.5; }); }
+    while(order.every(function(v,i){ return v===i; }));
+    moves=0; solved=false; doneEl.classList.remove('show'); info.textContent='Langkah: 0'; draw();
+  }
+  var sel=null;
+  function draw(){
+    slot.innerHTML='';
+    order.forEach(function(t,i){
+      var b=el('button','torn',P[t]); b.type='button';
+      b.style.clipPath=CLIPS[t];
+      b.style.transform='rotate('+(((i%2)?1:-1)*rand(.4,1.6)).toFixed(2)+'deg)';
+      if(sel===i) b.classList.add('sel');
+      if(t===i) b.classList.add('ok');
+      b.onclick=function(){ tap(i); };
+      slot.appendChild(b);
+    });
+  }
+  function tap(i){
+    if(solved) return; ac();
+    if(sel===null){ sel=i; SFX.paper(); draw(); return; }
+    if(sel!==i){ var t=order[sel]; order[sel]=order[i]; order[i]=t; moves++; SFX.pop(); }
+    sel=null; draw();
+    if(order.every(function(v,k){ return v===k; })){
+      solved=true; info.textContent='Selesai dalam '+moves+' langkah';
+      doneEl.textContent='"'+kalimat+'" — akhirnya kebaca juga';
+      doneEl.classList.add('show'); SFX.win(); FX.at(slot,70); markDone('robek');
+    } else info.textContent='Langkah: '+moves;
+  }
+  deal();
+})();
+
+/* =====================================================================
+   SLOT 6 — INTERAKTIF 2: DEBU DI KOMPAS
+   ===================================================================== */
+(function(){
+  var area=$('#dustArea'), foot=$('#dustFoot');
+  var txt=area.querySelector('.dust-txt');
+  if(!txt.textContent.trim()){ $('#kompasRahasia').hidden=true; return; }
+  var cv=el('canvas','dust-cv'); area.appendChild(cv);
+  var ctx,W,H,done=false,moves=0,last=null,down=false;
+  function paint(){
+    var r=area.getBoundingClientRect(), d=Math.min(devicePixelRatio||1,2);
+    W=r.width+20; H=r.height+20; cv.width=W*d; cv.height=H*d;
+    ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
+    ctx.globalCompositeOperation='source-over';
+    ctx.fillStyle='#FFFBF2'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(43,33,23,.035)';
+    for(var i=0;i<60;i++){ ctx.beginPath(); ctx.arc(rand(0,W),rand(0,H),rand(.6,2.2),0,7); ctx.fill(); }
+  }
+  requestAnimationFrame(paint);
+  function draw(e){
+    if(done) return;
+    var r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+    ctx.globalCompositeOperation='destination-out';
+    ctx.lineWidth=40; ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.beginPath();
+    if(last) ctx.moveTo(last[0],last[1]); else ctx.moveTo(x,y);
+    ctx.lineTo(x,y); ctx.stroke();
+    last=[x,y];
+    if(++moves%7===0) check();
+  }
+  function check(){
+    var d=ctx.getImageData(0,0,cv.width,cv.height).data, clear=0,n=0;
+    for(var i=3;i<d.length;i+=64){ n++; if(d[i]<40) clear++; }
+    if(clear/n>.52) reveal();
+  }
+  function reveal(){
+    if(done) return; done=true;
+    cv.style.transition='opacity .6s'; cv.style.opacity='0';
+    setTimeout(function(){ cv.remove(); },640);
+    foot.textContent='— ditulis dengan tinta yang cuma muncul kalau dicari';
+    SFX.good(); buzz(20);
+  }
+  cv.addEventListener('pointerdown',function(e){ down=true; last=null; ac(); try{ cv.setPointerCapture(e.pointerId); }catch(x){} draw(e); });
+  cv.addEventListener('pointermove',function(e){ if(down) draw(e); });
+  cv.addEventListener('pointerup',function(){ down=false; last=null; });
+  cv.addEventListener('pointercancel',function(){ down=false; last=null; });
+  addEventListener('resize',function(){ if(!done) paint(); });
+})();
+
+/* =====================================================================
+   SLOT 7 — SURAT
+   ===================================================================== */
+(function(){
+  var lock=$('#lock'), letter=$('#letter'), opened=false;
+  if(FOTO[0]) $('#ltStamp').src=FOTO[0].src; else $('.lt-stamp').hidden=true;
+  $('#ltHello').textContent='Hai '+(D.penerima||'')+',';
+  var pars=(D.surat||[]).filter(function(t){ return t; });
+  var nodes=pars.map(function(t){ var p=el('p','par',t); $('#ltPars').appendChild(p); return p; });
+
+  async function open(){
+    if(opened) return; opened=true;
+    ac(); SFX.paper(); MU.play();
+    lock.style.transition='opacity .5s,transform .5s'; lock.style.opacity='0'; lock.style.transform='scale(.97)';
+    setTimeout(function(){ lock.hidden=true; },520);
+    await wait(420);
+    letter.classList.add('show');
+    letter.scrollIntoView({behavior:'smooth',block:'start'});
+    for(var i=0;i<nodes.length;i++){
+      await wait(850);
+      nodes[i].classList.add('in');
+      await wait(Math.min(4200,900+nodes[i].textContent.length*22));
+    }
+    await wait(500); $('#ltSign').classList.add('in');
+    await wait(1100);
+    $('#segel').hidden=false;
+    await wait(400);
+    $('#segel').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  $('#openLetter').onclick=open;
+  $('#skipGames').onclick=open;
+})();
+
+/* =====================================================================
+   SLOT 8 — PENUTUP: SEGEL FOREVERSE
+   ===================================================================== */
+(function(){
+  var wax=$('#wax'), hint=$('#waxHint'), sealed=false;
+  drag(wax,{ axis:'y', dist:60,
+    onMove:function(p){
+      if(sealed) return;
+      wax.style.transform='translateY('+(p*16).toFixed(1)+'px)';
+      hint.textContent=p>.1?'terus…':'tarik segelnya ke bawah ↓';
+    },
+    onTap:function(){ if(sealed) return;
+      wax.classList.remove('nudge'); void wax.offsetWidth; wax.classList.add('nudge'); },
+    onCancel:function(){ if(!sealed){ wax.style.transform=''; hint.textContent='tarik segelnya ke bawah ↓'; } },
+    onDone:function(){
+    if(sealed) return; sealed=true;
+    wax.dataset.off='1'; wax.style.transform='';
+    wax.classList.add('drip');
+    SFX.whoosh();
+    setTimeout(function(){ wax.classList.add('pooled'); SFX.thud(); buzz(50); },780);
+    setTimeout(function(){
+      wax.classList.add('sealed'); SFX.chime(); FX.at(wax,70);
+      hint.textContent='tersegel';
+      $('#sealedNote').textContent='Suratnya tersegel lagi. Kali ini supaya tidak ke mana-mana.';
+      $('#sealedNote').classList.add('show');
+    },1320);
+    setTimeout(function(){ $('#endActs').classList.add('show'); },2100);
+  }});
+
+  var wa=String(D.waPengirim||'').replace(/\D/g,'');
+  if(wa.charAt(0)==='0') wa='62'+wa.slice(1);
+  if(wa.length>=10){
+    $('#replyBox').hidden=false; $('#waBtn').hidden=false;
+    $('#replyLbl').textContent='Mau balas ke '+(D.pengirim||'')+'?';
+    $('#replyTxt').value='Udah aku baca semua. Makasih ya 🤍';
+    $('#waBtn').addEventListener('click',function(e){
+      this.href='https://wa.me/'+wa+'?text='+encodeURIComponent($('#replyTxt').value);
+    });
+    $('#waBtn').href='https://wa.me/'+wa;
+  } else {
+    $('#waBtn').hidden=true;
+  }
+  $('#again').onclick=function(){ location.reload(); };
+  var fu='https://foreverse.id';
+  $('#made').href=fu+'?ref=peta-perjalanan';
+})();
+
+}
+window.FV_MULAI = FV_MULAI;
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   Pemuat: ambil isi surat, lalu jalankan tampilannya.
+   Berbeda dari Bait: data DITULIS LANGSUNG oleh server (worker.js)
+   ke dalam blok <script id="foreverse-data"> di atas sebelum halaman
+   ini dikirim — jadi di sini tinggal dibaca, tidak perlu fetch lagi.
+   ══════════════════════════════════════════════════════════════ */
+(function(){
+  "use strict";
+  var tirai = document.getElementById("memuat");
+
+  function gagal(t){
+    if(!tirai) return;
+    tirai.classList.add("gagal");
+    document.getElementById("memuatPesan").textContent = t;
+  }
+  function tutupTirai(){ if(tirai){ tirai.classList.add("pergi"); setTimeout(function(){ tirai.remove(); },420); } }
+
+  function pasang(data){
+    window.KADO = Object.assign({
+      penerima:"", pengirim:"", jenisHariJadi:"pacaran",
+      tanggalMulai:"", sembunyikanTahun:false,
+      foto:[], rahasia:"", surat:["","",""],
+      lagu:{file:"",mulai:0,selesai:0}, waPengirim:""
+    }, data || {});
+  }
+
+  function siapkanFoto(daftar){
+    var tugas = (daftar || []).filter(function(f){ return f && f.src; }).map(function(f){
+      return new Promise(function(beres){
+        var im = new Image();
+        im.onload = function(){ (im.decode ? im.decode() : Promise.resolve()).then(beres, beres); };
+        im.onerror = beres;
+        im.src = f.src;
+      });
+    });
+    var batas = new Promise(function(beres){ setTimeout(beres, 12000); });
+    return Promise.race([Promise.all(tugas), batas]);
+  }
+
+  var mentah = null;
+  try{ mentah = document.getElementById("foreverse-data").textContent; }catch(e){}
+  var data = null;
+  try{ data = JSON.parse(mentah || "{}"); }catch(e){ data = {}; }
+
+  if(!data || !data.penerima){
+    gagal("Suratnya tidak bisa dibuka sekarang. Minta tautan yang benar ke pengirimnya, ya.");
+    return;
+  }
+
+  pasang(data);
+  siapkanFoto(window.KADO.foto).then(function(){
+    FV_MULAI();
+    tutupTirai();
+  });
+})();
+</script>
+</body>
+</html>

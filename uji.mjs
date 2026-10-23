@@ -49,6 +49,14 @@ function isiDrafTema(tema) {
       { tanya: "Soal tiga?", pilihan: ["A", "B", "C"], benar: 2 }
     ];
     d.isi.harapan = ["Harapan satu.", "Harapan dua.", "Harapan tiga."];
+  } else if (tema === "peta-perjalanan") {
+    delete d.isi.ucapan;
+    delete d.isi.tanggalLahir;
+    delete d.isi.sembunyikanUmur;
+    d.isi.jenisHariJadi = "pacaran";
+    d.isi.tanggalMulai = "2021-10-24";
+    d.isi.sembunyikanTahun = false;
+    d.isi.rahasia = "Destinasi berikutnya, kamu yang pilih.";
   }
   return d;
 }
@@ -516,7 +524,8 @@ async function skripHalaman(berkas) {
 }
 
 for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html",
-                      "kado-riang.html", "langit-harapan.html", "index.html"]) {
+                      "kado-riang.html", "langit-harapan.html", "peta-perjalanan.html",
+                      "peta-perjalanan-demo.html", "index.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
     const { writeFileSync, rmSync } = await import("node:fs");
@@ -544,7 +553,7 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
    "match" — tapi mencaplok sampai </script> SKRIP BERIKUTNYA, menghapus
    skrip bootstrap pratinjau. Uji ini memastikan match-nya selalu pas
    satu skrip saja. */
-for (const berkas of ["kado-riang.html", "langit-harapan.html"]) {
+for (const berkas of ["kado-riang.html", "langit-harapan.html", "peta-perjalanan.html"]) {
   await uji(berkas + " · pola sisip data worker.js pas satu skrip, tidak mencaplok skrip berikutnya", async () => {
     const t = await readFile("./" + berkas, "utf8");
     const re = /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/;
@@ -761,6 +770,50 @@ await uji("langit-harapan · harapan yang belum lengkap ditolak", async () => {
   d.isi.harapan[2] = "";
   const j = await draf(L, d);
   harus(!j.ok, "seharusnya ditolak karena harapan ketiga kosong");
+});
+
+/* ═══════════ tema Peta Perjalanan (Anniversary) ═══════════ */
+judul("Tema Peta Perjalanan");
+
+await uji("peta-perjalanan · pesanan lengkap diterima dan tersimpan dengan tema yang benar", async () => {
+  const L = await buatLingkungan();
+  const j = await draf(L, isiDrafTema("peta-perjalanan"));
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT tema,isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  sama(b.tema, "peta-perjalanan", "tema tersimpan");
+  const isi = JSON.parse(b.isi);
+  sama(isi.jenisHariJadi, "pacaran", "jenis hari jadi tersimpan");
+  sama(isi.tanggalMulai, "2021-10-24", "tanggal mulai tersimpan");
+  harus(!("ucapan" in isi) && !("tanggalLahir" in isi), "isian birthday tidak boleh ikut nyangkut di momen anniversary");
+});
+
+await uji("peta-perjalanan · tanggal mulai kosong ditolak", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("peta-perjalanan");
+  d.isi.tanggalMulai = "";
+  const j = await draf(L, d);
+  harus(!j.ok, "seharusnya ditolak karena tanggal mulai kosong");
+});
+
+await uji("peta-perjalanan · jenisHariJadi di luar daftar jatuh ke 'pacaran'", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("peta-perjalanan");
+  d.isi.jenisHariJadi = "piknik";
+  const j = await draf(L, d);
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  sama(JSON.parse(b.isi).jenisHariJadi, "pacaran", "jatuh ke bawaan");
+});
+
+await uji("peta-perjalanan · bukan tema birthday, jadi tidak ikut terkena skema birthday di rapikanIsi()", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("peta-perjalanan");
+  const j = await draf(L, d);
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  const isi = JSON.parse(b.isi);
+  harus("sembunyikanTahun" in isi, "sembunyikanTahun harus ada");
+  harus(!("sembunyikanUmur" in isi), "sembunyikanUmur (birthday) tidak boleh ikut");
 });
 
 await uji("tema terkunci — tidak bisa diganti lewat edit", async () => {

@@ -39,13 +39,19 @@ const BATAS = {
 };
 
 const UCAPAN_SAH = ["selamat", "barakallah", "happy"];
+const JENIS_HARI_SAH = ["pacaran", "tunangan", "menikah"];
 
-/* Tema yang bisa dipesan, dan jumlah foto wajibnya. Tema baru = tambah
-   satu baris di sini, lalu tangani isian khasnya di rapikanIsi(). */
+/* Tema yang bisa dipesan, jumlah foto wajibnya, dan momen dasarnya.
+   `momen` menentukan isian DASAR yang dipakai (lihat rapikanIsi()):
+     "birthday"    → ucapan, tanggalLahir, sembunyikanUmur
+     "anniversary" → jenisHariJadi, tanggalMulai, sembunyikanTahun
+   Tema baru = tambah satu baris di sini, lalu tangani isian khasnya
+   (kalau ada, di luar isian dasar momennya) di rapikanIsi(). */
 const TEMA_SKEMA = {
-  "bait":           { nfoto: 3 },
-  "kado-riang":      { nfoto: 3 },
-  "langit-harapan":  { nfoto: 4 }
+  "bait":             { nfoto: 3, momen: "birthday" },
+  "kado-riang":       { nfoto: 3, momen: "birthday" },
+  "langit-harapan":   { nfoto: 4, momen: "birthday" },
+  "peta-perjalanan":  { nfoto: 3, momen: "anniversary" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -339,12 +345,10 @@ async function rapikanLagu(env, kode, masuk, lama) {
 
 async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   const p = badan.isi || {};
+  const skema = TEMA_SKEMA[tema] || TEMA_SKEMA.bait;
   const isi = {
     penerima: teks(p.penerima, BATAS.penerima),
     pengirim: teks(p.pengirim, BATAS.pengirim),
-    ucapan: UCAPAN_SAH.includes(p.ucapan) ? p.ucapan : "selamat",
-    tanggalLahir: tanggalSah(p.tanggalLahir),
-    sembunyikanUmur: !!p.sembunyikanUmur,
     surat: [0, 1, 2].map(i => teks((p.surat || [])[i], BATAS.surat)),
     lagu: null,
     foto: []
@@ -353,7 +357,21 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   if (!isi.penerima) throw new Error("Nama penerima belum diisi.");
   if (!isi.pengirim) throw new Error("Nama pengirim belum diisi.");
   if (!isi.surat[0]) throw new Error("Surat bagian 1 belum diisi.");
-  if (!isi.tanggalLahir) throw new Error("Tanggal lahir belum diisi.");
+
+  /* ── isian DASAR, beda per momen ──
+     Birthday: ucapan + tanggal lahir + sembunyikan umur.
+     Anniversary: jenis hari jadi + tanggal mulai + sembunyikan tahun. */
+  if (skema.momen === "anniversary") {
+    isi.jenisHariJadi = JENIS_HARI_SAH.includes(p.jenisHariJadi) ? p.jenisHariJadi : "pacaran";
+    isi.tanggalMulai = tanggalSah(p.tanggalMulai);
+    isi.sembunyikanTahun = !!p.sembunyikanTahun;
+    if (!isi.tanggalMulai) throw new Error("Tanggal mulai belum diisi.");
+  } else {
+    isi.ucapan = UCAPAN_SAH.includes(p.ucapan) ? p.ucapan : "selamat";
+    isi.tanggalLahir = tanggalSah(p.tanggalLahir);
+    isi.sembunyikanUmur = !!p.sembunyikanUmur;
+    if (!isi.tanggalLahir) throw new Error("Tanggal lahir belum diisi.");
+  }
 
   /* ── isian khas tema ──
      waPengirim dipakai semua tema untuk tombol balas WhatsApp
@@ -379,11 +397,13 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.harapan[0] || !isi.harapan[1] || !isi.harapan[2]) throw new Error("Ketiga harapan belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
+    /* bait & peta-perjalanan: satu pesan rahasia, diungkap di balik
+       lapisan interaktif (tinta rahasia / debu di kompas). */
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   }
 
-  const nfoto = (TEMA_SKEMA[tema] || TEMA_SKEMA.bait).nfoto;
+  const nfoto = skema.nfoto;
   const fotoLama = (lamaIsi && lamaIsi.foto) || [];
   const masuk = Array.isArray(badan.foto) ? badan.foto : [];
 
