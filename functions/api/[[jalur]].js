@@ -40,6 +40,7 @@ const BATAS = {
 
 const UCAPAN_SAH = ["selamat", "barakallah", "happy"];
 const JENIS_HARI_SAH = ["pacaran", "tunangan", "menikah"];
+const JENJANG_SAH = ["sma", "d3", "s1", "s2", "s3"];
 
 /* Kota yang bisa dipilih untuk momen LDR (tema Zona Waktu). Zona IANA
    dipakai di mesin tema untuk menghitung jam & selisihnya secara hidup
@@ -60,11 +61,12 @@ const KOTA_SAH = [
    Tema baru = tambah satu baris di sini, lalu tangani isian khasnya
    (kalau ada, di luar isian dasar momennya) di rapikanIsi(). */
 const TEMA_SKEMA = {
-  "bait":             { nfoto: 3, momen: "birthday" },
-  "kado-riang":       { nfoto: 3, momen: "birthday" },
-  "langit-harapan":   { nfoto: 4, momen: "birthday" },
-  "peta-perjalanan":  { nfoto: 3, momen: "anniversary" },
-  "zona-waktu":       { nfoto: 3, momen: "ldr" }
+  "bait":              { nfoto: 3, momen: "birthday" },
+  "kado-riang":        { nfoto: 3, momen: "birthday" },
+  "langit-harapan":    { nfoto: 4, momen: "birthday" },
+  "peta-perjalanan":   { nfoto: 3, momen: "anniversary" },
+  "zona-waktu":        { nfoto: 3, momen: "ldr" },
+  "graduation-benih":  { nfoto: 3, momen: "graduation" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -376,7 +378,8 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
      Anniversary: jenis hari jadi + tanggal mulai + sembunyikan tahun.
      LDR: kota pengirim + kota penerima (dipakai tema Zona Waktu untuk
      menghitung jam & jarak live — tidak ada angka berulang di sini,
-     beda struktur dari birthday/anniversary dengan sengaja). */
+     beda struktur dari birthday/anniversary dengan sengaja).
+     Graduation: jenjang + tanggal wisuda + sembunyikan tahun. */
   if (skema.momen === "anniversary") {
     isi.jenisHariJadi = JENIS_HARI_SAH.includes(p.jenisHariJadi) ? p.jenisHariJadi : "pacaran";
     isi.tanggalMulai = tanggalSah(p.tanggalMulai);
@@ -387,6 +390,11 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.kotaPenerima = KOTA_SAH.includes(p.kotaPenerima) ? p.kotaPenerima : "";
     if (!isi.kotaPengirim) throw new Error("Kota kamu belum dipilih.");
     if (!isi.kotaPenerima) throw new Error("Kota dianya belum dipilih.");
+  } else if (skema.momen === "graduation") {
+    isi.jenjang = JENJANG_SAH.includes(p.jenjang) ? p.jenjang : "s1";
+    isi.tanggalWisuda = tanggalSah(p.tanggalWisuda);
+    isi.sembunyikanTahun = !!p.sembunyikanTahun;
+    if (!isi.tanggalWisuda) throw new Error("Tanggal wisuda belum diisi.");
   } else {
     isi.ucapan = UCAPAN_SAH.includes(p.ucapan) ? p.ucapan : "selamat";
     isi.tanggalLahir = tanggalSah(p.tanggalLahir);
@@ -418,8 +426,10 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.harapan[0] || !isi.harapan[1] || !isi.harapan[2]) throw new Error("Ketiga harapan belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
-    /* bait, peta-perjalanan & zona-waktu: satu pesan rahasia/penutup,
-       diungkap di balik lapisan interaktif tema masing-masing. */
+    /* bait, peta-perjalanan, zona-waktu & graduation-benih: satu pesan
+       rahasia/penutup, diungkap di balik lapisan interaktif tema
+       masing-masing (tinta rahasia / debu di kompas / sinyal telepon /
+       buah yang dipetik). */
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   }

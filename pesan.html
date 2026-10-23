@@ -371,11 +371,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      siapkanTema(), dipanggil langsung untuk pesanan baru atau menyusul
      setelah data edit datang. */
   var TEMA_INFO = {
-    "bait":            { nama:"Bait",            nfoto:3, mesin:"/surat.html",            momen:"birthday" },
-    "kado-riang":      { nama:"Kado Riang",      nfoto:3, mesin:"/kado-riang.html",       momen:"birthday" },
-    "langit-harapan":  { nama:"Langit Harapan",  nfoto:4, mesin:"/langit-harapan.html",   momen:"birthday" },
-    "peta-perjalanan": { nama:"Peta Perjalanan", nfoto:3, mesin:"/peta-perjalanan.html",  momen:"anniversary" },
-    "zona-waktu":      { nama:"Zona Waktu",      nfoto:3, mesin:"/zona-waktu.html",       momen:"ldr" }
+    "bait":              { nama:"Bait",              nfoto:3, mesin:"/surat.html",             momen:"birthday" },
+    "kado-riang":        { nama:"Kado Riang",        nfoto:3, mesin:"/kado-riang.html",        momen:"birthday" },
+    "langit-harapan":    { nama:"Langit Harapan",    nfoto:4, mesin:"/langit-harapan.html",    momen:"birthday" },
+    "peta-perjalanan":   { nama:"Peta Perjalanan",   nfoto:3, mesin:"/peta-perjalanan.html",   momen:"anniversary" },
+    "zona-waktu":        { nama:"Zona Waktu",        nfoto:3, mesin:"/zona-waktu.html",        momen:"ldr" },
+    "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -552,6 +553,26 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<select id="kotaPenerima"><option value="">Pilih kota</option>' + opsiKota() + '</select>' +
         '<p class="galat">Kota dianya belum dipilih.</p></div>' +
         '</div>';
+    } else if(momen === "graduation"){
+      html = '<h2><span class="n">4</span> Jenjang dan tanggal wisuda</h2>' +
+        '<p class="jelas">Tanggal wisudanya dipakai untuk adegan lingkar tahun di tengah surat.</p>' +
+        '<div class="baris" data-f="jenjang"><label for="jenjang">Jenjang yang diselesaikan</label>' +
+        '<select id="jenjang">' +
+        '<option value="sma">SMA/SMK</option>' +
+        '<option value="d3">D3</option>' +
+        '<option value="s1" selected>S1</option>' +
+        '<option value="s2">S2</option>' +
+        '<option value="s3">S3</option>' +
+        '</select></div>' +
+        '<div class="dua">' +
+        '<div class="baris" data-f="wisuda"><label for="wisuda">Tanggal wisudanya</label>' +
+        '<input id="wisuda" type="date">' +
+        '<p class="galat">Tanggal wisuda belum diisi.</p></div>' +
+        '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
+        '<div class="setuju" style="width:100%">' +
+        '<input id="sembunyikanTahun" type="checkbox">' +
+        '<label for="sembunyikanTahun">Sembunyikan jumlah tahunnya — tampilkan tanggalnya saja, bukan tahun ke berapa.</label>' +
+        '</div></div></div>';
     } else if(momen === "anniversary"){
       html = '<h2><span class="n">4</span> Hari jadi dan tanggal</h2>' +
         '<p class="jelas">Tanggal mulainya dipakai untuk adegan pin bertanggal di tengah surat.</p>' +
@@ -644,6 +665,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan penutupnya (opsional)</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Jarak ini sementara. Aku di sini, nungguin."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "graduation-benih"){
+      html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
+        '<p class="jelas">Tersembunyi di dalam "buah yang dipetik" — baru terbaca setelah buahnya ditarik lepas dari rantingnya.</p>' +
+        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Bangga banget sama kamu. Lanjut terus, ya."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
         '<p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>' +
@@ -706,6 +733,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      jalan. Dibuat agak jarang (debounce) supaya tidak memuat ulang di
      setiap ketukan huruf. */
   function isiDasarUntuk(sumber){
+    if(MOMEN_GRUP === "graduation"){
+      return {
+        jenjang: $("jenjang").value || "s1",
+        tanggalWisuda: $("wisuda").value || (sumber==="pratinjau" ? "2022-08-01" : ""),
+        sembunyikanTahun: $("sembunyikanTahun").checked
+      };
+    }
     if(MOMEN_GRUP === "anniversary"){
       return {
         jenisHariJadi: $("jenisHariJadi").value || "pacaran",
@@ -807,6 +841,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["mulai","mulai"]]
       : MOMEN_GRUP === "ldr"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["kotaPengirim","kotaPengirim"],["kotaPenerima","kotaPenerima"]]
+      : MOMEN_GRUP === "graduation"
+      ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["wisuda","wisuda"]]
       : [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]];
     wajibDasar.forEach(function(p){
       var kosong = !$(p[0]).value.trim();
@@ -868,7 +904,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: Object.assign({
@@ -970,6 +1006,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         if(MOMEN_GRUP === "anniversary"){
           $("jenisHariJadi").value = i.jenisHariJadi || "pacaran";
           $("mulai").value = i.tanggalMulai || "";
+          $("sembunyikanTahun").checked = !!i.sembunyikanTahun;
+        } else if(MOMEN_GRUP === "graduation"){
+          $("jenjang").value = i.jenjang || "s1";
+          $("wisuda").value = i.tanggalWisuda || "";
           $("sembunyikanTahun").checked = !!i.sembunyikanTahun;
         } else {
           $("ucapan").value = i.ucapan || "selamat";

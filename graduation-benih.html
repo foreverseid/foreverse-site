@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EFF3E2">
+<meta name="robots" content="noindex, nofollow">
+<title>Ada yang tumbuh untukmu</title>
+<meta property="og:title" content="Ada yang tumbuh untukmu">
+<meta property="og:description" content="Buka pelan-pelan, ya.">
+<meta property="og:image" content="https://foreverse.id/cover-graduation-benih.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- =====================================================================
+     FOREVERSE · Graduation · Tema "Benih & Pohon Cita-Cita"
+     Semua isi pesanan ada di blok DATA di bawah. Tidak perlu menyentuh
+     bagian lain. (Form pesanan cukup menulis ulang blok ini.)
+     ===================================================================== -->
+<script id="foreverse-data" type="application/json">
+{
+  "tema": "graduation-benih",
+  "penerima": "",
+  "pengirim": "",
+  "jenjang": "s1",
+  "tanggalWisuda": "",
+  "sembunyikanTahun": false,
+  "foto": [],
+  "surat": [
+    "",
+    "",
+    ""
+  ],
+  "rahasia": "",
+  "waPengirim": "",
+  "lagu": {
+    "src": "",
+    "judul": "",
+    "artis": "",
+    "mulai": 0,
+    "selesai": 0
+  },
+  "foreverseUrl": "https://foreverse.id"
+}
+</script>
+<script>
+/* pratinjau dari /pesan: isi datang dari sessionStorage, dibaca di sini
+   SEBELUM mesin tema jalan. Untuk surat sungguhan di /s/<kode>, blok
+   data di atas sudah ditulis ulang di server (lihat worker.js). */
+(function(){
+  try{
+    if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
+      var mentah = sessionStorage.getItem("fv-pratinjau");
+      if(mentah) document.getElementById("foreverse-data").textContent = mentah;
+    }
+  }catch(e){}
+})();
+</script>
+
+<style>
+/* =====================================================================
+   PALET TEMA — Benih & Pohon Cita-Cita: tanah muda, daun pagi, madu senja.
+   Beda total dari palet merek (Bait) dan dari Peta Perjalanan.
+   ===================================================================== */
+:root{
+  --bg:#EFF3E2;           /* dasar halaman — tanah muda */
+  --card:#FFFEF8;         /* kartu & panel */
+  --ink:#28331F;          /* teks & garis — hijau tanah tua */
+  --muted:rgba(40,51,31,.62);
+  --faint:rgba(40,51,31,.26);
+  --hair:rgba(40,51,31,.13);
+  --p:#4F7A3D;            /* hijau daun — aksi utama */
+  --p-dk:#345226;
+  --a1:#D98C3D;           /* madu/amber — buah & aksen */
+  --a1-dk:#A8631F;
+  --soft:#DEE9C6;         /* daun muda — isian lembut */
+  --soft-lt:#EEF3E0;
+  --disp:'Fraunces',Georgia,serif;
+  --hand:'Caveat',cursive;
+  --sans:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--ink);background:var(--bg);overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden;height:100vh}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{max-width:520px;margin:0 auto;padding:0 20px}
+section{position:relative;padding:50px 0}
+.center{text-align:center}
+.eyebrow{font-family:var(--hand);font-size:1.3rem;color:var(--p);display:block;line-height:1.1;margin-bottom:2px}
+h2{font-family:var(--disp);font-weight:600;font-size:clamp(1.42rem,5.6vw,1.85rem);line-height:1.18;margin-bottom:7px}
+.lead{font-size:.93rem;color:var(--muted)}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.rule{width:38px;height:1px;background:var(--faint);margin:14px auto}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 22px;border-radius:999px;background:var(--p);color:#fff;font-weight:800;font-size:.94rem;box-shadow:0 3px 0 var(--p-dk);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--p-dk)}
+.btn.ghost{background:var(--card);color:var(--p);box-shadow:0 3px 0 var(--soft),inset 0 0 0 1px var(--hair)}
+.btn.small{padding:9px 17px;font-size:.85rem}
+.btn[disabled]{opacity:.42;filter:grayscale(.55);pointer-events:none}
+
+#toast{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;z-index:300;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:.86rem;max-width:84vw;text-align:center;transition:.3s;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#music{position:fixed;right:13px;bottom:calc(13px + env(safe-area-inset-bottom));z-index:150;width:42px;height:42px;border-radius:50%;background:var(--card);box-shadow:0 4px 14px rgba(40,51,31,.16);display:none;place-items:center;font-size:1rem}
+body.opened #music.on{display:grid}
+
+.grab{position:relative;touch-action:none;user-select:none;-webkit-user-select:none;
+  -webkit-touch-callout:none;cursor:grab}
+.grab.grabbing{cursor:grabbing}
+.btn,.press,.bud,.weed,.fruit{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
+.nudge{animation:nudge .45s ease}
+@keyframes nudge{30%{transform:translateY(5px)}60%{transform:translateY(-2px)}}
+.hint-flash{animation:hintFlash .7s ease 2}
+@keyframes hintFlash{50%{opacity:.25}}
+
+/* =====================================================================
+   SLOT 1 — PEMBUKA: Benih di Kantung
+   Satu gestur: goyangkan kantungnya ke kiri-kanan di atas pot sampai
+   benihnya tumpah — bukan tarik atau tekan-tahan seperti tema lain.
+   ===================================================================== */
+#open{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 22px calc(30px + env(safe-area-inset-bottom));background:radial-gradient(120% 80% at 50% 10%,#FFFEF8 0%,var(--bg) 62%,#E2EAC9 100%);transition:opacity .8s ease,visibility .8s}
+#open.gone{opacity:0;visibility:hidden;pointer-events:none}
+.op-to{text-align:center;animation:up .9s .1s both}
+.op-to small{display:block;font-size:.66rem;font-weight:900;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.op-to b{font-family:var(--disp);font-weight:600;font-size:clamp(1.6rem,7.6vw,2.15rem);line-height:1.1;word-break:break-word}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+
+.seed-scene{position:relative;width:min(240px,74vw);height:220px;animation:up .9s .3s both}
+.seed-pot{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:130px}
+.seed-pot svg{width:100%;height:auto;display:block}
+.seed-packet{position:absolute;left:50%;top:0;width:96px;margin-left:-48px;cursor:grab;touch-action:none}
+.seed-packet svg{width:100%;height:auto;display:block;transform-origin:50% 10%}
+.seed-packet.pour svg{animation:pourTilt .35s ease-in-out}
+@keyframes pourTilt{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+.seed-dot{position:absolute;left:50%;top:92px;width:7px;height:7px;border-radius:50%;background:#C9A227;opacity:0;pointer-events:none}
+.seed-dust{position:absolute;left:50%;bottom:58px;width:0;height:0;border-radius:50%;background:radial-gradient(circle,#C9A227 0%,transparent 70%);transform:translateX(-50%);opacity:0;transition:width .4s,height .4s,opacity .4s}
+.seed-dust.show{width:70px;height:34px;opacity:.55}
+.seed-hint{text-align:center;font-size:.76rem;font-weight:800;color:var(--muted)}
+#open.gone .seed-hint{opacity:0}
+.progress-dots{display:flex;gap:6px;justify-content:center;margin-top:4px}
+.progress-dots span{width:7px;height:7px;border-radius:50%;background:var(--faint);transition:background .2s,transform .2s}
+.progress-dots span.on{background:var(--p);transform:scale(1.2)}
+
+/* =====================================================================
+   SLOT 2 — GAME 1: Siram Teratur (ketuk tepat saat tetesan sampai)
+   ===================================================================== */
+#siram{background:linear-gradient(180deg,var(--bg),var(--card))}
+.card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 5px 22px rgba(40,51,31,.07),inset 0 0 0 1px var(--hair);margin-top:16px}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-head .ic{width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex:none}
+.card-head .ic svg{width:21px;height:21px}
+.card-head h3{font-family:var(--disp);font-weight:600;font-size:1.03rem;line-height:1.2}
+.card-head p{font-size:.76rem;color:var(--muted)}
+.tag{margin-left:auto;flex:none;font-size:.68rem;font-weight:900;padding:4px 10px;border-radius:99px;background:var(--bg);color:var(--faint)}
+.tag.on{background:var(--p);color:#fff}
+
+.water-rig{position:relative;height:190px;margin:8px auto 4px;width:120px}
+.water-track{position:absolute;left:50%;top:14px;bottom:46px;width:3px;margin-left:-1.5px;background:repeating-linear-gradient(180deg,var(--faint) 0 5px,transparent 5px 11px)}
+.water-zone{position:absolute;left:50%;bottom:44px;width:56px;height:30px;margin-left:-28px;border-radius:14px;background:rgba(79,122,61,.12);box-shadow:inset 0 0 0 1.5px rgba(79,122,61,.3)}
+.water-drop{position:absolute;left:50%;top:14px;width:12px;height:16px;margin-left:-6px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:#5FA1D6}
+.water-sprout{position:absolute;left:50%;bottom:0;transform:translateX(-50%) scale(var(--gs,.72));transform-origin:bottom center;transition:transform .25s}
+.water-sprout svg{width:52px;height:52px;display:block}
+.water-count{text-align:center;font-weight:900;font-size:.86rem;color:var(--muted);margin-top:2px}
+.water-btn{display:block;margin:12px auto 0}
+
+/* =====================================================================
+   SLOT 3 — INTERAKTIF 1: Kuncup yang Mekar (tekan & tahan tiap kuncup)
+   ===================================================================== */
+#kuncup{background:var(--card)}
+.bud-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.bud{position:relative;width:104px;cursor:pointer;touch-action:none}
+.bud-shape{position:relative;width:104px;height:104px;border-radius:50%;background:var(--soft);overflow:hidden;box-shadow:0 4px 14px rgba(40,51,31,.12);transition:border-radius .5s cubic-bezier(.2,.9,.3,1)}
+.bud-ring{position:absolute;inset:-3px;border-radius:50%}
+.bud-ring circle{fill:none;stroke:var(--p);stroke-width:4;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.bud-photo{position:absolute;inset:0;opacity:0;transform:scale(.7);transition:opacity .5s,transform .5s}
+.bud.open .bud-photo{opacity:1;transform:scale(1)}
+.bud-photo img{width:100%;height:100%;object-fit:cover}
+.bud-icon{position:absolute;inset:0;display:grid;place-items:center;transition:opacity .4s}
+.bud.open .bud-icon{opacity:0}
+.bud-cap{display:block;text-align:center;margin-top:8px;font-size:.74rem;color:var(--muted);line-height:1.35}
+.bud-cue{text-align:center;font-size:.76rem;color:var(--muted);margin-top:4px}
+
+/* =====================================================================
+   SLOT 4 — MOMEN KHAS: Lingkar Tahun (ketuk berulang, tanpa jatah)
+   ===================================================================== */
+#lingkar{background:linear-gradient(180deg,var(--card),var(--bg))}
+.trunk-wrap{position:relative;width:200px;margin:18px auto 0;text-align:center}
+.trunk-wrap svg{width:200px;height:200px;touch-action:none;cursor:pointer}
+.trunk-age{font-family:var(--disp);font-weight:600;font-size:1.5rem}
+.trunk-cue{font-size:.78rem;font-weight:800;color:var(--muted);margin-top:10px}
+
+/* =====================================================================
+   SLOT 5 — GAME 2: Cabut Gulma (tarik ke atas, keluar dari tanah)
+   ===================================================================== */
+#gulma{background:var(--bg)}
+.weed-bed{position:relative;height:200px;border-radius:16px;background:linear-gradient(180deg,#E9EFD8,#DCE6C5);overflow:hidden}
+.weed{position:absolute;width:40px;height:56px;margin:-56px -20px 0;cursor:grab;touch-action:none}
+.weed svg{width:100%;height:100%;display:block}
+.weed.gone{opacity:0;pointer-events:none}
+.weed-info{text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);margin-top:12px}
+
+/* =====================================================================
+   SLOT 6 — INTERAKTIF 2: Buah yang Dipetik (tarik ke samping)
+   ===================================================================== */
+#buah{background:linear-gradient(180deg,var(--bg),var(--card))}
+.fruit-scene{position:relative;height:180px;margin-top:12px}
+.fruit-scene svg.branch{position:absolute;left:50%;top:0;transform:translateX(-50%);width:180px;height:60px}
+.fruit{position:absolute;left:50%;top:48px;width:52px;height:52px;margin-left:-26px;cursor:grab;touch-action:none}
+.fruit svg{width:100%;height:100%;display:block}
+.fruit-halves{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:4px;opacity:0;transition:opacity .5s}
+.fruit-halves.show{opacity:1}
+.fruit-halves svg{width:38px;height:38px}
+.secret-sheet{position:relative;margin-top:18px;background:var(--card);border-radius:12px;padding:22px;box-shadow:0 7px 24px rgba(40,51,31,.09),inset 0 0 0 1px var(--hair);text-align:center}
+.secret-head{font-family:var(--hand);font-size:1.1rem;color:var(--muted);margin-bottom:8px}
+.secret-txt{font-family:var(--hand);font-size:1.4rem;line-height:1.35;color:#5A3A1E;transition:opacity .6s}
+.secret-foot{font-size:.72rem;color:var(--faint);margin-top:10px;font-style:italic}
+
+/* =====================================================================
+   SLOT 7 — SURAT
+   ===================================================================== */
+#surat{background:var(--card)}
+.lock{text-align:center;margin-top:18px;background:var(--bg);border-radius:20px;padding:24px 20px;box-shadow:inset 0 0 0 1px var(--hair)}
+.lock .ic{font-size:1.7rem}
+.lock h3{font-family:var(--disp);font-weight:600;font-size:1.1rem;margin-top:6px}
+.lock p{font-size:.84rem;color:var(--muted);margin-top:4px}
+.chips{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:13px 0 14px}
+.chips span{font-size:.75rem;font-weight:800;padding:5px 11px;border-radius:99px;background:var(--card);color:var(--faint);box-shadow:inset 0 0 0 1px var(--hair)}
+.chips span.on{background:var(--p);color:#fff;box-shadow:none}
+.skip{display:block;margin:12px auto 0;font-size:.78rem;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+.letter{display:none;position:relative;margin-top:20px;background:var(--card);border-radius:3px;padding:52px 22px 28px;box-shadow:0 14px 36px rgba(40,51,31,.14),inset 0 0 0 1px var(--hair)}
+.letter.show{display:block;animation:unfold .9s cubic-bezier(.2,.9,.3,1) both}
+@keyframes unfold{from{opacity:0;transform:translateY(18px) scaleY(.92);transform-origin:top center}}
+.letter::before{content:"";position:absolute;left:22px;right:22px;top:0;height:1px;background:var(--hair)}
+.lt-stamp{position:absolute;right:18px;top:-16px;width:60px;padding:4px;background:var(--bg);box-shadow:0 3px 10px rgba(40,51,31,.14)}
+.lt-stamp img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.lt-hello{font-family:var(--hand);font-size:1.75rem;color:var(--p);line-height:1.1;margin-bottom:12px}
+.letter p.par{font-family:var(--disp);font-weight:500;font-size:1.02rem;line-height:1.78;margin-bottom:15px;white-space:pre-line;opacity:0;transform:translateY(8px);transition:opacity 1s,transform 1s}
+.letter p.par.in{opacity:1;transform:none}
+.lt-sign{text-align:right;margin-top:18px;opacity:0;transition:opacity 1s}
+.lt-sign.in{opacity:1}
+.lt-sign small{display:block;font-size:.68rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.lt-sign b{font-family:var(--hand);font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1.1}
+
+/* =====================================================================
+   SLOT 8 — PENUTUP: Ditanam untuk Nanti
+   Satu bibit diseret dari pot ke petak tanah — satu-satunya tempat mark
+   Foreverse BOLEH muncul (sebagai papan nama kecil), tapi tidak wajib.
+   ===================================================================== */
+#tanam{background:linear-gradient(180deg,var(--card),var(--bg));padding-bottom:86px}
+.plant-scene{position:relative;width:min(300px,86vw);height:168px;margin:22px auto 0}
+.plant-pot{position:absolute;left:10%;bottom:0;width:90px;cursor:grab;touch-action:none}
+.plant-pot svg{width:100%;display:block}
+.plant-ground{position:absolute;right:6%;bottom:0;width:120px}
+.plant-ground svg{width:100%;display:block}
+.plant-ground.hover .gz{opacity:.9}
+.plant-hint{text-align:center;font-size:.8rem;font-weight:800;color:var(--muted);margin-top:14px;min-height:1.3em}
+.planted-note{display:none;text-align:center;font-family:var(--disp);font-style:italic;font-size:1.12rem;color:var(--ink);margin-top:16px;line-height:1.5}
+.planted-note.show{display:block;animation:fin .8s}
+.plant-tag{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%) scale(0);width:30px;opacity:0;transition:transform .5s cubic-bezier(.2,.9,.3,1.3),opacity .5s}
+.plant-tag.show{transform:translateX(-50%) scale(1);opacity:1}
+
+.end-acts{display:none;flex-direction:column;align-items:center;gap:11px;margin-top:26px}
+.end-acts.show{display:flex;animation:fin 1s}
+.wa{display:inline-flex;align-items:center;gap:8px;background:#25B864;color:#fff;font-weight:800;font-size:.92rem;padding:12px 22px;border-radius:999px;box-shadow:0 3px 0 #1A8A4A;text-decoration:none}
+.reply-box{width:min(330px,100%);background:var(--card);border-radius:16px;padding:13px;box-shadow:inset 0 0 0 1px var(--hair)}
+.reply-box label{display:block;font-size:.8rem;font-weight:800;margin-bottom:7px}
+.reply-box textarea{width:100%;min-height:72px;border:0;border-radius:11px;padding:10px 12px;font:inherit;font-size:.92rem;color:var(--ink);background:var(--bg);resize:none}
+.made{display:block;margin-top:30px;text-align:center;font-size:.76rem;color:var(--faint);text-decoration:none;line-height:1.6}
+.made b{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+@keyframes fin{from{opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
+.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:var(--bg);transition:opacity .4s}
+.memuat.pergi{opacity:0;pointer-events:none}
+.memuat-in{text-align:center;padding:24px;max-width:22rem}
+.memuat-in svg{opacity:.55;animation:mnaik 1.6s ease-in-out infinite}
+@keyframes mnaik{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.memuat-in p{margin:14px 0 0;font-size:.95rem;color:var(--muted);line-height:1.6;font-family:var(--sans)}
+.memuat.gagal svg{animation:none;opacity:.3}
+@media (prefers-reduced-motion: reduce){ .memuat-in svg{animation:none} }
+</style>
+</head>
+<body class="locked">
+
+<div id="memuat" class="memuat">
+  <div class="memuat-in">
+    <svg viewBox="0 0 64 48" width="52" height="39" aria-hidden="true">
+      <path d="M32 40V20" stroke="#28331F" stroke-width="3" stroke-linecap="round"/>
+      <path d="M32 22c-8 2-14-4-14-12 8 0 14 6 14 12z" fill="#4F7A3D"/>
+      <path d="M32 26c8 2 14-4 14-12-8 0-14 6-14 12z" fill="#D98C3D"/>
+    </svg>
+    <p id="memuatPesan">Menyemai benihnya…</p>
+  </div>
+</div>
+
+<div id="toast"></div>
+<button id="music" aria-label="Suara">🔊</button>
+
+<!-- ============ SLOT 1 — PEMBUKA: BENIH DI KANTUNG ============ -->
+<div id="open">
+  <div class="op-to"><small>Untuk</small><b data-f="penerima"></b></div>
+
+  <div class="seed-scene" id="seedScene">
+    <div class="seed-packet grab" id="seedPacket" role="button" tabindex="0" aria-label="Goyangkan kantungnya di atas pot sampai benihnya tumpah">
+      <svg viewBox="0 0 96 90" aria-hidden="true">
+        <path d="M14,18 L82,18 L76,86 L20,86 Z" fill="#F4E7C9" stroke="#28331F" stroke-width="2"/>
+        <path d="M14,18 L48,2 L82,18 Z" fill="#D98C3D" stroke="#28331F" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="48" cy="48" r="15" fill="#DEE9C6" stroke="#28331F" stroke-width="1.6"/>
+        <path d="M48,40c-4,1-7-2-7-6 4,0 7,3 7,6z" fill="#4F7A3D"/>
+        <path d="M48,42c4,1 7-2 7-6-4,0-7,3-7,6z" fill="#345226"/>
+      </svg>
+    </div>
+    <div class="seed-dust" id="seedDust"></div>
+    <div class="seed-pot">
+      <svg viewBox="0 0 130 70" aria-hidden="true">
+        <path d="M18,10 L112,10 L100,66 L30,66 Z" fill="#C9865A" stroke="#28331F" stroke-width="2"/>
+        <ellipse cx="65" cy="10" rx="47" ry="7" fill="#8A5A3B" stroke="#28331F" stroke-width="2"/>
+        <ellipse cx="65" cy="10" rx="36" ry="4.6" fill="#4A3221"/>
+      </svg>
+    </div>
+  </div>
+  <div class="progress-dots" id="seedDots"></div>
+  <div class="seed-hint" id="seedHint">goyangkan kantungnya di atas pot ↔</div>
+</div>
+
+<main>
+<!-- ============ SLOT 2 — GAME 1: SIRAM TERATUR ============ -->
+<section id="siram">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">sebelum tumbuh, perlu dirawat dulu</span>
+      <h2>Siram Teratur</h2>
+      <p class="lead">Ketuk tombol siram tepat saat tetesannya sampai di zona bawah.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D98C3D" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3v7M12 10l-4 9h8l-4-9z"/></svg></span>
+        <div><h3>Rawat benihnya</h3><p>Ketuk pas tetesannya sampai bawah</p></div>
+        <span class="tag" id="tagSiram">belum</span>
+      </div>
+      <div class="water-rig" id="waterRig">
+        <div class="water-track"></div>
+        <div class="water-zone"></div>
+        <div class="water-sprout" id="waterSprout">
+          <svg viewBox="0 0 60 60" aria-hidden="true">
+            <path d="M30,54V34" stroke="#28331F" stroke-width="3" stroke-linecap="round"/>
+            <path d="M30,38c-8,2-14-4-14-13 8,0 14,6 14,13z" fill="#4F7A3D"/>
+            <path d="M30,40c8,2 14-4 14-13-8,0-14,6-14,13z" fill="#6A9C53"/>
+          </svg>
+        </div>
+      </div>
+      <p class="water-count" id="waterCount">0 / 8</p>
+      <button class="btn water-btn" id="waterBtn" type="button">💧 Siram</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 3 — INTERAKTIF 1: KUNCUP YANG MEKAR ============ -->
+<section id="kuncup">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">tiga kuncup, masih menutup</span>
+      <h2>Kuncup yang Mekar</h2>
+      <p class="lead">Tekan dan tahan tiap kuncup sampai ia mekar sendiri.</p>
+    </div>
+    <div class="bud-row reveal" id="budRow"></div>
+    <p class="bud-cue">tahan sebentar di tiap kuncup</p>
+  </div>
+</section>
+
+<!-- ============ SLOT 4 — MOMEN KHAS: LINGKAR TAHUN ============ -->
+<section id="lingkar">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">satu lingkaran untuk satu tahun</span>
+      <h2 id="lgH"></h2>
+      <p class="lead">Ketuk batangnya berkali-kali sampai lingkaran barunya terbentuk.</p>
+    </div>
+    <div class="trunk-wrap reveal" id="trunkWrap">
+      <svg viewBox="0 0 200 200" id="trunkSvg" role="button" tabindex="0" aria-label="Ketuk berulang untuk menumbuhkan lingkaran tahun">
+        <circle cx="100" cy="100" r="92" fill="#F4E7C9" stroke="#8A5A3B" stroke-width="3"/>
+        <circle cx="100" cy="100" r="74" fill="none" stroke="#C9865A" stroke-width="2" opacity=".55"/>
+        <circle cx="100" cy="100" r="56" fill="none" stroke="#C9865A" stroke-width="2" opacity=".4"/>
+        <circle id="trunkNewRing" cx="100" cy="100" r="86" fill="none" stroke="#4F7A3D" stroke-width="7" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+        <g id="trunkFace" transform="translate(100 100)" opacity="0">
+          <text id="trunkNum" x="0" y="8" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="30" fill="#28331F">0</text>
+        </g>
+      </svg>
+      <p class="trunk-cue" id="trunkCue">ketuk untuk menumbuhkan lingkaran</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 5 — GAME 2: CABUT GULMA ============ -->
+<section id="gulma">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">bersihkan dulu sebelum tumbuh tinggi</span>
+      <h2>Cabut Gulma</h2>
+      <p class="lead">Tarik tiap gulma ke atas sampai akarnya tercabut.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#4F7A3D" stroke-width="1.8" stroke-linejoin="round"><path d="M12 4v10M8 18c0-3 1.8-5 4-5s4 2 4 5"/></svg></span>
+        <div><h3>Cabut 5 gulma</h3><p>Tarik lurus ke atas</p></div>
+        <span class="tag" id="tagGulma">belum</span>
+      </div>
+      <div class="weed-bed" id="weedBed"></div>
+      <p class="weed-info" id="weedInfo">Sisa: 5</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 6 — INTERAKTIF 2: BUAH YANG DIPETIK ============ -->
+<section id="buah">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">ada pesan yang baru terbaca kalau buahnya dipetik</span>
+      <h2>Buah yang Dipetik</h2>
+      <p class="lead">Tarik buahnya ke samping sampai lepas dari rantingnya.</p>
+    </div>
+    <div class="fruit-scene reveal" id="fruitScene">
+      <svg class="branch" viewBox="0 0 180 60" aria-hidden="true">
+        <path d="M0,20 Q90,2 180,20" fill="none" stroke="#8A5A3B" stroke-width="4" stroke-linecap="round"/>
+        <path d="M70,20 Q86,8 100,20" fill="none" stroke="#4F7A3D" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div class="fruit grab" id="fruit" role="button" tabindex="0" aria-label="Tarik buahnya ke samping untuk memetiknya">
+        <svg viewBox="0 0 52 52" aria-hidden="true">
+          <circle cx="26" cy="28" r="20" fill="#D98C3D" stroke="#A8631F" stroke-width="2"/>
+          <path d="M26,8V3" stroke="#4F7A3D" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="fruit-halves" id="fruitHalves">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20,2 A18,18 0 0,0 20,38 Z" fill="#F2C98A" stroke="#A8631F" stroke-width="2"/></svg>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20,2 A18,18 0 0,1 20,38 Z" fill="#F2C98A" stroke="#A8631F" stroke-width="2"/></svg>
+      </div>
+    </div>
+    <div class="secret-sheet reveal">
+      <div class="secret-head">P.S. —</div>
+      <p class="secret-txt" id="fruitSecret" data-f="rahasia" style="opacity:0"></p>
+      <p class="secret-foot" id="fruitFoot">masih di dalam buahnya</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLOT 7 — SURAT ============ -->
+<section id="surat">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">dan ini bagian yang sebenarnya</span>
+      <h2>Suratnya</h2>
+    </div>
+    <div class="lock reveal" id="lock">
+      <div class="ic">🌱</div>
+      <h3>Suratnya masih tersimpan</h3>
+      <p>Selesaikan dua permainan di atas untuk membukanya.</p>
+      <div class="chips"><span id="cSiram">Siram teratur</span><span id="cGulma">Cabut gulma</span></div>
+      <button class="btn" id="openLetter" type="button" disabled>Buka suratnya</button>
+      <button class="skip" id="skipGames" type="button">lewati permainan, langsung baca</button>
+    </div>
+    <article class="letter" id="letter">
+      <figure class="lt-stamp"><img id="ltStamp" alt=""></figure>
+      <div class="lt-hello" id="ltHello"></div>
+      <div id="ltPars"></div>
+      <div class="lt-sign" id="ltSign"><small>Dari</small><b data-f="pengirim"></b></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ SLOT 8 — PENUTUP: DITANAM UNTUK NANTI ============ -->
+<section id="tanam" hidden>
+  <div class="wrap center">
+    <div class="reveal in">
+      <span class="eyebrow">supaya terus tumbuh</span>
+      <h2>Tanam di tanah sungguhan</h2>
+      <p class="lead">Seret bibitnya dari pot ke petak tanah di sebelah.</p>
+    </div>
+    <div class="plant-scene">
+      <div class="plant-pot grab" id="plantPot" role="button" tabindex="0" aria-label="Seret bibitnya ke petak tanah">
+        <svg viewBox="0 0 90 84" aria-hidden="true">
+          <path d="M14,10 L76,10 L68,62 L22,62 Z" fill="#C9865A" stroke="#28331F" stroke-width="2"/>
+          <ellipse cx="45" cy="10" rx="32" ry="5.5" fill="#8A5A3B" stroke="#28331F" stroke-width="2"/>
+          <path d="M45,10V-4" stroke="#28331F" stroke-width="3" stroke-linecap="round"/>
+          <path d="M45,0c-6,1-10-3-10-9 6,0 10,4 10,9z" fill="#4F7A3D"/>
+          <path d="M45,2c6,1 10-3 10-9-6,0-10,4-10,9z" fill="#6A9C53"/>
+        </svg>
+      </div>
+      <div class="plant-ground" id="plantGround">
+        <svg viewBox="0 0 120 50" aria-hidden="true">
+          <ellipse class="gz" cx="60" cy="38" rx="48" ry="10" fill="#DCE6C5" stroke="#8A5A3B" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>
+        </svg>
+        <div class="plant-tag" id="plantTag">
+          <svg viewBox="0 0 30 34" aria-hidden="true">
+            <path d="M3,34V10l12-9 12,9v24z" fill="#F4E7C9" stroke="#28331F" stroke-width="1.6"/>
+            <path d="M8,16c0,5 2.8,8 6,9.5" stroke="#345226" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+            <path d="M22,16c0,5-2.8,8-6,9.5" stroke="#D98C3D" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <p class="plant-hint" id="plantHint">seret bibitnya ke petak tanah →</p>
+    <p class="planted-note" id="plantedNote"></p>
+
+    <div class="end-acts" id="endActs">
+      <div class="reply-box" id="replyBox" hidden>
+        <label for="replyTxt" id="replyLbl"></label>
+        <textarea id="replyTxt" maxlength="300"></textarea>
+      </div>
+      <a class="wa" id="waBtn" target="_blank" rel="noopener">Balas lewat WhatsApp</a>
+      <button class="btn ghost small" id="again" type="button">Baca lagi dari awal</button>
+      <a class="made" id="made" target="_blank" rel="noopener">Halaman ini dibuat dengan Foreverse<br><b>foreverse.id</b></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Mesin tema Benih & Pohon Cita-Cita × Graduation. Dipanggil sekali
+   (FV_MULAI()) setelah data (dari splice server atau pratinjau)
+   siap di variabel KADO.
+   ═══════════════════════════════════════════════════════════════ */
+function FV_MULAI(){
+'use strict';
+var D = KADO || {};
+D.lagu = D.lagu || {};
+D.lagu.src = D.lagu.src || D.lagu.file || "";
+D.foto = (D.foto || []).map(function(f){ return { src: f.src, caption: f.caption || f.ket || "" }; });
+
+var $=function(s,r){ return (r||document).querySelector(s); };
+var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
+var wait=function(ms){ return new Promise(function(r){ setTimeout(r,ms); }); };
+var rand=function(a,b){ return a+Math.random()*(b-a); };
+var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
+
+$$('[data-f]').forEach(function(n){
+  var v=n.dataset.f.split('.').reduce(function(o,k){ return o==null?o:o[k]; },D);
+  if(v!=null) n.textContent=v;
+});
+
+/* ---- jenjang: label tampil ---- */
+var JENJANG=({
+  sma:{label:'SMA/SMK'}, d3:{label:'D3'}, s1:{label:'S1'}, s2:{label:'S2'}, s3:{label:'S3'}
+})[D.jenjang]||{label:'S1'};
+
+/* ---- tahun wisuda: tanggal terdekat, supaya tetap benar walau dibuka H-2 ---- */
+var A=(function(){
+  var m=new Date((D.tanggalWisuda||'2022-01-01')+'T00:00:00');
+  var now=new Date(); now.setHours(0,0,0,0);
+  var best=null;
+  [-1,0,1].forEach(function(o){
+    var d=new Date(now.getFullYear()+o,m.getMonth(),m.getDate());
+    if(!best||Math.abs(d-now)<Math.abs(best-now)) best=d;
+  });
+  var tahun=best.getFullYear()-m.getFullYear(), hide=!!D.sembunyikanTahun;
+  return { hide:hide, tahun:tahun, date:best,
+    baru: hide?String(best.getFullYear()):String(Math.max(tahun,0)),
+    lama: hide?String(best.getFullYear()-1):String(Math.max(tahun-1,0)) };
+})();
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; });
+
+/* ---- suara dibuat browser, tanpa file ---- */
+var AC=null, muted=false;
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C) AC=new C(); } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||muted) return;
+  var t=a.currentTime+(o.when||0), v=o.vol||.14, osc=a.createOscillator(), g=a.createGain();
+  osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
+  if(o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide,t+dur);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t+dur+.05);
+}
+function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
+  var n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*dur,a.sampleRate), d=b.getChannelData(0);
+  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5);
+  var f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=freq;
+  var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.destination); n.start();
+}
+var SFX={
+  rustle:function(){ noise(.22,3400,.16); },
+  pop:function(){ tone(620,.08,{type:'sine',vol:.2}); tone(940,.1,{type:'sine',vol:.1,when:.05}); },
+  good:function(){ tone(660,.13); tone(880,.18,{when:.09}); },
+  bad:function(){ tone(185,.2,{type:'sawtooth',vol:.06}); },
+  thud:function(){ tone(120,.16,{type:'square',vol:.17}); tone(70,.22,{type:'sine',vol:.22,when:.02}); noise(.2,900,.3); },
+  snap:function(){ noise(.18,2200,.22); tone(240,.1,{type:'square',vol:.1}); },
+  chime:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.45,{when:i*.08,vol:.11}); }); },
+  tok:function(){ tone(340,.06,{type:'square',vol:.1}); },
+  win:function(){ [523,659,784,659,784,1046].forEach(function(f,i){ tone(f,.26,{when:i*.11}); }); }
+};
+function lagu(){
+  var N={G4:392,A4:440,B4:493.9,C5:523.3,D5:587.3,E5:659.3,F5:698.5,G5:784};
+  var s=[['C5',1],['E5',1],['G5',1],['C5',1.5],['G5',.5],['E5',1],['C5',2],
+         ['D5',1],['F5',1],['A4',1],['D5',1.5],['A4',.5],['F5',1],['D5',2],
+         ['E5',1],['G5',1],['C5',1],['G5',2],['F5',1],['D5',1],['C4',3]];
+  duck(true); var t=0;
+  s.forEach(function(p){ tone(N[p[0]]||260,p[1]*.38,{when:t,vol:.2}); t+=p[1]*.4; });
+  setTimeout(function(){ duck(false); }, t*1000+300);
+}
+
+/* ---- lagu latar: unggahan pembeli, atau kotak musik bawaan ---- */
+function musicBox(){
+  var a=ac(); if(!a) return null;
+  var gain=a.createGain(); gain.gain.value=.11; gain.connect(a.destination);
+  var notes=[60,64,67,72,67,64, 62,65,69,74,69,65, 60,64,67,71,67,64, 57,60,65,69,72,69];
+  var step=.36, t0=a.currentTime+.1, n=0, timer=null, berhenti=false;
+  function ping(midi,t){
+    var o=a.createOscillator(), g=a.createGain();
+    o.type='sine'; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.9,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+1.4);
+    o.connect(g); g.connect(gain); o.start(t); o.stop(t+1.5);
+  }
+  (function loop(){
+    if(berhenti) return;
+    while(t0 < a.currentTime+1.2){ ping(notes[n%notes.length],t0); t0+=step; n++; }
+    timer=setTimeout(loop,300);
+  })();
+  return { gain:gain, stop:function(){ berhenti=true; clearTimeout(timer); } };
+}
+var MU=(function(){
+  var L=D.lagu||{}, has=!!(L.src&&String(L.src).trim()), audio=has?new Audio():null;
+  var st=+L.mulai||0, en=+L.selesai||0, vol=.72, playing=false, synth=null;
+  if(audio){ audio.src=L.src; audio.preload='auto'; audio.loop=!en;
+    audio.addEventListener('timeupdate',function(){ if(en>st&&audio.currentTime>=en) audio.currentTime=st; });
+    audio.addEventListener('ended',function(){ audio.currentTime=st; audio.play().catch(function(){}); }); }
+  return { has:has, audio:audio,
+    play:function(){
+      if(audio){
+        try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+        if(!playing){ try{ audio.currentTime=st; }catch(e){} }
+        audio.volume=0; audio.muted=muted;
+        audio.play().then(function(){ playing=true; var v=0, t=setInterval(function(){ v+=.05; if(v>=vol){v=vol;clearInterval(t);} audio.volume=v; },90); }).catch(function(){});
+        return;
+      }
+      if(!synth) synth=musicBox();
+    },
+    duck:function(on){ if(audio) audio.volume=on?.12:vol; else if(synth) synth.gain.gain.value=on?.03:.11; } };
+})();
+function duck(on){ MU.duck(on); }
+$('#music').onclick=function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; if(MU.audio) MU.audio.muted=muted; try{ if(AC) muted?AC.suspend():AC.resume(); }catch(e){} };
+if(MU.has) $('#music').classList.add('on');
+
+var tt;
+function toast(m,ms){ var t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){ t.classList.remove('show'); }, ms||2400); }
+
+/* ---- konfeti (serpihan daun & madu, bukan kotak biasa) ---- */
+var FX=(function(){
+  var cv,ctx,P=[],run=false,W,H;
+  var COL=['#4F7A3D','#D98C3D','#FFFEF8','#28331F','#DEE9C6','#8AB06E'];
+  function ensure(){ if(cv) return; cv=el('canvas'); cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:250;display:none'; document.body.appendChild(cv); }
+  function start(){ ensure(); if(run) return; run=true;
+    var d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
+    cv.width=W*d; cv.height=H*d; cv.style.display='block'; ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
+    requestAnimationFrame(loop); }
+  function loop(){ ctx.clearRect(0,0,W,H);
+    P=P.filter(function(p){ return p.life>0&&p.y<H+40; });
+    P.forEach(function(p){ p.vx*=.99; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.life--;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.globalAlpha=Math.min(1,p.life/40); ctx.fillStyle=p.c;
+      if(p.s2===0) ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);
+      else { ctx.beginPath(); ctx.arc(0,0,p.s/3,0,7); ctx.fill(); }
+      ctx.restore(); });
+    if(P.length) return requestAnimationFrame(loop);
+    run=false; cv.style.display='none'; cv.width=1; cv.height=1; }
+  function add(a){ P=P.concat(a).slice(-160); start(); }
+  return {
+    burst:function(x,y,n,pw){ n=n||70; pw=pw||8; var a=[];
+      for(var i=0;i<Math.min(n,90);i++){ var t=rand(0,Math.PI*2), s=rand(pw*.3,pw);
+        a.push({x:x,y:y,vx:Math.cos(t)*s,vy:Math.sin(t)*s-3,g:.22,s:rand(5,9),r:rand(0,6),vr:rand(-.25,.25),c:COL[i%COL.length],s2:i%2,life:rand(80,140)}); }
+      add(a); },
+    shower:function(n){ n=n||100; var a=[];
+      for(var i=0;i<Math.min(n,110);i++) a.push({x:rand(0,innerWidth),y:rand(-innerHeight*.6,-10),vx:rand(-1,1),vy:rand(2,5),g:.05,s:rand(6,10),r:rand(0,6),vr:rand(-.2,.2),c:COL[i%COL.length],s2:i%2,life:240});
+      add(a); },
+    at:function(node,n){ var r=node.getBoundingClientRect(); this.burst(r.left+r.width/2,r.top+r.height/2,n||70,10); }
+  };
+})();
+
+/* ---- muncul saat discroll ---- */
+var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+$$('.reveal').forEach(function(n){ io.observe(n); });
+
+function noMenu(node){ node.addEventListener('contextmenu',function(e){ e.preventDefault(); return false; }); }
+document.addEventListener('contextmenu',function(e){
+  var t=e.target;
+  if(t&&t.closest&&t.closest('.btn,.press,.grab,.bud,.weed,.fruit,canvas,img,svg')){ e.preventDefault(); }
+},true);
+document.addEventListener('dragstart',function(e){
+  if(e.target&&e.target.tagName==='IMG') e.preventDefault();
+},true);
+
+/* =====================================================================
+   SLOT 1 — PEMBUKA: BENIH DI KANTUNG
+   Goyangkan kantungnya ke kiri-kanan (dihitung tiap kali arahnya
+   berbalik) — bukan menarik atau menekan-tahan seperti tema lain.
+   ===================================================================== */
+(function(){
+  var packet=$('#seedPacket'), dust=$('#seedDust'), hint=$('#seedHint'), dots=$('#seedDots');
+  var NEED=5, count=0, opened=false, down=false, lastX=0, dir=0, armed=true;
+  for(var i=0;i<NEED;i++) dots.appendChild(el('span'));
+  function markDots(){ $$('span',dots).forEach(function(s,i){ s.classList.toggle('on', i<count); }); }
+  noMenu(packet);
+  packet.addEventListener('pointerdown',function(e){
+    if(opened) return; down=true; ac(); lastX=e.clientX; dir=0; armed=true;
+    try{ packet.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  packet.addEventListener('pointermove',function(e){
+    if(!down||opened) return;
+    var dx=e.clientX-lastX;
+    if(Math.abs(dx)>16 && armed){
+      var nd = dx>0?1:-1;
+      if(nd!==dir && dir!==0){
+        count=Math.min(NEED,count+1); markDots(); SFX.rustle(); buzz(8);
+        packet.classList.remove('pour'); void packet.offsetWidth; packet.classList.add('pour');
+        dust.classList.add('show'); setTimeout(function(){ dust.classList.remove('show'); },300);
+        armed=false; setTimeout(function(){ armed=true; },90);
+        if(count>=NEED) finish();
+      }
+      dir=nd; lastX=e.clientX;
+    }
+  });
+  function up(){ down=false; }
+  packet.addEventListener('pointerup',up);
+  packet.addEventListener('pointercancel',up);
+  packet.addEventListener('keydown',function(e){
+    if((e.key==='Enter'||e.key===' ')&&!opened){ e.preventDefault(); count=NEED; markDots(); finish(); }
+  });
+
+  function finish(){
+    if(opened) return; opened=true;
+    SFX.pop(); buzz([18,20,18]);
+    hint.textContent='benihnya tumpah ke potnya 🌱';
+    MU.play();
+    setTimeout(function(){
+      FX.burst(innerWidth/2,innerHeight*.5,90,9); FX.shower(70); SFX.chime();
+    },280);
+    setTimeout(function(){
+      $('#open').classList.add('gone');
+      document.body.classList.remove('locked');
+      document.body.classList.add('opened');
+    },1200);
+    setTimeout(function(){ var o=$('#open'); o&&o.remove(); },2100);
+  }
+})();
+
+/* =====================================================================
+   SLOT 2 — GAME 1: SIRAM TERATUR
+   Tetesan turun terus-menerus; ketuk tombol siram pas tetesannya ada
+   di zona bawah — bukan tangkap benda jatuh maupun seret bebas.
+   ===================================================================== */
+var DONE={siram:false,gulma:false};
+function markDone(k){
+  if(DONE[k]) return; DONE[k]=true;
+  var tagId=k==='siram'?'#tagSiram':'#tagGulma', chipId=k==='siram'?'#cSiram':'#cGulma';
+  $(tagId).textContent='selesai'; $(tagId).classList.add('on');
+  $(chipId).classList.add('on');
+  if(DONE.siram&&DONE.gulma){ $('#openLetter').disabled=false; $('#skipGames').hidden=true; toast('Suratnya sudah bisa dibuka'); }
+}
+(function(){
+  var rig=$('#waterRig'), drop=null, sprout=$('#waterSprout'), count=$('#waterCount'), btn=$('#waterBtn');
+  var NEED=8, RIG_TOP=14, ZONE_TOP=0, DUR=1250, hits=0, t0=0, active=false, raf=null, finished=false;
+  var H=190, ZB=44, ZH=30;
+  ZONE_TOP = H-ZB-ZH;
+
+  function spawn(){
+    drop=el('div','water-drop'); rig.appendChild(drop);
+    t0=performance.now(); active=true;
+    raf=requestAnimationFrame(step);
+  }
+  function step(now){
+    if(!active) return;
+    var p=Math.min(1,(now-t0)/DUR);
+    var y=RIG_TOP + p*(H-RIG_TOP-18);
+    drop.style.top=y+'px';
+    if(p>=1){ miss(); return; }
+    raf=requestAnimationFrame(step);
+  }
+  function inZone(){
+    if(!drop||!active) return false;
+    var y=parseFloat(drop.style.top||'0');
+    return y >= ZONE_TOP-10 && y <= ZONE_TOP+ZH+6;
+  }
+  function clearDrop(){ cancelAnimationFrame(raf); active=false; if(drop){ drop.remove(); drop=null; } }
+  function hit(){
+    if(finished) return;
+    clearDrop(); hits=Math.min(NEED,hits+1);
+    count.textContent=hits+' / '+NEED;
+    var gs=Math.min(1,.72+hits*.035); sprout.style.setProperty('--gs',gs);
+    SFX.good(); buzz(14);
+    if(hits>=NEED){ finish(); return; }
+    setTimeout(spawn,260);
+  }
+  function miss(){
+    if(finished) return;
+    clearDrop(); SFX.bad();
+    setTimeout(spawn,220);
+  }
+  btn.addEventListener('click',function(){
+    if(finished) return;
+    if(!drop){ return; }
+    if(inZone()) hit(); else miss();
+  });
+  function finish(){
+    if(finished) return; finished=true;
+    btn.disabled=true;
+    SFX.win(); FX.at(rig,60);
+    markDone('siram');
+  }
+  spawn();
+})();
+
+/* =====================================================================
+   SLOT 3 — INTERAKTIF 1: KUNCUP YANG MEKAR
+   Tekan dan tahan tiap kuncup (maksimal ±1.2 detik) sampai mekar sendiri
+   — bukan tap-flip kartu, bukan ketukan sekali jadi.
+   ===================================================================== */
+(function(){
+  var row=$('#budRow');
+  if(!FOTO.length){ $('#kuncup').hidden=true; return; }
+  var HOLD=1150;
+  FOTO.slice(0,3).forEach(function(f,idx){
+    var wrap=el('div','bud');
+    var shape=el('div','bud-shape');
+    var ringWrap=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    ringWrap.setAttribute('viewBox','0 0 104 104'); ringWrap.setAttribute('class','bud-ring');
+    var circ=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circ.setAttribute('cx','52'); circ.setAttribute('cy','52'); circ.setAttribute('r','49');
+    var circumf=2*Math.PI*49;
+    circ.setAttribute('stroke-dasharray',String(circumf));
+    circ.setAttribute('stroke-dashoffset',String(circumf));
+    ringWrap.appendChild(circ);
+    var icon=el('div','bud-icon'); icon.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#4F7A3D" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 8c0-3 2-5 5-5-0 3-2 5-5 5zM12 8c0-3-2-5-5-5 0 3 2 5 5 5zM12 16c0 3 2 5 5 5 0-3-2-5-5-5zM12 16c0 3-2 5-5 5 0-3 2-5 5-5z"/></svg>';
+    var photo=el('div','bud-photo'); var img=el('img'); img.src=f.src; img.alt=''; img.loading='lazy'; photo.appendChild(img);
+    shape.appendChild(ringWrap); shape.appendChild(icon); shape.appendChild(photo);
+    var cap=el('span','bud-cap', f.caption || '');
+    wrap.appendChild(shape); wrap.appendChild(cap);
+    row.appendChild(wrap);
+
+    var down=false, t0=0, raf=null, opened=false;
+    noMenu(wrap);
+    function step(now){
+      if(!down||opened) return;
+      var p=Math.min(1,(now-t0)/HOLD);
+      circ.setAttribute('stroke-dashoffset',String(circumf*(1-p)));
+      if(p>=1){ open(); return; }
+      raf=requestAnimationFrame(step);
+    }
+    function start(e){
+      if(opened) return; down=true; ac(); t0=performance.now();
+      try{ wrap.setPointerCapture(e.pointerId); }catch(err){}
+      raf=requestAnimationFrame(step);
+    }
+    function cancel(){
+      if(!down||opened) return; down=false; cancelAnimationFrame(raf);
+      circ.setAttribute('stroke-dashoffset',String(circumf));
+    }
+    function open(){
+      if(opened) return; opened=true; down=false; cancelAnimationFrame(raf);
+      shape.style.borderRadius='38%'; wrap.classList.add('open');
+      SFX.pop(); buzz(16); FX.at(shape,40);
+    }
+    wrap.addEventListener('pointerdown',start);
+    wrap.addEventListener('pointerup',cancel);
+    wrap.addEventListener('pointercancel',cancel);
+    wrap.addEventListener('pointerleave',cancel);
+    wrap.addEventListener('keydown',function(e){
+      if((e.key==='Enter'||e.key===' ')&&!opened){ e.preventDefault(); open(); }
+    });
+  });
+})();
+
+/* =====================================================================
+   SLOT 4 — MOMEN KHAS: LINGKAR TAHUN
+   Ketuk berulang (tanpa jatah, tanpa jadwal) sampai lingkarannya penuh
+   — bukan tekan-tahan tunggal, bukan putar dial.
+   ===================================================================== */
+(function(){
+  var svg=$('#trunkSvg'), ring=$('#trunkNewRing'), face=$('#trunkFace'), num=$('#trunkNum'), cue=$('#trunkCue');
+  var NEED=8, taps=0, done=false;
+  var r=86, circumf=2*Math.PI*r;
+  ring.setAttribute('stroke-dasharray',String(circumf));
+  ring.setAttribute('stroke-dashoffset',String(circumf));
+  $('#lgH').textContent = A.hide ? 'lingkaran baru di batangnya' : 'tahun ke-'+A.baru+' sejak lulus '+JENJANG.label;
+  num.textContent = A.lama;
+
+  function tap(){
+    if(done) return;
+    taps=Math.min(NEED,taps+1);
+    ring.setAttribute('stroke-dashoffset', String(circumf*(1-taps/NEED)));
+    SFX.tok(); buzz(6);
+    cue.textContent = taps<NEED ? 'ketuk lagi…' : 'lingkarannya terbentuk';
+    if(taps>=NEED) finish();
+  }
+  svg.addEventListener('pointerdown',function(e){ e.preventDefault(); tap(); });
+  svg.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tap(); } });
+
+  function finish(){
+    if(done) return; done=true;
+    SFX.thud(); buzz(40);
+    ring.style.stroke='#345226';
+    setTimeout(function(){
+      face.setAttribute('opacity','1');
+      num.textContent=A.lama; SFX.pop();
+    },200);
+    setTimeout(function(){
+      num.textContent=A.baru; SFX.chime();
+      FX.at(svg,70);
+    },900);
+  }
+})();
+
+/* =====================================================================
+   SLOT 5 — GAME 2: CABUT GULMA
+   Tarik tiap gulma lurus ke ATAS (bukan ke bawah/ke samping seperti
+   gestur lain) sampai akarnya tercabut dan terbang.
+   ===================================================================== */
+(function(){
+  var bed=$('#weedBed'), info=$('#weedInfo');
+  var N=5, left=N, pts=[];
+  function jitter(){
+    var tries=0;
+    while(tries++<50){
+      var x=rand(14,86), y=rand(22,78);
+      var ok=pts.every(function(p){ return Math.hypot(p.x-x,p.y-y)>20; });
+      if(ok) return {x:x,y:y};
+    }
+    return {x:rand(14,86),y:rand(22,78)};
+  }
+  for(var i=0;i<N;i++) pts.push(jitter());
+
+  pts.forEach(function(p){
+    var w=el('div','weed');
+    w.style.left=p.x+'%'; w.style.top=p.y+'%';
+    w.innerHTML='<svg viewBox="0 0 40 56" aria-hidden="true">'+
+      '<path d="M20,56V30" stroke="#28331F" stroke-width="2.4" stroke-linecap="round"/>'+
+      '<path d="M20,30c-10,2-16-5-16-14 10,0 16,7 16,14z" fill="#7A9A4F"/>'+
+      '<path d="M20,32c10,2 16-5 16-14-10,0-16,7-16,14z" fill="#8FB065"/>'+
+      '</svg>';
+    bed.appendChild(w);
+
+    var down=false, sy=0, startTop=0, done=false;
+    noMenu(w);
+    w.addEventListener('pointerdown',function(e){
+      if(done) return; down=true; ac(); sy=e.clientY;
+      w.style.transition='';
+      try{ w.setPointerCapture(e.pointerId); }catch(err){}
+    });
+    w.addEventListener('pointermove',function(e){
+      if(!down||done) return;
+      var up=sy-e.clientY; // positif kalau jari bergerak ke ATAS
+      var d=Math.max(0,up);
+      w.style.transform='translateY('+(-d)+'px)';
+      w.style.opacity=String(Math.max(.15,1-d/70));
+      if(d>66) pull();
+    });
+    function reset(){
+      if(down&&!done){ w.style.transition='transform .25s,opacity .25s'; w.style.transform=''; w.style.opacity=''; }
+      down=false;
+    }
+    w.addEventListener('pointerup',reset);
+    w.addEventListener('pointercancel',reset);
+    w.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!done){ e.preventDefault(); pull(); } });
+
+    function pull(){
+      if(done) return; done=true; down=false;
+      w.style.transition='transform .3s ease-in,opacity .3s';
+      w.style.transform='translateY(-120px) rotate(-12deg)';
+      w.style.opacity='0';
+      w.classList.add('gone');
+      SFX.snap(); buzz(16);
+      left=Math.max(0,left-1);
+      info.textContent = left>0 ? 'Sisa: '+left : 'Bersih — tanahnya siap!';
+      if(left<=0){ SFX.win(); FX.at(bed,70); markDone('gulma'); }
+    }
+  });
+})();
+
+/* =====================================================================
+   SLOT 6 — INTERAKTIF 2: BUAH YANG DIPETIK
+   Tarik buahnya ke SAMPING (mendatar) sampai lepas — bukan ke atas
+   seperti gulma, bukan ke bawah seperti ritual segel tema lain.
+   ===================================================================== */
+(function(){
+  var fruit=$('#fruit'), halves=$('#fruitHalves'), secret=$('#fruitSecret'), foot=$('#fruitFoot');
+  if(!secret.textContent.trim()){ $('#buah').hidden=true; return; }
+  var NEED=90, down=false, sx=0, picked=false;
+  noMenu(fruit);
+  fruit.addEventListener('pointerdown',function(e){
+    if(picked) return; down=true; ac(); sx=e.clientX;
+    fruit.style.transition='';
+    try{ fruit.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  fruit.addEventListener('pointermove',function(e){
+    if(!down||picked) return;
+    var dx=e.clientX-sx;
+    fruit.style.transform='translateX('+dx+'px) rotate('+(dx/8)+'deg)';
+    if(Math.abs(dx)>NEED) pick();
+  });
+  function reset(){
+    if(down&&!picked){ fruit.style.transition='transform .25s'; fruit.style.transform=''; }
+    down=false;
+  }
+  fruit.addEventListener('pointerup',reset);
+  fruit.addEventListener('pointercancel',reset);
+  fruit.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!picked){ e.preventDefault(); pick(); } });
+
+  function pick(){
+    if(picked) return; picked=true; down=false;
+    fruit.style.transition='transform .3s ease-in,opacity .3s';
+    fruit.style.transform='translate(90px,40px) rotate(30deg)';
+    fruit.style.opacity='0';
+    SFX.snap(); buzz(20);
+    setTimeout(function(){
+      halves.classList.add('show'); SFX.thud();
+    },280);
+    setTimeout(function(){
+      secret.style.opacity='1'; foot.textContent='— cuma kebaca setelah buahnya dipetik';
+      SFX.chime(); FX.at(halves,50);
+    },620);
+  }
+})();
+
+/* =====================================================================
+   SLOT 7 — SURAT
+   ===================================================================== */
+(function(){
+  var lock=$('#lock'), letter=$('#letter'), opened=false;
+  if(FOTO[0]) $('#ltStamp').src=FOTO[0].src; else $('.lt-stamp').hidden=true;
+  $('#ltHello').textContent='Hai '+(D.penerima||'')+',';
+  var pars=(D.surat||[]).filter(function(t){ return t; });
+  var nodes=pars.map(function(t){ var p=el('p','par',t); $('#ltPars').appendChild(p); return p; });
+
+  async function open(){
+    if(opened) return; opened=true;
+    ac(); SFX.rustle(); MU.play();
+    lock.style.transition='opacity .5s,transform .5s'; lock.style.opacity='0'; lock.style.transform='scale(.97)';
+    setTimeout(function(){ lock.hidden=true; },520);
+    await wait(420);
+    letter.classList.add('show');
+    letter.scrollIntoView({behavior:'smooth',block:'start'});
+    for(var i=0;i<nodes.length;i++){
+      await wait(850);
+      nodes[i].classList.add('in');
+      await wait(Math.min(4200,900+nodes[i].textContent.length*22));
+    }
+    await wait(500); $('#ltSign').classList.add('in');
+    await wait(1100);
+    $('#tanam').hidden=false;
+    await wait(400);
+    $('#tanam').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  $('#openLetter').onclick=open;
+  $('#skipGames').onclick=open;
+})();
+
+/* =====================================================================
+   SLOT 8 — PENUTUP: DITANAM UNTUK NANTI
+   Satu bibit diseret dari pot ke SATU petak tanah tetap — bukan
+   mencocokkan beberapa keping ke beberapa penanda (Susun Rute), dan
+   bukan segel lilin tarik-vertikal milik tema lain.
+   ===================================================================== */
+(function(){
+  var pot=$('#plantPot'), ground=$('#plantGround'), tag=$('#plantTag'), hint=$('#plantHint'), planted=false;
+  noMenu(pot);
+  var ox=0,oy=0,sx=0,sy=0,down=false;
+  pot.addEventListener('pointerdown',function(e){
+    if(planted) return; down=true; ac();
+    var r=pot.getBoundingClientRect();
+    ox=r.left; oy=r.top; sx=e.clientX; sy=e.clientY;
+    pot.style.position='fixed'; pot.style.left=ox+'px'; pot.style.top=oy+'px'; pot.style.bottom='auto'; pot.style.height=r.height+'px'; pot.style.zIndex='40';
+    try{ pot.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  pot.addEventListener('pointermove',function(e){
+    if(!down||planted) return;
+    var nx=ox+e.clientX-sx, ny=oy+e.clientY-sy;
+    pot.style.left=nx+'px'; pot.style.top=ny+'px';
+    var gr=ground.getBoundingClientRect(), pr=pot.getBoundingClientRect();
+    var near=Math.hypot((pr.left+pr.width/2)-(gr.left+gr.width/2),(pr.top+pr.height*.7)-(gr.top+gr.height*.6)) < 70;
+    ground.classList.toggle('hover', near);
+    if(near) hint.textContent='lepas di sini';
+    else hint.textContent='seret bibitnya ke petak tanah →';
+  });
+  function drop(e){
+    if(!down||planted) return; down=false;
+    var gr=ground.getBoundingClientRect(), pr=pot.getBoundingClientRect();
+    var near=Math.hypot((pr.left+pr.width/2)-(gr.left+gr.width/2),(pr.top+pr.height*.7)-(gr.top+gr.height*.6)) < 70;
+    if(near){ plant(); }
+    else {
+      pot.style.transition='left .3s,top .3s';
+      pot.style.left=ox+'px'; pot.style.top=oy+'px';
+      setTimeout(function(){ pot.style.transition=''; },310);
+      ground.classList.remove('hover');
+    }
+  }
+  pot.addEventListener('pointerup',drop);
+  pot.addEventListener('pointercancel',drop);
+  pot.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!planted){ e.preventDefault(); plant(); } });
+
+  function plant(){
+    if(planted) return; planted=true; down=false;
+    ground.classList.remove('hover');
+    pot.style.transition='opacity .4s'; pot.style.opacity='0';
+    SFX.thud(); buzz(50);
+    setTimeout(function(){
+      tag.classList.add('show'); SFX.pop();
+    },420);
+    setTimeout(function(){
+      SFX.chime(); FX.at(ground,70);
+      hint.textContent='tertanam';
+      $('#plantedNote').textContent='Bibitnya sudah di tanah. Yang kecil ini, pelan-pelan akan jadi besar.';
+      $('#plantedNote').classList.add('show');
+    },900);
+    setTimeout(function(){ $('#endActs').classList.add('show'); },1700);
+  }
+
+  var wa=String(D.waPengirim||'').replace(/\D/g,'');
+  if(wa.charAt(0)==='0') wa='62'+wa.slice(1);
+  if(wa.length>=10){
+    $('#replyBox').hidden=false; $('#waBtn').hidden=false;
+    $('#replyLbl').textContent='Mau balas ke '+(D.pengirim||'')+'?';
+    $('#replyTxt').value='Udah aku baca semua. Makasih ya 🤍';
+    $('#waBtn').addEventListener('click',function(e){
+      this.href='https://wa.me/'+wa+'?text='+encodeURIComponent($('#replyTxt').value);
+    });
+    $('#waBtn').href='https://wa.me/'+wa;
+  } else {
+    $('#waBtn').hidden=true;
+  }
+  $('#again').onclick=function(){ location.reload(); };
+  var fu='https://foreverse.id';
+  $('#made').href=fu+'?ref=graduation-benih';
+})();
+
+}
+window.FV_MULAI = FV_MULAI;
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   Pemuat: ambil isi surat, lalu jalankan tampilannya.
+   Data DITULIS LANGSUNG oleh server (worker.js) ke dalam blok
+   <script id="foreverse-data"> di atas sebelum halaman ini dikirim.
+   ══════════════════════════════════════════════════════════════ */
+(function(){
+  "use strict";
+  var tirai = document.getElementById("memuat");
+
+  function gagal(t){
+    if(!tirai) return;
+    tirai.classList.add("gagal");
+    document.getElementById("memuatPesan").textContent = t;
+  }
+  function tutupTirai(){ if(tirai){ tirai.classList.add("pergi"); setTimeout(function(){ tirai.remove(); },420); } }
+
+  function pasang(data){
+    window.KADO = Object.assign({
+      penerima:"", pengirim:"", jenjang:"s1",
+      tanggalWisuda:"", sembunyikanTahun:false,
+      foto:[], rahasia:"", surat:["","",""],
+      lagu:{file:"",mulai:0,selesai:0}, waPengirim:""
+    }, data || {});
+  }
+
+  function siapkanFoto(daftar){
+    var tugas = (daftar || []).filter(function(f){ return f && f.src; }).map(function(f){
+      return new Promise(function(beres){
+        var im = new Image();
+        im.onload = function(){ (im.decode ? im.decode() : Promise.resolve()).then(beres, beres); };
+        im.onerror = beres;
+        im.src = f.src;
+      });
+    });
+    var batas = new Promise(function(beres){ setTimeout(beres, 12000); });
+    return Promise.race([Promise.all(tugas), batas]);
+  }
+
+  var mentah = null;
+  try{ mentah = document.getElementById("foreverse-data").textContent; }catch(e){}
+  var data = null;
+  try{ data = JSON.parse(mentah || "{}"); }catch(e){ data = {}; }
+
+  if(!data || !data.penerima){
+    gagal("Suratnya tidak bisa dibuka sekarang. Minta tautan yang benar ke pengirimnya, ya.");
+    return;
+  }
+
+  pasang(data);
+  siapkanFoto(window.KADO.foto).then(function(){
+    FV_MULAI();
+    tutupTirai();
+  });
+})();
+</script>
+</body>
+</html>

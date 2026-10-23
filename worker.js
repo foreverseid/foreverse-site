@@ -74,13 +74,14 @@ export default {
         return await ambilHalaman(env, url.origin, "pesan", request);
 
       /* ── alamat pendek: /s/<kode> ──
-         Tiga mesin tema (surat.html = Bait, kado-riang.html,
-         langit-harapan.html) berbagi alamat /s/<kode> yang sama.
-         Temanya dilihat dulu di D1, baru file yang cocok disajikan.
-         Bait tetap mengambil datanya sendiri lewat fetch client-side
-         (lihat surat.html) — dua mesin baru datanya ditulis langsung
-         di sini, karena mesinnya membaca data secara serentak (tanpa
-         fetch) saat halamannya baru dibuka. */
+         Semua mesin tema (surat.html = Bait, kado-riang.html,
+         langit-harapan.html, peta-perjalanan.html, zona-waktu.html,
+         graduation-benih.html) berbagi alamat /s/<kode> yang sama.
+         Temanya dilihat dulu di D1,
+         baru file yang cocok disajikan. Bait tetap mengambil datanya
+         sendiri lewat fetch client-side (lihat surat.html) — mesin-mesin
+         lain datanya ditulis langsung di sini, karena mesinnya membaca
+         data secara serentak (tanpa fetch) saat halamannya baru dibuka. */
       if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) {
         const kode = p.split("/")[2];
         let baris = null;
@@ -101,6 +102,7 @@ export default {
           : tema === "langit-harapan" ? "langit-harapan"
           : tema === "peta-perjalanan" ? "peta-perjalanan"
           : tema === "zona-waktu" ? "zona-waktu"
+          : tema === "graduation-benih" ? "graduation-benih"
           : "surat";
         const r = await ambilHalaman(env, url.origin, nama, request);
 
