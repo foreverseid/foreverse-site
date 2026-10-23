@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE6">
+<meta name="robots" content="noindex, nofollow">
+<title>Jamnya beda, tapi ini untukmu</title>
+<meta property="og:title" content="Ada sesuatu dari seberang jam">
+<meta property="og:description" content="Buka pelan-pelan, ya.">
+<meta property="og:image" content="https://foreverse.id/og-zona-waktu.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- =====================================================================
+     FOREVERSE · LDR · Tema "Zona Waktu"
+     Semua isi pesanan ada di blok DATA di bawah. Tidak perlu menyentuh
+     bagian lain. (Form pesanan cukup menulis ulang blok ini.)
+     ===================================================================== -->
+<script id="foreverse-data" type="application/json">
+{
+  "tema": "zona-waktu",
+  "penerima": "",
+  "pengirim": "",
+  "kotaPenerima": "jakarta",
+  "kotaPengirim": "jakarta",
+  "foto": [],
+  "surat": [
+    "",
+    "",
+    ""
+  ],
+  "rahasia": "",
+  "waPengirim": "",
+  "lagu": {
+    "src": "",
+    "judul": "",
+    "artis": "",
+    "mulai": 0,
+    "selesai": 0
+  },
+  "foreverseUrl": "https://foreverse.id"
+}
+</script>
+<script>
+(function(){
+  try{
+    if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
+      var mentah = sessionStorage.getItem("fv-pratinjau");
+      if(mentah) document.getElementById("foreverse-data").textContent = mentah;
+    }
+  }catch(e){}
+})();
+</script>
+
+<style>
+/* =====================================================================
+   PALET TEMA — Zona Waktu: senja yang bertemu pagi. Bukan cream/coral
+   (Bait), bukan teal/terakota (Peta Perjalanan), bukan emas/pink
+   (Kado Riang) atau biru-malam/emas (Langit Harapan).
+   ===================================================================== */
+:root{
+  --bg:#F4EFE6;
+  --card:#FFFBF5;
+  --ink:#20223A;
+  --muted:rgba(32,34,58,.62);
+  --faint:rgba(32,34,58,.26);
+  --hair:rgba(32,34,58,.13);
+  --p:#4C5FD6;
+  --p-dk:#333F99;
+  --a1:#F2A65A;
+  --a1-dk:#C97E2E;
+  --soft:#E4E6F5;
+  --soft-lt:#EDEFF9;
+  --disp:'Fraunces',Georgia,serif;
+  --hand:'Caveat',cursive;
+  --sans:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--ink);background:var(--bg);overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden;height:100vh}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{max-width:520px;margin:0 auto;padding:0 20px}
+section{position:relative;padding:50px 0}
+.center{text-align:center}
+.eyebrow{font-family:var(--hand);font-size:1.3rem;color:var(--p);display:block;line-height:1.1;margin-bottom:2px}
+h2{font-family:var(--disp);font-weight:600;font-size:clamp(1.42rem,5.6vw,1.85rem);line-height:1.18;margin-bottom:7px}
+.lead{font-size:.93rem;color:var(--muted)}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 22px;border-radius:999px;background:var(--p);color:#fff;font-weight:800;font-size:.94rem;box-shadow:0 3px 0 var(--p-dk);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--p-dk)}
+.btn.ghost{background:var(--card);color:var(--p);box-shadow:0 3px 0 var(--soft),inset 0 0 0 1px var(--hair)}
+.btn.small{padding:9px 17px;font-size:.85rem}
+.btn[disabled]{opacity:.42;filter:grayscale(.55);pointer-events:none}
+
+#toast{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;z-index:300;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:.86rem;max-width:84vw;text-align:center;transition:.3s;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#music{position:fixed;right:13px;bottom:calc(13px + env(safe-area-inset-bottom));z-index:150;width:42px;height:42px;border-radius:50%;background:var(--card);box-shadow:0 4px 14px rgba(32,34,58,.16);display:none;place-items:center;font-size:1rem}
+body.opened #music.on{display:grid}
+
+.grab{position:relative;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:grab}
+.grab.grabbing{cursor:grabbing}
+.btn,.press,.env-card,.hop-dot{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
+.nudge{animation:nudge .45s ease}
+@keyframes nudge{30%{transform:translateY(5px)}60%{transform:translateY(-2px)}}
+@keyframes shk{20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-2px,1px)}80%{transform:translate(2px,-1px)}}
+
+/* =====================================================================
+   SLOT 1 — PEMBUKA: Weker Diputar
+   Satu gestur: ketuk kuncinya berulang untuk memutar weker sampai
+   penuh — bukan tarik, bukan tekan-tahan, bukan sobek.
+   ===================================================================== */
+#open{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 22px calc(30px + env(safe-area-inset-bottom));background:radial-gradient(120% 80% at 50% 10%,#FFFBF5 0%,var(--bg) 60%,#E9E3D4 100%);transition:opacity .8s ease,visibility .8s}
+#open.gone{opacity:0;visibility:hidden;pointer-events:none}
+.op-to{text-align:center;animation:up .9s .1s both}
+.op-to small{display:block;font-size:.66rem;font-weight:900;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.op-to b{font-family:var(--disp);font-weight:600;font-size:clamp(1.6rem,7.6vw,2.15rem);line-height:1.1;word-break:break-word}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+
+.weker{position:relative;width:168px;height:168px;animation:up .9s .3s both}
+.weker svg{width:100%;height:100%}
+.weker.ring{animation:up .9s .3s both,ringshake .5s ease 2}
+@keyframes ringshake{15%{transform:rotate(-7deg)}30%{transform:rotate(6deg)}45%{transform:rotate(-5deg)}60%{transform:rotate(4deg)}75%{transform:rotate(-2deg)}}
+#windKey{position:absolute;right:-4px;top:50%;width:46px;height:46px;margin-top:-23px;cursor:pointer}
+#windKey svg{width:100%;height:100%;transition:transform .15s}
+#windKey.tapped svg{transform:rotate(var(--kr,0deg)) scale(.92)}
+.wind-ring{position:absolute;inset:0;pointer-events:none}
+.wind-hint{text-align:center;font-size:.76rem;font-weight:800;color:var(--muted)}
+#open.gone .wind-hint{opacity:0}
+
+/* =====================================================================
+   SLOT 2 — MOMEN KHAS: Dua Jam Diselaraskan
+   Dua jam kota sungguhan (dihitung via Intl, bukan statis) berdetak
+   terpisah; ketuk pas jendela sinkronnya menyala — bukan drag, bukan
+   putar-dial melingkar, bukan menelusuri garis.
+   ===================================================================== */
+#jam{background:linear-gradient(180deg,var(--bg),var(--card))}
+.jam-row{display:flex;justify-content:center;gap:26px;margin-top:18px}
+.jam-box{text-align:center}
+.jam-box svg{width:92px;height:92px}
+.jam-box .jl{display:block;font-size:.72rem;font-weight:800;color:var(--muted);margin-top:6px}
+.jam-box .jt{display:block;font-family:var(--disp);font-weight:600;font-size:.98rem;margin-top:1px}
+.sync-mid{position:relative;width:78px;height:78px;margin:22px auto 0;display:grid;place-items:center}
+.sync-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--a1) 0deg,transparent 0deg);transition:background .1s linear;opacity:.35}
+.sync-ring.hot{opacity:1}
+#syncBtn{position:relative;width:62px;height:62px;border-radius:50%;background:var(--card);box-shadow:0 4px 14px rgba(32,34,58,.18),inset 0 0 0 2px var(--hair);display:grid;place-items:center;font-size:1.4rem;transition:transform .12s}
+#syncBtn:active{transform:scale(.93)}
+.sync-dots{display:flex;justify-content:center;gap:7px;margin-top:14px}
+.sync-dots span{width:9px;height:9px;border-radius:50%;background:var(--soft);transition:background .25s}
+.sync-dots span.hit{background:var(--p)}
+.sync-cue{text-align:center;font-size:.8rem;font-weight:800;color:var(--muted);margin-top:10px}
+.jam-result{text-align:center;font-family:var(--disp);font-style:italic;font-size:1.05rem;color:var(--ink);margin-top:16px;line-height:1.55;min-height:1.6em}
+
+/* =====================================================================
+   SLOT 3 — GAME 1: Sinyal Telepon
+   Jaga penanda tetap di dalam pita sinyal yang melayang naik-turun
+   dengan menekan tombol naik/turun berulang — bukan tangkap benda
+   jatuh, bukan seret ke target.
+   ===================================================================== */
+#sinyal{background:var(--card)}
+.sig-wrap{display:flex;align-items:center;gap:16px;margin-top:18px;justify-content:center}
+.sig-track{position:relative;width:52px;height:220px;border-radius:26px;background:var(--soft-lt);overflow:hidden;box-shadow:inset 0 0 0 1px var(--hair)}
+.sig-zone{position:absolute;left:0;right:0;height:46px;background:rgba(242,166,90,.4);border-top:2px solid var(--a1);border-bottom:2px solid var(--a1)}
+.sig-marker{position:absolute;left:50%;width:30px;height:30px;margin-left:-15px;border-radius:50%;background:var(--p);box-shadow:0 3px 8px rgba(32,34,58,.3);display:grid;place-items:center;transition:top .14s ease}
+.sig-marker svg{width:16px;height:16px}
+.sig-marker.ok{background:var(--a1)}
+.sig-btns{display:flex;flex-direction:column;gap:10px}
+.sig-btns button{width:54px;height:54px;border-radius:50%;background:var(--card);box-shadow:0 3px 10px rgba(32,34,58,.16),inset 0 0 0 1px var(--hair);font-size:1.3rem;display:grid;place-items:center}
+.sig-btns button:active{transform:scale(.92)}
+.sig-bar{width:min(300px,100%);height:9px;border-radius:99px;background:var(--soft);margin:18px auto 0;overflow:hidden}
+.sig-bar i{display:block;height:100%;width:0%;background:var(--p);transition:width .15s}
+.sig-info{text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);margin-top:10px}
+
+/* =====================================================================
+   SLOT 4 — GAME 2: Lipat Pesawat Kertas
+   Tiga lipatan, tiap lipatan satu arah sapuan jari yang berbeda —
+   bukan drag ke target, bukan tap berurutan, bukan putar.
+   ===================================================================== */
+#pesawat{background:linear-gradient(180deg,var(--card),var(--bg))}
+.fold-scene{position:relative;width:min(240px,74vw);height:170px;margin:20px auto 0;touch-action:none}
+.fold-paper{position:absolute;left:50%;top:50%;width:150px;height:104px;margin:-52px 0 0 -75px;background:linear-gradient(145deg,#FFFEFB,var(--soft-lt));border-radius:4px;box-shadow:0 8px 20px rgba(32,34,58,.16),inset 0 0 0 1px var(--hair);transition:transform .35s cubic-bezier(.2,.9,.3,1.2),clip-path .35s}
+.fold-paper.f1{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+.fold-steps{display:flex;justify-content:center;gap:10px;margin-top:16px}
+.fold-steps span{width:30px;height:30px;border-radius:9px;background:var(--soft);display:grid;place-items:center;font-size:.9rem;color:var(--faint);transition:background .2s,color .2s}
+.fold-steps span.on{background:var(--a1);color:#fff}
+.fold-cue{text-align:center;font-size:.8rem;font-weight:800;color:var(--muted);margin-top:12px}
+.fold-fly{position:fixed;z-index:60;pointer-events:none;opacity:0;font-size:2rem}
+
+/* =====================================================================
+   SLOT 5 — INTERAKTIF 1: Oleh-oleh Digital
+   Sapu amplop ke atas untuk menyingkap foto — bukan tap-flip kartu,
+   bukan gosok kanvas, bukan geser lensa.
+   ===================================================================== */
+#oleholeh{background:var(--bg)}
+.env-strip{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.env-slot{position:relative;width:104px;aspect-ratio:3/4;border-radius:7px;overflow:hidden;box-shadow:0 4px 14px rgba(32,34,58,.12)}
+.env-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.env-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:.6rem;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);background:linear-gradient(0deg,rgba(0,0,0,.45),transparent)}
+.env-card{position:absolute;inset:0;z-index:2;touch-action:none;cursor:grab;background:repeating-linear-gradient(135deg,#fff 0 10px,#EDEFF9 10px 20px);border:3px solid var(--p);box-shadow:0 4px 12px rgba(32,34,58,.18);transition:transform .4s ease,opacity .4s ease}
+.env-card .ic{position:absolute;inset:0;display:grid;place-items:center;font-size:1.6rem}
+.env-card.gone{transform:translateY(-180px) rotate(-8deg);opacity:0;pointer-events:none}
+.oleh-cue{text-align:center;font-size:.76rem;color:var(--muted);margin-top:10px}
+
+/* =====================================================================
+   SLOT 6 — INTERAKTIF 2: Peta Jarak
+   Ketuk berulang untuk melangkahkan pesawat kertas menyusuri rute
+   tetap — bukan drag-menelusuri, bukan tap cari urutan tersembunyi.
+   ===================================================================== */
+#jarak{background:var(--card)}
+.map-scene{position:relative;max-width:320px;height:150px;margin:18px auto 0}
+.map-scene svg{position:absolute;inset:0;width:100%;height:100%}
+.map-plane{position:absolute;width:22px;height:22px;margin:-11px;z-index:3;transition:left .4s cubic-bezier(.3,.8,.3,1),top .4s cubic-bezier(.3,.8,.3,1)}
+.map-plane svg{width:100%;height:100%}
+#hopBtn{display:block;margin:16px auto 0}
+.map-fact{text-align:center;font-family:var(--disp);font-style:italic;font-size:1.02rem;color:var(--ink);margin-top:14px;line-height:1.55;min-height:1.6em}
+
+/* =====================================================================
+   SLOT 7 — SURAT
+   ===================================================================== */
+#surat{background:var(--bg)}
+.lock{text-align:center;margin-top:18px;background:var(--card);border-radius:20px;padding:24px 20px;box-shadow:inset 0 0 0 1px var(--hair)}
+.lock .ic{font-size:1.7rem}
+.lock h3{font-family:var(--disp);font-weight:600;font-size:1.1rem;margin-top:6px}
+.lock p{font-size:.84rem;color:var(--muted);margin-top:4px}
+.chips{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:13px 0 14px}
+.chips span{font-size:.75rem;font-weight:800;padding:5px 11px;border-radius:99px;background:var(--bg);color:var(--faint);box-shadow:inset 0 0 0 1px var(--hair)}
+.chips span.on{background:var(--p);color:#fff;box-shadow:none}
+.skip{display:block;margin:12px auto 0;font-size:.78rem;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+.letter{display:none;position:relative;margin-top:20px;background:var(--card);border-radius:3px;padding:52px 22px 28px;box-shadow:0 14px 36px rgba(32,34,58,.14),inset 0 0 0 1px var(--hair)}
+.letter.show{display:block;animation:unfold .9s cubic-bezier(.2,.9,.3,1) both}
+@keyframes unfold{from{opacity:0;transform:translateY(18px) scaleY(.92);transform-origin:top center}}
+.letter::before{content:"";position:absolute;left:22px;right:22px;top:0;height:1px;background:var(--hair)}
+.lt-stamp{position:absolute;right:18px;top:-16px;width:60px;padding:4px;background:var(--bg);box-shadow:0 3px 10px rgba(32,34,58,.14)}
+.lt-stamp img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.lt-hello{font-family:var(--hand);font-size:1.75rem;color:var(--p);line-height:1.1;margin-bottom:12px}
+.letter p.par{font-family:var(--disp);font-weight:500;font-size:1.02rem;line-height:1.78;margin-bottom:15px;white-space:pre-line;opacity:0;transform:translateY(8px);transition:opacity 1s,transform 1s}
+.letter p.par.in{opacity:1;transform:none}
+.lt-sign{text-align:right;margin-top:18px;opacity:0;transition:opacity 1s}
+.lt-sign.in{opacity:1}
+.lt-sign small{display:block;font-size:.68rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.lt-sign b{font-family:var(--hand);font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1.1}
+
+/* =====================================================================
+   SLOT 8 — PENUTUP: Isyarat Pelukan
+   Tekan-tahan (maks ~2 detik) sampai gaugenya penuh — bukan drag
+   segel lilin. Mark Foreverse muncul kecil, opsional, tidak jadi
+   ritual besar (sesuai revisi 24-10-2026: penutup bebas bervariasi).
+   ===================================================================== */
+#pelukan{background:linear-gradient(180deg,var(--card),var(--bg));padding-bottom:86px}
+.hug-wrap{position:relative;width:140px;height:140px;margin:22px auto 0;display:grid;place-items:center}
+.hug-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--p) 0deg,var(--soft) 0deg);transition:background .05s linear}
+.hug-ring::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--card)}
+#hugBtn{position:relative;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;font-size:2.1rem;transition:transform .12s;touch-action:none}
+#hugBtn.pressing{transform:scale(.94)}
+.hug-hint{text-align:center;font-size:.8rem;font-weight:800;color:var(--muted);margin-top:14px;min-height:1.3em}
+.sealed-note{display:none;text-align:center;font-family:var(--disp);font-style:italic;font-size:1.12rem;color:var(--ink);margin-top:16px;line-height:1.5}
+.sealed-note.show{display:block;animation:fin .8s}
+
+.end-acts{display:none;flex-direction:column;align-items:center;gap:11px;margin-top:26px}
+.end-acts.show{display:flex;animation:fin 1s}
+.wa{display:inline-flex;align-items:center;gap:8px;background:#25B864;color:#fff;font-weight:800;font-size:.92rem;padding:12px 22px;border-radius:999px;box-shadow:0 3px 0 #1A8A4A;text-decoration:none}
+.reply-box{width:min(330px,100%);background:var(--card);border-radius:16px;padding:13px;box-shadow:inset 0 0 0 1px var(--hair)}
+.reply-box label{display:block;font-size:.8rem;font-weight:800;margin-bottom:7px}
+.reply-box textarea{width:100%;min-height:72px;border:0;border-radius:11px;padding:10px 12px;font:inherit;font-size:.92rem;color:var(--ink);background:var(--bg);resize:none}
+.made{display:none;margin-top:30px;text-align:center;font-size:.76rem;color:var(--faint);text-decoration:none;line-height:1.6;opacity:0;transition:opacity 1.1s}
+.made.show{display:block}
+.made.in{opacity:1}
+.made b{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+@keyframes fin{from{opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+
+.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:var(--bg);transition:opacity .4s}
+.memuat.pergi{opacity:0;pointer-events:none}
+.memuat-in{text-align:center;padding:24px;max-width:22rem}
+.memuat-in svg{opacity:.55;animation:mnaik 1.6s ease-in-out infinite}
+@keyframes mnaik{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.memuat-in p{margin:14px 0 0;font-size:.95rem;color:var(--muted);line-height:1.6;font-family:var(--sans)}
+.memuat.gagal svg{animation:none;opacity:.3}
+@media (prefers-reduced-motion: reduce){ .memuat-in svg{animation:none} }
+</style>
+</head>
+<body class="locked">
+
+<div id="memuat" class="memuat">
+  <div class="memuat-in">
+    <svg viewBox="0 0 64 48" width="52" height="39" aria-hidden="true">
+      <circle cx="32" cy="24" r="19" fill="none" stroke="#20223A" stroke-width="3"/>
+      <path d="M32 11v6M32 31v6M19 24h6M41 24h6" stroke="#20223A" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M32 24l7-9-3 11z" fill="#F2A65A"/>
+    </svg>
+    <p id="memuatPesan">Menghitung selisih jamnya…</p>
+  </div>
+</div>
+
+<div id="toast"></div>
+<button id="music" aria-label="Suara">🔊</button>
+
+<!-- ============ SLOT 1 — PEMBUKA: WEKER DIPUTAR ============ -->
+<div id="open">
+  <div class="op-to"><small>Untuk</small><b data-f="penerima"></b></div>
+
+  <div class="weker" id="weker">
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="48" fill="#FFFEFB" stroke="#20223A" stroke-width="3"/>
+      <circle cx="60" cy="24" r="6" fill="#4C5FD6" stroke="#20223A" stroke-width="2"/>
+      <circle cx="60" cy="24" r="6" fill="#4C5FD6" stroke="#20223A" stroke-width="2" transform="rotate(180 60 60)"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="#20223A" stroke-width="1" opacity=".2"/>
+      <g id="wekerHour" transform="rotate(50 60 60)"><rect x="58" y="36" width="4" height="26" rx="2" fill="#20223A"/></g>
+      <g id="wekerMin" transform="rotate(170 60 60)"><rect x="58.5" y="28" width="3" height="34" rx="1.5" fill="#20223A"/></g>
+      <circle cx="60" cy="60" r="4" fill="#F2A65A"/>
+    </svg>
+    <div id="windKey" role="button" tabindex="0" aria-label="Ketuk untuk memutar kuncinya">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="12" fill="#F2A65A" stroke="#C97E2E" stroke-width="2.4"/>
+        <rect x="21" y="2" width="6" height="12" rx="2" fill="#C97E2E"/>
+        <rect x="22.4" y="22.4" width="3.2" height="3.2" fill="#20223A" transform="rotate(0 24 24)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="wind-hint" id="windHint">ketuk kuncinya sampai wekernya penuh terputar</div>
+</div>
+
+<main>
+<!-- ============ SLOT 2 — MOMEN KHAS: DUA JAM DISELARASKAN ============ -->
+<section id="jam">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">dua kota, dua waktu</span>
+      <h2>Dua Jam Diselaraskan</h2>
+      <p class="lead">Ketuk pas lingkarannya menyala terang, tiga kali berturut-turut.</p>
+    </div>
+    <div class="jam-row reveal">
+      <div class="jam-box"><svg id="clockA" viewBox="0 0 100 100"></svg><span class="jl" id="clockALabel"></span><span class="jt" id="clockATime"></span></div>
+      <div class="jam-box"><svg id="clockB" viewBox="0 0 100 100"></svg><span class="jl" id="clockBLabel"></span><span class="jt" id="clockBTime"></span></div>
+    </div>
+    <div class="sync-mid reveal">
+      <div class="sync-ring" id="syncRing"></div>
+      <button id="syncBtn" type="button" aria-label="Ketuk untuk menyelaraskan">⏱</button>
+    </div>
+    <div class="sync-dots"><span id="sd0"></span><span id="sd1"></span><span id="sd2"></span></div>
+    <p class="sync-cue" id="syncCue">tunggu lingkarannya menyala, baru ketuk</p>
+    <p class="jam-result" id="jamResult"></p>
+  </div>
+</section>
+
+<!-- ============ SLOT 3 — GAME 1: SINYAL TELEPON ============ -->
+<section id="sinyal">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">jangan sampai putus</span>
+      <h2>Sinyal Telepon</h2>
+      <p class="lead">Jaga penandanya tetap di pita sinyal yang melayang, sampai tersambung penuh 6 detik.</p>
+    </div>
+    <div class="sig-wrap reveal">
+      <div class="sig-track" id="sigTrack">
+        <div class="sig-zone" id="sigZone"></div>
+        <div class="sig-marker" id="sigMarker"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 12a8 8 0 0 1 16 0M8 12a4 4 0 0 1 8 0M12 16v2"/></svg></div>
+      </div>
+      <div class="sig-btns">
+        <button id="sigUp" type="button" aria-label="Naikkan">▲</button>
+        <button id="sigDown" type="button" aria-label="Turunkan">▼</button>
+      </div>
+    </div>
+    <div class="sig-bar"><i id="sigBar"></i></div>
+    <p class="sig-info" id="sigInfo">belum tersambung</p>
+  </div>
+</section>
+
+<!-- ============ SLOT 4 — GAME 2: LIPAT PESAWAT KERTAS ============ -->
+<section id="pesawat">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">dilipat dari jauh, tetap sampai</span>
+      <h2>Lipat Pesawat Kertas</h2>
+      <p class="lead">Sapu jarimu di atas kertasnya sesuai arah anak panah, tiga kali.</p>
+    </div>
+    <div class="fold-scene reveal" id="foldScene">
+      <div class="fold-paper f1" id="foldPaper"></div>
+    </div>
+    <div class="fold-steps"><span id="fs0">←</span><span id="fs1">↗</span><span id="fs2">→</span></div>
+    <p class="fold-cue" id="foldCue">sapu ke kiri dulu</p>
+  </div>
+</section>
+
+<!-- ============ SLOT 5 — INTERAKTIF 1: OLEH-OLEH DIGITAL ============ -->
+<section id="oleholeh">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">titipan lewat udara</span>
+      <h2>Oleh-oleh Digital</h2>
+      <p class="lead">Sapu amplopnya ke atas, satu-satu, untuk membuka isinya.</p>
+    </div>
+    <div class="env-strip reveal" id="envStrip"></div>
+    <p class="oleh-cue">sapu ke atas untuk membuka</p>
+  </div>
+</section>
+
+<!-- ============ SLOT 6 — INTERAKTIF 2: PETA JARAK ============ -->
+<section id="jarak">
+  <div class="wrap center">
+    <div class="reveal">
+      <span class="eyebrow">sejauh ini, secepat ini sampainya</span>
+      <h2>Peta Jarak</h2>
+      <p class="lead">Ketuk tombolnya untuk melangkahkan pesawatnya, sampai menyeberang penuh.</p>
+    </div>
+    <div class="map-scene reveal" id="mapScene">
+      <svg id="mapSvg" viewBox="0 0 280 140" aria-hidden="true">
+        <path id="mapDash" d="M34,104 Q140,20 246,88" fill="none" stroke="#C7CBEF" stroke-width="2" stroke-dasharray="3 6"/>
+        <circle cx="34" cy="104" r="5" fill="#4C5FD6" stroke="#20223A" stroke-width="1.4"/>
+        <circle cx="246" cy="88" r="5" fill="#F2A65A" stroke="#20223A" stroke-width="1.4"/>
+      </svg>
+      <div class="map-plane" id="mapPlane" style="left:34px;top:104px">
+        <svg viewBox="0 0 24 24" fill="#20223A" aria-hidden="true"><path d="M21 12l-7-2-4-9-2 1 2 8-7 2v2l7 2-2 8 2 1 4-9 7-2z"/></svg>
+      </div>
+    </div>
+    <button class="btn small" id="hopBtn" type="button">Lanjutkan perjalanannya</button>
+    <p class="map-fact" id="mapFact"></p>
+  </div>
+</section>
+
+<!-- ============ SLOT 7 — SURAT ============ -->
+<section id="surat">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow">dan ini bagian yang sebenarnya</span>
+      <h2>Suratnya</h2>
+    </div>
+    <div class="lock reveal" id="lock">
+      <div class="ic">🌙</div>
+      <h3>Suratnya masih tersimpan</h3>
+      <p>Selesaikan dua permainan di atas untuk membukanya.</p>
+      <div class="chips"><span id="cSinyal">Sinyal telepon</span><span id="cPesawat">Lipat pesawat</span></div>
+      <button class="btn" id="openLetter" type="button" disabled>Buka suratnya</button>
+      <button class="skip" id="skipGames" type="button">lewati permainan, langsung baca</button>
+    </div>
+    <article class="letter" id="letter">
+      <figure class="lt-stamp"><img id="ltStamp" alt=""></figure>
+      <div class="lt-hello" id="ltHello"></div>
+      <div id="ltPars"></div>
+      <div class="lt-sign" id="ltSign"><small>Dari</small><b data-f="pengirim"></b></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ SLOT 8 — PENUTUP: ISYARAT PELUKAN ============ -->
+<section id="pelukan" hidden>
+  <div class="wrap center">
+    <div class="reveal in">
+      <span class="eyebrow">supaya rasanya sampai juga</span>
+      <h2>Kirim pelukan jarak jauh</h2>
+      <p class="lead">Tekan dan tahan sampai lingkarannya penuh.</p>
+    </div>
+    <div class="hug-wrap">
+      <div class="hug-ring" id="hugRing"></div>
+      <button id="hugBtn" type="button" aria-label="Tekan dan tahan untuk mengirim pelukan">🤍</button>
+    </div>
+    <p class="hug-hint" id="hugHint">tekan dan tahan</p>
+    <p class="sealed-note" id="sealedNote"></p>
+
+    <div class="end-acts" id="endActs">
+      <div class="reply-box" id="replyBox" hidden>
+        <label for="replyTxt" id="replyLbl"></label>
+        <textarea id="replyTxt" maxlength="300"></textarea>
+      </div>
+      <a class="wa" id="waBtn" target="_blank" rel="noopener">Balas lewat WhatsApp</a>
+      <button class="btn ghost small" id="again" type="button">Baca lagi dari awal</button>
+      <a class="made" id="made" target="_blank" rel="noopener">Halaman ini dibuat dengan Foreverse<br><b>foreverse.id</b></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Data kota: nama tampil, zona IANA (dihitung live via Intl — tahan
+   DST, tidak memakai angka GMT tetap), dan koordinat untuk jarak.
+   ═══════════════════════════════════════════════════════════════ */
+var KOTA = {
+  jakarta:{nama:"Jakarta",tz:"Asia/Jakarta",lat:-6.2,lon:106.8},
+  medan:{nama:"Medan",tz:"Asia/Jakarta",lat:3.6,lon:98.7},
+  surabaya:{nama:"Surabaya",tz:"Asia/Jakarta",lat:-7.25,lon:112.75},
+  denpasar:{nama:"Denpasar",tz:"Asia/Makassar",lat:-8.65,lon:115.2},
+  makassar:{nama:"Makassar",tz:"Asia/Makassar",lat:-5.15,lon:119.4},
+  manado:{nama:"Manado",tz:"Asia/Makassar",lat:1.49,lon:124.85},
+  jayapura:{nama:"Jayapura",tz:"Asia/Jayapura",lat:-2.53,lon:140.7},
+  kualalumpur:{nama:"Kuala Lumpur",tz:"Asia/Kuala_Lumpur",lat:3.14,lon:101.69},
+  singapura:{nama:"Singapura",tz:"Asia/Singapore",lat:1.35,lon:103.82},
+  bangkok:{nama:"Bangkok",tz:"Asia/Bangkok",lat:13.75,lon:100.5},
+  manila:{nama:"Manila",tz:"Asia/Manila",lat:14.6,lon:120.98},
+  hongkong:{nama:"Hong Kong",tz:"Asia/Hong_Kong",lat:22.3,lon:114.17},
+  taipei:{nama:"Taipei",tz:"Asia/Taipei",lat:25.03,lon:121.56},
+  tokyo:{nama:"Tokyo",tz:"Asia/Tokyo",lat:35.68,lon:139.69},
+  seoul:{nama:"Seoul",tz:"Asia/Seoul",lat:37.57,lon:126.98},
+  shanghai:{nama:"Shanghai",tz:"Asia/Shanghai",lat:31.23,lon:121.47},
+  dubai:{nama:"Dubai",tz:"Asia/Dubai",lat:25.2,lon:55.27},
+  doha:{nama:"Doha",tz:"Asia/Qatar",lat:25.29,lon:51.53},
+  riyadh:{nama:"Riyadh",tz:"Asia/Riyadh",lat:24.71,lon:46.68},
+  istanbul:{nama:"Istanbul",tz:"Europe/Istanbul",lat:41.01,lon:28.98},
+  kairo:{nama:"Kairo",tz:"Africa/Cairo",lat:30.04,lon:31.24},
+  london:{nama:"London",tz:"Europe/London",lat:51.51,lon:-.13},
+  amsterdam:{nama:"Amsterdam",tz:"Europe/Amsterdam",lat:52.37,lon:4.9},
+  paris:{nama:"Paris",tz:"Europe/Paris",lat:48.86,lon:2.35},
+  berlin:{nama:"Berlin",tz:"Europe/Berlin",lat:52.52,lon:13.4},
+  roma:{nama:"Roma",tz:"Europe/Rome",lat:41.9,lon:12.5},
+  sydney:{nama:"Sydney",tz:"Australia/Sydney",lat:-33.87,lon:151.21},
+  melbourne:{nama:"Melbourne",tz:"Australia/Melbourne",lat:-37.81,lon:144.96},
+  perth:{nama:"Perth",tz:"Australia/Perth",lat:-31.95,lon:115.86},
+  auckland:{nama:"Auckland",tz:"Pacific/Auckland",lat:-36.85,lon:174.76},
+  newyork:{nama:"New York",tz:"America/New_York",lat:40.71,lon:-74.0},
+  losangeles:{nama:"Los Angeles",tz:"America/Los_Angeles",lat:34.05,lon:-118.24},
+  toronto:{nama:"Toronto",tz:"America/Toronto",lat:43.65,lon:-79.38},
+  vancouver:{nama:"Vancouver",tz:"America/Vancouver",lat:49.28,lon:-123.12}
+};
+
+function FV_MULAI(){
+'use strict';
+var D = KADO || {};
+D.lagu = D.lagu || {};
+D.lagu.src = D.lagu.src || D.lagu.file || "";
+D.foto = (D.foto || []).map(function(f){ return { src: f.src, caption: f.caption || f.ket || "" }; });
+
+var $=function(s,r){ return (r||document).querySelector(s); };
+var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
+var rand=function(a,b){ return a+Math.random()*(b-a); };
+var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
+
+$$('[data-f]').forEach(function(n){
+  var v=n.dataset.f.split('.').reduce(function(o,k){ return o==null?o:o[k]; },D);
+  if(v!=null) n.textContent=v;
+});
+
+var CA = KOTA[D.kotaPengirim] || KOTA.jakarta;   // kota pengirim (yang nulis surat)
+var CB = KOTA[D.kotaPenerima] || KOTA.jakarta;    // kota penerima
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; });
+
+/* ---- suara dibuat browser, tanpa file (infrastruktur tak kasat mata, dipakai ulang) ---- */
+var AC=null, muted=false;
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C) AC=new C(); } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||muted) return;
+  var t=a.currentTime+(o.when||0), v=o.vol||.14, osc=a.createOscillator(), g=a.createGain();
+  osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
+  if(o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide,t+dur);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t+dur+.05);
+}
+function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
+  var n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*dur,a.sampleRate), d=b.getChannelData(0);
+  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5);
+  var f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=freq;
+  var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.destination); n.start();
+}
+var SFX={
+  tick:function(){ tone(900,.05,{type:'square',vol:.09}); },
+  ring:function(){ [1400,1100,1400,1100].forEach(function(f,i){ tone(f,.12,{when:i*.13,vol:.16,type:'square'}); }); },
+  pop:function(){ tone(620,.08,{type:'sine',vol:.2}); tone(940,.1,{type:'sine',vol:.1,when:.05}); },
+  good:function(){ tone(660,.13); tone(880,.18,{when:.09}); },
+  bad:function(){ tone(185,.2,{type:'sawtooth',vol:.06}); },
+  whoosh:function(){ tone(700,.45,{type:'sine',vol:.07,slide:220}); },
+  chime:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.45,{when:i*.08,vol:.11}); }); },
+  win:function(){ [523,659,784,659,784,1046].forEach(function(f,i){ tone(f,.26,{when:i*.11}); }); },
+  warm:function(){ [392,494,587,659].forEach(function(f,i){ tone(f,.5,{when:i*.1,vol:.1}); }); }
+};
+
+function musicBox(){
+  var a=ac(); if(!a) return null;
+  var gain=a.createGain(); gain.gain.value=.11; gain.connect(a.destination);
+  var notes=[62,66,69,74,69,66, 64,67,71,76,71,67, 62,66,69,73,69,66, 60,64,69,73,76,73];
+  var step=.36, t0=a.currentTime+.1, n=0, timer=null, berhenti=false;
+  function ping(midi,t){
+    var o=a.createOscillator(), g=a.createGain();
+    o.type='sine'; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.9,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+1.4);
+    o.connect(g); g.connect(gain); o.start(t); o.stop(t+1.5);
+  }
+  (function loop(){
+    if(berhenti) return;
+    while(t0 < a.currentTime+1.2){ ping(notes[n%notes.length],t0); t0+=step; n++; }
+    timer=setTimeout(loop,300);
+  })();
+  return { gain:gain, stop:function(){ berhenti=true; clearTimeout(timer); } };
+}
+var MU=(function(){
+  var L=D.lagu||{}, has=!!(L.src&&String(L.src).trim()), audio=has?new Audio():null;
+  var st=+L.mulai||0, en=+L.selesai||0, vol=.72, playing=false, synth=null;
+  if(audio){ audio.src=L.src; audio.preload='auto'; audio.loop=!en;
+    audio.addEventListener('timeupdate',function(){ if(en>st&&audio.currentTime>=en) audio.currentTime=st; });
+    audio.addEventListener('ended',function(){ audio.currentTime=st; audio.play().catch(function(){}); }); }
+  return { has:has, audio:audio,
+    play:function(){
+      if(audio){
+        try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+        if(!playing){ try{ audio.currentTime=st; }catch(e){} }
+        audio.volume=0; audio.muted=muted;
+        audio.play().then(function(){ playing=true; var v=0, t=setInterval(function(){ v+=.05; if(v>=vol){v=vol;clearInterval(t);} audio.volume=v; },90); }).catch(function(){});
+        return;
+      }
+      if(!synth) synth=musicBox();
+    },
+    duck:function(on){ if(audio) audio.volume=on?.12:vol; else if(synth) synth.gain.gain.value=on?.03:.11; } };
+})();
+function duck(on){ MU.duck(on); }
+$('#music').onclick=function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; if(MU.audio) MU.audio.muted=muted; try{ if(AC) muted?AC.suspend():AC.resume(); }catch(e){} };
+if(MU.has) $('#music').classList.add('on');
+
+var tt;
+function toast(m,ms){ var t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){ t.classList.remove('show'); }, ms||2400); }
+
+var FX=(function(){
+  var cv,ctx,P=[],run=false,W,H;
+  var COL=['#4C5FD6','#F2A65A','#FFFBF5','#20223A','#E4E6F5','#8C98E8'];
+  function ensure(){ if(cv) return; cv=el('canvas'); cv.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:250;display:none'; document.body.appendChild(cv); }
+  function start(){ ensure(); if(run) return; run=true;
+    var d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
+    cv.width=W*d; cv.height=H*d; cv.style.display='block'; ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
+    requestAnimationFrame(loop); }
+  function loop(){ ctx.clearRect(0,0,W,H);
+    P=P.filter(function(p){ return p.life>0&&p.y<H+40; });
+    P.forEach(function(p){ p.vx*=.99; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.life--;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.globalAlpha=Math.min(1,p.life/40); ctx.fillStyle=p.c;
+      if(p.s2===0) ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);
+      else { ctx.beginPath(); ctx.arc(0,0,p.s/3,0,7); ctx.fill(); }
+      ctx.restore(); });
+    if(P.length) return requestAnimationFrame(loop);
+    run=false; cv.style.display='none'; cv.width=1; cv.height=1; }
+  function add(a){ P=P.concat(a).slice(-160); start(); }
+  return {
+    burst:function(x,y,n,pw){ n=n||70; pw=pw||8; var a=[];
+      for(var i=0;i<Math.min(n,90);i++){ var t=rand(0,Math.PI*2), s=rand(pw*.3,pw);
+        a.push({x:x,y:y,vx:Math.cos(t)*s,vy:Math.sin(t)*s-3,g:.22,s:rand(5,9),r:rand(0,6),vr:rand(-.25,.25),c:COL[i%COL.length],s2:i%2,life:rand(80,140)}); }
+      add(a); },
+    at:function(node,n){ var r=node.getBoundingClientRect(); this.burst(r.left+r.width/2,r.top+r.height/2,n||70,10); }
+  };
+})();
+
+var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+$$('.reveal').forEach(function(n){ io.observe(n); });
+
+function noMenu(node){ node.addEventListener('contextmenu',function(e){ e.preventDefault(); return false; }); }
+document.addEventListener('contextmenu',function(e){
+  var t=e.target;
+  if(t&&t.closest&&t.closest('.btn,.press,.grab,.env-card,canvas,img,svg')) e.preventDefault();
+},true);
+document.addEventListener('dragstart',function(e){ if(e.target&&e.target.tagName==='IMG') e.preventDefault(); },true);
+
+/* ---- helper: swipe/flick — klasifikasi arah dari vektor rilis, bukan posisi terus-menerus ---- */
+function swipe(node,opts){
+  var sx=0,sy=0,on=false,pid=null;
+  noMenu(node);
+  node.addEventListener('pointerdown',function(e){
+    if(node.dataset.off) return;
+    on=true; sx=e.clientX; sy=e.clientY; ac();
+    try{ node.setPointerCapture(e.pointerId); pid=e.pointerId; }catch(err){}
+  });
+  node.addEventListener('pointerup',function(e){
+    if(!on) return; on=false;
+    var dx=e.clientX-sx, dy=e.clientY-sy, dist=Math.hypot(dx,dy);
+    if(dist<opts.min) { opts.onFizzle&&opts.onFizzle(); return; }
+    var ang=Math.atan2(dy,dx)*180/Math.PI; // -180..180, 0=kanan,90=bawah,-90=atas
+    opts.onSwipe&&opts.onSwipe(ang,dist);
+  });
+  node.addEventListener('pointercancel',function(){ on=false; });
+}
+function dirMatch(ang,target,tol){
+  var d=Math.abs(((ang-target+540)%360)-180); // jarak sudut terkecil
+  return d<=tol;
+}
+
+/* =====================================================================
+   SLOT 1 — PEMBUKA: WEKER DIPUTAR
+   Ketukan berulang mengakumulasi putaran kunci — bukan drag, bukan
+   tekan-tahan tunggal, bukan sobek.
+   ===================================================================== */
+(function(){
+  var key=$('#windKey'), weker=$('#weker'), hint=$('#windHint'), hour=$('#wekerHour'), minT=$('#wekerMin');
+  var N=0, NEED=7, opened=false;
+  key.addEventListener('click',function(){
+    if(opened) return;
+    N++; SFX.tick(); buzz(8);
+    key.style.setProperty('--kr',(N*34)+'deg');
+    key.classList.remove('tapped'); void key.offsetWidth; key.classList.add('tapped');
+    hour.setAttribute('transform','rotate('+(50+N*9)+' 60 60)');
+    minT.setAttribute('transform','rotate('+(170+N*22)+' 60 60)');
+    hint.textContent='terputar '+N+'/'+NEED;
+    if(N>=NEED){
+      opened=true; key.dataset.off='1';
+      weker.classList.add('ring'); SFX.ring(); buzz([30,40,30,40]);
+      hint.textContent='wekernya berbunyi 🔔';
+      MU.play();
+      setTimeout(function(){ FX.burst(innerWidth/2,innerHeight*.4,90,10); SFX.chime(); },500);
+      setTimeout(function(){
+        $('#open').classList.add('gone');
+        document.body.classList.remove('locked');
+        document.body.classList.add('opened');
+      },1300);
+      setTimeout(function(){ var o=$('#open'); o&&o.remove(); },2200);
+    }
+  });
+  key.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); key.click(); } });
+})();
+
+/* =====================================================================
+   SLOT 2 — MOMEN KHAS: DUA JAM DISELARASKAN
+   Dua jam kota sungguhan (Intl, tahan DST) berjalan hidup; jendela
+   sinkron menyala berkala, ketuk pas jendelanya terang — penilaian
+   berbasis WAKTU ketukan, bukan urutan atau posisi.
+   ===================================================================== */
+(function(){
+  function bagianJam(tz){
+    try{
+      var p=new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+      var h=0,m=0; p.forEach(function(x){ if(x.type==='hour') h=+x.value; if(x.type==='minute') m=+x.value; });
+      return {h:h,m:m};
+    }catch(e){ var d=new Date(); return {h:d.getHours(),m:d.getMinutes()}; }
+  }
+  function offsetMin(tz){
+    try{
+      var now=new Date();
+      var a=new Date(now.toLocaleString('en-US',{timeZone:tz}));
+      var b=new Date(now.toLocaleString('en-US',{timeZone:'UTC'}));
+      return Math.round((a-b)/60000);
+    }catch(e){ return 0; }
+  }
+  function faceSvg(svg){
+    svg.innerHTML='<circle cx="50" cy="50" r="44" fill="#FFFEFB" stroke="#20223A" stroke-width="2.4"/>'+
+      '<circle cx="50" cy="50" r="2.6" fill="#20223A"/>'+
+      '<g class="hh"><rect x="48.4" y="28" width="3.2" height="24" rx="1.6" fill="#20223A"/></g>'+
+      '<g class="mh"><rect x="48.8" y="18" width="2.4" height="34" rx="1.2" fill="#4C5FD6"/></g>';
+  }
+  var svgA=$('#clockA'), svgB=$('#clockB');
+  faceSvg(svgA); faceSvg(svgB);
+  $('#clockALabel').textContent=CA.nama; $('#clockBLabel').textContent=CB.nama;
+
+  function tick(){
+    [[svgA,CA,'#clockATime'],[svgB,CB,'#clockBTime']].forEach(function(row){
+      var t=bagianJam(row[1].tz);
+      var hourAng=(t.h%12)*30+t.m*.5, minAng=t.m*6;
+      row[0].querySelector('.hh').setAttribute('transform','rotate('+hourAng+' 50 50)');
+      row[0].querySelector('.mh').setAttribute('transform','rotate('+minAng+' 50 50)');
+      $(row[2]).textContent=(t.h<10?'0':'')+t.h+'.'+(t.m<10?'0':'')+t.m;
+    });
+  }
+  tick(); setInterval(tick,15000);
+
+  var ring=$('#syncRing'), btn=$('#syncBtn'), cue=$('#syncCue'), hits=0, NEED=3, done=false, hot=false, loopT=null;
+  function cycle(){
+    if(done) return;
+    hot=false; ring.classList.remove('hot');
+    var t0=performance.now(), waitMs=rand(1100,1700);
+    (function spin(){
+      if(done) return;
+      var p=Math.min(1,(performance.now()-t0)/waitMs);
+      ring.style.background='conic-gradient(var(--a1) '+(p*360).toFixed(0)+'deg,transparent 0deg)';
+      if(p<1) return requestAnimationFrame(spin);
+      hot=true; ring.classList.add('hot');
+      loopT=setTimeout(function(){ if(!done){ hot=false; ring.classList.remove('hot'); cycle(); } },650);
+    })();
+  }
+  cycle();
+  btn.addEventListener('click',function(){
+    if(done) return;
+    ac();
+    if(hot){
+      hits++; clearTimeout(loopT); SFX.good(); buzz(14);
+      $('#sd'+(hits-1)).classList.add('hit');
+      cue.textContent=hits<NEED?'pas! lagi, tunggu menyala':'selaras!';
+      if(hits>=NEED){
+        done=true; ring.classList.add('hot'); SFX.win(); FX.at(btn,60);
+        var oa=offsetMin(CA.tz), ob=offsetMin(CB.tz);
+        var selisihJam=Math.abs(ob-oa)/60;
+        var selisihTxt=selisihJam%1===0?selisihJam.toFixed(0):selisihJam.toFixed(1);
+        $('#jamResult').textContent='Di '+CA.nama+' sekarang jam '+$('#clockATime').textContent.replace('.',':')+
+          ', di '+CB.nama+' sudah jam '+$('#clockBTime').textContent.replace('.',':')+
+          ' — beda '+selisihTxt+' jam, tapi jarak itu nggak kerasa kalau hatinya sudah sinkron.';
+      } else {
+        cycle();
+      }
+    } else {
+      SFX.bad(); buzz(45);
+      btn.classList.remove('nudge'); void btn.offsetWidth; btn.classList.add('nudge');
+      cue.textContent='belum pas, tunggu sampai menyala';
+    }
+  });
+})();
+
+/* =====================================================================
+   SLOT 3 — GAME 1: SINYAL TELEPON
+   Tombol naik/turun menggeser penanda; pita sinyal melayang sendiri
+   mengikuti gelombang sinus — pemain harus terus menyesuaikan, bukan
+   sekali seret ke target tetap.
+   ===================================================================== */
+(function(){
+  var track=$('#sigTrack'), zone=$('#sigZone'), marker=$('#sigMarker'), bar=$('#sigBar'), info=$('#sigInfo');
+  var TH=220, ZH=46, MH=30, pos=TH/2, t0=performance.now(), acc=0, NEED=6000, done=false, raf;
+  function loop(){
+    if(done) return;
+    var t=(performance.now()-t0)/1000;
+    var zc=TH/2 + Math.sin(t*.7)*(TH/2-ZH/2-6);
+    zone.style.top=(zc-ZH/2)+'px';
+    var inZone = Math.abs(pos-zc) < (ZH/2-6);
+    marker.classList.toggle('ok',inZone);
+    if(inZone){ acc+=16; }
+    bar.style.width=Math.min(100,acc/NEED*100)+'%';
+    if(acc>=NEED){
+      done=true; info.textContent='tersambung penuh ✓'; SFX.win(); FX.at(track,60); markDone('sinyal');
+      return;
+    }
+    info.textContent=inZone?'tersambung…':'geser ke pitanya';
+    raf=requestAnimationFrame(loop);
+  }
+  function nudge(dy){
+    if(done) return;
+    pos=Math.max(MH/2,Math.min(TH-MH/2,pos+dy));
+    marker.style.top=(pos-MH/2)+'px';
+    buzz(6);
+  }
+  $('#sigUp').addEventListener('click',function(){ nudge(-16); });
+  $('#sigDown').addEventListener('click',function(){ nudge(16); });
+  marker.style.top=(pos-MH/2)+'px';
+  raf=requestAnimationFrame(loop);
+})();
+
+/* =====================================================================
+   SLOT 4 — GAME 2: LIPAT PESAWAT KERTAS
+   Sapuan jari (flick, dinilai dari vektor rilis) dalam urutan arah
+   tertentu — bukan drag posisi, bukan tap urutan angka.
+   ===================================================================== */
+(function(){
+  var paper=$('#foldPaper'), cue=$('#foldCue'), scene=$('#foldScene');
+  var SEQ=[{a:180,label:'ke kiri',tol:50},{a:-45,label:'ke kanan-atas',tol:45},{a:0,label:'ke kanan',tol:50}];
+  var step=0, done=false;
+  var FOLD_CLIP=[
+    'polygon(0 0,100% 0,100% 100%,0 100%)',
+    'polygon(14% 0,100% 0,100% 100%,14% 100%)',
+    'polygon(14% 10%,100% 0,92% 100%,14% 90%)',
+    'polygon(14% 10%,92% 4%,86% 96%,14% 90%)'
+  ];
+  swipe(scene,{
+    min:46,
+    onFizzle:function(){ if(done) return; cue.classList.remove('nudge'); void cue.offsetWidth; cue.classList.add('nudge'); },
+    onSwipe:function(ang){
+      if(done) return;
+      var want=SEQ[step];
+      if(dirMatch(ang,want.a,want.tol)){
+        step++; SFX.pop(); buzz(12);
+        $('#fs'+(step-1)).classList.add('on');
+        paper.style.clipPath=FOLD_CLIP[step];
+        paper.style.transform='rotate('+(step*4)+'deg) scale('+(1-step*.04)+')';
+        if(step>=SEQ.length){
+          done=true; cue.textContent='terlipat jadi pesawat ✓'; SFX.win();
+          var r=paper.getBoundingClientRect();
+          var fly=el('div'); fly.textContent='✈️'; fly.style.cssText='position:fixed;z-index:60;pointer-events:none;font-size:2rem;left:'+(r.left+r.width/2-16)+'px;top:'+(r.top+r.height/2-16)+'px;transition:transform 1s ease-in,opacity 1s;';
+          document.body.appendChild(fly);
+          requestAnimationFrame(function(){ fly.style.transform='translate(160px,-120px) rotate(28deg)'; fly.style.opacity='0'; });
+          setTimeout(function(){ fly.remove(); },1100);
+          FX.at(scene,50); markDone('pesawat');
+        } else {
+          cue.textContent='sapu '+SEQ[step].label;
+        }
+      } else {
+        SFX.bad(); buzz(45);
+        cue.classList.remove('nudge'); void cue.offsetWidth; cue.classList.add('nudge');
+      }
+    }
+  });
+})();
+
+var DONE={sinyal:false,pesawat:false};
+function markDone(k){
+  if(DONE[k]) return; DONE[k]=true;
+  var tagId=k==='sinyal'?'#cSinyal':'#cPesawat';
+  $(tagId).classList.add('on');
+  if(DONE.sinyal&&DONE.pesawat){ $('#openLetter').disabled=false; $('#skipGames').hidden=true; toast('Suratnya sudah bisa dibuka'); }
+}
+
+/* =====================================================================
+   SLOT 5 — INTERAKTIF 1: OLEH-OLEH DIGITAL
+   Sapu amplop ke atas (flick satu arah) untuk menyingkap foto — bukan
+   tap-flip kartu, bukan gosok kanvas, bukan geser lensa kabut.
+   ===================================================================== */
+(function(){
+  var strip=$('#envStrip');
+  if(!FOTO.length){ $('#oleholeh').hidden=true; return; }
+  FOTO.slice(0,3).forEach(function(f){
+    var slot=el('div','env-slot');
+    var img=el('img','env-photo'); img.src=f.src; img.alt='';
+    slot.appendChild(img);
+    if(f.caption){ var cap=el('div','env-cap',f.caption); slot.appendChild(cap); }
+    var env=el('div','env-card'); env.appendChild(el('div','ic','✉️'));
+    slot.appendChild(env);
+    strip.appendChild(slot);
+    swipe(env,{
+      min:34,
+      onFizzle:function(){ env.classList.remove('nudge'); void env.offsetWidth; env.classList.add('nudge'); },
+      onSwipe:function(ang,dist){
+        if(!dirMatch(ang,-90,55)) { SFX.bad(); return; }
+        env.classList.add('gone'); SFX.whoosh(); buzz(10); FX.at(env,30);
+      }
+    });
+  });
+})();
+
+/* =====================================================================
+   SLOT 6 — INTERAKTIF 2: PETA JARAK
+   Ketuk berulang untuk melangkahkan token sepanjang rute tetap —
+   bukan menelusuri garis dengan jari, bukan tap mencari urutan
+   tersembunyi (hanya ada satu langkah valid tiap saatnya).
+   ===================================================================== */
+(function(){
+  var svg=$('#mapSvg'), path=$('#mapDash'), plane=$('#mapPlane'), btn=$('#hopBtn'), fact=$('#mapFact');
+  var len=path.getTotalLength(), HOPS=5, hop=0;
+  function toPx(pt){
+    var r=svg.getBoundingClientRect(), vb=svg.viewBox.baseVal;
+    return { x:r.left+(pt.x/vb.width)*r.width, y:r.top+(pt.y/vb.height)*r.height, rLeft:r.left, rTop:r.top, sx:r.width/vb.width, sy:r.height/vb.height };
+  }
+  function place(frac){
+    var pt=path.getPointAtLength(len*frac);
+    var m=svg.getBoundingClientRect(), vb=svg.viewBox.baseVal;
+    var sx=m.width/vb.width, sy=m.height/vb.height;
+    plane.style.left=(pt.x*sx)+'px'; plane.style.top=(pt.y*sy)+'px';
+  }
+  place(0);
+  function kmJarak(){
+    var R=6371, dLat=(CB.lat-CA.lat)*Math.PI/180, dLon=(CB.lon-CA.lon)*Math.PI/180;
+    var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(CA.lat*Math.PI/180)*Math.cos(CB.lat*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+    return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+  }
+  btn.addEventListener('click',function(){
+    if(hop>=HOPS) return;
+    hop++; ac(); SFX.whoosh(); buzz(8);
+    place(hop/HOPS);
+    if(hop>=HOPS){
+      btn.disabled=true; btn.textContent='Sudah sampai'; SFX.win(); FX.at(plane,50);
+      var km=kmJarak();
+      fact.textContent='Sejauh kira-kira '+km.toLocaleString('id-ID')+' km dari '+CA.nama+' ke '+CB.nama+' — tapi pesan ini sampai lebih cepat dari itu.';
+    } else {
+      btn.textContent='Lanjutkan perjalanannya ('+hop+'/'+HOPS+')';
+    }
+  });
+})();
+
+/* =====================================================================
+   SLOT 7 — SURAT
+   ===================================================================== */
+(function(){
+  $('#openLetter').addEventListener('click',open);
+  $('#skipGames').addEventListener('click',open);
+  var opened=false;
+  function open(){
+    if(opened) return; opened=true;
+    $('#lock').style.display='none';
+    var letter=$('#letter');
+    letter.classList.add('show');
+    SFX.chime();
+    $('#ltStamp').src=(FOTO[0]&&FOTO[0].src)||'';
+    $('#ltHello').textContent='Halo, '+(D.penerima||'');
+    var pars=$('#ltPars');
+    (D.surat||[]).filter(Boolean).forEach(function(txt,i){
+      var p=el('p','par',txt);
+      pars.appendChild(p);
+      setTimeout(function(){ p.classList.add('in'); },350+i*650);
+    });
+    var totalDelay=350+((D.surat||[]).filter(Boolean).length)*650+500;
+    setTimeout(function(){ $('#ltSign').classList.add('in'); },totalDelay);
+    setTimeout(function(){
+      $('#pelukan').hidden=false;
+      $('#pelukan').scrollIntoView&&null;
+    },totalDelay+700);
+  }
+})();
+
+/* =====================================================================
+   SLOT 8 — PENUTUP: ISYARAT PELUKAN
+   Tekan-tahan dengan gauge terlihat (maks ~2 detik) — bukan drag
+   segel lilin. Mark Foreverse (kalau dipakai) muncul kecil & opsional
+   di akhir, bukan ritual besar (revisi 24-10-2026).
+   ===================================================================== */
+(function(){
+  var btn=$('#hugBtn'), ring=$('#hugRing'), hint=$('#hugHint'), done=false, pressing=false, t0=0, raf;
+  var DUR=1900; // ms, di dalam batas 1-2 detik yang diizinkan
+  function frame(){
+    if(!pressing||done) return;
+    var p=Math.min(1,(performance.now()-t0)/DUR);
+    ring.style.background='conic-gradient(var(--p) '+(p*360).toFixed(0)+'deg,var(--soft) 0deg)';
+    if(p>=1) return finish();
+    raf=requestAnimationFrame(frame);
+  }
+  function startPress(e){
+    if(done) return;
+    e.preventDefault(); ac(); pressing=true; t0=performance.now();
+    btn.classList.add('pressing'); hint.textContent='tahan terus…';
+    raf=requestAnimationFrame(frame);
+  }
+  function cancelPress(){
+    if(done||!pressing) return;
+    pressing=false; btn.classList.remove('pressing');
+    ring.style.background='conic-gradient(var(--p) 0deg,var(--soft) 0deg)';
+    hint.textContent='terlepas — tekan lagi dari awal';
+    cancelAnimationFrame(raf);
+  }
+  function finish(){
+    done=true; pressing=false; btn.classList.remove('pressing');
+    SFX.warm(); buzz([20,30,20,30,20]);
+    FX.burst(innerWidth/2,0,0,0); // no-op kecil, burst sungguhan di bawah pakai posisi tombol
+    FX.at(btn,80);
+    hint.textContent='terkirim 🤍';
+    var isi=(D.rahasia||'').trim();
+    $('#sealedNote').textContent = isi ? isi : 'Pelukannya sudah berangkat — sampai ketemu lagi, di waktu siapa pun yang lebih longgar.';
+    $('#sealedNote').classList.add('show');
+    var wa=$('#waBtn'), nomor=(D.waPengirim||'').replace(/[^0-9]/g,'');
+    if(nomor){ wa.href='https://wa.me/'+(nomor.charAt(0)==='0'?'62'+nomor.slice(1):nomor)+'?text='+encodeURIComponent('Hai '+(D.pengirim||'')+', pelukannya sudah sampai 🤍'); }
+    else { wa.hidden=true; }
+    $('#replyLbl').textContent='Mau balas lewat sini juga?';
+    $('#endActs').classList.add('show');
+    var made=$('#made');
+    if(D.foreverseUrl){ made.href=D.foreverseUrl; made.classList.add('show'); setTimeout(function(){ made.classList.add('in'); },500); }
+    $('#again').addEventListener('click',function(){ location.hash=''; location.reload(); });
+  }
+  btn.addEventListener('pointerdown',startPress);
+  btn.addEventListener('pointerup',cancelPress);
+  btn.addEventListener('pointercancel',cancelPress);
+  btn.addEventListener('pointerleave',cancelPress);
+  noMenu(btn);
+})();
+
+} /* FV_MULAI */
+
+/* ═══ muat data & jalankan ═══ */
+var KADO = JSON.parse(document.getElementById('foreverse-data').textContent || '{}');
+try{ FV_MULAI(); }catch(e){ console.error(e); }
+setTimeout(function(){ var m=document.getElementById('memuat'); if(m) m.classList.add('pergi'); setTimeout(function(){ m&&m.remove(); },450); },260);
+</script>
+</body>
+</html>

@@ -374,8 +374,24 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "bait":            { nama:"Bait",            nfoto:3, mesin:"/surat.html",            momen:"birthday" },
     "kado-riang":      { nama:"Kado Riang",      nfoto:3, mesin:"/kado-riang.html",       momen:"birthday" },
     "langit-harapan":  { nama:"Langit Harapan",  nfoto:4, mesin:"/langit-harapan.html",   momen:"birthday" },
-    "peta-perjalanan": { nama:"Peta Perjalanan", nfoto:3, mesin:"/peta-perjalanan.html",  momen:"anniversary" }
+    "peta-perjalanan": { nama:"Peta Perjalanan", nfoto:3, mesin:"/peta-perjalanan.html",  momen:"anniversary" },
+    "zona-waktu":      { nama:"Zona Waktu",      nfoto:3, mesin:"/zona-waktu.html",       momen:"ldr" }
   };
+  /* Kota untuk momen LDR — harus sama persis dengan KOTA di
+     zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
+  var KOTA_LDR = [
+    ["jakarta","Jakarta"],["medan","Medan"],["surabaya","Surabaya"],["denpasar","Denpasar"],
+    ["makassar","Makassar"],["manado","Manado"],["jayapura","Jayapura"],
+    ["kualalumpur","Kuala Lumpur"],["singapura","Singapura"],["bangkok","Bangkok"],["manila","Manila"],
+    ["hongkong","Hong Kong"],["taipei","Taipei"],["tokyo","Tokyo"],["seoul","Seoul"],["shanghai","Shanghai"],
+    ["dubai","Dubai"],["doha","Doha"],["riyadh","Riyadh"],["istanbul","Istanbul"],["kairo","Kairo"],
+    ["london","London"],["amsterdam","Amsterdam"],["paris","Paris"],["berlin","Berlin"],["roma","Roma"],
+    ["sydney","Sydney"],["melbourne","Melbourne"],["perth","Perth"],["auckland","Auckland"],
+    ["newyork","New York"],["losangeles","Los Angeles"],["toronto","Toronto"],["vancouver","Vancouver"]
+  ];
+  function opsiKota(selected){
+    return KOTA_LDR.map(function(k){ return '<option value="'+k[0]+'"'+(k[0]===selected?' selected':'')+'>'+k[1]+'</option>'; }).join('');
+  }
   var TEMA = (new URLSearchParams(location.search).get("tema")) || "bait";
   if(!TEMA_INFO[TEMA]) TEMA = "bait";
   var NFOTO = TEMA_INFO[TEMA].nfoto;
@@ -525,7 +541,18 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      Anniversary = jenis hari jadi + tanggal mulai + sembunyikan tahun. */
   function renderBlokDasar(momen){
     var b = $("blokDasar"), html = "";
-    if(momen === "anniversary"){
+    if(momen === "ldr"){
+      html = '<h2><span class="n">4</span> Kota kalian berdua</h2>' +
+        '<p class="jelas">Dipakai untuk menghitung jam kota kalian secara hidup dan jaraknya di tengah surat.</p>' +
+        '<div class="dua">' +
+        '<div class="baris" data-f="kotaPengirim"><label for="kotaPengirim">Kotamu sekarang</label>' +
+        '<select id="kotaPengirim"><option value="">Pilih kota</option>' + opsiKota() + '</select>' +
+        '<p class="galat">Kotamu belum dipilih.</p></div>' +
+        '<div class="baris" data-f="kotaPenerima"><label for="kotaPenerima">Kota dia sekarang</label>' +
+        '<select id="kotaPenerima"><option value="">Pilih kota</option>' + opsiKota() + '</select>' +
+        '<p class="galat">Kota dianya belum dipilih.</p></div>' +
+        '</div>';
+    } else if(momen === "anniversary"){
       html = '<h2><span class="n">4</span> Hari jadi dan tanggal</h2>' +
         '<p class="jelas">Tanggal mulainya dipakai untuk adegan pin bertanggal di tengah surat.</p>' +
         '<div class="baris" data-f="jenisHariJadi"><label for="jenisHariJadi">Jenis hari jadinya</label>' +
@@ -611,6 +638,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Destinasi berikutnya, kamu yang pilih."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "zona-waktu"){
+      html = '<h2><span class="n">5</span> Pesan penutup</h2>' +
+        '<p class="jelas">Muncul di akhir, setelah "isyarat pelukan" dikirim — boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
+        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan penutupnya (opsional)</label>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Jarak ini sementara. Aku di sini, nungguin."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
         '<p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>' +
@@ -678,6 +711,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         jenisHariJadi: $("jenisHariJadi").value || "pacaran",
         tanggalMulai: $("mulai").value || (sumber==="pratinjau" ? "2020-01-01" : ""),
         sembunyikanTahun: $("sembunyikanTahun").checked
+      };
+    }
+    if(MOMEN_GRUP === "ldr"){
+      return {
+        kotaPengirim: $("kotaPengirim").value || (sumber==="pratinjau" ? "jakarta" : ""),
+        kotaPenerima: $("kotaPenerima").value || (sumber==="pratinjau" ? "tokyo" : "")
       };
     }
     return {
@@ -766,6 +805,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var kurang = [];
     var wajibDasar = MOMEN_GRUP === "anniversary"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["mulai","mulai"]]
+      : MOMEN_GRUP === "ldr"
+      ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["kotaPengirim","kotaPengirim"],["kotaPenerima","kotaPenerima"]]
       : [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]];
     wajibDasar.forEach(function(p){
       var kosong = !$(p[0]).value.trim();
@@ -827,7 +868,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: Object.assign({

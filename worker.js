@@ -100,6 +100,7 @@ export default {
         const nama = tema === "kado-riang" ? "kado-riang"
           : tema === "langit-harapan" ? "langit-harapan"
           : tema === "peta-perjalanan" ? "peta-perjalanan"
+          : tema === "zona-waktu" ? "zona-waktu"
           : "surat";
         const r = await ambilHalaman(env, url.origin, nama, request);
 
