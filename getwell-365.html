@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2A2026">
+<meta name="theme-color" content="#FAF3E8">
 <meta name="robots" content="noindex, nofollow">
 <title>Semoga lekas sembuh</title>
 <meta property="og:title" content="Semoga lekas sembuh">
@@ -13,27 +13,30 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <!-- =====================================================================
      FOREVERSE · Get Well Soon · Tema "36,5"
 
-     Tema ini TIDAK memakai pola tema-tema lain, dan itu disengaja:
-       · tidak ada scroll — satu kamar yang berubah di tempat
-       · tidak ada kolom 520px, tidak ada kartu .card, tidak ada trio
-         header eyebrow/h2/lead yang diulang tiap bagian
-       · tidak ada .reveal + IntersectionObserver (tidak ada yang discroll)
-       · suratnya bukan kartu dan bukan layar penuh: dia lembar keterangan
-         obat yang dibuka lipatannya satu per satu, satu lipatan satu
-         paragraf
-       · fotonya tidak berjejer: tertanam di dalam kamar (bingkai meja,
-         pintu lemari, terselip di cermin) dan baru tajam saat demamnya
-         turun
+     Satu kamar yang terang dan terbaca. Tidak ada scroll: objeknya
+     didekatkan lalu ditaruh lagi. Satu angka menggerakkan halaman —
+     suhu 39,2 -> 36,5 derajat.
 
-     Satu angka menggerakkan segalanya: suhu tubuh, 39,2 → 36,5 °C.
-     Makin turun suhunya, makin tajam dan makin tenang kamarnya.
-     Suhu tidak pernah naik lagi — tidak ada kegagalan yang menyakitkan
-     di tema tentang orang sakit.
+     CATATAN KETERBACAAN & KONSEKUENSI (hasil revisi 24-10-2026):
+       · TIDAK ADA blur() di mana pun. Demamnya disampaikan lewat warna
+         cahaya, bukan dengan mengaburkan layar — versi sebelumnya kebaca
+         sebagai "halaman rusak".
+       · Tiap objek punya SILUET jelas bergaris tegas + LABEL namanya yang
+         selalu tampil, supaya penerima sadar itu benda apa.
+       · Objek yang sedang aktif diberi cincin berdenyut + panah penunjuk,
+         dan namanya disebut di baris instruksi bawah beserta nomor
+         langkahnya.
+       · Tekan-tahan TETAP DIPAKAI, tapi durasinya pendek (maks 0,8 detik)
+         DAN menu long-press browser dicegah di level dokumen
+         (contextmenu + touchstart + callout + user-select). Versi
+         sebelumnya menahan 2,4 detik tanpa guard, jadi menu
+         Back/Reload/Translate browser muncul menimpa halaman.
+       · Area sentuh minimal 44px untuk semua yang bisa disentuh.
 
      Semua isi pesanan ada di blok DATA di bawah.
      ===================================================================== -->
@@ -89,25 +92,27 @@
 
 <style>
 /* =====================================================================
-   PALET — kamar sore yang panas, pelan-pelan jadi tenang.
-   --panas (1 → 0) dihitung dari suhu dan dipakai di mana-mana:
-   blur, tint, kehangatan lampu, dengung suara.
+   PALET — kamar sore yang terang. Palet merek dipakai apa adanya supaya
+   kontrasnya tinggi dan bentuknya kebaca: kertas krem, garis navy,
+   koral untuk demam, mint untuk pulih, madu untuk cahaya lampu.
+   --panas (1 -> 0) hanya mengubah WARNA CAHAYA, tidak pernah ketajaman.
    ===================================================================== */
 :root{
   --panas:1;
-  --wall:#32262C;
-  --wall-dark:#241B20;
-  --wall-lit:#4A3A3F;
-  --ink:#F4EBE4;
-  --muted:rgba(244,235,228,.66);
-  --faint:rgba(244,235,228,.3);
-  --hair:rgba(244,235,228,.14);
-  --demam:#E8734A;          /* panas */
-  --sembuh:#8FD3C7;         /* pulih */
-  --lampu:#FFD79A;
-  --kayu:#6E4A3A;
-  --kayu-tua:#4A3026;
-  --kain:#D9CFC4;
+  --kertas:#FAF3E8;
+  --kertas-2:#F2E7D6;
+  --navy:#1B1B2F;
+  --navy-70:rgba(27,27,47,.7);
+  --navy-40:rgba(27,27,47,.4);
+  --navy-18:rgba(27,27,47,.18);
+  --coral:#E8734A;
+  --coral-tua:#C4542F;
+  --mint:#5FB7A3;
+  --mint-muda:#CDE9E1;
+  --madu:#F2C14E;
+  --kayu:#C08457;
+  --kayu-tua:#8A5A3B;
+  --kain:#E8E0D4;
   --disp:'Fraunces',Georgia,serif;
   --hand:'Caveat',cursive;
   --sans:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -116,348 +121,353 @@
 [hidden]{display:none!important}
 html,body{height:100%;overflow:hidden}
 body{
-  font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink);
-  background:var(--wall-dark);-webkit-font-smoothing:antialiased;
+  font-family:var(--sans);font-size:15px;line-height:1.45;color:var(--navy);
+  background:var(--kertas);-webkit-font-smoothing:antialiased;
+  /* guard long-press: tanpa ini, tekan-tahan memunculkan menu browser */
   user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  touch-action:manipulation;
 }
-img{max-width:100%;display:block;-webkit-user-drag:none}
+img{max-width:100%;display:block;-webkit-user-drag:none;pointer-events:none}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
-svg{display:block;overflow:visible}
+svg{display:block}
 
-/* ── KAMAR ───────────────────────────────────────────────────────────
-   Satu panggung tetap. Tidak discroll; isinya yang berubah.           */
-#ruang{
-  position:fixed;inset:0;overflow:hidden;
-  background:
-    radial-gradient(120% 70% at 78% 18%, rgba(255,215,154,calc(.20 + var(--panas)*.14)) 0%, transparent 62%),
-    linear-gradient(180deg, var(--wall-lit) 0%, var(--wall) 46%, var(--wall-dark) 100%);
-  filter:blur(calc(var(--panas) * 2.6px)) saturate(calc(1 + var(--panas)*.55));
-  transition:filter 1.1s ease, background 1.6s ease;
-}
-#demamTint{
-  position:fixed;inset:0;pointer-events:none;z-index:6;
-  background:radial-gradient(90% 60% at 50% 55%, rgba(232,115,74,calc(var(--panas)*.34)) 0%, rgba(232,115,74,calc(var(--panas)*.12)) 60%, transparent 100%);
-  transition:background 1.2s ease;
-}
-#denyut{
-  position:fixed;inset:0;pointer-events:none;z-index:7;
-  box-shadow:inset 0 0 calc(60px + var(--panas)*90px) rgba(232,115,74,calc(var(--panas)*.5));
-  animation:denyut 2.4s ease-in-out infinite;transition:box-shadow 1.2s ease;
-}
-@keyframes denyut{50%{opacity:.55}}
+/* ── KAMAR: panggung tetap, tidak discroll ───────────────────────── */
+#ruang{position:fixed;left:0;right:0;top:0;bottom:64px;overflow:hidden;
+  background:linear-gradient(180deg,#FFFBF4 0%,var(--kertas) 38%,var(--kertas-2) 100%)}
+#ruang::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(232,115,74,calc(var(--panas)*.17)),rgba(232,115,74,calc(var(--panas)*.07)));
+  transition:background 1.2s ease}
+.lantai{position:absolute;left:0;right:0;bottom:0;height:7%;background:var(--kayu-tua)}
 
-.obj{position:absolute;z-index:8}
-.bisa{cursor:pointer;touch-action:none}
-.bisa::after{
-  content:"";position:absolute;inset:-14px;border-radius:40px;pointer-events:none;
-  box-shadow:0 0 0 2px rgba(255,215,154,.0);transition:box-shadow .4s;
-}
-.sorot::after{box-shadow:0 0 0 2px rgba(255,215,154,.5),0 0 26px 6px rgba(255,215,154,.3);animation:sorotPulse 2s ease-in-out infinite}
-@keyframes sorotPulse{50%{box-shadow:0 0 0 2px rgba(255,215,154,.22),0 0 14px 3px rgba(255,215,154,.14)}}
-.mati{opacity:.42;pointer-events:none;filter:grayscale(.35)}
-.lenyap{opacity:0;pointer-events:none;transition:opacity .7s}
+.obj{position:absolute;z-index:4}
+.bisa{cursor:pointer}
+.bisa .pegang{touch-action:none}
+/* cincin penanda objek yang sedang aktif */
+.obj.aktif .ring{opacity:1;animation:ringPulse 1.8s ease-in-out infinite}
+.ring{position:absolute;inset:-12px;border-radius:22px;border:2.5px solid var(--coral);
+  opacity:0;pointer-events:none;transition:opacity .35s}
+@keyframes ringPulse{50%{transform:scale(1.045);border-color:var(--madu)}}
+.obj.beres .ring{display:none}
+.obj.beres .label{background:var(--mint-muda);border-color:var(--mint);color:#17483E}
+.obj.beres .label::after{content:" ✓"}
+/* label nama objek — selalu tampil supaya penerima tahu itu benda apa */
+.label{position:absolute;left:50%;transform:translateX(-50%);bottom:-24px;white-space:nowrap;
+  font-size:.64rem;font-weight:900;letter-spacing:.02em;padding:3px 8px;border-radius:999px;
+  background:#fff;border:1.5px solid var(--navy-18);color:var(--navy-70);z-index:5}
+.label.atas{bottom:auto;top:-24px}
+/* panah penunjuk */
+#panah{position:absolute;z-index:6;width:34px;height:34px;pointer-events:none;opacity:0;
+  transition:opacity .3s,left .45s cubic-bezier(.2,.9,.3,1),top .45s cubic-bezier(.2,.9,.3,1)}
+#panah.tampil{opacity:1;animation:panahGoyang 1.3s ease-in-out infinite}
+@keyframes panahGoyang{50%{transform:translateY(7px)}}
 
-/* jendela — kiri atas, daunnya berayun di engsel */
-#jendela{left:4%;top:7%;width:40%}
-.jd-kusen{position:relative;width:100%;aspect-ratio:1/1.05}
-.jd-luar{position:absolute;inset:6%;border-radius:3px;overflow:hidden;
-  background:linear-gradient(180deg,#53414A 0%,#6E5560 55%,#7C6A64 100%)}
-.jd-luar .bintik{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,230,190,.55)}
-.jd-daun{position:absolute;inset:0;transform-origin:left center;
-  transition:transform .25s ease-out;will-change:transform}
-.jd-kaca{position:absolute;inset:6%;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
-  box-shadow:inset 0 0 0 1px rgba(244,235,228,.18)}
-#jendela.buka .jd-tirai{animation:tirai 3.4s ease-in-out infinite}
-.jd-tirai{position:absolute;right:-6%;top:0;width:26%;height:86%;
-  background:linear-gradient(90deg,rgba(217,207,196,.85),rgba(217,207,196,.45));
-  border-radius:0 0 40% 10%;transform-origin:top center}
-@keyframes tirai{50%{transform:skewX(-7deg) scaleY(1.03)}}
+/* jendela */
+#jendela{left:4%;top:4%;width:36%}
+.jd-bingkai{position:relative;width:100%;aspect-ratio:1/.92;background:#BFD8E6;
+  border:3px solid var(--navy);border-radius:4px;overflow:hidden}
+.jd-langit{position:absolute;inset:0;background:linear-gradient(180deg,#CFE3EF 0%,#F6D9BE 70%,#F0C49C 100%)}
+.jd-mentari{position:absolute;right:14%;top:16%;width:26%;aspect-ratio:1;border-radius:50%;
+  background:var(--madu);box-shadow:0 0 18px 5px rgba(242,193,78,.55)}
+.jd-palang{position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:var(--navy)}
+.jd-palang2{position:absolute;top:48%;left:0;right:0;height:3px;background:var(--navy)}
+.jd-daun{position:absolute;inset:0;background:rgba(214,232,240,.85);border:3px solid var(--navy);
+  transform-origin:left center;transition:transform .3s ease-out;will-change:transform}
+.jd-kait{position:absolute;right:-9px;top:50%;width:46px;height:46px;margin-top:-23px;
+  display:grid;place-items:center;z-index:3}
+.jd-kait i{width:20px;height:20px;border-radius:50%;background:var(--coral);
+  border:2.5px solid var(--navy);display:block}
 
-/* lemari — kiri bawah, ada foto yang ditempel */
-#lemari{left:2%;bottom:6%;width:34%}
-.lm-pintu{position:relative;width:100%;aspect-ratio:1/1.35;border-radius:4px;
-  background:linear-gradient(100deg,var(--kayu) 0%,var(--kayu-tua) 70%);
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
-.lm-garis{position:absolute;left:12%;right:12%;top:10%;bottom:10%;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+/* foto 1 — ditempel di dinding, miring, pakai selotip */
+#fotoA{right:5%;top:4%;width:23%;transform:rotate(5deg)}
+.ft-tempel{position:relative;padding:7% 7% 16%;background:#fff;border:2.5px solid var(--navy);
+  box-shadow:3px 4px 0 var(--navy-18)}
+.ft-tempel img{width:100%;aspect-ratio:1/1.05;object-fit:cover;background:var(--kertas-2)}
+.ft-selotip{position:absolute;left:50%;top:-11px;width:54px;height:20px;margin-left:-27px;
+  background:rgba(242,193,78,.75);border:1.5px solid var(--navy-18);transform:rotate(-4deg)}
 
-/* cermin — kanan atas */
-#cermin{right:5%;top:5%;width:26%}
-.cm-bingkai{position:relative;width:100%;aspect-ratio:1/1.25;border-radius:50% 50% 46% 46%;
-  background:linear-gradient(160deg,#8A6F5E,#5A4336);padding:7%}
-.cm-kaca{width:100%;height:100%;border-radius:50% 50% 46% 46%;
-  background:linear-gradient(170deg,rgba(255,255,255,.16),rgba(143,211,199,.1) 60%,rgba(255,255,255,.04));
-  box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
+/* kepala ranjang + bantal + zona dahi (sisi kiri kamar) */
+#ranjang{left:0;bottom:0;width:48%;height:44%;z-index:3}
+.rj-kepala{position:absolute;left:3%;right:6%;bottom:62%;height:38%;background:var(--kayu);
+  border:3px solid var(--navy);border-radius:12px 12px 0 0}
+.rj-kasur{position:absolute;left:0;right:0;bottom:0;height:64%;background:#fff;
+  border:3px solid var(--navy);border-radius:0 10px 0 0}
+.rj-selimut{position:absolute;left:0;right:0;bottom:0;height:34%;background:var(--mint-muda);
+  border-top:3px solid var(--navy)}
+#bantal{left:4%;bottom:22%;width:40%;z-index:5}
+.bt-bentuk{position:relative;width:100%;aspect-ratio:2/1.08;background:#fff;
+  border:3px solid var(--navy);border-radius:40% 40% 24% 24%}
+.bt-zona{position:absolute;left:50%;top:16%;width:58%;height:56%;margin-left:-29%;
+  border:2.5px dashed var(--coral);border-radius:44%;display:grid;place-items:center;
+  font-size:.6rem;font-weight:900;color:var(--coral-tua);text-align:center;line-height:1.1;
+  transition:background .3s,border-color .3s}
+.bt-zona.siap{background:rgba(242,193,78,.35);border-color:var(--navy)}
+#bantal.beres .bt-zona{border-color:var(--mint);color:#17483E}
 
-/* meja samping + lampu + ponsel + termometer + gelas + kotak obat */
-#meja{right:0;bottom:0;width:62%;height:44%;
-  background:linear-gradient(180deg,var(--kayu) 0%,var(--kayu-tua) 18%,var(--kayu-tua) 100%);
-  border-radius:16px 0 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.4);z-index:8}
-#meja::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;
-  background:linear-gradient(90deg,rgba(255,215,154,.3),rgba(255,215,154,.05));border-radius:16px 0 0 0}
+/* handuk kompres — tergeletak di selimut */
+#handuk{left:5%;bottom:4%;width:21%;min-width:76px;z-index:9}
+.hd-kain{position:relative;width:100%;aspect-ratio:1.4/1;min-height:52px;border-radius:8px;
+  background:repeating-linear-gradient(135deg,var(--mint-muda) 0 8px,#B7DCD2 8px 16px);
+  border:3px solid var(--navy);box-shadow:2px 3px 0 var(--navy-18)}
+#handuk.nempel .hd-kain{box-shadow:0 0 0 4px rgba(95,183,163,.4)}
+/* cincin progres tekan-tahan (pendek: 0,8 detik) */
+.tahanRing{position:absolute;inset:-10px;pointer-events:none;opacity:0;transition:opacity .2s}
+.tahanRing.on{opacity:1}
+.tahanRing circle{fill:none;stroke:var(--coral);stroke-width:4;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:50% 50%}
 
-#lampu{right:6%;bottom:30%;width:30%}
-.lp-kap{width:100%;aspect-ratio:2/1.15;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);
-  background:linear-gradient(180deg,#C9A37A,#9A7352)}
-.lp-cahaya{position:absolute;left:-40%;right:-40%;top:88%;height:280px;pointer-events:none;
-  background:radial-gradient(60% 70% at 50% 0%,rgba(255,215,154,calc(.5 - var(--panas)*.1)) 0%,transparent 72%);
-  transition:background 1.2s}
-.lp-batang{position:absolute;left:50%;top:98%;width:5px;height:54px;margin-left:-2.5px;
-  background:linear-gradient(180deg,#8A6F5E,#5A4336)}
-#tali{position:absolute;right:-2%;top:70%;width:34px;height:120px;z-index:11;touch-action:none;cursor:pointer}
-.tali-garis{position:absolute;left:50%;top:0;width:2px;height:var(--tl,78px);margin-left:-1px;
-  background:rgba(244,235,228,.5)}
-.tali-bola{position:absolute;left:50%;top:var(--tl,78px);width:14px;height:14px;margin-left:-7px;
-  border-radius:50%;background:var(--kain);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+/* meja samping — permukaannya di bottom:42%, semua benda duduk di situ,
+   dan di bawahnya ada rak terbuka tempat kotak obat. */
+#meja{right:0;bottom:0;width:54%;height:46%;background:var(--kayu);
+  border:3px solid var(--navy);border-radius:10px 0 0 0;z-index:4}
+#meja .permukaan{position:absolute;left:0;right:0;top:0;height:9%;background:var(--kayu-tua);
+  border-bottom:3px solid var(--navy)}
+#meja .rak{position:absolute;left:6%;right:6%;top:26%;bottom:10%;background:var(--kertas-2);
+  border:3px solid var(--navy);border-radius:6px}
 
-#gelas{right:40%;bottom:30%;width:15%}
-.gl-badan{position:relative;width:100%;aspect-ratio:1/1.5;border-radius:4px 4px 10px 10px;
-  background:linear-gradient(100deg,rgba(255,255,255,.16),rgba(255,255,255,.06));
-  box-shadow:inset 0 0 0 1.5px rgba(244,235,228,.3);overflow:hidden;
-  transform-origin:bottom right;transition:transform .2s}
-.gl-air{position:absolute;left:0;right:0;bottom:0;height:var(--air,72%);
-  background:linear-gradient(180deg,rgba(143,211,199,.55),rgba(143,211,199,.8));
-  transition:height .35s ease}
-.gl-dasar{position:absolute;left:0;right:0;bottom:3px;text-align:center;
-  font-family:var(--hand);font-size:.62rem;line-height:1.05;color:#2A2026;opacity:0;transition:opacity .6s;padding:0 2px}
+/* lampu meja — duduk di permukaan meja */
+#lampu{right:7%;bottom:46%;width:21%;min-width:80px;z-index:5}
+.lp-kap{width:100%;aspect-ratio:2/1.1;clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);
+  background:var(--madu);border-bottom:3px solid var(--navy)}
+.lp-tiang{position:absolute;left:50%;top:97%;width:6px;height:34px;margin-left:-3px;background:var(--navy)}
+.lp-alas{position:absolute;left:50%;top:calc(97% + 32px);width:46%;height:10px;margin-left:-23%;
+  background:var(--kayu-tua);border:2.5px solid var(--navy);border-radius:4px}
+.lp-sinar{position:absolute;left:-30%;right:-30%;top:95%;height:170px;pointer-events:none;
+  background:radial-gradient(60% 72% at 50% 0%,rgba(242,193,78,.6) 0%,transparent 70%);
+  transition:opacity .9s}
+#tali{position:absolute;right:-10px;top:38%;width:46px;height:104px;z-index:8;display:grid;
+  justify-items:center}
+.tali-garis{width:3px;height:var(--tl,56px);background:var(--navy);transition:height .18s}
+.tali-bola{width:18px;height:18px;border-radius:50%;background:var(--kain);border:2.5px solid var(--navy)}
+
+/* gelas air */
+#gelas{right:29%;bottom:46%;width:12%;min-width:50px;z-index:6}
+.gl-badan{position:relative;width:100%;aspect-ratio:1/1.45;min-height:62px;
+  border:3px solid var(--navy);border-radius:4px 4px 12px 12px;background:#fff;overflow:hidden;
+  transform-origin:bottom right;transition:transform .35s ease}
+.gl-air{position:absolute;left:0;right:0;bottom:0;height:var(--air,70%);
+  background:linear-gradient(180deg,#BFE3F0,#8FCBDE);transition:height .5s ease}
+.gl-dasar{position:absolute;left:0;right:0;bottom:4px;text-align:center;padding:0 3px;
+  font-family:var(--hand);font-size:.66rem;line-height:1.05;color:var(--navy);opacity:0;transition:opacity .5s}
 .gl-dasar.tampil{opacity:1}
 
-#termo{right:22%;bottom:26%;width:5%;z-index:9;touch-action:none}
-.tm-batang{position:relative;width:100%;aspect-ratio:1/7;border-radius:999px;
-  background:linear-gradient(90deg,#EFE7DC,#CFC3B6);box-shadow:0 2px 6px rgba(0,0,0,.35)}
-.tm-isi{position:absolute;left:34%;right:34%;bottom:6%;height:var(--tmi,62%);
-  background:var(--demam);border-radius:999px;transition:height .8s,background 1s}
-.tm-angka{position:absolute;left:120%;top:40%;white-space:nowrap;font-weight:800;font-size:.78rem;
-  color:var(--ink);opacity:0;transition:opacity .5s}
+/* termometer */
+#termo{right:44%;bottom:46%;width:7%;min-width:30px;z-index:7}
+.tm-batang{position:relative;width:100%;aspect-ratio:1/4.4;min-height:60px;border-radius:999px;
+  background:#fff;border:3px solid var(--navy);overflow:hidden}
+.tm-isi{position:absolute;left:24%;right:24%;bottom:5%;height:var(--tmi,66%);
+  background:var(--coral);border-radius:999px;transition:height .9s ease,background 1s}
+.tm-angka{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);white-space:nowrap;
+  font-weight:900;font-size:.76rem;color:var(--coral-tua);opacity:0;transition:opacity .5s}
 .tm-angka.jelas{opacity:1}
 
-#kotakobat{right:7%;bottom:9%;width:34%}
-.ko-badan{position:relative;width:100%;aspect-ratio:2.6/1;border-radius:7px;
-  background:linear-gradient(170deg,#E6DCCF,#C3B5A5);box-shadow:0 4px 12px rgba(0,0,0,.35);
-  display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:4px}
-.ko-sekat{position:relative;border-radius:3px;background:#A89684;overflow:hidden}
-.ko-sekat small{position:absolute;inset:0;display:grid;place-items:center;font-size:.42rem;font-weight:900;color:#4A3026}
-.ko-tutup{position:absolute;inset:0;background:linear-gradient(180deg,#F2EAE1,#D6C9BA);
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);touch-action:none;transition:transform .2s}
-.ko-sekat.kosong .ko-tutup{transform:translateX(-82%);opacity:.45}
-.ko-pil{position:absolute;left:50%;top:50%;width:52%;height:34%;margin:-17% 0 0 -26%;
-  border-radius:999px;background:linear-gradient(90deg,#FFF,#F0B429)}
+/* kotak obat — 3 laci jelas, bukan kisi-kisi */
+#kotakobat{right:9%;bottom:14%;width:38%;min-width:148px;z-index:7}
+.ko-badan{position:relative;width:100%;background:#fff;border:3px solid var(--navy);border-radius:8px;
+  padding:6px;display:flex;flex-direction:column;gap:5px}
+.ko-laci{position:relative;height:34px;border-radius:5px;background:var(--kertas-2);
+  border:2.5px solid var(--navy);display:flex;align-items:center;gap:7px;padding:0 8px;overflow:hidden}
+.ko-laci .gagang{width:22px;height:5px;border-radius:3px;background:var(--navy);flex:none}
+.ko-laci .nm{font-size:.66rem;font-weight:900;color:var(--navy-70)}
+.ko-laci .pil{margin-left:auto;width:18px;height:11px;border-radius:999px;
+  background:linear-gradient(90deg,#fff 50%,var(--madu) 50%);border:2px solid var(--navy);flex:none}
+.ko-laci.kebuka{background:var(--mint-muda);border-color:var(--mint)}
+.ko-laci.kebuka .pil{opacity:.25}
 
-/* foto-foto: tertanam di kamar, tidak berjejer, tidak seukuran */
-#fotoA{right:30%;bottom:36%;width:17%;transform:rotate(-3deg)}       /* bingkai di meja */
-#fotoB{left:7%;bottom:30%;width:19%;transform:rotate(4deg)}          /* ditempel di pintu lemari */
-#fotoC{right:7%;top:9%;width:15%;transform:rotate(-7deg)}            /* terselip di cermin */
-.ft-bingkai{position:relative;padding:7%;background:var(--kain);box-shadow:0 4px 12px rgba(0,0,0,.4)}
-.ft-bingkai img{width:100%;aspect-ratio:1/1.2;object-fit:cover;filter:blur(calc(var(--panas)*2.4px));transition:filter 1.1s}
-#fotoB .ft-bingkai{padding:4%;background:#F4EBE4;transform:none}
-#fotoB .ft-bingkai::before,#fotoB .ft-bingkai::after{content:"";position:absolute;left:28%;right:28%;height:12px;
-  background:rgba(255,235,200,.45);transform:rotate(-2deg)}
-#fotoB .ft-bingkai::before{top:-6px}
-#fotoB .ft-bingkai::after{bottom:-6px}
-#fotoC .ft-bingkai{padding:5%}
+/* ponsel */
+#ponsel{left:30%;bottom:5%;width:12%;min-width:44px;z-index:6}
+.pn-badan{position:relative;width:100%;aspect-ratio:1/1.9;min-height:62px;border-radius:6px;
+  background:var(--navy);border:3px solid var(--navy)}
+.pn-layar{position:absolute;inset:7%;border-radius:3px;background:#2E2E44;transition:background .5s}
+#ponsel.nyala .pn-layar{background:linear-gradient(180deg,#CDE9E1,var(--mint));
+  box-shadow:0 0 16px 4px rgba(95,183,163,.5)}
 
-/* dahi/selimut — bawah tengah, tempat kompres ditaruh */
-#dahi{left:50%;bottom:0;width:46%;transform:translateX(-50%);z-index:8}
-.dh-bantal{width:100%;aspect-ratio:2.4/1;border-radius:46% 46% 8% 8%;
-  background:linear-gradient(180deg,#E3D9CE,#BCAE9F);box-shadow:0 -4px 16px rgba(0,0,0,.35)}
-.dh-zona{position:absolute;left:50%;top:14%;width:44%;height:40%;margin-left:-22%;
-  border-radius:40%;box-shadow:inset 0 0 0 2px rgba(255,215,154,0);transition:box-shadow .4s}
-.dh-zona.aktif{box-shadow:inset 0 0 0 2px rgba(255,215,154,.55)}
-#handuk{left:16%;bottom:12%;width:22%;z-index:12;touch-action:none}
-.hd-kain{width:100%;aspect-ratio:1.5/1;border-radius:6px;
-  background:repeating-linear-gradient(135deg,#CFE3DD 0 6px,#BBD6CF 6px 12px);
-  box-shadow:0 4px 12px rgba(0,0,0,.35)}
-#handuk.nempel{filter:drop-shadow(0 0 10px rgba(143,211,199,.5))}
+/* foto 2 — bingkai berdiri di meja */
+#fotoB{left:6%;top:32%;width:20%;min-width:66px;z-index:5;transform:rotate(-3deg)}
+.ft-bingkai{position:relative;padding:8%;background:var(--kain);border:3px solid var(--navy)}
+.ft-bingkai img{width:100%;aspect-ratio:1/1.15;object-fit:cover;background:var(--kertas-2)}
+/* foto 3 — digantung di tali jepitan */
+#fotoC{left:46%;top:9%;width:19%;min-width:64px;z-index:5;transform:rotate(-4deg)}
+.ft-jepit{position:relative;padding:7% 7% 14%;background:#fff;border:2.5px solid var(--navy)}
+.ft-jepit img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--kertas-2)}
+.ft-jepitan{position:absolute;left:50%;top:-14px;width:14px;height:22px;margin-left:-7px;
+  background:var(--kayu);border:2px solid var(--navy);border-radius:3px}
+#talifoto{position:absolute;left:42%;width:26%;top:7%;height:3px;background:var(--navy-40);z-index:3}
 
-#ponsel{right:26%;bottom:16%;width:11%;z-index:9}
-.pn-badan{position:relative;width:100%;aspect-ratio:1/2;border-radius:4px;background:#1B1620;
-  box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(244,235,228,.18)}
-.pn-layar{position:absolute;inset:8%;border-radius:2px;background:#0E0B11;transition:background .5s}
-#ponsel.nyala .pn-layar{background:linear-gradient(180deg,#CFE3DD,#8FD3C7);box-shadow:0 0 18px 4px rgba(143,211,199,.45)}
+/* ── BARIS BAWAH: satu-satunya chrome, selalu tampil ─────────────── */
+#bawah{position:fixed;left:0;right:0;bottom:0;z-index:20;height:64px;
+  display:flex;align-items:center;gap:10px;padding:0 13px calc(0px + env(safe-area-inset-bottom));
+  background:#fff;border-top:3px solid var(--navy)}
+#suhuBox{flex:none;display:flex;align-items:baseline;gap:2px;font-family:var(--disp);
+  font-weight:600;font-size:1.2rem;color:var(--coral-tua);transition:color 1s}
+#suhuBox small{font-size:.6rem;font-weight:800;color:var(--navy-40)}
+#suhuBox.pulih{color:var(--mint)}
+#teksArah{flex:1;min-width:0}
+#langkahNo{display:block;font-size:.58rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--navy-40)}
+#arahan{display:block;font-size:.82rem;font-weight:700;line-height:1.25}
+#arahan b{color:var(--coral-tua)}
 
-/* ── GARIS BAWAH: satu-satunya "chrome", tidak diulang per bagian ── */
-#bawah{
-  position:fixed;left:0;right:0;bottom:0;z-index:20;
-  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
-  display:flex;align-items:center;gap:12px;
-  background:linear-gradient(180deg,rgba(26,20,24,0),rgba(26,20,24,.86) 40%);
-}
-#suhuBox{display:flex;align-items:baseline;gap:3px;flex:none;
-  font-family:var(--disp);font-weight:600;font-size:1.22rem;color:var(--demam);transition:color 1.2s}
-#suhuBox small{font-size:.66rem;font-weight:800;color:var(--muted)}
-#suhuBox.pulih{color:var(--sembuh)}
-#arahan{flex:1;font-size:.82rem;font-weight:700;color:var(--ink);line-height:1.3}
-#arahan b{font-weight:800;color:var(--lampu)}
-#hari{flex:none;font-size:.66rem;font-weight:800;color:var(--faint);text-align:right;line-height:1.2}
-
-/* ── DEKAT: objek yang didekatkan, bukan halaman baru ───────────────
-   Muncul dengan membesar dari posisi objeknya sendiri.               */
-#dekat{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:22px}
+/* ── DEKAT: objek yang didekatkan ───────────────────────────────── */
+#dekat{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
 #dekat.tampil{display:flex}
-#dekatBg{position:absolute;inset:0;background:rgba(20,15,18,.82);backdrop-filter:blur(3px);opacity:0;transition:opacity .4s}
+#dekatBg{position:absolute;inset:0;background:rgba(27,27,47,.55);opacity:0;transition:opacity .35s}
 #dekat.tampil #dekatBg{opacity:1}
-#dekatIsi{position:relative;width:min(380px,100%);max-height:84vh;overflow:auto;
-  transform:scale(.25);opacity:0;transition:transform .45s cubic-bezier(.2,.9,.3,1.1),opacity .3s}
-#dekat.tampil #dekatIsi{transform:scale(1);opacity:1}
-.dk-tutup{display:block;margin:14px auto 0;font-size:.76rem;font-weight:800;color:var(--muted);
-  text-decoration:underline;text-underline-offset:3px}
+#dekatIsi{position:relative;width:min(360px,100%);max-height:82vh;overflow:auto;
+  transform:translateY(16px) scale(.94);opacity:0;transition:transform .4s cubic-bezier(.2,.9,.3,1),opacity .3s}
+#dekat.tampil #dekatIsi{transform:none;opacity:1}
+.dk-tutup{display:block;margin:12px auto 0;font-size:.8rem;font-weight:800;color:#fff;
+  background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.5);border-radius:999px;padding:9px 18px}
 
-/* foto yang didekatkan */
-.dk-foto{background:var(--kain);padding:12px 12px 8px;box-shadow:0 18px 40px rgba(0,0,0,.5)}
-.dk-foto img{width:100%;aspect-ratio:1/1.15;object-fit:cover}
-.dk-foto p{margin-top:9px;font-family:var(--hand);font-size:1.12rem;color:#2A2026;text-align:center;line-height:1.2}
+.kartu{background:#fff;border:3px solid var(--navy);border-radius:14px;padding:18px 16px;
+  box-shadow:5px 6px 0 rgba(27,27,47,.25)}
+.kartu h3{font-family:var(--disp);font-weight:600;font-size:1.06rem;text-align:center}
+.kartu .jelas{font-size:.78rem;color:var(--navy-70);text-align:center;margin-top:3px}
 
-/* sekat obat yang dibuka */
-.dk-dosis{background:#F4EBE4;border-radius:14px;padding:20px 18px;box-shadow:0 18px 40px rgba(0,0,0,.5);text-align:center}
-.dk-dosis .ikon{width:42px;height:42px;margin:0 auto 10px;border-radius:50%;
-  background:linear-gradient(90deg,#FFF,#F0B429);box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.dk-dosis .aturan{font-size:.68rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#A8623A}
-.dk-dosis .teks{margin-top:8px;font-family:var(--disp);font-size:1.08rem;line-height:1.55;color:#2A2026;white-space:pre-line}
+.dk-dosis{text-align:center}
+.dk-dosis .pilBesar{width:52px;height:30px;margin:0 auto 12px;border-radius:999px;
+  background:linear-gradient(90deg,#fff 50%,var(--madu) 50%);border:3px solid var(--navy)}
+.dk-dosis .aturan{display:inline-block;font-size:.64rem;font-weight:900;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--coral-tua);background:rgba(232,115,74,.12);
+  border-radius:999px;padding:4px 10px}
+.dk-dosis .teks{margin-top:10px;font-family:var(--disp);font-size:1.05rem;line-height:1.6;white-space:pre-line}
 
-/* rutinitas: 3 hal yang bikin enakan, ditaruh ke urutan malam */
-.dk-rutin{background:#F4EBE4;border-radius:16px;padding:18px;box-shadow:0 18px 40px rgba(0,0,0,.5)}
-.dk-rutin h3{font-family:var(--disp);font-weight:600;font-size:1.04rem;color:#2A2026;text-align:center}
-.dk-rutin .jelas{font-size:.76rem;color:#6B5A52;text-align:center;margin-top:3px}
-.rt-slot{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.rt-kotak{position:relative;min-height:46px;border-radius:10px;background:#E4D9CE;
-  box-shadow:inset 0 0 0 1.5px rgba(42,32,38,.14);display:flex;align-items:center;gap:9px;padding:8px 11px}
-.rt-kotak .no{width:20px;height:20px;border-radius:50%;background:#C9B6A6;color:#4A3026;
-  font-size:.68rem;font-weight:900;display:grid;place-items:center;flex:none}
-.rt-kotak.isi{background:#D7E8E2;box-shadow:inset 0 0 0 1.5px rgba(143,211,199,.8)}
-.rt-kotak.target{box-shadow:inset 0 0 0 2px rgba(232,115,74,.7)}
-.rt-kotak span.t{font-size:.86rem;font-weight:700;color:#2A2026;line-height:1.25}
-.rt-sumber{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;justify-content:center;min-height:40px}
-.rt-item{padding:9px 13px;border-radius:999px;background:#EBDED2;color:#2A2026;
-  font-size:.84rem;font-weight:800;box-shadow:0 2px 0 #C9B6A6;touch-action:none;cursor:grab}
-.rt-item.diambil{opacity:0;pointer-events:none}
-.rt-jalan{display:block;margin:14px auto 0}
-.rt-main{margin-top:12px;text-align:center;font-family:var(--hand);font-size:1.2rem;color:#2A2026;min-height:1.4em}
+.dk-foto img{width:100%;aspect-ratio:1/1.08;object-fit:cover;border:3px solid var(--navy);background:var(--kertas-2)}
+.dk-foto p{margin-top:10px;font-family:var(--hand);font-size:1.15rem;text-align:center;line-height:1.2}
 
-/* irama napas */
-.dk-napas{text-align:center}
-.np-ring{position:relative;width:min(230px,66vw);aspect-ratio:1;margin:0 auto;border-radius:50%;
-  background:radial-gradient(circle,rgba(143,211,199,.3) 0%,rgba(143,211,199,.06) 70%,transparent 72%);
-  box-shadow:0 0 0 2px rgba(143,211,199,.35);
-  transform:scale(var(--np,.62));transition:transform .1s linear;touch-action:none;cursor:pointer}
-.np-ring b{position:absolute;inset:0;display:grid;place-items:center;
-  font-family:var(--disp);font-weight:500;font-size:1.1rem;color:var(--ink);transform:scale(calc(1 / var(--np,.62)))}
-.np-info{margin-top:18px;font-size:.84rem;font-weight:800;color:var(--muted)}
-.np-titik{display:flex;gap:7px;justify-content:center;margin-top:10px}
-.np-titik i{width:8px;height:8px;border-radius:50%;background:rgba(244,235,228,.25)}
-.np-titik i.on{background:var(--sembuh)}
-.dk-napas.salah .np-ring{box-shadow:0 0 0 2px rgba(232,115,74,.6)}
+/* rutinitas: ketuk hal -> ketuk urutannya (bukan seret, lebih jelas) */
+.rt-slot{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.rt-kotak{min-height:46px;border-radius:9px;background:var(--kertas-2);border:2.5px solid var(--navy);
+  display:flex;align-items:center;gap:9px;padding:8px 10px}
+.rt-kotak .no{width:24px;height:24px;border-radius:50%;background:#fff;border:2.5px solid var(--navy);
+  font-size:.7rem;font-weight:900;display:grid;place-items:center;flex:none}
+.rt-kotak .t{font-size:.86rem;font-weight:700;line-height:1.2;color:var(--navy-40)}
+.rt-kotak.isi{background:var(--mint-muda);border-color:var(--mint)}
+.rt-kotak.isi .t{color:var(--navy)}
+.rt-kotak.bisaIsi{border-style:dashed;border-color:var(--coral)}
+.rt-sumber{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;justify-content:center}
+.rt-item{padding:10px 14px;border-radius:999px;background:#fff;border:2.5px solid var(--navy);
+  font-size:.84rem;font-weight:800;min-height:44px;display:flex;align-items:center}
+.rt-item.dipilih{background:var(--madu)}
+.rt-item.diambil{opacity:.3;pointer-events:none}
+.rt-jalan{display:block;margin:14px auto 0;padding:11px 20px;border-radius:999px;
+  background:var(--mint);border:3px solid var(--navy);font-weight:900;font-size:.88rem}
+.rt-jalan[disabled]{opacity:.4}
+.rt-main{margin-top:11px;text-align:center;font-family:var(--hand);font-size:1.2rem;min-height:1.4em}
 
-/* ── SURAT: lembar keterangan obat, dibuka lipatannya satu-satu ──── */
-#lembar{position:fixed;inset:0;z-index:40;display:none;overflow:auto;
-  padding:26px 16px calc(26px + env(safe-area-inset-bottom));
-  background:radial-gradient(120% 60% at 50% 0%,#413036,#1C1519 70%)}
+/* irama napas — tekan-tahan PENDEK, lalu lepas */
+.np-ring{position:relative;width:min(200px,58vw);aspect-ratio:1;margin:12px auto 0;border-radius:50%;
+  background:var(--mint-muda);border:3px solid var(--navy);transform:scale(var(--np,.66));
+  transition:transform .09s linear;touch-action:none;display:grid;place-items:center}
+.np-ring b{font-family:var(--disp);font-weight:600;font-size:1.15rem;
+  transform:scale(calc(1 / var(--np,.66)))}
+.np-info{margin-top:16px;font-size:.84rem;font-weight:800;color:var(--navy-70);text-align:center;min-height:2.4em}
+.np-titik{display:flex;gap:7px;justify-content:center;margin-top:9px}
+.np-titik i{width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--navy)}
+.np-titik i.on{background:var(--mint)}
+
+/* ── SURAT: lembar keterangan obat, lipatannya dibuka satu-satu ─── */
+#lembar{position:fixed;inset:0;z-index:40;display:none;overflow:auto;padding:22px 14px 30px;
+  background:var(--kertas-2)}
 #lembar.tampil{display:block}
-.lb-kertas{width:min(400px,100%);margin:0 auto;background:#F7F1E6;color:#2A2026;
-  box-shadow:0 20px 50px rgba(0,0,0,.55);position:relative}
-.lb-kop{padding:16px 18px 12px;border-bottom:1.5px dashed rgba(42,32,38,.28)}
-.lb-kop small{display:block;font-size:.6rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:#A8623A}
-.lb-kop h3{font-family:var(--disp);font-weight:600;font-size:1.12rem;margin-top:3px;line-height:1.2}
-.lb-kop p{font-size:.72rem;color:#6B5A52;margin-top:3px}
-.lipat{position:relative;border-bottom:1.5px dashed rgba(42,32,38,.22);overflow:hidden}
-.lipat-tutup{position:relative;height:62px;display:flex;align-items:center;gap:10px;padding:0 18px;
-  background:linear-gradient(180deg,#EFE6D8,#E2D6C4);touch-action:none;cursor:grab}
-.lipat-tutup .lbl{font-size:.74rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#8A6F5E}
-.lipat-tutup .tarik{margin-left:auto;font-size:.7rem;font-weight:800;color:#A8623A}
-.lipat-tutup::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(42,32,38,.14)}
-.lipat-isi{max-height:0;opacity:0;padding:0 18px;transition:max-height .7s cubic-bezier(.2,.9,.3,1),opacity .6s .15s,padding .7s}
-.lipat.buka .lipat-isi{max-height:420px;opacity:1;padding:14px 18px 18px}
+.lb-kertas{width:min(400px,100%);margin:0 auto;background:#fff;border:3px solid var(--navy);
+  box-shadow:6px 7px 0 rgba(27,27,47,.2);position:relative}
+.lb-kop{padding:15px 16px 12px;border-bottom:3px dashed var(--navy-18)}
+.lb-kop small{display:block;font-size:.58rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--coral-tua)}
+.lb-kop h3{font-family:var(--disp);font-weight:600;font-size:1.1rem;margin-top:3px;line-height:1.2}
+.lb-kop p{font-size:.72rem;color:var(--navy-70);margin-top:2px}
+.lipat{border-bottom:2px dashed var(--navy-18)}
+.lipat-tutup{width:100%;min-height:52px;display:flex;align-items:center;gap:9px;padding:0 16px;
+  background:var(--kertas);text-align:left}
+.lipat-tutup .lbl{font-size:.72rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-70)}
+.lipat-tutup .tarik{margin-left:auto;font-size:.72rem;font-weight:900;color:var(--coral-tua)}
+.lipat-isi{max-height:0;opacity:0;padding:0 16px;overflow:hidden;
+  transition:max-height .65s cubic-bezier(.2,.9,.3,1),opacity .5s .1s,padding .65s}
+.lipat.buka .lipat-isi{max-height:460px;opacity:1;padding:13px 16px 17px}
 .lipat.buka .lipat-tutup{display:none}
-.lipat-isi p{font-family:var(--disp);font-weight:500;font-size:1.02rem;line-height:1.78;white-space:pre-line}
-.lb-kaki{padding:16px 18px 20px;text-align:right}
-.lb-kaki small{display:block;font-size:.62rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:#A8623A}
-.lb-kaki b{font-family:var(--hand);font-size:1.7rem;font-weight:700;line-height:1.1}
-.lb-cap{position:absolute;right:14px;top:-14px;width:74px;padding:5px;background:#EFE6D8;
-  box-shadow:0 4px 12px rgba(0,0,0,.3);transform:rotate(5deg)}
-.lb-cap img{width:100%;aspect-ratio:1/1.1;object-fit:cover}
-.lb-lanjut{display:block;margin:20px auto 0}
+.lipat-isi p{font-family:var(--disp);font-weight:500;font-size:1.01rem;line-height:1.75;white-space:pre-line}
+.lb-kaki{padding:15px 16px 18px;text-align:right}
+.lb-kaki small{display:block;font-size:.6rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--coral-tua)}
+.lb-kaki b{font-family:var(--hand);font-size:1.65rem;font-weight:700;line-height:1.1}
+.lb-cap{position:absolute;right:12px;top:-16px;width:66px;padding:5px;background:#fff;
+  border:2.5px solid var(--navy);transform:rotate(5deg)}
+.lb-cap img{width:100%;aspect-ratio:1/1.05;object-fit:cover;background:var(--kertas-2)}
+.lb-lanjut{display:block;margin:18px auto 0;padding:13px 22px;border-radius:999px;background:var(--mint);
+  border:3px solid var(--navy);font-weight:900;font-size:.9rem}
 
 /* ── PENUTUP ─────────────────────────────────────────────────────── */
-#gelapkan{position:fixed;inset:0;z-index:35;background:#0C090B;opacity:0;pointer-events:none;transition:opacity 1.6s}
-#gelapkan.on{opacity:.93}
-#notif{position:fixed;left:50%;top:38%;z-index:45;width:min(330px,86vw);transform:translate(-50%,10px) scale(.94);
-  opacity:0;transition:.7s;pointer-events:none}
-#notif.tampil{opacity:1;transform:translate(-50%,0) scale(1)}
-.nt-kartu{background:rgba(244,235,228,.96);color:#2A2026;border-radius:16px;padding:13px 15px;
-  box-shadow:0 20px 50px rgba(0,0,0,.6)}
-.nt-kartu .atas{display:flex;align-items:center;gap:8px;font-size:.66rem;font-weight:900;color:#6B5A52}
-.nt-kartu .atas i{width:16px;height:16px;border-radius:5px;background:linear-gradient(140deg,#1B1B2F,#E8734A);flex:none}
+#gelapkan{position:fixed;inset:0;z-index:35;background:#14121C;opacity:0;pointer-events:none;transition:opacity 1.4s}
+#gelapkan.on{opacity:.88}
+#notif{position:fixed;left:50%;top:34%;z-index:45;width:min(330px,88vw);
+  transform:translate(-50%,12px);opacity:0;transition:.6s;pointer-events:none}
+#notif.tampil{opacity:1;transform:translate(-50%,0)}
+.nt-kartu{background:#fff;border:3px solid var(--navy);border-radius:16px;padding:13px 14px;
+  box-shadow:5px 6px 0 rgba(0,0,0,.35)}
+.nt-kartu .atas{display:flex;align-items:center;gap:8px;font-size:.66rem;font-weight:900;color:var(--navy-70)}
+.nt-kartu .atas i{width:18px;height:18px;border-radius:6px;background:linear-gradient(140deg,var(--navy),var(--coral));flex:none}
 .nt-kartu .isi{margin-top:7px;font-size:.92rem;line-height:1.45;white-space:pre-line}
 
-#mataTutup{position:fixed;inset:0;z-index:50;pointer-events:none}
-#mataTutup .lid{position:absolute;left:0;right:0;height:52%;background:#0A0709;transition:transform 1.9s cubic-bezier(.5,0,.5,1)}
-#mataTutup .atas{top:0;transform:translateY(-100%)}
-#mataTutup .bawah{bottom:0;transform:translateY(100%)}
-#mataTutup.tutup .atas,#mataTutup.tutup .bawah{transform:translateY(0)}
-
-#akhir{position:fixed;inset:0;z-index:55;display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;padding:30px 22px calc(30px + env(safe-area-inset-bottom));text-align:center;
-  background:radial-gradient(90% 60% at 50% 40%,#2A3A36,#0E1312 75%)}
-#akhir.tampil{display:flex;animation:masuk 1.2s both}
+#akhir{position:fixed;inset:0;z-index:55;display:none;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px;padding:28px 20px calc(28px + env(safe-area-inset-bottom));
+  text-align:center;background:var(--kertas)}
+#akhir.tampil{display:flex;animation:masuk 1s both}
 @keyframes masuk{from{opacity:0}}
-#akhir .suhuAkhir{font-family:var(--disp);font-weight:600;font-size:2.4rem;color:var(--sembuh)}
-#akhir .kata{font-family:var(--hand);font-size:1.4rem;color:var(--ink);max-width:22ch;line-height:1.25}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 22px;border-radius:999px;
-  background:var(--sembuh);color:#15201E;font-weight:800;font-size:.94rem;box-shadow:0 3px 0 #5FA698}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #5FA698}
-.btn.ghost{background:rgba(244,235,228,.1);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hair)}
-.btn.small{padding:9px 17px;font-size:.85rem}
-.btn[disabled]{opacity:.4;pointer-events:none}
-.wa{display:inline-flex;align-items:center;gap:8px;background:#25B864;color:#fff;font-weight:800;font-size:.92rem;
-  padding:12px 22px;border-radius:999px;box-shadow:0 3px 0 #1A8A4A;text-decoration:none}
-.balas{width:min(330px,100%);background:rgba(244,235,228,.08);border-radius:14px;padding:12px;
-  box-shadow:inset 0 0 0 1px var(--hair)}
+#akhir .suhuAkhir{font-family:var(--disp);font-weight:600;font-size:2.5rem;color:var(--mint)}
+#akhir .kata{font-family:var(--hand);font-size:1.4rem;max-width:22ch;line-height:1.25}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;
+  padding:12px 22px;border-radius:999px;background:var(--mint);border:3px solid var(--navy);
+  font-weight:900;font-size:.92rem;color:var(--navy)}
+.btn.ghost{background:#fff}
+.btn.small{min-height:42px;padding:9px 17px;font-size:.84rem}
+.wa{display:inline-flex;align-items:center;gap:8px;min-height:46px;background:#25B864;color:#fff;
+  font-weight:900;font-size:.9rem;padding:12px 22px;border-radius:999px;border:3px solid var(--navy);text-decoration:none}
+.balas{width:min(330px,100%);background:#fff;border:3px solid var(--navy);border-radius:14px;padding:12px}
 .balas label{display:block;font-size:.78rem;font-weight:800;margin-bottom:6px;text-align:left}
-.balas textarea{width:100%;min-height:66px;border:0;border-radius:10px;padding:9px 11px;font:inherit;font-size:.9rem;
-  color:var(--ink);background:rgba(0,0,0,.3);resize:none}
-.dibuat{display:block;margin-top:16px;font-size:.74rem;color:var(--faint);text-decoration:none;line-height:1.5}
-.dibuat b{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.balas textarea{width:100%;min-height:62px;border:2px solid var(--navy-18);border-radius:9px;padding:8px 10px;
+  font:inherit;font-size:.9rem;resize:none;background:var(--kertas)}
+.dibuat{display:block;margin-top:12px;font-size:.74rem;color:var(--navy-40);text-decoration:none;line-height:1.5}
+.dibuat b{color:var(--navy-70);text-decoration:underline;text-underline-offset:3px}
 
-/* ── PEMBUKA: kelopak mata ───────────────────────────────────────── */
-#mata{position:fixed;inset:0;z-index:60;background:#070506;cursor:pointer;touch-action:none}
-#mata .lid{position:absolute;left:0;right:0;height:52%;background:#070506;z-index:3;transition:transform 1.5s cubic-bezier(.45,0,.3,1)}
-#mata .atas{top:0}
-#mata .bawah{bottom:0}
-#mata.melek .atas{transform:translateY(-101%)}
-#mata.melek .bawah{transform:translateY(101%)}
-#mata.kedip .atas{transform:translateY(-62%)}
-#mata.kedip .bawah{transform:translateY(62%)}
-#mata .isi{position:absolute;inset:0;z-index:2;display:grid;place-items:center;text-align:center;padding:30px}
-#mata .ketukan{font-family:var(--hand);font-size:1.5rem;color:rgba(244,235,228,.8);line-height:1.3;animation:ketuk 2.6s ease-in-out infinite}
-#mata .ketukan small{display:block;font-family:var(--sans);font-size:.78rem;font-weight:800;color:rgba(244,235,228,.45);margin-top:10px;letter-spacing:.04em}
-@keyframes ketuk{50%{opacity:.5}}
-#mata.melek{pointer-events:none;transition:opacity .8s 1s;opacity:0}
+/* ── PEMBUKA: terang & jelas, bukan layar hitam ──────────────────── */
+#mulai{position:fixed;inset:0;z-index:60;background:var(--kertas);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  padding:30px 24px calc(30px + env(safe-area-inset-bottom));text-align:center;
+  transition:opacity .7s,visibility .7s}
+#mulai.pergi{opacity:0;visibility:hidden;pointer-events:none}
+#mulai .untuk{font-size:.62rem;font-weight:900;letter-spacing:.3em;text-transform:uppercase;color:var(--navy-40)}
+#mulai .nama{font-family:var(--disp);font-weight:600;font-size:clamp(1.8rem,8vw,2.4rem);line-height:1.08;word-break:break-word}
+#mulai .pengantar{font-size:.95rem;color:var(--navy-70);max-width:26ch;line-height:1.5}
+#mulai .pintu{width:min(170px,52vw);aspect-ratio:1/1.5;background:var(--kayu);border:3px solid var(--navy);
+  border-radius:8px 8px 0 0;position:relative;animation:pintuKetuk 2.6s ease-in-out infinite}
+#mulai .pintu i{position:absolute;right:14%;top:50%;width:14px;height:14px;margin-top:-7px;
+  border-radius:50%;background:var(--madu);border:2.5px solid var(--navy)}
+@keyframes pintuKetuk{10%{transform:translateX(-3px)}20%{transform:translateX(3px)}30%{transform:translateX(0)}}
+#mulai .tok{font-family:var(--hand);font-size:1.3rem;color:var(--navy-70)}
 
-#toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));transform:translate(-50%,16px);
-  opacity:0;z-index:70;background:var(--ink);color:#2A2026;padding:9px 15px;border-radius:11px;
-  font-weight:800;font-size:.84rem;max-width:84vw;text-align:center;transition:.3s;pointer-events:none}
+#toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,14px);opacity:0;z-index:70;
+  background:var(--navy);color:var(--kertas);padding:10px 15px;border-radius:11px;font-weight:800;
+  font-size:.84rem;max-width:86vw;text-align:center;transition:.3s;pointer-events:none}
 #toast.show{opacity:1;transform:translate(-50%,0)}
-#suara{position:fixed;left:13px;top:calc(13px + env(safe-area-inset-top));z-index:25;width:38px;height:38px;
-  border-radius:50%;background:rgba(244,235,228,.12);display:none;place-items:center;font-size:.95rem}
-body.mulai #suara.ada{display:grid}
+#suara{position:fixed;right:12px;top:calc(12px + env(safe-area-inset-top));z-index:25;width:44px;height:44px;
+  border-radius:50%;background:#fff;border:2.5px solid var(--navy);display:none;place-items:center;font-size:1rem}
+body.jalan #suara.ada{display:grid}
 
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.2s!important}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
 
-.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:var(--wall-dark);transition:opacity .4s}
+.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:var(--kertas);transition:opacity .4s}
 .memuat.pergi{opacity:0;pointer-events:none}
 .memuat-in{text-align:center;padding:24px;max-width:22rem}
-.memuat-in svg{margin:0 auto;opacity:.75;animation:napasKecil 3s ease-in-out infinite}
-@keyframes napasKecil{50%{transform:scale(1.12);opacity:1}}
-.memuat-in p{margin:14px 0 0;font-size:.95rem;color:var(--muted);line-height:1.6}
-.memuat.gagal svg{animation:none;opacity:.3}
+.memuat-in svg{margin:0 auto;animation:napasKecil 2.6s ease-in-out infinite}
+@keyframes napasKecil{50%{transform:scale(1.14)}}
+.memuat-in p{margin:13px 0 0;font-size:.95rem;color:var(--navy-70);line-height:1.6}
+.memuat.gagal svg{animation:none;opacity:.35}
 </style>
 </head>
 <body>
 
 <div id="memuat" class="memuat">
   <div class="memuat-in">
-    <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true">
-      <circle cx="24" cy="24" r="20" fill="none" stroke="#8FD3C7" stroke-width="2" opacity=".5"/>
-      <circle cx="24" cy="24" r="9" fill="#8FD3C7" opacity=".8"/>
+    <svg viewBox="0 0 48 48" width="46" height="46" aria-hidden="true">
+      <circle cx="24" cy="24" r="20" fill="none" stroke="#1B1B2F" stroke-width="3"/>
+      <circle cx="24" cy="24" r="8" fill="#5FB7A3"/>
     </svg>
     <p id="memuatPesan">Mengecek suhunya…</p>
   </div>
@@ -465,84 +475,127 @@ body.mulai #suara.ada{display:grid}
 
 <!-- ══════════════ KAMAR ══════════════ -->
 <div id="ruang">
+  <div class="lantai"></div>
+  <div id="talifoto"></div>
+
   <!-- jendela -->
-  <div class="obj bisa" id="jendela" role="button" tabindex="0" aria-label="Buka jendelanya">
-    <div class="jd-kusen">
-      <div class="jd-luar" id="jdLuar"></div>
-      <div class="jd-daun" id="jdDaun"><div class="jd-kaca"></div></div>
-      <div class="jd-tirai"></div>
+  <div class="obj bisa" id="jendela">
+    <div class="jd-bingkai">
+      <div class="jd-langit"><div class="jd-mentari"></div></div>
+      <div class="jd-palang"></div><div class="jd-palang2"></div>
+      <div class="jd-daun" id="jdDaun"></div>
     </div>
+    <div class="jd-kait pegang" id="jdKait" role="button" tabindex="0" aria-label="Seret kaitnya ke kanan untuk membuka jendela"><i></i></div>
+    <span class="label">jendela</span>
+    <span class="ring"></span>
   </div>
 
-  <!-- cermin + foto terselip -->
-  <div class="obj" id="cermin"><div class="cm-bingkai"><div class="cm-kaca"></div></div></div>
+  <!-- foto 1: ditempel di dinding -->
+  <div class="obj bisa" id="fotoA" role="button" tabindex="0" aria-label="Lihat fotonya">
+    <div class="ft-tempel"><div class="ft-selotip"></div><img alt=""></div>
+    <span class="label">foto</span>
+    <span class="ring"></span>
+  </div>
 
-  <!-- lemari -->
-  <div class="obj" id="lemari"><div class="lm-pintu"><div class="lm-garis"></div></div></div>
+  <!-- foto 3: digantung di tali -->
+  <div class="obj bisa" id="fotoC" role="button" tabindex="0" aria-label="Lihat fotonya">
+    <div class="ft-jepit"><div class="ft-jepitan"></div><img alt=""></div>
+    <span class="label">foto</span>
+    <span class="ring"></span>
+  </div>
 
-  <!-- meja samping -->
-  <div class="obj" id="meja"></div>
+  <!-- ranjang -->
+  <div class="obj" id="ranjang">
+    <div class="rj-kepala"></div>
+    <div class="rj-kasur"></div>
+    <div class="rj-selimut"></div>
+  </div>
 
-  <!-- lampu + talinya -->
-  <div class="obj" id="lampu">
-    <div class="lp-kap"></div>
-    <div class="lp-cahaya" id="lpCahaya"></div>
-    <div class="lp-batang"></div>
-    <div id="tali" role="button" tabindex="0" aria-label="Matikan lampunya">
+  <!-- bantal + zona dahi -->
+  <div class="obj" id="bantal">
+    <div class="bt-bentuk"><div class="bt-zona" id="btZona">taruh<br>di sini</div></div>
+    <span class="ring"></span>
+  </div>
+
+  <!-- handuk kompres -->
+  <div class="obj bisa" id="handuk">
+    <div class="hd-kain pegang" role="button" tabindex="0" aria-label="Seret kompres ke dahi, lalu tahan sebentar">
+      <svg class="tahanRing" id="hdRing" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46"/></svg>
+    </div>
+    <span class="label">kompres</span>
+    <span class="ring"></span>
+  </div>
+
+  <!-- meja -->
+  <div class="obj" id="meja"><div class="permukaan"></div><div class="rak"></div></div>
+
+  <!-- lampu + tali -->
+  <div class="obj bisa" id="lampu">
+    <div class="lp-kap"></div><div class="lp-tiang"></div><div class="lp-alas"></div>
+    <div class="lp-sinar" id="lpSinar"></div>
+    <div id="tali" class="pegang" role="button" tabindex="0" aria-label="Tarik tali lampunya ke bawah">
       <div class="tali-garis"></div><div class="tali-bola"></div>
     </div>
+    <span class="label atas">lampu</span>
+    <span class="ring"></span>
   </div>
 
   <!-- gelas air -->
-  <div class="obj bisa" id="gelas" role="button" tabindex="0" aria-label="Minum airnya">
+  <div class="obj bisa" id="gelas" role="button" tabindex="0" aria-label="Ketuk gelasnya untuk minum">
     <div class="gl-badan" id="glBadan">
       <div class="gl-air" id="glAir"></div>
       <div class="gl-dasar" id="glDasar"></div>
     </div>
+    <span class="label">gelas air</span>
+    <span class="ring"></span>
   </div>
 
   <!-- termometer -->
-  <div class="obj bisa" id="termo" role="button" tabindex="0" aria-label="Baca termometernya di bawah lampu">
-    <div class="tm-batang"><div class="tm-isi" id="tmIsi"></div><div class="tm-angka" id="tmAngka"></div></div>
+  <div class="obj bisa" id="termo" role="button" tabindex="0" aria-label="Ketuk termometernya untuk dibaca">
+    <div class="tm-batang"><div class="tm-isi" id="tmIsi"></div></div>
+    <div class="tm-angka" id="tmAngka"></div>
+    <span class="label atas">termometer</span>
+    <span class="ring"></span>
   </div>
 
-  <!-- kotak obat 7 sekat -->
-  <div class="obj bisa" id="kotakobat" role="button" tabindex="0" aria-label="Buka sekat obatnya">
+  <!-- kotak obat: 3 laci -->
+  <div class="obj bisa" id="kotakobat">
     <div class="ko-badan" id="koBadan"></div>
+    <span class="label">kotak obat</span>
+    <span class="ring"></span>
+  </div>
+
+  <!-- foto 2: bingkai berdiri -->
+  <div class="obj bisa" id="fotoB" role="button" tabindex="0" aria-label="Lihat fotonya">
+    <div class="ft-bingkai"><img alt=""></div>
+    <span class="label">foto</span>
+    <span class="ring"></span>
   </div>
 
   <!-- ponsel -->
-  <div class="obj" id="ponsel"><div class="pn-badan"><div class="pn-layar"></div></div></div>
+  <div class="obj" id="ponsel">
+    <div class="pn-badan"><div class="pn-layar"></div></div>
+    <span class="label">ponsel</span>
+  </div>
 
-  <!-- foto-foto, tertanam di kamar -->
-  <div class="obj bisa" id="fotoA" role="button" tabindex="0" aria-label="Lihat fotonya"><div class="ft-bingkai"><img alt=""></div></div>
-  <div class="obj bisa" id="fotoB" role="button" tabindex="0" aria-label="Lihat fotonya"><div class="ft-bingkai"><img alt=""></div></div>
-  <div class="obj bisa" id="fotoC" role="button" tabindex="0" aria-label="Lihat fotonya"><div class="ft-bingkai"><img alt=""></div></div>
-
-  <!-- bantal + zona dahi -->
-  <div class="obj" id="dahi"><div class="dh-bantal"></div><div class="dh-zona" id="dhZona"></div></div>
-
-  <!-- handuk kompres -->
-  <div class="obj bisa" id="handuk" role="button" tabindex="0" aria-label="Taruh kompres di dahinya"><div class="hd-kain"></div></div>
+  <!-- panah penunjuk objek aktif -->
+  <svg id="panah" viewBox="0 0 34 34" aria-hidden="true">
+    <path d="M17 3v22M17 29l-9-10M17 29l9-10" fill="none" stroke="#E8734A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
 </div>
 
-<div id="demamTint"></div>
-<div id="denyut"></div>
-
-<!-- garis bawah: suhu + satu arahan -->
+<!-- baris bawah: suhu + nomor langkah + instruksi -->
 <div id="bawah">
   <div id="suhuBox"><span id="suhuAngka">39,2</span><small>°C</small></div>
-  <div id="arahan"></div>
-  <div id="hari"></div>
+  <div id="teksArah"><span id="langkahNo"></span><span id="arahan"></span></div>
 </div>
 
 <button id="suara" aria-label="Suara">🔊</button>
 <div id="toast"></div>
 
-<!-- objek yang didekatkan -->
 <div id="dekat"><div id="dekatBg"></div><div id="dekatIsi"></div></div>
 
-<!-- ══════════════ SURAT: lembar keterangan obat ══════════════ -->
+<!-- ══════════════ SURAT ══════════════ -->
 <div id="lembar">
   <div class="lb-kertas">
     <div class="lb-cap" id="lbCap"><img id="lbCapImg" alt=""></div>
@@ -552,20 +605,20 @@ body.mulai #suara.ada{display:grid}
       <p id="lbSub"></p>
     </div>
     <div class="lipat" id="lipat1">
-      <div class="lipat-tutup" role="button" tabindex="0"><span class="lbl">Lipatan pertama</span><span class="tarik">tarik untuk buka →</span></div>
+      <button class="lipat-tutup" type="button"><span class="lbl">Lipatan pertama</span><span class="tarik">buka ▸</span></button>
       <div class="lipat-isi"><p id="par1"></p></div>
     </div>
     <div class="lipat" id="lipat2">
-      <div class="lipat-tutup" role="button" tabindex="0"><span class="lbl">Lipatan kedua</span><span class="tarik">tarik untuk buka →</span></div>
+      <button class="lipat-tutup" type="button"><span class="lbl">Lipatan kedua</span><span class="tarik">buka ▸</span></button>
       <div class="lipat-isi"><p id="par2"></p></div>
     </div>
     <div class="lipat" id="lipat3">
-      <div class="lipat-tutup" role="button" tabindex="0"><span class="lbl">Lipatan terakhir</span><span class="tarik">tarik untuk buka →</span></div>
+      <button class="lipat-tutup" type="button"><span class="lbl">Lipatan terakhir</span><span class="tarik">buka ▸</span></button>
       <div class="lipat-isi"><p id="par3"></p></div>
     </div>
     <div class="lb-kaki"><small>Dikirim oleh</small><b data-f="pengirim"></b></div>
   </div>
-  <button class="btn lb-lanjut" id="lbLanjut" hidden>Simpan, lalu matikan lampunya</button>
+  <button class="lb-lanjut" id="lbLanjut" type="button" hidden>Simpan, lalu matikan lampunya</button>
 </div>
 
 <!-- penutup -->
@@ -574,7 +627,6 @@ body.mulai #suara.ada{display:grid}
   <div class="atas"><i></i><span id="ntDari"></span></div>
   <div class="isi" id="ntIsi"></div>
 </div></div>
-<div id="mataTutup"><div class="lid atas"></div><div class="lid bawah"></div></div>
 
 <div id="akhir">
   <div class="suhuAkhir">36,5 °C</div>
@@ -588,23 +640,22 @@ body.mulai #suara.ada{display:grid}
   <a class="dibuat" id="dibuat" target="_blank" rel="noopener">Halaman ini dibuat dengan Foreverse<br><b>foreverse.id</b></a>
 </div>
 
-<!-- ══════════════ PEMBUKA: kelopak mata ══════════════ -->
-<div id="mata" role="button" tabindex="0" aria-label="Ketuk dua kali untuk membuka mata">
-  <div class="isi">
-    <div class="ketukan" id="ketukan">tok… tok…<small>ada yang ngetuk pintu — ketuk dua kali buat buka mata</small></div>
-  </div>
-  <div class="lid atas"></div>
-  <div class="lid bawah"></div>
+<!-- ══════════════ PEMBUKA ══════════════ -->
+<div id="mulai">
+  <span class="untuk">Untuk</span>
+  <div class="nama" data-f="penerima"></div>
+  <div class="pintu"><i></i></div>
+  <p class="tok">tok… tok…</p>
+  <p class="pengantar">Ada yang nganterin sesuatu ke kamarmu. Nggak usah bangun — cukup ketuk tombolnya.</p>
+  <button class="btn" id="tblMulai" type="button">Buka pintunya</button>
 </div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
    Mesin tema "36,5" × Get Well Soon.
-
-   Seluruh halaman digerakkan satu angka: SUHU (39,2 → 36,5).
-   setSuhu() menulis --panas ke :root, dan semua tampilan (blur, tint,
-   kehangatan lampu, ketajaman foto, dengung suara) ikut dari situ.
-   Tidak ada scroll; objek didekatkan lalu ditaruh lagi.
+   Satu angka menggerakkan halaman: SUHU 39,2 -> 36,5.
+   Perubahan suhu hanya mengubah WARNA CAHAYA, tidak pernah ketajaman
+   gambar — tidak ada blur() sama sekali di tema ini.
    ═══════════════════════════════════════════════════════════════ */
 function FV_MULAI(){
 'use strict';
@@ -617,10 +668,9 @@ D.enakan = (D.enakan || []).filter(function(x){ return x && String(x).trim(); })
 
 var $=function(s,r){ return (r||document).querySelector(s); };
 var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
-var rand=function(a,b){ return a+Math.random()*(b-a); };
-var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
 var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
 var klem=function(v,a,b){ return v<a?a:(v>b?b:v); };
+var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
 
 $$('[data-f]').forEach(function(n){
   var v=n.dataset.f.split('.').reduce(function(o,k){ return o==null?o:o[k]; },D);
@@ -630,7 +680,18 @@ $$('[data-f]').forEach(function(n){
 var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; });
 var DOSIS=(D.dosis||[]).filter(function(d){ return d.teks; });
 
-/* ── hari ke berapa sakitnya (dari tanggal yang diisi pembeli) ── */
+/* ── KONSEKUENSI TEKAN-TAHAN ──────────────────────────────────────
+   Tekan-tahan tetap dipakai di tema ini, tapi akibatnya di browser
+   ponsel harus ditutup rapat: tanpa ini, menahan jari memunculkan menu
+   Back/Reload/Translate milik browser menimpa halaman.               */
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
+document.addEventListener('selectstart', function(e){ e.preventDefault(); }, true);
+document.addEventListener('dragstart', function(e){ e.preventDefault(); }, true);
+$$('.pegang').forEach(function(n){
+  n.addEventListener('touchstart', function(e){ e.preventDefault(); }, { passive:false });
+});
+
+/* ── hari ke berapa sakitnya ── */
 var HARI=(function(){
   if(!D.tanggalSakit) return 0;
   var m=new Date(D.tanggalSakit+'T00:00:00');
@@ -640,8 +701,8 @@ var HARI=(function(){
   return n>0 && n<400 ? n : 0;
 })();
 
-/* ── suara: dibuat browser, tanpa berkas ── */
-var AC=null, bisu=false, hum=null, humGain=null;
+/* ── suara ── */
+var AC=null, bisu=false;
 function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C) AC=new C(); } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
 function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||bisu) return;
   var t=a.currentTime+(o.when||0), v=o.vol||.12, osc=a.createOscillator(), g=a.createGain();
@@ -658,31 +719,18 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||bisu) return;
 }
 var SFX={
   ketuk:function(){ tone(150,.1,{type:'triangle',vol:.16}); noise(.07,700,.14); },
-  angin:function(){ noise(1.5,520,.1); },
-  air:function(){ noise(.5,900,.12); tone(380,.3,{vol:.06,slide:280}); },
-  kain:function(){ noise(.35,2200,.1); },
-  sekat:function(){ noise(.12,3000,.13); tone(520,.06,{type:'square',vol:.06}); },
-  lembut:function(){ tone(523,.3,{vol:.1}); tone(784,.4,{when:.1,vol:.07}); },
+  angin:function(){ noise(1.2,520,.1); },
+  air:function(){ noise(.45,900,.12); tone(380,.3,{vol:.06,slide:280}); },
+  kain:function(){ noise(.3,2200,.1); },
+  laci:function(){ noise(.14,2600,.12); tone(460,.07,{type:'square',vol:.06}); },
+  lembut:function(){ tone(523,.28,{vol:.1}); tone(784,.36,{when:.09,vol:.07}); },
   tarik:function(){ tone(300,.14,{type:'triangle',vol:.1,slide:420}); },
-  klik:function(){ tone(900,.04,{type:'square',vol:.07}); },
-  pulih:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.6,{when:i*.13,vol:.09}); }); }
+  klik:function(){ tone(880,.05,{type:'square',vol:.07}); },
+  pulih:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.55,{when:i*.12,vol:.09}); }); }
 };
-/* dengung demam: makin dingin, makin hilang */
-function mulaiHum(){
-  var a=ac(); if(!a||hum) return;
-  var n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*2,a.sampleRate), d=b.getChannelData(0);
-  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.5;
-  n.buffer=b; n.loop=true;
-  var f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=320;
-  humGain=a.createGain(); humGain.gain.value=.05;
-  n.connect(f); f.connect(humGain); humGain.connect(a.destination); n.start(); hum=n;
-}
-function setHum(p){ if(humGain) humGain.gain.value=.055*p; }
-
-/* ── lagu latar ── */
 function musicBox(){
   var a=ac(); if(!a) return null;
-  var gain=a.createGain(); gain.gain.value=.085; gain.connect(a.destination);
+  var gain=a.createGain(); gain.gain.value=.08; gain.connect(a.destination);
   var notes=[57,60,64,67,64,60, 55,59,62,67,62,59, 53,57,60,65,60,57, 55,59,62,66,62,59];
   var step=.52, t0=a.currentTime+.2, n=0, timer=null, stop=false;
   function ping(midi,t){
@@ -691,12 +739,10 @@ function musicBox(){
     g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.8,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+1.9);
     o.connect(g); g.connect(gain); o.start(t); o.stop(t+2);
   }
-  (function loop(){
-    if(stop) return;
+  (function loop(){ if(stop) return;
     while(t0 < a.currentTime+1.5){ ping(notes[n%notes.length],t0); t0+=step; n++; }
-    timer=setTimeout(loop,400);
-  })();
-  return { gain:gain, stop:function(){ stop=true; clearTimeout(timer); } };
+    timer=setTimeout(loop,400); })();
+  return { gain:gain };
 }
 var MU=(function(){
   var L=D.lagu||{}, ada=!!(L.src&&String(L.src).trim()), audio=ada?new Audio():null;
@@ -718,7 +764,6 @@ var MU=(function(){
 })();
 $('#suara').onclick=function(){ bisu=!bisu; this.textContent=bisu?'🔇':'🔊';
   if(MU.audio) MU.audio.muted=bisu;
-  if(humGain) humGain.gain.value=bisu?0:.055*PANAS();
   try{ if(AC) bisu?AC.suspend():AC.resume(); }catch(e){} };
 if(MU.ada) $('#suara').classList.add('ada');
 
@@ -726,14 +771,7 @@ var tt;
 function toast(m,ms){ var t=$('#toast'); t.textContent=m; t.classList.add('show');
   clearTimeout(tt); tt=setTimeout(function(){ t.classList.remove('show'); }, ms||2600); }
 
-function noMenu(n){ n.addEventListener('contextmenu',function(e){ e.preventDefault(); }); }
-document.addEventListener('contextmenu',function(e){
-  if(e.target&&e.target.closest&&e.target.closest('.obj,.btn,img,svg,.rt-item,.lipat-tutup')) e.preventDefault();
-},true);
-
-/* ══════════════════════════════════════════════════════════════
-   SUHU — satu angka yang menggerakkan semuanya
-   ══════════════════════════════════════════════════════════════ */
+/* ══════════════ SUHU ══════════════ */
 var SUHU_AWAL=39.2, SUHU_PULIH=36.5, SUHU=SUHU_AWAL;
 function PANAS(){ return klem((SUHU-SUHU_PULIH)/(SUHU_AWAL-SUHU_PULIH),0,1); }
 function tulisSuhu(){
@@ -741,589 +779,449 @@ function tulisSuhu(){
   document.documentElement.style.setProperty('--panas', p.toFixed(3));
   $('#suhuAngka').textContent=SUHU.toFixed(1).replace('.',',');
   $('#suhuBox').classList.toggle('pulih', SUHU<=36.9);
-  $('#tmIsi').style.setProperty('--tmi',(22+p*56).toFixed(1)+'%');
-  $('#tmIsi').style.background = p>.45 ? 'var(--demam)' : (p>.15 ? '#D9A06A' : 'var(--sembuh)');
-  setHum(p);
+  $('#tmIsi').style.setProperty('--tmi',(24+p*54).toFixed(1)+'%');
+  $('#tmIsi').style.background = p>.45 ? 'var(--coral)' : (p>.15 ? '#D9A06A' : 'var(--mint)');
 }
-function turun(d){
-  SUHU=Math.max(SUHU_PULIH, +(SUHU-d).toFixed(2));
-  tulisSuhu();
-}
-function arahan(t){ $('#arahan').innerHTML=t; }
+function turun(d){ SUHU=Math.max(SUHU_PULIH, +(SUHU-d).toFixed(2)); tulisSuhu(); }
 
-/* ══════════════════════════════════════════════════════════════
-   TAHAP — objek yang bisa disentuh maju satu per satu
-   ══════════════════════════════════════════════════════════════ */
-var TAHAP=[
-  { id:'#jendela',  kata:'Udara di kamar pengap. <b>Buka jendelanya</b> — tarik daunnya ke luar.' },
-  { id:'#gelas',    kata:'Tenggorokannya kering. <b>Miringkan gelasnya</b> buat minum.' },
-  { id:'#handuk',   kata:'<b>Taruh kompresnya di dahi</b>, lalu tahan sebentar sampai menempel.' },
-  { id:'#kotakobat',kata:'Masih ada dosis yang belum diminum. <b>Geser tutup sekatnya</b>.' },
-  { id:'#foto',     kata:'Kamarnya mulai kelihatan. <b>Ketuk foto-fotonya</b> satu per satu.' },
-  { id:'#rutin',    kata:'<b>Susun rutinitas malamnya</b> — taruh tiap hal ke urutannya.' },
-  { id:'#napas',    kata:'Tinggal satu: <b>samakan napasnya</b>.' },
-  { id:'#termo',    kata:'<b>Dekatkan termometernya ke lampu</b> biar angkanya kebaca.' },
-  { id:'#lembar',   kata:'Ada lembar terselip di kotak obat. <b>Buka lipatannya</b>.' },
-  { id:'#tali',     kata:'Sudah waktunya tidur. <b>Tarik tali lampunya</b>.' }
+/* ══════════════ LANGKAH ══════════════ */
+var LANGKAH=[
+  { objek:'#jendela', kata:'Kamarnya pengap. Seret <b>kait bulat di tepi jendela</b> ke kanan.' },
+  { objek:'#gelas',   kata:'Tenggorokannya kering. <b>Ketuk gelas airnya</b>.' },
+  { objek:'#handuk',  kata:'Seret <b>kompres</b> ke kotak putus-putus di bantal, lalu tahan sebentar.' },
+  { objek:'#kotakobat', kata:'<b>Ketuk tiap laci kotak obat</b> — ada dosis yang belum diminum.' },
+  { objek:'#fotoA',   kata:'<b>Ketuk foto-fotonya</b> satu per satu (ada tiga di kamar ini).' },
+  { objek:'#kotakobat', kata:'<b>Susun rutinitas malamnya</b> — ketuk halnya, lalu ketuk nomor urutannya.' },
+  { objek:'#bantal',  kata:'<b>Samakan napasnya</b>: tahan saat lingkarannya mengembang, lepas saat mengempis.' },
+  { objek:'#termo',   kata:'<b>Ketuk termometernya</b> untuk membaca suhunya sekarang.' },
+  { objek:'#kotakobat', kata:'Ada lembar terselip di kotak obat. <b>Buka lipatannya</b>.' },
+  { objek:'#lampu',   kata:'Sudah waktunya tidur. <b>Tarik tali lampunya</b> ke bawah.' }
 ];
-var tahap=-1;
-function majuTahap(){
-  tahap++;
-  $$('.bisa').forEach(function(n){ n.classList.remove('sorot'); });
-  var t=TAHAP[tahap];
-  if(!t) return;
-  arahan(t.kata);
-  $('#ruang').dataset.tahap=String(tahap);
-  if(t.id==='#foto'){ ['#fotoA','#fotoB','#fotoC'].forEach(function(s,i){ if(FOTO[i]) $(s).classList.add('sorot'); }); return; }
-  if(t.id==='#rutin'){ $('#kotakobat').classList.add('sorot'); return; }
-  if(t.id==='#napas'){ $('#dahi').classList.add('sorot'); return; }
-  if(t.id==='#lembar'){ $('#kotakobat').classList.add('sorot'); return; }
-  var n=$(t.id); if(n) n.classList.add('sorot');
+var langkah=-1;
+function majuLangkah(){
+  langkah++;
+  var L=LANGKAH[langkah];
+  $$('.obj').forEach(function(n){ n.classList.remove('aktif'); });
+  if(!L){ $('#panah').classList.remove('tampil'); return; }
+  $('#langkahNo').textContent='Langkah '+(langkah+1)+' dari '+LANGKAH.length;
+  $('#arahan').innerHTML=L.kata;
+  $('#ruang').dataset.langkah=String(langkah);
+  var target=$(L.objek);
+  if(target){
+    target.classList.add('aktif');
+    tunjuk(target);
+  }
+  if(L.objek==='#fotoA'){ ['#fotoB','#fotoC'].forEach(function(s){ var n=$(s); if(n&&!n.classList.contains('beres')) n.classList.add('aktif'); }); }
+  if(langkah===5) return bukaRutin();
+  if(langkah===6) return bukaNapas();
+  if(langkah===8) return bukaLembar();
 }
-function tahapIni(){ return (TAHAP[tahap]||{}).id; }
+function tunjuk(node){
+  var p=$('#panah'), r=node.getBoundingClientRect(), rr=$('#ruang').getBoundingClientRect();
+  p.style.left=(r.left-rr.left+r.width/2-17)+'px';
+  p.style.top=Math.max(2,(r.top-rr.top-42))+'px';
+  p.classList.add('tampil');
+}
+function beres(sel){
+  var n=$(sel); if(!n) return;
+  n.classList.add('beres'); n.classList.remove('aktif');
+}
+function langkahIni(){ return (LANGKAH[langkah]||{}).objek; }
 
-/* ── seret: satu helper, dipakai beberapa objek ── */
-function seret(node, saat, selesai){
-  var aktif=false, x0=0, y0=0;
+/* ── seret pendek ── */
+function seret(node, saat, lepas){
+  var on=false, x0=0, y0=0;
   node.addEventListener('pointerdown',function(e){
     if(node.dataset.mati==='1') return;
-    aktif=true; x0=e.clientX; y0=e.clientY; ac();
+    on=true; x0=e.clientX; y0=e.clientY; ac();
     try{ node.setPointerCapture(e.pointerId); }catch(_){}
   });
-  node.addEventListener('pointermove',function(e){
-    if(!aktif) return;
-    saat(e.clientX-x0, e.clientY-y0, e);
-  });
-  function habis(e){ if(!aktif) return; aktif=false; if(selesai) selesai(e); }
+  node.addEventListener('pointermove',function(e){ if(on) saat(e.clientX-x0, e.clientY-y0, e); });
+  function habis(e){ if(!on) return; on=false; if(lepas) lepas(e); }
   node.addEventListener('pointerup',habis);
   node.addEventListener('pointercancel',habis);
 }
 
-/* ══════════════ objek yang didekatkan ══════════════ */
-function dekatkan(dariNode, isiNode, labelTutup){
+/* ── panel "didekatkan" ── */
+function dekatkan(isiNode, labelTutup){
   var dk=$('#dekat'), box=$('#dekatIsi');
-  box.innerHTML='';
-  box.appendChild(isiNode);
+  box.innerHTML=''; box.appendChild(isiNode);
   if(labelTutup!==false){
-    var b=el('button','dk-tutup',labelTutup||'taruh lagi');
-    b.type='button'; b.onclick=tutupDekat; box.appendChild(b);
+    var b=el('button','dk-tutup',labelTutup||'taruh lagi'); b.type='button';
+    b.onclick=tutupDekat; box.appendChild(b);
   }
-  if(dariNode){
-    var r=dariNode.getBoundingClientRect();
-    box.style.transformOrigin=(r.left+r.width/2)+'px '+(r.top+r.height/2)+'px';
-  }
-  /* Latar hanya boleh menutup kalau memang ada tombol tutupnya. Rutinitas
-     dan irama napas sengaja tidak punya — kalau latarnya bisa menutup,
-     alurnya nyangkut separuh jalan. */
-  dk.dataset.bisaTutup = labelTutup===false ? '0' : '1';
-  dk.dataset.sejak = String(Date.now());
+  dk.dataset.bisaTutup = labelTutup===false ? '0':'1';
+  dk.dataset.sejak=String(Date.now());
   dk.classList.add('tampil');
 }
 function tutupDekat(){
-  var dk=$('#dekat');
-  dk.classList.remove('tampil');
-  /* bersihkan isinya setelah animasinya selesai — kalau ditinggal, kartu
-     lama masih nyangkut di DOM dan bisa terbaca sebagai yang masih
-     terbuka. */
-  setTimeout(function(){ if(!dk.classList.contains('tampil')) $('#dekatIsi').innerHTML=''; },460);
+  var dk=$('#dekat'); dk.classList.remove('tampil');
+  setTimeout(function(){ if(!dk.classList.contains('tampil')) $('#dekatIsi').innerHTML=''; },420);
 }
 $('#dekatBg').addEventListener('click',function(){
   var dk=$('#dekat');
   if(dk.dataset.bisaTutup!=='1') return;
-  /* Jeda singkat: panelnya sering terbuka DI TENGAH seretan, jadi jari
-     yang diangkat tepat setelah itu mendarat di latar ini dan langsung
-     menutupnya lagi. */
-  if(Date.now() - (+dk.dataset.sejak||0) < 420) return;
+  if(Date.now()-(+dk.dataset.sejak||0) < 420) return;
   tutupDekat();
 });
 
-/* ══════════════ 1 · PEMBUKA: kelopak mata, ketuk dua kali ══════════════ */
-(function(){
-  var mata=$('#mata'), ketuk=0, kapan=0, buka=false;
-  noMenu(mata);
-  function coba(){
-    if(buka) return;
-    var t=Date.now();
-    if(t-kapan>900) ketuk=0;
-    kapan=t; ketuk++;
-    ac(); SFX.ketuk(); buzz(10);
-    mata.classList.add('kedip');
-    setTimeout(function(){ if(!buka) mata.classList.remove('kedip'); },260);
-    if(ketuk>=2) melek();
-  }
-  mata.addEventListener('pointerdown',coba);
-  mata.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); coba(); coba(); } });
-  function melek(){
-    buka=true;
-    mata.classList.remove('kedip'); mata.classList.add('melek');
-    document.body.classList.add('mulai');
-    mulaiHum(); MU.play();
-    setTimeout(function(){ var m=$('#mata'); m&&m.remove(); },2600);
-    setTimeout(majuTahap,700);
-  }
-})();
+/* ══════ 1 · PEMBUKA — layar terang dengan tombol jelas ══════ */
+$('#tblMulai').addEventListener('click', function(){
+  ac(); SFX.ketuk(); buzz(12);
+  document.body.classList.add('jalan');
+  MU.play();
+  $('#mulai').classList.add('pergi');
+  setTimeout(function(){ var m=$('#mulai'); m&&m.remove(); },900);
+  setTimeout(majuLangkah,350);
+});
 
-/* ══════════════ 2 · JENDELA: daunnya diayun keluar di engsel ══════════════ */
+/* ══════ 2 · JENDELA — seret kait ke kanan ══════ */
 (function(){
-  var node=$('#jendela'), daun=$('#jdDaun'), luar=$('#jdLuar');
-  for(var i=0;i<9;i++){
-    var b=el('div','bintik');
-    b.style.left=rand(6,92).toFixed(1)+'%'; b.style.top=rand(8,80).toFixed(1)+'%';
-    b.style.opacity=rand(.3,.9).toFixed(2); luar.appendChild(b);
-  }
-  var sudut=0, kelar=false;
-  seret(node, function(dx){
-    if(kelar||tahapIni()!=='#jendela') return;
-    sudut=klem(dx*0.55,0,74);
-    daun.style.transform='perspective(520px) rotateY(-'+sudut.toFixed(1)+'deg)';
-    if(sudut>16 && Math.random()<.06) SFX.angin();
-    if(sudut>=66) selesai();
-  });
-  node.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&tahapIni()==='#jendela'){ e.preventDefault(); sudut=70; daun.style.transform='perspective(520px) rotateY(-70deg)'; selesai(); } });
+  var node=$('#jendela'), kait=$('#jdKait'), daun=$('#jdDaun'), kelar=false;
+  seret(kait, function(dx){
+    if(kelar||langkahIni()!=='#jendela') return;
+    var s=klem(dx*0.75,0,72);
+    daun.style.transform='perspective(520px) rotateY(-'+s.toFixed(1)+'deg)';
+    if(s>=58) selesai();
+  }, function(){ if(!kelar) daun.style.transform='perspective(520px) rotateY(0deg)'; });
+  kait.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&langkahIni()==='#jendela'){ e.preventDefault(); selesai(); } });
   function selesai(){
     if(kelar) return; kelar=true;
-    node.classList.add('buka'); node.classList.remove('sorot'); node.dataset.mati='1';
     daun.style.transform='perspective(520px) rotateY(-70deg)';
+    node.classList.add('buka'); beres('#jendela'); kait.dataset.mati='1';
     SFX.angin(); buzz(14); turun(.35);
     toast('angin sore masuk');
-    setTimeout(majuTahap,900);
+    setTimeout(majuLangkah,900);
   }
 })();
 
-/* ══════════════ 3 · GELAS: dimiringkan sampai airnya tinggal sedikit ══════════════ */
+/* ══════ 3 · GELAS — ketuk untuk minum ══════ */
 (function(){
-  var node=$('#gelas'), badan=$('#glBadan'), air=$('#glAir'), dasar=$('#glDasar');
-  var air0=72, miring=0, kelar=false;
-  air.style.setProperty('--air',air0+'%');
+  var node=$('#gelas'), badan=$('#glBadan'), air=$('#glAir'), dasar=$('#glDasar'), kelar=false;
+  air.style.setProperty('--air','70%');
   dasar.textContent = D.airPesan || 'minum dulu, pelan-pelan.';
-  seret(node, function(dx,dy){
-    if(kelar||tahapIni()!=='#gelas') return;
-    miring=klem(-dy*0.9,0,62);
-    badan.style.transform='rotate(-'+miring.toFixed(1)+'deg)';
-    var sisa=klem(air0 - (miring/62)*air0, 0, air0);
-    air.style.setProperty('--air',sisa.toFixed(1)+'%');
-    if(miring>12 && Math.random()<.07) SFX.air();
-    if(miring>=54) selesai();
-  }, function(){
-    if(!kelar){ badan.style.transform='rotate(0)'; air.style.setProperty('--air',air0+'%'); }
-  });
-  node.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&tahapIni()==='#gelas'){ e.preventDefault(); selesai(); } });
-  function selesai(){
-    if(kelar) return; kelar=true;
-    badan.style.transform='rotate(0)'; air.style.setProperty('--air','6%');
-    dasar.classList.add('tampil');
-    node.classList.remove('sorot'); node.dataset.mati='1';
-    SFX.air(); buzz(14); turun(.35);
-    setTimeout(majuTahap,1500);
+  function minum(){
+    if(kelar||langkahIni()!=='#gelas') return;
+    kelar=true;
+    badan.style.transform='rotate(-24deg)';
+    SFX.air(); buzz(14);
+    setTimeout(function(){ air.style.setProperty('--air','8%'); },260);
+    setTimeout(function(){ badan.style.transform='rotate(0)'; dasar.classList.add('tampil'); },1000);
+    beres('#gelas'); turun(.35);
+    setTimeout(majuLangkah,2100);
   }
+  node.addEventListener('click',minum);
+  node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); minum(); } });
 })();
 
-/* ══════════════ 4 · KOMPRES: diseret ke dahi lalu ditahan sebentar ══════════════ */
+/* ══════ 4 · KOMPRES — seret ke dahi, lalu TAHAN 0,8 detik ══════
+   Tahannya sengaja pendek, dan menu long-press browser sudah dicegah
+   di atas (contextmenu + touchstart + callout).                     */
 (function(){
-  var node=$('#handuk'), zona=$('#dhZona');
-  var x=0,y=0, kelar=false, tahanMulai=0, timer=null;
-  seret(node, function(dx,dy){
-    if(kelar||tahapIni()!=='#handuk') return;
+  var node=$('#handuk'), kain=$('.hd-kain',node), zona=$('#btZona'), ring=$('#hdRing');
+  var TAHAN=800, x=0, y=0, kelar=false, t0=0, raf=null;
+  var lingkar=2*Math.PI*46;
+  var c=$('circle',ring);
+  c.setAttribute('stroke-dasharray',String(lingkar));
+  c.setAttribute('stroke-dashoffset',String(lingkar));
+
+  seret(kain, function(dx,dy){
+    if(kelar||langkahIni()!=='#handuk') return;
     x=dx; y=dy;
     node.style.transform='translate('+dx+'px,'+dy+'px)';
-    zona.classList.toggle('aktif', diZona());
-    if(diZona()){
-      if(!tahanMulai){
-        tahanMulai=Date.now();
-        timer=setTimeout(function(){ if(diZona()&&!kelar) selesai(); },1150);
-      }
-    } else { tahanMulai=0; clearTimeout(timer); }
+    var di=diZona();
+    zona.classList.toggle('siap',di);
+    if(di){
+      if(!t0){ t0=performance.now(); ring.classList.add('on'); raf=requestAnimationFrame(hitung); }
+    } else { batal(); }
   }, function(){
-    clearTimeout(timer); tahanMulai=0;
-    if(!kelar){ zona.classList.remove('aktif'); node.style.transform='translate(0,0)'; }
+    batal();
+    if(!kelar){ zona.classList.remove('siap'); node.style.transform='translate(0,0)'; }
   });
+  function hitung(now){
+    if(!t0||kelar) return;
+    var p=klem((now-t0)/TAHAN,0,1);
+    c.setAttribute('stroke-dashoffset',String(lingkar*(1-p)));
+    if(p>=1){ selesai(); return; }
+    raf=requestAnimationFrame(hitung);
+  }
+  function batal(){ t0=0; cancelAnimationFrame(raf); ring.classList.remove('on'); c.setAttribute('stroke-dashoffset',String(lingkar)); }
   function diZona(){
-    var a=node.getBoundingClientRect(), b=zona.getBoundingClientRect();
+    var a=kain.getBoundingClientRect(), b=zona.getBoundingClientRect();
     var ax=a.left+a.width/2, ay=a.top+a.height/2;
-    return ax>b.left-28 && ax<b.right+28 && ay>b.top-34 && ay<b.bottom+34;
+    return ax>b.left-30 && ax<b.right+30 && ay>b.top-36 && ay<b.bottom+36;
   }
-  node.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&tahapIni()==='#handuk'){ e.preventDefault(); selesai(); } });
+  kain.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&langkahIni()==='#handuk'){ e.preventDefault(); selesai(); } });
   function selesai(){
-    if(kelar) return; kelar=true;
-    clearTimeout(timer);
-    var b=zona.getBoundingClientRect(), a=node.getBoundingClientRect();
-    node.style.transform='translate('+(x + (b.left+b.width/2) - (a.left+a.width/2))+'px,'+(y + (b.top+b.height/2) - (a.top+a.height/2))+'px)';
-    node.classList.add('nempel'); node.classList.remove('sorot'); node.dataset.mati='1';
-    zona.classList.remove('aktif');
+    if(kelar) return; kelar=true; batal();
+    var b=zona.getBoundingClientRect(), a=kain.getBoundingClientRect();
+    node.style.transform='translate('+(x+(b.left+b.width/2)-(a.left+a.width/2))+'px,'+(y+(b.top+b.height/2)-(a.top+a.height/2))+'px)';
+    node.classList.add('nempel'); beres('#handuk'); beres('#bantal');
+    zona.classList.remove('siap'); zona.innerHTML='adem';
     SFX.kain(); buzz([14,30,14]); turun(.5);
-    toast('dingin di dahi, enak');
-    setTimeout(majuTahap,1100);
+    setTimeout(majuLangkah,1000);
   }
 })();
 
-/* ══════════════ 5 · KOTAK OBAT: 3 sekat bertutup, digeser ══════════════
-   Yang 4 sudah terbuka (sudah diminum). Yang 3 masih bertutup, dan
-   isinya dosis tulisan pembeli — dengan aturan pakainya.             */
+/* ══════ 5 · KOTAK OBAT — 3 laci, diketuk ══════ */
 (function(){
-  var badan=$('#koBadan'), node=$('#kotakobat');
-  var HARI_LABEL=['S','S','R','K','J','S','M'];
-  var isiSekat=[null,null,null,null,null,null,null];
-  var pakai=[1,3,5];                                  // sekat yang masih bertutup
-  DOSIS.slice(0,3).forEach(function(d,i){ isiSekat[pakai[i]]=d; });
-  var sisa=0;
-  HARI_LABEL.forEach(function(h,i){
-    var s=el('div','ko-sekat'); s.dataset.i=String(i);
-    s.appendChild(el('small',null,h));
-    var d=isiSekat[i];
-    if(d){
-      sisa++;
-      var pil=el('div','ko-pil'); s.appendChild(pil);
-      var tutup=el('div','ko-tutup'); s.appendChild(tutup);
-      pasangGeser(s,tutup,d);
-    } else {
-      s.classList.add('kosong');
-      var t2=el('div','ko-tutup'); s.appendChild(t2);
-    }
-    badan.appendChild(s);
-  });
-  if(!sisa){ /* tanpa dosis: lewati tahapnya nanti lewat cek di majuTahap */ }
-
-  function pasangGeser(sekat,tutup,dosis){
-    var geser=0, kebuka=false, siapTampil=false;
-    seret(tutup, function(dx){
-      if(kebuka) return;
-      if(tahapIni()!=='#kotakobat' && tahapIni()!=='#lembar') return;
-      /* sekatnya kecil (±17px), jadi ambangnya dihitung dari jarak jari
-         dalam PIKSEL, sementara geser visualnya dalam persen lebar sekat.
-         Dulu dua satuan ini tertukar dan tutupnya hampir tidak bisa
-         dibuka — ditemukan lewat uji Playwright, bukan dari baca kode. */
-      geser=klem(dx*5,-82,0);
-      tutup.style.transform='translateX('+geser.toFixed(1)+'%)';
-      if(dx<=-16 && !siapTampil){
-        siapTampil=true;
-        tutup.style.transform='translateX(-82%)'; tutup.style.opacity='.45';
-        SFX.sekat(); buzz(10);
-      }
-    }, function(){
-      /* kartunya baru muncul setelah jari DIANGKAT — kalau muncul di
-         tengah seretan, jari yang terangkat mendarat di latar panelnya
-         dan menutupnya seketika. */
-      if(siapTampil) buka();
-      else if(!kebuka) tutup.style.transform='translateX(0)';
-    });
-    tutup.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); siapTampil=true; buka(); } });
+  var badan=$('#koBadan'), sisa=0;
+  DOSIS.slice(0,3).forEach(function(d,i){
+    sisa++;
+    var laci=el('div','ko-laci');
+    laci.appendChild(el('span','gagang'));
+    laci.appendChild(el('span','nm','dosis '+(i+1)));
+    laci.appendChild(el('span','pil'));
+    laci.setAttribute('role','button'); laci.setAttribute('tabindex','0');
+    laci.setAttribute('aria-label','Buka dosis '+(i+1));
+    badan.appendChild(laci);
+    var kebuka=false;
     function buka(){
-      if(kebuka) return; kebuka=true;
-      tutup.style.transform='translateX(-82%)'; tutup.style.opacity='.45';
-      var kartu=el('div','dk-dosis');
-      kartu.appendChild(el('div','ikon'));
-      kartu.appendChild(el('div','aturan', dosis.aturan || 'diminum kapan saja'));
-      kartu.appendChild(el('div','teks', dosis.teks));
-      dekatkan(sekat,kartu,'tutup lagi');
-      turun(.2);
+      if(kebuka||langkahIni()!=='#kotakobat') return;
+      kebuka=true; laci.classList.add('kebuka');
+      SFX.laci(); buzz(10); turun(.2);
+      var k=el('div','kartu dk-dosis');
+      k.appendChild(el('div','pilBesar'));
+      k.appendChild(el('div','aturan', d.aturan || 'diminum kapan saja'));
+      k.appendChild(el('div','teks', d.teks));
+      dekatkan(k,'tutup lacinya');
       sisa--;
-      if(sisa<=0 && tahapIni()==='#kotakobat'){
-        node.classList.remove('sorot');
-        setTimeout(function(){ tutupDekat(); majuTahap(); },1400);
-      }
+      if(sisa<=0){ beres('#kotakobat'); setTimeout(function(){ tutupDekat(); majuLangkah(); },1500); }
     }
-  }
+    laci.addEventListener('click',buka);
+    laci.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); buka(); } });
+  });
+  if(!sisa) $('#kotakobat').style.display='none';
 })();
 
-/* ══════════════ 6 · FOTO: tertanam di kamar, diketuk untuk didekatkan ══════════════ */
+/* ══════ 6 · FOTO — tiga tempat berbeda di kamar ══════ */
 (function(){
   var slot=['#fotoA','#fotoB','#fotoC'], sudah=0, perlu=0;
   slot.forEach(function(s,i){
     var node=$(s), f=FOTO[i];
-    if(!f){ node.remove(); return; }
+    if(!f){ if(node) node.remove(); return; }
     perlu++;
     $('img',node).src=f.src;
     var kebuka=false;
-    node.addEventListener('click',function(){
-      if(tahapIni()!=='#foto' && !kebuka && tahapIni()!=='#rutin') return;
-      var k=el('div','dk-foto');
+    function lihat(){
+      if(langkahIni()!=='#fotoA' && !kebuka) return;
+      var k=el('div','kartu dk-foto');
       var im=el('img'); im.src=f.src; im.alt=''; k.appendChild(im);
       if(f.caption) k.appendChild(el('p',null,f.caption));
-      dekatkan(node,k,'taruh lagi');
-      SFX.klik();
+      dekatkan(k,'taruh lagi'); SFX.klik();
       if(!kebuka){
-        kebuka=true; node.classList.remove('sorot'); sudah++;
-        turun(.1);
-        if(sudah>=perlu && tahapIni()==='#foto') setTimeout(function(){ tutupDekat(); majuTahap(); },1300);
+        kebuka=true; beres(s); sudah++; turun(.1);
+        if(sudah>=perlu) setTimeout(function(){ tutupDekat(); majuLangkah(); },1400);
       }
-    });
-    node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); node.click(); } });
-  });
-  if(!perlu){ /* tidak ada foto: tahapnya dilewati di majuTahap */ }
-})();
-
-/* ══════════════ 7 · RUTINITAS: 3 hal yang bikin enakan, ditaruh ke urutan ══════════════ */
-var bukaRutin=(function(){
-  var kelar=false;
-  return function(){
-    if(kelar) return;
-    var hal=(D.enakan||[]).slice(0,3);
-    if(!hal.length){ kelar=true; majuTahap(); return; }
-    var k=el('div','dk-rutin');
-    k.appendChild(el('h3','', 'Rutinitas malam ini'));
-    k.appendChild(el('p','jelas','Taruh tiap hal ke urutan yang kamu mau. Bebas urutannya.'));
-    var slotWrap=el('div','rt-slot');
-    var isi=[null,null,null];
-    hal.forEach(function(_,i){
-      var kotak=el('div','rt-kotak'); kotak.dataset.i=String(i);
-      kotak.appendChild(el('span','no',String(i+1)));
-      kotak.appendChild(el('span','t','—'));
-      slotWrap.appendChild(kotak);
-    });
-    k.appendChild(slotWrap);
-    var sumber=el('div','rt-sumber');
-    hal.forEach(function(t,i){
-      var it=el('div','rt-item',t); it.dataset.i=String(i);
-      sumber.appendChild(it);
-      pasangSeret(it,t);
-    });
-    k.appendChild(sumber);
-    var main=el('p','rt-main','');
-    var tbl=el('button','btn small rt-jalan','Jalankan rutinitasnya'); tbl.type='button'; tbl.disabled=true;
-    k.appendChild(tbl); k.appendChild(main);
-    dekatkan($('#kotakobat'),k,false);
-
-    function pasangSeret(it,teks){
-      /* item yang sedang diseret ikut berada di bawah kursor, jadi
-         elementFromPoint() akan mengembalikan item itu sendiri, bukan slot
-         di bawahnya. Disembunyikan sebentar dari hit-test saat diperiksa. */
-      function slotDiBawah(x,y){
-        var simpan=it.style.pointerEvents;
-        it.style.pointerEvents='none';
-        var atas=document.elementFromPoint(x,y);
-        it.style.pointerEvents=simpan;
-        return atas&&atas.closest?atas.closest('.rt-kotak'):null;
-      }
-      seret(it, function(dx,dy,e){
-        it.style.position='relative'; it.style.zIndex='5';
-        it.style.transform='translate('+dx+'px,'+dy+'px)';
-        var kotak=slotDiBawah(e.clientX,e.clientY);
-        $$('.rt-kotak',k).forEach(function(n){ n.classList.toggle('target', n===kotak && !n.classList.contains('isi')); });
-      }, function(e){
-        var kotak=e?slotDiBawah(e.clientX,e.clientY):null;
-        $$('.rt-kotak',k).forEach(function(n){ n.classList.remove('target'); });
-        it.style.transform='translate(0,0)'; it.style.zIndex='';
-        if(kotak && !kotak.classList.contains('isi')){
-          var idx=+kotak.dataset.i;
-          isi[idx]=teks;
-          kotak.classList.add('isi');
-          $('.t',kotak).textContent=teks;
-          it.classList.add('diambil');
-          SFX.klik(); buzz(8);
-          if(isi.every(Boolean)) tbl.disabled=false;
-        }
-      });
-      it.addEventListener('keydown',function(e){
-        if(e.key==='Enter'||e.key===' '){
-          e.preventDefault();
-          var kosong=$$('.rt-kotak',k).filter(function(n){ return !n.classList.contains('isi'); })[0];
-          if(!kosong) return;
-          isi[+kosong.dataset.i]=teks; kosong.classList.add('isi');
-          $('.t',kosong).textContent=teks; it.classList.add('diambil');
-          if(isi.every(Boolean)) tbl.disabled=false;
-        }
-      });
     }
-
-    tbl.onclick=function(){
-      if(kelar) return;
-      tbl.disabled=true;
-      var n=0;
-      (function putar(){
-        if(n>=isi.length){
-          kelar=true; SFX.lembut(); turun(.3);
-          main.textContent='malamnya jadi lebih enak.';
-          setTimeout(function(){ tutupDekat(); majuTahap(); },1500);
-          return;
-        }
-        main.textContent=isi[n];
-        $$('.rt-kotak',k)[n].style.background='#C7E4DB';
-        SFX.klik(); n++;
-        setTimeout(putar,900);
-      })();
-    };
-  };
+    node.addEventListener('click',lihat);
+    node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); lihat(); } });
+  });
 })();
 
-/* ══════════════ 8 · IRAMA NAPAS: tahan saat tarik, lepas saat buang ══════════════
-   Bukan ketuk-pas-waktunya: jarinya harus MENAHAN selama lingkarannya
-   mengembang, lalu MELEPAS selama lingkarannya mengempis.            */
-var bukaNapas=(function(){
-  var kelar=false;
-  return function(){
-    if(kelar) return;
-    var PERLU=6, TARIK=2400, BUANG=2600;
-    var k=el('div','dk-napas');
-    var ring=el('div','np-ring'); ring.id='napasRing';
-    ring.appendChild(el('b',null,'tarik…'));
-    var info=el('div','np-info','tahan jarimu saat lingkarannya mengembang');
-    var titik=el('div','np-titik');
-    for(var i=0;i<PERLU;i++) titik.appendChild(el('i'));
-    k.appendChild(ring); k.appendChild(info); k.appendChild(titik);
-    dekatkan($('#dahi'),k,false);
+/* ══════ 7 · RUTINITAS — ketuk hal, lalu ketuk nomornya ══════ */
+function bukaRutin(){
+  var hal=(D.enakan||[]).slice(0,3);
+  if(!hal.length) return majuLangkah();
+  var k=el('div','kartu');
+  k.appendChild(el('h3',null,'Rutinitas malam ini'));
+  k.appendChild(el('p','jelas','Ketuk satu hal, lalu ketuk nomor urutannya. Bebas urutannya.'));
+  var slotWrap=el('div','rt-slot'), isi=[null,null,null], pilih=null;
+  hal.forEach(function(_,i){
+    var kotak=el('div','rt-kotak'); kotak.dataset.i=String(i);
+    kotak.appendChild(el('span','no',String(i+1)));
+    kotak.appendChild(el('span','t','—'));
+    kotak.setAttribute('role','button'); kotak.setAttribute('tabindex','0');
+    kotak.addEventListener('click',function(){ taruh(kotak); });
+    kotak.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); taruh(kotak); } });
+    slotWrap.appendChild(kotak);
+  });
+  k.appendChild(slotWrap);
+  var sumber=el('div','rt-sumber');
+  hal.forEach(function(t){
+    var it=el('div','rt-item',t);
+    it.setAttribute('role','button'); it.setAttribute('tabindex','0');
+    it.addEventListener('click',function(){ pilihItem(it); });
+    it.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pilihItem(it); } });
+    sumber.appendChild(it);
+  });
+  k.appendChild(sumber);
+  var main=el('p','rt-main','');
+  var tbl=el('button','rt-jalan','Jalankan rutinitasnya'); tbl.type='button'; tbl.disabled=true;
+  k.appendChild(tbl); k.appendChild(main);
+  dekatkan(k,false);
 
-    var fase='tarik', t0=performance.now(), tekan=false;
-    var benarTarik=0, benarBuang=0, totalTarik=0, totalBuang=0, lolos=0, raf=null;
-    ring.addEventListener('pointerdown',function(e){ tekan=true; ac(); try{ ring.setPointerCapture(e.pointerId); }catch(_){} });
-    ring.addEventListener('pointerup',function(){ tekan=false; });
-    ring.addEventListener('pointercancel',function(){ tekan=false; });
-    ring.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selesai(); } });
-
-    function jalan(now){
-      var dur = fase==='tarik' ? TARIK : BUANG;
-      var p = klem((now-t0)/dur,0,1);
-      var s = fase==='tarik' ? (.62+p*.38) : (1-p*.38);
-      ring.style.setProperty('--np',s.toFixed(3));
-      k.dataset.fase=fase;
-
-      if(fase==='tarik'){ totalTarik++; if(tekan) benarTarik++; }
-      else { totalBuang++; if(!tekan) benarBuang++; }
-
-      if(p>=1){
-        if(fase==='tarik'){
-          fase='buang'; t0=now; $('b',ring).textContent='buang…';
-          info.textContent='sekarang lepas jarimu';
-        } else {
-          var okT = totalTarik? benarTarik/totalTarik : 0;
-          var okB = totalBuang? benarBuang/totalBuang : 0;
-          if(okT>=.65 && okB>=.65){
-            lolos++; turun(.05);
-            $$('i',titik)[lolos-1] && $$('i',titik)[lolos-1].classList.add('on');
-            SFX.lembut(); k.classList.remove('salah');
-            info.textContent='pas. lanjut, tarik lagi…';
-          } else {
-            k.classList.add('salah');
-            info.textContent='belum pas — tahan saat mengembang, lepas saat mengempis';
-          }
-          benarTarik=benarBuang=totalTarik=totalBuang=0;
-          fase='tarik'; t0=now; $('b',ring).textContent='tarik…';
-          if(lolos>=PERLU){ selesai(); return; }
-        }
+  function pilihItem(it){
+    if(it.classList.contains('diambil')) return;
+    $$('.rt-item',k).forEach(function(n){ n.classList.remove('dipilih'); });
+    it.classList.add('dipilih'); pilih=it; SFX.klik();
+    $$('.rt-kotak',k).forEach(function(n){ n.classList.toggle('bisaIsi', !n.classList.contains('isi')); });
+  }
+  function taruh(kotak){
+    if(!pilih || kotak.classList.contains('isi')) return;
+    var teks=pilih.textContent;
+    isi[+kotak.dataset.i]=teks;
+    kotak.classList.add('isi'); $('.t',kotak).textContent=teks;
+    pilih.classList.add('diambil'); pilih.classList.remove('dipilih'); pilih=null;
+    $$('.rt-kotak',k).forEach(function(n){ n.classList.remove('bisaIsi'); });
+    SFX.klik(); buzz(8);
+    if(isi.every(Boolean)) tbl.disabled=false;
+  }
+  var jalan=false;
+  tbl.onclick=function(){
+    if(jalan) return; jalan=true; tbl.disabled=true;
+    var n=0;
+    (function putar(){
+      if(n>=isi.length){
+        SFX.lembut(); turun(.3);
+        main.textContent='malamnya jadi lebih enak.';
+        setTimeout(function(){ tutupDekat(); majuLangkah(); },1500);
+        return;
       }
-      raf=requestAnimationFrame(jalan);
+      main.textContent=isi[n];
+      $$('.rt-kotak',k)[n].style.background='#B7DCD2';
+      SFX.klik(); n++; setTimeout(putar,900);
+    })();
+  };
+}
+
+/* ══════ 8 · IRAMA NAPAS — tahan 1,1 detik, lalu lepas ══════
+   Tekan-tahan tetap dipakai, tapi pendek (1,1 detik per tarikan) dan
+   menu long-press browser sudah dicegah.                            */
+function bukaNapas(){
+  var PERLU=5, TARIK=1100, BUANG=1200;
+  var k=el('div','kartu');
+  k.appendChild(el('h3',null,'Samakan napasnya'));
+  k.appendChild(el('p','jelas','Tahan jarimu saat lingkarannya mengembang, lepas saat mengempis. '+PERLU+' kali.'));
+  var ring=el('div','np-ring'); ring.id='napasRing';
+  ring.setAttribute('role','button'); ring.setAttribute('tabindex','0');
+  ring.appendChild(el('b',null,'tahan'));
+  var info=el('div','np-info','mulai: tahan jarimu sekarang');
+  var titik=el('div','np-titik');
+  for(var i=0;i<PERLU;i++) titik.appendChild(el('i'));
+  k.appendChild(ring); k.appendChild(info); k.appendChild(titik);
+  dekatkan(k,false);
+  ring.addEventListener('touchstart',function(e){ e.preventDefault(); },{passive:false});
+
+  var fase='tarik', t0=performance.now(), tekan=false, lolos=0, kelar=false;
+  var okT=0,totT=0,okB=0,totB=0, raf=null;
+  ring.addEventListener('pointerdown',function(e){ tekan=true; ac(); try{ ring.setPointerCapture(e.pointerId); }catch(_){} });
+  ring.addEventListener('pointerup',function(){ tekan=false; });
+  ring.addEventListener('pointercancel',function(){ tekan=false; });
+  ring.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selesai(); } });
+
+  function jalan(now){
+    if(kelar) return;
+    var dur = fase==='tarik'?TARIK:BUANG;
+    var p = klem((now-t0)/dur,0,1);
+    ring.style.setProperty('--np', (fase==='tarik' ? (.66+p*.34) : (1-p*.34)).toFixed(3));
+    k.dataset.fase=fase;
+    if(fase==='tarik'){ totT++; if(tekan) okT++; } else { totB++; if(!tekan) okB++; }
+    if(p>=1){
+      if(fase==='tarik'){
+        fase='buang'; t0=now; $('b',ring).textContent='lepas'; info.textContent='sekarang lepas jarimu';
+      } else {
+        var a=totT?okT/totT:0, b=totB?okB/totB:0;
+        if(a>=.6 && b>=.6){
+          lolos++; turun(.06);
+          var d=$$('i',titik)[lolos-1]; if(d) d.classList.add('on');
+          SFX.lembut(); info.textContent='pas. tahan lagi…';
+        } else {
+          info.textContent='belum pas — tahan saat mengembang, lepas saat mengempis';
+        }
+        okT=totT=okB=totB=0; fase='tarik'; t0=now; $('b',ring).textContent='tahan';
+        if(lolos>=PERLU){ selesai(); return; }
+      }
     }
     raf=requestAnimationFrame(jalan);
+  }
+  raf=requestAnimationFrame(jalan);
 
-    function selesai(){
-      if(kelar) return; kelar=true;
-      cancelAnimationFrame(raf);
-      info.textContent='napasnya sudah teratur.';
-      SFX.pulih();
-      setTimeout(function(){ tutupDekat(); majuTahap(); },1400);
-    }
-  };
-})();
+  function selesai(){
+    if(kelar) return; kelar=true; cancelAnimationFrame(raf);
+    info.textContent='napasnya sudah teratur.'; SFX.pulih();
+    setTimeout(function(){ tutupDekat(); majuLangkah(); },1300);
+  }
+}
 
-/* ══════════════ 9 · TERMOMETER: dibaca di bawah cahaya lampu ══════════════ */
+/* ══════ 9 · TERMOMETER — diketuk, dibaca ══════ */
 (function(){
   var node=$('#termo'), angka=$('#tmAngka'), kelar=false;
-  var x=0,y=0, timer=null;
-  seret(node, function(dx,dy){
-    if(kelar||tahapIni()!=='#termo') return;
-    x=dx; y=dy;
-    node.style.transform='translate('+dx+'px,'+dy+'px) rotate('+klem(dx*.1,-16,16).toFixed(1)+'deg)';
-    if(diCahaya()){
-      if(!timer) timer=setTimeout(function(){ if(diCahaya()&&!kelar) selesai(); },700);
-    } else { clearTimeout(timer); timer=null; }
-  }, function(){
-    clearTimeout(timer); timer=null;
-    if(!kelar) node.style.transform='translate(0,0)';
-  });
-  function diCahaya(){
-    var a=node.getBoundingClientRect(), b=$('#lampu').getBoundingClientRect();
-    var ax=a.left+a.width/2, ay=a.top+a.height/2;
-    return ax>b.left-40 && ax<b.right+40 && ay>b.top-20 && ay<b.bottom+190;
-  }
-  node.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&tahapIni()==='#termo'){ e.preventDefault(); selesai(); } });
-  function selesai(){
-    if(kelar) return; kelar=true;
-    clearTimeout(timer);
+  function baca(){
+    if(kelar||langkahIni()!=='#termo') return;
+    kelar=true;
     SUHU=SUHU_PULIH; tulisSuhu();
     angka.textContent='36,5 °C'; angka.classList.add('jelas');
-    node.classList.remove('sorot'); node.dataset.mati='1';
-    SFX.pulih(); buzz([16,40,16]);
+    beres('#termo'); SFX.pulih(); buzz([16,40,16]);
     toast('demamnya turun');
-    setTimeout(majuTahap,1600);
+    setTimeout(majuLangkah,1700);
   }
+  node.addEventListener('click',baca);
+  node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); baca(); } });
 })();
 
-/* ══════════════ 10 · SURAT: lembar keterangan obat, dibuka lipatannya ══════════════ */
+/* ══════ 10 · SURAT — lipatannya dibuka satu-satu ══════ */
+function bukaLembar(){
+  $('#lembar').classList.add('tampil');
+  $('#arahan').innerHTML='Satu lipatan, satu bagian. <b>Ketuk tiap lipatannya</b>.';
+}
 (function(){
-  var lembar=$('#lembar');
   $('#lbJudul').textContent='Untuk '+(D.penerima||'kamu');
   $('#lbSub').textContent = HARI && !D.sembunyikanHari
     ? 'Hari ke-'+HARI+' · dibaca saat suhunya 36,5 °C'
     : 'Dibaca saat suhunya sudah 36,5 °C';
   if(FOTO[0]) $('#lbCapImg').src=FOTO[0].src; else $('#lbCap').style.display='none';
   ['#par1','#par2','#par3'].forEach(function(s,i){ $(s).textContent=(D.surat||[])[i]||''; });
-
   var adaPar=[0,1,2].filter(function(i){ return ((D.surat||[])[i]||'').trim(); });
-  [1,2,3].forEach(function(n,i){ if(adaPar.indexOf(i)<0) $('#lipat'+n).remove(); });
+  [1,2,3].forEach(function(n,i){ if(adaPar.indexOf(i)<0){ var x=$('#lipat'+n); if(x) x.remove(); } });
 
-  var kebuka=0, perlu=adaPar.length||1;
+  var perlu=Math.max(1,adaPar.length), kebuka=0;
   $$('.lipat').forEach(function(lip){
-    var tutup=$('.lipat-tutup',lip);
-    var tarik=0;
-    seret(tutup, function(dx,dy){
-      tarik=Math.max(tarik, Math.abs(dx)>Math.abs(dy)?Math.abs(dx):Math.abs(dy));
-      tutup.style.transform='translateY('+klem(dy*.4,-10,22).toFixed(1)+'px)';
-      if(tarik>=44) buka();
-    }, function(){ if(!lip.classList.contains('buka')) tutup.style.transform='translateY(0)'; });
-    tutup.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); buka(); } });
-    function buka(){
+    var tombol=$('.lipat-tutup',lip);
+    tombol.addEventListener('click',function(){
       if(lip.classList.contains('buka')) return;
       lip.classList.add('buka'); SFX.kain(); buzz(10);
       kebuka++;
-      if(kebuka>=perlu){ $('#lbLanjut').hidden=false; }
-    }
+      if(kebuka>=perlu) $('#lbLanjut').hidden=false;
+    });
   });
-
-  $('#lbLanjut').onclick=function(){
-    lembar.classList.remove('tampil');
-    majuTahap();
-  };
-
-  window.__bukaLembar=function(){
-    lembar.classList.add('tampil');
-    arahan('Satu lipatan, satu bagian. <b>Tarik tiap lipatannya</b>.');
-  };
+  $('#lbLanjut').addEventListener('click',function(){
+    $('#lembar').classList.remove('tampil');
+    majuLangkah();
+  });
 })();
 
-/* ══════════════ 11 · PENUTUP: tali lampu, ponsel, lalu mata menutup ══════════════ */
+/* ══════ 11 · PENUTUP — tarik tali lampu ══════ */
 (function(){
   var tali=$('#tali'), kelar=false;
   seret(tali, function(dx,dy){
-    if(kelar||tahapIni()!=='#tali') return;
-    var t=klem(78+dy,78,150);
-    tali.style.setProperty('--tl',t+'px');
-    if(t>=138) selesai();
-  }, function(){ if(!kelar) tali.style.setProperty('--tl','78px'); });
-  tali.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&tahapIni()==='#tali'){ e.preventDefault(); selesai(); } });
+    if(kelar||langkahIni()!=='#lampu') return;
+    var t=klem(56+dy,56,130);
+    tali.querySelector('.tali-garis').style.height=t+'px';
+    if(t>=118) selesai();
+  }, function(){ if(!kelar) tali.querySelector('.tali-garis').style.height='56px'; });
+  tali.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!kelar&&langkahIni()==='#lampu'){ e.preventDefault(); selesai(); } });
 
   function selesai(){
     if(kelar) return; kelar=true;
-    tali.style.setProperty('--tl','78px');
+    tali.querySelector('.tali-garis').style.height='56px';
+    beres('#lampu'); $('#panah').classList.remove('tampil');
     SFX.tarik(); buzz(18);
-    arahan('');
+    $('#langkahNo').textContent=''; $('#arahan').textContent='Selamat istirahat.';
+    $('#lpSinar').style.opacity='0';
     $('#gelapkan').classList.add('on');
-    $('#lpCahaya').style.opacity='0';
     setTimeout(function(){
-      $('#ponsel').classList.add('nyala');
-      SFX.klik();
+      $('#ponsel').classList.add('nyala'); SFX.klik();
       if(D.rahasia){
         $('#ntDari').textContent=(D.pengirim||'Dia')+' · sekarang';
         $('#ntIsi').textContent=D.rahasia;
         $('#notif').classList.add('tampil');
       }
-    },1700);
-    setTimeout(function(){
-      $('#notif').classList.remove('tampil');
-      $('#mataTutup').classList.add('tutup');
-    }, D.rahasia?5200:2600);
-    setTimeout(selesaikan, D.rahasia?7000:4400);
+    },1500);
+    setTimeout(function(){ $('#notif').classList.remove('tampil'); }, D.rahasia?5000:2200);
+    setTimeout(tutup, D.rahasia?5800:3000);
   }
-
-  function selesaikan(){
+  function tutup(){
     $('#akhir').classList.add('tampil');
     $('#akhirKata').textContent = HARI && !D.sembunyikanHari
       ? 'Hari ke-'+HARI+', dan kamu masih ditemani.'
@@ -1340,26 +1238,16 @@ var bukaNapas=(function(){
         if(t) wa.href='https://wa.me/'+no+'?text='+encodeURIComponent(t);
       });
     } else { wa.hidden=true; }
-    $('#ulang').onclick=function(){ location.reload(); };
+    $('#ulang').addEventListener('click',function(){ location.reload(); });
   }
 })();
 
-/* ══════════════ sambungan tahap → objek yang butuh dibuka ══════════════ */
-var majuAsli=majuTahap;
-majuTahap=function(){
-  majuAsli();
-  var id=tahapIni();
-  if(id==='#rutin') return bukaRutin();
-  if(id==='#napas') return bukaNapas();
-  if(id==='#lembar') return window.__bukaLembar();
-  /* tahap yang objeknya tidak ada (mis. foto kosong) langsung dilewati */
-  if(id==='#foto' && !FOTO.length) return majuTahap();
-  if(id==='#kotakobat' && !DOSIS.length) return majuTahap();
-};
-
 tulisSuhu();
-arahan('');
-$('#hari').innerHTML = HARI && !D.sembunyikanHari ? 'hari ke-'+HARI+'<br>sakitnya' : '';
+$('#langkahNo').textContent='';
+$('#arahan').textContent='';
+window.addEventListener('resize',function(){
+  var L=LANGKAH[langkah]; if(L){ var t=$(L.objek); if(t) tunjuk(t); }
+});
 
 }
 window.FV_MULAI = FV_MULAI;
@@ -1374,7 +1262,6 @@ window.FV_MULAI = FV_MULAI;
 (function(){
   "use strict";
   var tirai = document.getElementById("memuat");
-
   function gagal(t){
     if(!tirai) return;
     tirai.classList.add("gagal");
@@ -1389,7 +1276,6 @@ window.FV_MULAI = FV_MULAI;
       rahasia:"", waPengirim:"", lagu:{src:"",mulai:0,selesai:0}
     }, data || {});
   }
-
   function siapkanFoto(daftar){
     var tugas = (daftar || []).filter(function(f){ return f && f.src; }).map(function(f){
       return new Promise(function(beres){
