@@ -76,7 +76,8 @@ export default {
       /* ── alamat pendek: /s/<kode> ──
          Semua mesin tema (surat.html = Bait, kado-riang.html,
          langit-harapan.html, peta-perjalanan.html, zona-waktu.html,
-         graduation-benih.html, confess-kunang.html, getwell-365.html)
+         graduation-benih.html, confess-kunang.html, getwell-365.html,
+         pasar-malam.html)
          berbagi alamat /s/<kode> yang sama. Temanya dilihat dulu di D1,
          baru file yang cocok disajikan. Bait tetap mengambil datanya
          sendiri lewat fetch client-side (lihat surat.html) — mesin-mesin
@@ -105,6 +106,7 @@ export default {
           : tema === "graduation-benih" ? "graduation-benih"
           : tema === "confess-kunang" ? "confess-kunang"
           : tema === "getwell-365" ? "getwell-365"
+          : tema === "pasar-malam" ? "pasar-malam"
           : "surat";
         const r = await ambilHalaman(env, url.origin, nama, request);
 

@@ -36,6 +36,7 @@ const BATAS = {
   surat: 220, caption: 40, rahasia: 120,
   kupon: 50, harapan: 90, kuisTanya: 70, kuisPilihan: 30,
   dosis: 90, aturanDosis: 40, enakan: 60, airPesan: 80,
+  kegiatan: 24, alasan: 90, titikTemu: 40, catatanTunda: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -69,7 +70,8 @@ const TEMA_SKEMA = {
   "zona-waktu":        { nfoto: 3, momen: "ldr" },
   "graduation-benih":  { nfoto: 3, momen: "graduation" },
   "confess-kunang":    { nfoto: 3, momen: "confess" },
-  "getwell-365":       { nfoto: 3, momen: "getwell" }
+  "getwell-365":       { nfoto: 3, momen: "getwell" },
+  "pasar-malam":       { nfoto: 3, momen: "askout" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -104,6 +106,17 @@ function teks(v, maks) {
 function tanggalSah(v) {
   const s = teks(v, 10);
   return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : "";
+}
+
+/* Jam ajakan (momen Ask Out) — "HH:MM" 24 jam. Dipakai mesin tema untuk
+   jarum jam menara di puncak bianglala, jadi harus benar-benar jam. */
+function jamSah(v) {
+  const s = teks(v, 5);
+  const m = s.match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return "";
+  const j = +m[1], n = +m[2];
+  if (j > 23 || n > 59) return "";
+  return ("0" + j).slice(-2) + ":" + m[2];
 }
 
 /* ══════════════════ DOKU ══════════════════
@@ -405,6 +418,16 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.tanggalSakit = tanggalSah(p.tanggalSakit);
     isi.sembunyikanHari = !!p.sembunyikanHari;
     if (!isi.tanggalSakit) throw new Error("Tanggal mulai sakit belum diisi.");
+  } else if (skema.momen === "askout") {
+    /* Ask Out: tidak ada angka berulang (bukan umur/tahun jadian).
+       Angka pribadinya justru tanggal & jam ajakan itu sendiri —
+       dipakai mesin tema untuk jam menara dan tiga pilihan malam.
+       Titik temu opsional: tidak semua ajakan punya tempat jemput. */
+    isi.tanggalAjak = tanggalSah(p.tanggalAjak);
+    isi.jamAjak = jamSah(p.jamAjak);
+    isi.titikTemu = teks(p.titikTemu, BATAS.titikTemu);
+    if (!isi.tanggalAjak) throw new Error("Tanggal ajakannya belum diisi.");
+    if (!isi.jamAjak) throw new Error("Jam ajakannya belum diisi.");
   } else if (skema.momen === "confess") {
     /* Confess sengaja TIDAK punya isian dasar tambahan — tidak ada
        tanggal atau angka berulang yang masuk akal untuk satu
@@ -458,6 +481,17 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (isi.enakan.some(x => !x)) throw new Error("Ketiga hal yang bikin enakan belum diisi.");
     isi.airPesan = teks(p.airPesan, BATAS.airPesan);
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "pasar-malam") {
+    /* "Pasar Malam": `kegiatan` jadi label di leher empat botol lempar
+       gelang (yang meleset berdiri lagi di kios pancing), `alasan` jadi
+       tiga lapis gula kapas, `catatanTunda` jadi kalimat untuk pilihan
+       "kapan pun kamu siap" di papan lampu. */
+    isi.kegiatan = [0, 1, 2, 3].map(i => teks((p.kegiatan || [])[i], BATAS.kegiatan));
+    if (isi.kegiatan.some(k => !k)) throw new Error("Keempat rencana di botolnya belum diisi.");
+    isi.alasan = [0, 1, 2].map(i => teks((p.alasan || [])[i], BATAS.alasan));
+    if (isi.alasan.some(a => !a)) throw new Error("Ketiga alasannya belum diisi.");
+    isi.catatanTunda = teks(p.catatanTunda, BATAS.catatanTunda);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
     /* bait, peta-perjalanan, zona-waktu, graduation-benih &

@@ -360,7 +360,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
   var $ = function(id){ return document.getElementById(id); };
   var BATAS = { penerima:20, pengirim:20, surat:220, caption:40, rahasia:120, kupon:50, harapan:90, kuisTanya:70, kuisPilihan:30,
-                dosis:90, aturanDosis:40, enakan:60, airPesan:80 };
+                dosis:90, aturanDosis:40, enakan:60, airPesan:80,
+                kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -379,7 +380,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "zona-waktu":        { nama:"Zona Waktu",        nfoto:3, mesin:"/zona-waktu.html",        momen:"ldr" },
     "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:3, mesin:"/confess-kunang.html",  momen:"confess" },
-    "getwell-365":       { nama:"36,5",                  nfoto:3, mesin:"/getwell-365.html",     momen:"getwell" }
+    "getwell-365":       { nama:"36,5",                  nfoto:3, mesin:"/getwell-365.html",     momen:"getwell" },
+    "pasar-malam":       { nama:"Pasar Malam",           nfoto:3, mesin:"/pasar-malam.html",     momen:"askout" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -557,6 +559,20 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<input id="sembunyikanHari" type="checkbox">' +
         '<label for="sembunyikanHari">Sembunyikan hitungan harinya — tampilkan suratnya saja.</label>' +
         '</div></div></div>';
+    } else if(momen === "askout"){
+      html = '<h2><span class="n">4</span> Malam yang kamu ajak</h2>' +
+        '<p class="jelas">Tanggal dan jamnya jadi jam menara di puncak bianglala, dan jadi baris pertama di papan lampu tempat dia menjawab.</p>' +
+        '<div class="dua">' +
+        '<div class="baris" data-f="tglAjak"><label for="tglAjak">Tanggal ajakannya</label>' +
+        '<input id="tglAjak" type="date">' +
+        '<p class="galat">Tanggal ajakannya belum diisi.</p></div>' +
+        '<div class="baris" data-f="jamAjak"><label for="jamAjak">Jamnya</label>' +
+        '<input id="jamAjak" type="time">' +
+        '<p class="galat">Jam ajakannya belum diisi.</p></div>' +
+        '</div>' +
+        '<div class="baris" data-f="titikTemu"><label for="titikTemu">Ketemu / jemput di mana (opsional)</label>' +
+        '<input id="titikTemu" type="text" maxlength="40" placeholder="Depan kosan kamu">' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(momen === "confess"){
       html = '<h2><span class="n">4</span> Tidak ada tanggal di sini</h2>' +
         '<p class="jelas">Pengakuan cuma terjadi sekali — tidak ada angka berulang seperti umur atau tahun jadian. Lanjut ke foto dan suratnya saja.</p>';
@@ -629,6 +645,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '</div></div></div>';
     }
     b.innerHTML = html;
+    if(momen === "askout") pasangHitung("titikTemu", BATAS.titikTemu);
   }
 
   /* ══ 2b · blok ke-5: beda per tema ══
@@ -717,6 +734,29 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="rahasia"><label for="rahasia">Notifikasi penutup (opsional)</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Udah tidur? Aku di sini kalau butuh apa-apa."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "pasar-malam"){
+      html = '<h2><span class="n">5</span> Empat rencana di botol</h2>' +
+        '<p class="jelas">Jadi label di leher botol lempar gelang. Yang tersangkut jadi acara malam itu; yang meleset berdiri lagi di kios pancing.</p>';
+      var contohRencana = ["mie malam-malam", "nonton yang jelek", "muter nggak jelas", "ngopi sampai tutup"];
+      for(var kg2=0;kg2<4;kg2++){
+        html += '<div class="baris" data-f="kegiatan'+kg2+'"><label for="kegiatan'+kg2+'">Rencana '+(kg2+1)+'</label>' +
+          '<input id="kegiatan'+kg2+'" type="text" maxlength="24" placeholder="'+contohRencana[kg2]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Rencana '+(kg2+1)+' belum diisi.</p></div>';
+      }
+      html += '<h2 style="margin-top:28px"><span class="n">5</span> Tiga alasan kamu ngajak</h2>' +
+        '<p class="jelas">Digulung jadi tiga lapis gula kapas — muncul satu per satu sambil batangnya diputar.</p>';
+      for(var al=0;al<3;al++){
+        html += '<div class="baris" data-f="alasan'+al+'"><label for="alasan'+al+'">Alasan '+(al+1)+'</label>' +
+          '<textarea id="alasan'+al+'" maxlength="90" placeholder="Soalnya ketemu kamu itu bagian paling nggak capek dari seminggu."></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Alasan '+(al+1)+' belum diisi.</p></div>';
+      }
+      html += '<h2 style="margin-top:28px"><span class="n">5</span> Kalau dia belum bisa</h2>' +
+        '<p class="jelas">Di papan lampu ada pilihan ketiga, "kapan pun kamu siap". Ini kalimat yang muncul kalau dia memilih itu — boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
+        '<div class="baris" data-f="catatanTunda"><label for="catatanTunda">Kalimatnya (opsional)</label>' +
+        '<textarea id="catatanTunda" maxlength="90" style="min-height:70px" placeholder="Nggak apa-apa. Aku nunggu sampai kamu siap."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "confess-kunang"){
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
         '<p class="jelas">Muncul di akhir, setelah toplesnya dilontarkan ke langit — kalimat terakhir dari pengakuannya.</p>' +
@@ -747,6 +787,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       }
       pasangHitung("airPesan", BATAS.airPesan);
       pasangHitung("rahasia", BATAS.rahasia);
+    } else if(tema === "pasar-malam"){
+      for(var kk=0;kk<4;kk++) pasangHitung("kegiatan"+kk, BATAS.kegiatan);
+      for(var ka=0;ka<3;ka++) pasangHitung("alasan"+ka, BATAS.alasan);
+      pasangHitung("catatanTunda", BATAS.catatanTunda);
     } else {
       pasangHitung("rahasia", BATAS.rahasia);
     }
@@ -781,6 +825,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         harapan: [0,1,2].map(function(h){ return $("harapan"+h).value; })
       };
     }
+    if(TEMA === "pasar-malam"){
+      return {
+        kegiatan: [0,1,2,3].map(function(i){ return $("kegiatan"+i).value; }),
+        alasan: [0,1,2].map(function(i){ return $("alasan"+i).value; }),
+        catatanTunda: $("catatanTunda").value
+      };
+    }
     if(TEMA === "getwell-365"){
       return {
         dosis: [0,1,2].map(function(i){ return { teks: $("dosisT"+i).value, aturan: $("dosisA"+i).value }; }),
@@ -805,6 +856,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       return {
         tanggalSakit: $("sakit").value || (sumber==="pratinjau" ? "2026-10-21" : ""),
         sembunyikanHari: $("sembunyikanHari").checked
+      };
+    }
+    if(MOMEN_GRUP === "askout"){
+      return {
+        tanggalAjak: $("tglAjak").value || (sumber==="pratinjau" ? "2026-11-07" : ""),
+        jamAjak: $("jamAjak").value || (sumber==="pratinjau" ? "19:00" : ""),
+        titikTemu: $("titikTemu").value
       };
     }
     if(MOMEN_GRUP === "confess"){
@@ -922,6 +980,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["wisuda","wisuda"]]
       : MOMEN_GRUP === "getwell"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["sakit","sakit"]]
+      : MOMEN_GRUP === "askout"
+      ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["tglAjak","tglAjak"],["jamAjak","jamAjak"]]
       : MOMEN_GRUP === "confess"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"]]
       : [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]];
@@ -956,6 +1016,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         var kosongH = !$("harapan"+h).value.trim();
         tandai("harapan"+h, kosongH);
         if(kosongH) kurang.push("harapan"+h);
+      });
+    } else if(TEMA === "pasar-malam"){
+      [0,1,2,3].forEach(function(i){
+        var kosongK = !$("kegiatan"+i).value.trim();
+        tandai("kegiatan"+i, kosongK);
+        if(kosongK) kurang.push("kegiatan"+i);
+      });
+      [0,1,2].forEach(function(i){
+        var kosongA = !$("alasan"+i).value.trim();
+        tandai("alasan"+i, kosongA);
+        if(kosongA) kurang.push("alasan"+i);
       });
     } else if(TEMA === "getwell-365"){
       [0,1,2].forEach(function(i){
@@ -994,7 +1065,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: Object.assign({
@@ -1101,7 +1172,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           $("jenjang").value = i.jenjang || "s1";
           $("wisuda").value = i.tanggalWisuda || "";
           $("sembunyikanTahun").checked = !!i.sembunyikanTahun;
-        } else {
+        } else if(MOMEN_GRUP === "askout"){
+          $("tglAjak").value = i.tanggalAjak || "";
+          $("jamAjak").value = i.jamAjak || "";
+          $("titikTemu").value = i.titikTemu || "";
+        } else if($("ucapan")){
           $("ucapan").value = i.ucapan || "selamat";
           $("lahir").value  = i.tanggalLahir || "";
           $("sembunyikanUmur").checked = !!i.sembunyikanUmur;
@@ -1118,7 +1193,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
             if(r) r.checked = true;
           });
           (i.harapan||[]).forEach(function(v,n){ if($("harapan"+n)) $("harapan"+n).value = v || ""; });
-        } else {
+        } else if(TEMA === "pasar-malam"){
+          (i.kegiatan||[]).forEach(function(v,n){ if($("kegiatan"+n)) $("kegiatan"+n).value = v || ""; });
+          (i.alasan||[]).forEach(function(v,n){ if($("alasan"+n)) $("alasan"+n).value = v || ""; });
+          if($("catatanTunda")) $("catatanTunda").value = i.catatanTunda || "";
+        } else if($("rahasia")){
           $("rahasia").value = i.rahasia || "";
         }
         var lagu = i.lagu || {};
