@@ -66,7 +66,8 @@ const TEMA_SKEMA = {
   "langit-harapan":    { nfoto: 4, momen: "birthday" },
   "peta-perjalanan":   { nfoto: 3, momen: "anniversary" },
   "zona-waktu":        { nfoto: 3, momen: "ldr" },
-  "graduation-benih":  { nfoto: 3, momen: "graduation" }
+  "graduation-benih":  { nfoto: 3, momen: "graduation" },
+  "confess-kunang":    { nfoto: 3, momen: "confess" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -395,6 +396,12 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.tanggalWisuda = tanggalSah(p.tanggalWisuda);
     isi.sembunyikanTahun = !!p.sembunyikanTahun;
     if (!isi.tanggalWisuda) throw new Error("Tanggal wisuda belum diisi.");
+  } else if (skema.momen === "confess") {
+    /* Confess sengaja TIDAK punya isian dasar tambahan — tidak ada
+       tanggal atau angka berulang yang masuk akal untuk satu
+       pengakuan (beda dari birthday/anniversary/graduation yang
+       semuanya berulang tahunan). Hanya nama, foto, surat, dan pesan
+       rahasia di bawah. */
   } else {
     isi.ucapan = UCAPAN_SAH.includes(p.ucapan) ? p.ucapan : "selamat";
     isi.tanggalLahir = tanggalSah(p.tanggalLahir);
@@ -426,10 +433,11 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.harapan[0] || !isi.harapan[1] || !isi.harapan[2]) throw new Error("Ketiga harapan belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
-    /* bait, peta-perjalanan, zona-waktu & graduation-benih: satu pesan
-       rahasia/penutup, diungkap di balik lapisan interaktif tema
-       masing-masing (tinta rahasia / debu di kompas / sinyal telepon /
-       buah yang dipetik). */
+    /* bait, peta-perjalanan, zona-waktu, graduation-benih &
+       confess-kunang: satu pesan rahasia/penutup, diungkap di balik
+       lapisan interaktif tema masing-masing (tinta rahasia / debu di
+       kompas / sinyal telepon / buah yang dipetik / toples yang
+       dilepas ke langit). */
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   }

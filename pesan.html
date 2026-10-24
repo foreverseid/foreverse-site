@@ -376,7 +376,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "langit-harapan":    { nama:"Langit Harapan",    nfoto:4, mesin:"/langit-harapan.html",    momen:"birthday" },
     "peta-perjalanan":   { nama:"Peta Perjalanan",   nfoto:3, mesin:"/peta-perjalanan.html",   momen:"anniversary" },
     "zona-waktu":        { nama:"Zona Waktu",        nfoto:3, mesin:"/zona-waktu.html",        momen:"ldr" },
-    "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" }
+    "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" },
+    "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:3, mesin:"/confess-kunang.html",  momen:"confess" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -542,7 +543,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      Anniversary = jenis hari jadi + tanggal mulai + sembunyikan tahun. */
   function renderBlokDasar(momen){
     var b = $("blokDasar"), html = "";
-    if(momen === "ldr"){
+    if(momen === "confess"){
+      html = '<h2><span class="n">4</span> Tidak ada tanggal di sini</h2>' +
+        '<p class="jelas">Pengakuan cuma terjadi sekali — tidak ada angka berulang seperti umur atau tahun jadian. Lanjut ke foto dan suratnya saja.</p>';
+    } else if(momen === "ldr"){
       html = '<h2><span class="n">4</span> Kota kalian berdua</h2>' +
         '<p class="jelas">Dipakai untuk menghitung jam kota kalian secara hidup dan jaraknya di tengah surat.</p>' +
         '<div class="dua">' +
@@ -671,6 +675,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Bangga banget sama kamu. Lanjut terus, ya."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "confess-kunang"){
+      html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
+        '<p class="jelas">Muncul di akhir, setelah toplesnya dilontarkan ke langit — kalimat terakhir dari pengakuannya.</p>' +
+        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Aku cuma butuh satu kesempatan buat bilang ini langsung."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
         '<p class="jelas">Tersembunyi di balik lapisan "tinta rahasia" — baru terlihat setelah digosok.</p>' +
@@ -733,6 +743,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      jalan. Dibuat agak jarang (debounce) supaya tidak memuat ulang di
      setiap ketukan huruf. */
   function isiDasarUntuk(sumber){
+    if(MOMEN_GRUP === "confess"){
+      return {};
+    }
     if(MOMEN_GRUP === "graduation"){
       return {
         jenjang: $("jenjang").value || "s1",
@@ -843,6 +856,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["kotaPengirim","kotaPengirim"],["kotaPenerima","kotaPenerima"]]
       : MOMEN_GRUP === "graduation"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["wisuda","wisuda"]]
+      : MOMEN_GRUP === "confess"
+      ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"]]
       : [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["lahir","lahir"]];
     wajibDasar.forEach(function(p){
       var kosong = !$(p[0]).value.trim();
@@ -904,7 +919,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: Object.assign({

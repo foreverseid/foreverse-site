@@ -73,6 +73,12 @@ function isiDrafTema(tema) {
     d.isi.tanggalWisuda = "2026-10-24";
     d.isi.sembunyikanTahun = false;
     d.isi.rahasia = "Toga ini aku simpan fotonya, buat pigura nanti.";
+  } else if (tema === "confess-kunang") {
+    d.momen = "confess";
+    delete d.isi.ucapan;
+    delete d.isi.tanggalLahir;
+    delete d.isi.sembunyikanUmur;
+    d.isi.rahasia = "Aku cuma butuh satu kesempatan buat bilang ini langsung.";
   }
   return d;
 }
@@ -543,6 +549,7 @@ for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.htm
                       "kado-riang.html", "langit-harapan.html", "peta-perjalanan.html",
                       "peta-perjalanan-demo.html", "zona-waktu.html", "zona-waktu-demo.html",
                       "graduation-benih.html", "graduation-benih-demo.html",
+                      "confess-kunang.html", "confess-kunang-demo.html",
                       "index.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
@@ -571,7 +578,7 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
    "match" — tapi mencaplok sampai </script> SKRIP BERIKUTNYA, menghapus
    skrip bootstrap pratinjau. Uji ini memastikan match-nya selalu pas
    satu skrip saja. */
-for (const berkas of ["kado-riang.html", "langit-harapan.html", "peta-perjalanan.html", "zona-waktu.html", "graduation-benih.html"]) {
+for (const berkas of ["kado-riang.html", "langit-harapan.html", "peta-perjalanan.html", "zona-waktu.html", "graduation-benih.html", "confess-kunang.html"]) {
   await uji(berkas + " · pola sisip data worker.js pas satu skrip, tidak mencaplok skrip berikutnya", async () => {
     const t = await readFile("./" + berkas, "utf8");
     const re = /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/;
@@ -925,6 +932,50 @@ await uji("graduation-benih · bukan tema birthday/kado-riang/langit-harapan, ja
   const isi = JSON.parse(b.isi);
   harus("sembunyikanTahun" in isi, "sembunyikanTahun harus ada");
   harus(!("sembunyikanUmur" in isi), "sembunyikanUmur (birthday) tidak boleh ikut");
+  harus(!("kupon" in isi), "kupon (kado-riang) tidak boleh ikut");
+  harus(!("kuis" in isi) && !("harapan" in isi), "kuis/harapan (langit-harapan) tidak boleh ikut");
+});
+
+await uji("confess-kunang · pesanan lengkap diterima dan tersimpan dengan tema yang benar", async () => {
+  const L = await buatLingkungan();
+  const j = await draf(L, isiDrafTema("confess-kunang"));
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT tema,momen,isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  sama(b.tema, "confess-kunang", "tema tersimpan");
+  sama(b.momen, "confess", "momen tersimpan sesuai skema tema");
+  const isi = JSON.parse(b.isi);
+  sama(isi.rahasia, "Aku cuma butuh satu kesempatan buat bilang ini langsung.", "rahasia tersimpan");
+});
+
+await uji("confess-kunang · momen confess tidak punya isian dasar tambahan — tanggal/jenjang/kota birthday-anniversary-ldr-graduation tidak boleh ikut nyangkut", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("confess-kunang");
+  const j = await draf(L, d);
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  const isi = JSON.parse(b.isi);
+  harus(!("ucapan" in isi) && !("tanggalLahir" in isi) && !("sembunyikanUmur" in isi), "isian birthday tidak boleh ikut");
+  harus(!("jenisHariJadi" in isi) && !("tanggalMulai" in isi), "isian anniversary tidak boleh ikut");
+  harus(!("kotaPengirim" in isi) && !("kotaPenerima" in isi), "isian ldr tidak boleh ikut");
+  harus(!("jenjang" in isi) && !("tanggalWisuda" in isi), "isian graduation tidak boleh ikut");
+  harus(!("sembunyikanTahun" in isi), "sembunyikanTahun (momen lain) tidak boleh ikut di confess");
+});
+
+await uji("confess-kunang · pesan rahasia boleh kosong (opsional, sama seperti tema lain)", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("confess-kunang");
+  d.isi.rahasia = "";
+  const j = await draf(L, d);
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+});
+
+await uji("confess-kunang · bukan tema birthday/kado-riang/langit-harapan, jadi tidak ikut terkena skema khusus tema lain di rapikanIsi()", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("confess-kunang");
+  const j = await draf(L, d);
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  const isi = JSON.parse(b.isi);
   harus(!("kupon" in isi), "kupon (kado-riang) tidak boleh ikut");
   harus(!("kuis" in isi) && !("harapan" in isi), "kuis/harapan (langit-harapan) tidak boleh ikut");
 });
