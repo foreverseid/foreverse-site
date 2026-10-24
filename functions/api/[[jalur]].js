@@ -35,6 +35,7 @@ const BATAS = {
   penerima: 20, pengirim: 20,
   surat: 220, caption: 40, rahasia: 120,
   kupon: 50, harapan: 90, kuisTanya: 70, kuisPilihan: 30,
+  dosis: 90, aturanDosis: 40, enakan: 60, airPesan: 80,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -67,7 +68,8 @@ const TEMA_SKEMA = {
   "peta-perjalanan":   { nfoto: 3, momen: "anniversary" },
   "zona-waktu":        { nfoto: 3, momen: "ldr" },
   "graduation-benih":  { nfoto: 3, momen: "graduation" },
-  "confess-kunang":    { nfoto: 3, momen: "confess" }
+  "confess-kunang":    { nfoto: 3, momen: "confess" },
+  "getwell-365":       { nfoto: 3, momen: "getwell" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -396,6 +398,13 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.tanggalWisuda = tanggalSah(p.tanggalWisuda);
     isi.sembunyikanTahun = !!p.sembunyikanTahun;
     if (!isi.tanggalWisuda) throw new Error("Tanggal wisuda belum diisi.");
+  } else if (skema.momen === "getwell") {
+    /* Get Well Soon: tanggal mulai sakit dipakai mesin tema untuk
+       menghitung "hari ke-N" secara hidup — bukan angka tahunan yang
+       berulang seperti birthday/anniversary/graduation. */
+    isi.tanggalSakit = tanggalSah(p.tanggalSakit);
+    isi.sembunyikanHari = !!p.sembunyikanHari;
+    if (!isi.tanggalSakit) throw new Error("Tanggal mulai sakit belum diisi.");
   } else if (skema.momen === "confess") {
     /* Confess sengaja TIDAK punya isian dasar tambahan — tidak ada
        tanggal atau angka berulang yang masuk akal untuk satu
@@ -431,6 +440,24 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
       throw new Error("Kuis belum lengkap — tiap soal perlu pertanyaan dan 3 pilihan.");
     isi.harapan = [0, 1, 2].map(i => teks((p.harapan || [])[i], BATAS.harapan));
     if (!isi.harapan[0] || !isi.harapan[1] || !isi.harapan[2]) throw new Error("Ketiga harapan belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "getwell-365") {
+    /* "36,5": tiap dosis punya teks + aturan pakainya, dibuka dari sekat
+       kotak obat. `enakan` = 3 hal yang bikin penerima enakan, disusun
+       jadi rutinitas malam. `airPesan` = tulisan di dasar gelas.
+       `rahasia` = notifikasi di ponsel saat lampunya dimatikan. */
+    isi.dosis = [0, 1, 2].map(i => {
+      const d = (p.dosis || [])[i] || {};
+      return {
+        teks: teks(d.teks, BATAS.dosis),
+        aturan: teks(d.aturan, BATAS.aturanDosis)
+      };
+    });
+    if (isi.dosis.some(d => !d.teks)) throw new Error("Ketiga dosisnya belum diisi.");
+    isi.enakan = [0, 1, 2].map(i => teks((p.enakan || [])[i], BATAS.enakan));
+    if (isi.enakan.some(x => !x)) throw new Error("Ketiga hal yang bikin enakan belum diisi.");
+    isi.airPesan = teks(p.airPesan, BATAS.airPesan);
+    isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
     /* bait, peta-perjalanan, zona-waktu, graduation-benih &
