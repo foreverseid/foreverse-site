@@ -132,6 +132,18 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 svg{display:block}
 
 /* ── KAMAR: panggung tetap, tidak discroll ───────────────────────── */
+/* layar mendatar: kamar dirender di ukuran potret tetap (412×836) lalu
+   diskalakan utuh ke tengah — komposisinya sama persis dengan versi HP,
+   jadi tidak ada benda yang bisa bertumpuk. Sisi kiri-kanan = dinding & lantai. */
+#ruang.skala{right:auto;bottom:auto;left:50%;width:412px;height:836px;margin-left:-206px;
+  transform:scale(var(--k,1));transform-origin:50% 0}
+#putar{position:fixed;inset:0;z-index:99;display:none;place-items:center;text-align:center;padding:24px;
+  background:var(--kertas);font-weight:800;color:var(--navy)}
+#putar.tampil{display:grid}
+#putar b{display:block;font-family:var(--serif,serif);font-size:1.3rem;margin-bottom:6px}
+body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
+  background:linear-gradient(0deg,var(--kayu-tua) 0 calc((100vh - 64px)*.07),transparent 0),
+    linear-gradient(180deg,#FFFBF4 0%,var(--kertas) 38%,var(--kertas-2) 100%)}
 #ruang{position:fixed;left:0;right:0;top:0;bottom:64px;overflow:hidden;
   background:linear-gradient(180deg,#FFFBF4 0%,var(--kertas) 38%,var(--kertas-2) 100%)}
 #ruang::after{content:"";position:absolute;inset:0;pointer-events:none;
@@ -174,8 +186,13 @@ svg{display:block}
   transform-origin:left center;transition:transform .3s ease-out;will-change:transform}
 .jd-kait{position:absolute;right:-9px;top:50%;width:46px;height:46px;margin-top:-23px;
   display:grid;place-items:center;z-index:3}
-.jd-kait i{width:20px;height:20px;border-radius:50%;background:var(--coral);
-  border:2.5px solid var(--navy);display:block}
+.jd-kait i{position:relative;width:14px;height:34px;border-radius:7px;background:var(--coral);
+  border:2.5px solid var(--navy);display:block;box-shadow:2px 2px 0 var(--navy-18)}
+/* engsel bulat + gagang: bentuk tuas jendela yang jelas */
+.jd-kait i::before{content:"";position:absolute;left:50%;top:-9px;width:16px;height:16px;margin-left:-8px;
+  border-radius:50%;background:var(--madu);border:2.5px solid var(--navy)}
+.jd-kait i::after{content:"";position:absolute;left:3px;right:3px;top:12px;height:10px;
+  background:repeating-linear-gradient(180deg,var(--navy) 0 2px,transparent 2px 4px);opacity:.5}
 
 /* foto 1 — ditempel di dinding, miring, pakai selotip */
 #fotoA{right:5%;top:4%;width:23%;transform:rotate(5deg)}
@@ -243,7 +260,7 @@ svg{display:block}
 #gelas{right:29%;bottom:46%;width:12%;min-width:50px;z-index:6}
 .gl-badan{position:relative;width:100%;aspect-ratio:1/1.45;min-height:62px;
   border:3px solid var(--navy);border-radius:4px 4px 12px 12px;background:#fff;overflow:hidden;
-  transform-origin:bottom right;transition:transform .35s ease}
+  transform-origin:50% 100%;transition:transform .4s ease}
 .gl-air{position:absolute;left:0;right:0;bottom:0;height:var(--air,70%);
   background:linear-gradient(180deg,#BFE3F0,#8FCBDE);transition:height .5s ease}
 .gl-dasar{position:absolute;left:0;right:0;bottom:4px;text-align:center;padding:0 3px;
@@ -474,6 +491,7 @@ body.jalan #suara.ada{display:grid}
 </div>
 
 <!-- ══════════════ KAMAR ══════════════ -->
+<div id="putar" aria-live="polite"><div><b>Putar HP-mu ke posisi tegak</b>kamarnya lebih lega kalau dilihat berdiri.</div></div>
 <div id="ruang">
   <div class="lantai"></div>
   <div id="talifoto"></div>
@@ -786,7 +804,7 @@ function turun(d){ SUHU=Math.max(SUHU_PULIH, +(SUHU-d).toFixed(2)); tulisSuhu();
 
 /* ══════════════ LANGKAH ══════════════ */
 var LANGKAH=[
-  { objek:'#jendela', kata:'Kamarnya pengap. Seret <b>kait bulat di tepi jendela</b> ke kanan.' },
+  { objek:'#jendela', kata:'Kamarnya pengap. Seret <b>tuas oranye di tepi jendela</b> ke kanan.' },
   { objek:'#gelas',   kata:'Tenggorokannya kering. <b>Ketuk gelas airnya</b>.' },
   { objek:'#handuk',  kata:'Seret <b>kompres</b> ke kotak putus-putus di bantal, lalu tahan sebentar.' },
   { objek:'#kotakobat', kata:'<b>Ketuk tiap laci kotak obat</b> — ada dosis yang belum diminum.' },
@@ -818,8 +836,8 @@ function majuLangkah(){
 }
 function tunjuk(node){
   var p=$('#panah'), r=node.getBoundingClientRect(), rr=$('#ruang').getBoundingClientRect();
-  p.style.left=(r.left-rr.left+r.width/2-17)+'px';
-  p.style.top=Math.max(2,(r.top-rr.top-42))+'px';
+  p.style.left=((r.left-rr.left+r.width/2)/K-17)+'px';
+  p.style.top=Math.max(2,((r.top-rr.top)/K-42))+'px';
   p.classList.add('tampil');
 }
 function beres(sel){
@@ -829,6 +847,16 @@ function beres(sel){
 function langkahIni(){ return (LANGKAH[langkah]||{}).objek; }
 
 /* ── seret pendek ── */
+/* skala panggung — K dipakai untuk mengubah piksel layar ke piksel kamar */
+var K=1;
+function aturSkala(){
+  var r=$('#ruang'), w=innerWidth, h=innerHeight-64;
+  if(w>h){ K=Math.min(h/836, w/412); r.classList.add('skala'); r.style.setProperty('--k',K); }
+  else { K=1; r.classList.remove('skala'); }
+  var pt=$('#putar'); if(pt) pt.classList.toggle('tampil', w>h && K<.62);
+  var a=document.querySelector('.obj.aktif'); if(a&&$('#panah').classList.contains('tampil')) tunjuk(a);
+}
+addEventListener('resize',aturSkala); aturSkala();
 function seret(node, saat, lepas){
   var on=false, x0=0, y0=0;
   node.addEventListener('pointerdown',function(e){
@@ -836,7 +864,7 @@ function seret(node, saat, lepas){
     on=true; x0=e.clientX; y0=e.clientY; ac();
     try{ node.setPointerCapture(e.pointerId); }catch(_){}
   });
-  node.addEventListener('pointermove',function(e){ if(on) saat(e.clientX-x0, e.clientY-y0, e); });
+  node.addEventListener('pointermove',function(e){ if(on) saat((e.clientX-x0)/K, (e.clientY-y0)/K, e); });
   function habis(e){ if(!on) return; on=false; if(lepas) lepas(e); }
   node.addEventListener('pointerup',habis);
   node.addEventListener('pointercancel',habis);
@@ -903,12 +931,14 @@ $('#tblMulai').addEventListener('click', function(){
   function minum(){
     if(kelar||langkahIni()!=='#gelas') return;
     kelar=true;
-    badan.style.transform='rotate(-24deg)';
-    SFX.air(); buzz(14);
-    setTimeout(function(){ air.style.setProperty('--air','8%'); },260);
-    setTimeout(function(){ badan.style.transform='rotate(0)'; dasar.classList.add('tampil'); },1000);
+    /* diangkat → dimiringkan ke bibir → diteguk → diturunkan lagi */
+    badan.style.transform='translateY(-26%)';
+    setTimeout(function(){ badan.style.transform='translateY(-34%) rotate(-38deg)'; SFX.air(); buzz(14); },420);
+    setTimeout(function(){ air.style.setProperty('--air','8%'); },650);
+    setTimeout(function(){ badan.style.transform='translateY(-22%) rotate(0)'; },1300);
+    setTimeout(function(){ badan.style.transform='none'; dasar.classList.add('tampil'); },1720);
     beres('#gelas'); turun(.35);
-    setTimeout(majuLangkah,2100);
+    setTimeout(majuLangkah,2500);
   }
   node.addEventListener('click',minum);
   node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); minum(); } });
@@ -955,7 +985,7 @@ $('#tblMulai').addEventListener('click', function(){
   function selesai(){
     if(kelar) return; kelar=true; batal();
     var b=zona.getBoundingClientRect(), a=kain.getBoundingClientRect();
-    node.style.transform='translate('+(x+(b.left+b.width/2)-(a.left+a.width/2))+'px,'+(y+(b.top+b.height/2)-(a.top+a.height/2))+'px)';
+    node.style.transform='translate('+(x+((b.left+b.width/2)-(a.left+a.width/2))/K)+'px,'+(y+((b.top+b.height/2)-(a.top+a.height/2))/K)+'px)';
     node.classList.add('nempel'); beres('#handuk'); beres('#bantal');
     zona.classList.remove('siap'); zona.innerHTML='adem';
     SFX.kain(); buzz([14,30,14]); turun(.5);
