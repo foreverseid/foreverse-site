@@ -363,7 +363,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 dosis:90, aturanDosis:40, enakan:60, airPesan:80,
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
-                catatan:90, pesanan:40, tahu:90 };
+                catatan:90, pesanan:40, tahu:90,
+                tempatKj:24, ceritaKj:90 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -385,7 +386,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "getwell-365":       { nama:"36,5",                  nfoto:3, mesin:"/getwell-365.html",     momen:"getwell" },
     "pasar-malam":       { nama:"Pasar Malam",           nfoto:3, mesin:"/pasar-malam.html",     momen:"askout" },
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:3, mesin:"/lewat-duluan.html",    momen:"lovenote" },
-    "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:3, mesin:"/kasus-pengirim.html", momen:"confess" }
+    "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:3, mesin:"/kasus-pengirim.html", momen:"confess" },
+    "rekonstruksi":      { nama:"Rekonstruksi Hari Pertama", nfoto:3, mesin:"/rekonstruksi.html",   momen:"anniversary" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -741,6 +743,35 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="rahasia"><label for="rahasia">Notifikasi penutup (opsional)</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Udah tidur? Aku di sini kalau butuh apa-apa."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "rekonstruksi"){
+      html = '<h2><span class="n">5</span> Kalian berdua, waktu itu</h2>' +
+        '<p class="jelas">Dua sosok yang memerankan ulang hari pertama kalian. Dia sendiri juga memakai tampilan pertama saat menyelidiki.</p>' +
+        '<div class="dua">' +
+        '<div class="baris"><label for="karA">Tampilan dia</label><select id="karA"><option value="perempuan" selected>Perempuan</option><option value="laki">Laki-laki</option></select></div>' +
+        '<div class="baris"><label for="karB">Tampilan kamu</label><select id="karB"><option value="laki" selected>Laki-laki</option><option value="perempuan">Perempuan</option></select></div>' +
+        '</div>' +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Empat kejadian di hari pertama</h2>' +
+        '<p class="jelas">Nama tempatnya jadi nama bangunan di sketsa, jamnya jadi teka-teki garis waktu. Urutannya bebas — dia yang menyusun ulang.</p>';
+      var contohKj = [["Toko buku","10:15","Kita rebutan buku terakhir di rak diskon."],["Kedai mi","12:40","Kamu bilang lapar. Aku pura-pura lapar juga."],["Halte","16:05","Hujan. Kita nunggu bis yang sama."],["Taman kota","19:30","Kamu minta nomorku."]];
+      for(var kj=0;kj<4;kj++){
+        html += '<div class="dua" style="margin-top:'+(kj?'18':'4')+'px">' +
+          '<div class="baris" data-f="kjTempat'+kj+'"><label for="kjTempat'+kj+'">Tempat '+(kj+1)+'</label>' +
+          '<input id="kjTempat'+kj+'" type="text" maxlength="24" placeholder="'+contohKj[kj][0]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Tempatnya belum diisi.</p></div>' +
+          '<div class="baris" data-f="kjJam'+kj+'"><label for="kjJam'+kj+'">Jamnya</label>' +
+          '<input id="kjJam'+kj+'" type="time">' +
+          '<p class="galat">Jamnya belum diisi.</p></div></div>' +
+          '<div class="baris" data-f="kjCerita'+kj+'"><label for="kjCerita'+kj+'">Apa yang terjadi</label>' +
+          '<textarea id="kjCerita'+kj+'" maxlength="90" placeholder="'+contohKj[kj][2]+'"></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div>' +
+          '<p class="galat">Ceritanya belum diisi.</p></div>';
+      }
+      html += '<h2 style="margin-top:28px"><span class="n">5</span> Kalimat penutup</h2>' +
+        '<p class="jelas">Muncul saat jamnya kembali ke hari ini. Boleh dikosongkan.</p>' +
+        '<div class="baris" data-f="penutup"><label for="penutup">Kalimatnya (opsional)</label>' +
+        '<textarea id="penutup" maxlength="120" style="min-height:70px" placeholder="Hari itu biasa aja. Ternyata itu hari yang paling aku syukuri."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "kasus-pengirim"){
       html = '<h2><span class="n">5</span> Detektifnya</h2>' +
         '<p class="jelas">Dia sendiri yang jadi detektif di kafe langganannya. Pilih tampilan tokohnya.</p>' +
@@ -848,6 +879,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       }
       pasangHitung("airPesan", BATAS.airPesan);
       pasangHitung("rahasia", BATAS.rahasia);
+    } else if(tema === "rekonstruksi"){
+      for(var hj=0;hj<4;hj++){ pasangHitung("kjTempat"+hj, BATAS.tempatKj); pasangHitung("kjCerita"+hj, BATAS.ceritaKj); }
+      pasangHitung("penutup", BATAS.penutup);
     } else if(tema === "kasus-pengirim"){
       pasangHitung("catatan", BATAS.catatan);
       pasangHitung("pesanan", BATAS.pesanan);
@@ -893,6 +927,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           };
         }),
         harapan: [0,1,2].map(function(h){ return $("harapan"+h).value; })
+      };
+    }
+    if(TEMA === "rekonstruksi"){
+      return {
+        karakterPenerima: $("karA").value || "perempuan",
+        karakterPengirim: $("karB").value || "laki",
+        kejadian: [0,1,2,3].map(function(i){ return { tempat: $("kjTempat"+i).value, jam: $("kjJam"+i).value, cerita: $("kjCerita"+i).value }; }),
+        penutup: $("penutup").value
       };
     }
     if(TEMA === "kasus-pengirim"){
@@ -1109,6 +1151,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tandai("harapan"+h, kosongH);
         if(kosongH) kurang.push("harapan"+h);
       });
+    } else if(TEMA === "rekonstruksi"){
+      [0,1,2,3].forEach(function(i){
+        ["kjTempat","kjJam","kjCerita"].forEach(function(nm){
+          var kosong = !$(nm+i).value.trim();
+          tandai(nm+i, kosong);
+          if(kosong) kurang.push(nm+i);
+        });
+      });
     } else if(TEMA === "kasus-pengirim"){
       ["catatan","pesanan","tahu"].forEach(function(nm){
         var kosong = !$(nm).value.trim();
@@ -1302,6 +1352,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
             if(r) r.checked = true;
           });
           (i.harapan||[]).forEach(function(v,n){ if($("harapan"+n)) $("harapan"+n).value = v || ""; });
+        } else if(TEMA === "rekonstruksi"){
+          if($("karA")) $("karA").value = i.karakterPenerima === "laki" ? "laki" : "perempuan";
+          if($("karB")) $("karB").value = i.karakterPengirim === "perempuan" ? "perempuan" : "laki";
+          (i.kejadian||[]).forEach(function(k,n){
+            if(!$("kjTempat"+n)) return;
+            $("kjTempat"+n).value = (k && k.tempat) || ""; $("kjJam"+n).value = (k && k.jam) || ""; $("kjCerita"+n).value = (k && k.cerita) || "";
+          });
+          if($("penutup")) $("penutup").value = i.penutup || "";
         } else if(TEMA === "kasus-pengirim"){
           if($("karakter")) $("karakter").value = i.karakter === "laki" ? "laki" : "perempuan";
           ["catatan","pesanan","tahu","penutup"].forEach(function(nm){ if($(nm)) $(nm).value = i[nm] || ""; });

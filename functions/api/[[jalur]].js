@@ -39,6 +39,7 @@ const BATAS = {
   kegiatan: 24, alasan: 90, titikTemu: 40, catatanTunda: 90,
   kebiasaan: 90, kangen: 70, barang: 24, penutup: 120,
   catatan: 90, pesanan: 40, tahu: 90,
+  tempatKj: 24, ceritaKj: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -77,7 +78,8 @@ const TEMA_SKEMA = {
   "getwell-365":       { nfoto: 3, momen: "getwell" },
   "pasar-malam":       { nfoto: 3, momen: "askout" },
   "lewat-duluan":      { nfoto: 3, momen: "lovenote" },
-  "kasus-pengirim":    { nfoto: 3, momen: "confess" }
+  "kasus-pengirim":    { nfoto: 3, momen: "confess" },
+  "rekonstruksi":      { nfoto: 3, momen: "anniversary" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -502,6 +504,25 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.alasan = [0, 1, 2].map(i => teks((p.alasan || [])[i], BATAS.alasan));
     if (isi.alasan.some(a => !a)) throw new Error("Ketiga alasannya belum diisi.");
     isi.catatanTunda = teks(p.catatanTunda, BATAS.catatanTunda);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "rekonstruksi") {
+    /* "Rekonstruksi Hari Pertama": empat kejadian di hari pertama —
+       tempat (jadi nama bangunan di sketsa), jam (jadi jawaban game garis
+       waktu & urutan pemutaran ulang, jadi WAJIB jam sungguhan), dan
+       cerita singkat. `karakterPenerima`/`karakterPengirim` = tampilan
+       dua sosok "dulu"; nilai asing jatuh ke bawaan. */
+    isi.karakterPenerima = KARAKTER_SAH.includes(p.karakterPenerima) ? p.karakterPenerima : "perempuan";
+    isi.karakterPengirim = KARAKTER_SAH.includes(p.karakterPengirim) ? p.karakterPengirim : "laki";
+    isi.kejadian = [0, 1, 2, 3].map(i => {
+      const k = (p.kejadian || [])[i] || {};
+      return { tempat: teks(k.tempat, BATAS.tempatKj), jam: jamSah(k.jam), cerita: teks(k.cerita, BATAS.ceritaKj) };
+    });
+    isi.kejadian.forEach((k, i) => {
+      if (!k.tempat) throw new Error("Tempat kejadian " + (i + 1) + " belum diisi.");
+      if (!k.jam) throw new Error("Jam kejadian " + (i + 1) + " belum diisi.");
+      if (!k.cerita) throw new Error("Cerita kejadian " + (i + 1) + " belum diisi.");
+    });
+    isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "kasus-pengirim") {
     /* "Kasus Pengirim Tanpa Nama": `catatan` = kertas tanpa nama di meja

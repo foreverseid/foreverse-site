@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#F4F1EA">
+<meta name="robots" content="noindex, nofollow">
+<title>Rekonstruksi hari pertama</title>
+<meta property="og:title" content="Rekonstruksi: hari pertama kita">
+<meta property="og:description" content="Susun ulang harinya, satu bukti demi satu bukti.">
+<meta property="og:image" content="https://foreverse.id/cover-rekonstruksi.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- =====================================================================
+     FOREVERSE · Anniversary · Tema "Rekonstruksi Hari Pertama"
+     Semua isi pesanan ada di blok DATA di bawah. Tidak perlu menyentuh
+     bagian lain. (Form pesanan cukup menulis ulang blok ini.)
+     ===================================================================== -->
+<script id="foreverse-data" type="application/json">
+{
+  "tema": "rekonstruksi",
+  "penerima": "",
+  "pengirim": "",
+  "jenisHariJadi": "pacaran",
+  "tanggalMulai": "",
+  "sembunyikanTahun": false,
+  "karakterPenerima": "perempuan",
+  "karakterPengirim": "laki",
+  "kejadian": [
+    { "tempat": "", "jam": "", "cerita": "" },
+    { "tempat": "", "jam": "", "cerita": "" },
+    { "tempat": "", "jam": "", "cerita": "" },
+    { "tempat": "", "jam": "", "cerita": "" }
+  ],
+  "penutup": "",
+  "foto": [],
+  "surat": [
+    "",
+    "",
+    ""
+  ],
+  "waPengirim": "",
+  "lagu": {
+    "src": "",
+    "judul": "",
+    "artis": "",
+    "mulai": 0,
+    "selesai": 0
+  },
+  "foreverseUrl": "https://foreverse.id"
+}
+</script>
+<script>
+/* pratinjau dari /pesan: isi datang dari sessionStorage, dibaca di sini
+   SEBELUM mesin tema jalan. Untuk surat sungguhan di /s/<kode>, blok data
+   di atas sudah ditulis ulang di server (lihat worker.js). */
+(function(){
+  try{
+    if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
+      var mentah = sessionStorage.getItem("fv-pratinjau");
+      if(mentah) document.getElementById("foreverse-data").textContent = mentah;
+    }
+  }catch(e){}
+})();
+</script>
+
+<style>
+/* =====================================================================
+   REKONSTRUKSI HARI PERTAMA — dunia yang dijalani, tapi:
+   · digambar sebagai SKETSA pensil di kertas berpetak; tiap bangunan
+     berganti ke palet berwarna sekali, saat buktinya ditemukan
+   · waktunya HARI ITU, bukan hari ini (jam di baris atas)
+   · tempatnya dinamai pembeli, bukan ditentukan tema
+   · dua sosok "dulu" memerankan ulang harinya di rute lingkaran yang
+     sudah pasti (tidak mencari jalan sendiri → tidak bisa nyangkut)
+   Skema kontrol sama dengan tema dunia-dijalani lain.
+   ===================================================================== */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#241C2E; --pensil:#5E5A6A; --redup:#6E6480; --kertas:#F4F1EA; --krem:#FFFCF4;
+  --coral:#E8734A; --amber:#FFC24A; --merah:#C8372D; --biru:#3B6FA8;
+  --piksel:'Pixelify Sans',ui-monospace,'Courier New',monospace;
+  --ketik:'Special Elite','Courier New',monospace;
+  --tangan:'Caveat',cursive;
+  --sans:'Figtree',system-ui,sans-serif;
+}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:var(--kertas)}
+body{
+  position:fixed;inset:0;font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink);
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-font-smoothing:antialiased
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+[hidden]{display:none!important}
+#dunia{position:fixed;inset:0;display:block;touch-action:none}
+
+#atas{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  padding:calc(7px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 7px calc(12px + env(safe-area-inset-left));
+  background:var(--krem);border-bottom:3px solid var(--ink);
+  display:grid;grid-template-columns:auto 1fr auto auto;gap:3px 9px;align-items:center
+}
+#jam{font-family:var(--ketik);font-size:.8rem;background:var(--ink);color:var(--amber);border-radius:6px;padding:2px 8px;white-space:nowrap}
+#kantong{display:flex;gap:4px;align-items:center;font-family:var(--piksel);font-size:.78rem;color:var(--redup);white-space:nowrap}
+#kantong i{width:13px;height:13px;border:2px solid var(--ink);border-radius:3px;background:#fff;display:inline-block}
+#kantong i.isi{background:var(--coral)}
+@media (max-width:420px){ #kantong .kata{display:none} }
+#langkahT{grid-column:1/-1;font-size:.88rem;font-weight:600;line-height:1.3}
+.kecil{font-size:.76rem;font-weight:700;border:2px solid var(--ink);border-radius:999px;padding:3px 10px;background:#fff;white-space:nowrap}
+#suara{width:30px;height:30px;padding:0;display:grid;place-items:center;font-size:.85rem}
+@media (orientation:landscape) and (max-height:560px){
+  #atas{grid-template-columns:auto auto 1fr auto auto}
+  #langkahT{grid-column:auto;order:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #lewati{order:4} #suara{order:5}
+}
+
+#joy{
+  position:fixed;z-index:15;
+  left:calc(24px + env(safe-area-inset-left));
+  bottom:calc(24px + env(safe-area-inset-bottom));
+  width:112px;height:112px;border-radius:50%;
+  background:rgba(255,252,244,.9);border:3px solid var(--ink);touch-action:none
+}
+#joy::before{content:"";position:absolute;inset:-23px;border-radius:50%}
+#joy .setrip{position:absolute;width:0;height:0;border:7px solid transparent;pointer-events:none}
+#joy .s1{left:50%;top:7px;transform:translateX(-50%);border-bottom-color:rgba(36,28,46,.45);border-top:0}
+#joy .s2{left:50%;bottom:7px;transform:translateX(-50%);border-top-color:rgba(36,28,46,.45);border-bottom:0}
+#joy .s3{top:50%;left:7px;transform:translateY(-50%);border-right-color:rgba(36,28,46,.45);border-left:0}
+#joy .s4{top:50%;right:7px;transform:translateY(-50%);border-left-color:rgba(36,28,46,.45);border-right:0}
+#joyBola{position:absolute;left:50%;top:50%;width:56px;height:56px;border-radius:50%;background:var(--coral);border:3px solid var(--ink);transform:translate(-50%,-50%);pointer-events:none}
+#aksi{
+  position:fixed;z-index:15;
+  right:calc(24px + env(safe-area-inset-right));
+  bottom:calc(36px + env(safe-area-inset-bottom));
+  width:84px;height:84px;border-radius:50%;
+  background:var(--amber);border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);
+  font-family:var(--piksel);font-weight:700;font-size:.96rem;touch-action:none
+}
+#aksi::before{content:"";position:absolute;inset:-14px;border-radius:50%}
+#aksi:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+#aksi.mati{background:#ECE8DE;color:#9A90A8;border-color:#9A90A8;box-shadow:0 3px 0 #9A90A8}
+body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
+
+#tirai{position:fixed;inset:0;z-index:40;background:rgba(36,28,46,.42);display:flex;align-items:center;justify-content:center;padding:14px}
+.kartu{
+  width:100%;max-width:450px;max-height:calc(100svh - 28px);overflow:auto;
+  background:var(--krem);border:3px solid var(--ink);border-radius:10px;box-shadow:6px 6px 0 var(--ink);
+  padding:18px 18px 16px;-webkit-overflow-scrolling:touch
+}
+.kartu h3{font-family:var(--piksel);font-weight:700;font-size:1.28rem;line-height:1.15;margin-bottom:8px}
+.kartu p{font-size:.95rem;margin-bottom:10px}
+.tbl{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 18px;border-radius:999px;background:var(--coral);color:#fff;font-weight:700;
+  border:3px solid var(--ink);box-shadow:3px 4px 0 var(--ink);text-decoration:none;margin-top:6px
+}
+.tbl:active{transform:translate(2px,3px);box-shadow:0 1px 0 var(--ink)}
+.tbl.putih{background:#fff;color:var(--ink)}
+.tbl[disabled]{opacity:.4;pointer-events:none}
+.baris-tbl{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+
+/* barang bukti */
+.bukti{position:relative;background:#fff;border:2px solid var(--ink);padding:14px;margin:4px 0 10px;box-shadow:3px 3px 0 rgba(36,28,46,.2)}
+.bukti .stempel-jam{display:inline-block;font-family:var(--ketik);font-size:1.4rem;color:var(--biru);border:3px solid var(--biru);border-radius:6px;padding:0 10px;transform:rotate(-3deg);margin-bottom:8px}
+.bukti .cerita{font-family:var(--tangan);font-size:1.45rem;line-height:1.2}
+.bukti img{width:100%;max-height:30svh;object-fit:cover;display:block;border:2px solid var(--ink);margin-top:10px}
+
+/* garis waktu */
+.ket-kecil{font-family:var(--piksel);font-size:.8rem;color:var(--redup);margin:2px 0 6px}
+.garis{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 14px;padding-top:12px}
+.garis::before{content:"";position:absolute;left:4px;right:4px;top:22px;height:4px;background:var(--ink);border-radius:2px}
+.pasak{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:118px;border:0;background:none;padding:0}
+.pasak .bulat{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink)}
+.pasak .jamnya{font-family:var(--ketik);font-size:.92rem;font-weight:700}
+.pasak .slot{width:100%;min-height:62px;border:2px dashed #A79FB0;border-radius:8px;display:grid;place-items:center;padding:4px;font-size:.68rem;font-weight:700;line-height:1.15;text-align:center;color:var(--redup)}
+.pasak.isi .bulat{background:var(--coral)}
+.pasak.isi .slot{border:2px solid var(--ink);background:#FFF0CC;color:var(--ink)}
+.kartu-bukti{display:grid;gap:7px;margin-bottom:10px}
+.kb{text-align:left;background:#fff;border:2px solid var(--ink);border-radius:8px;padding:8px 11px;font-size:.88rem}
+.kb b{display:block;font-size:.92rem}
+.kb.pilih{background:var(--amber);box-shadow:0 0 0 3px rgba(232,115,74,.4)}
+.kb.pakai{display:none}
+
+/* laporan */
+.laporan{background:#fff;border:2px solid #CFC7D6;padding:16px;margin:4px 0 10px;font-size:.98rem;line-height:1.6;
+  background-image:linear-gradient(#E6EEF5 1px,transparent 1px);background-size:100% 27px}
+.laporan .kop{font-family:var(--ketik);font-size:.84rem;line-height:1.5;border-bottom:2px dashed #CFC7D6;padding-bottom:8px;margin-bottom:10px;white-space:pre-wrap;background:#fff}
+.laporan p{margin-bottom:10px}
+.laporan .ttd{text-align:right;font-family:var(--tangan);font-size:1.4rem}
+.hari{font-family:var(--ketik);font-size:1.05rem;background:#fff;border:2px solid var(--ink);padding:10px 12px;margin:4px 0 10px}
+.hari b{display:block;font-family:var(--piksel);font-size:1.7rem;color:var(--coral);line-height:1.1}
+.balas{width:100%;margin-top:6px;border:2px solid var(--ink);border-radius:8px;padding:9px 11px;font:inherit;font-size:.92rem;background:#fff;min-height:70px;resize:vertical;user-select:text;-webkit-user-select:text}
+.jejak{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;font-size:.76rem;color:var(--redup)}
+.jejak a{color:var(--redup)}
+
+#pembuka{position:fixed;inset:0;z-index:50;background:var(--kertas);
+  background-image:linear-gradient(#DCE4EC 1px,transparent 1px),linear-gradient(90deg,#DCE4EC 1px,transparent 1px);background-size:24px 24px;
+  display:flex;align-items:center;justify-content:center;padding:18px}
+.map{position:relative;width:100%;max-width:400px;background:#E9C98F;border:3px solid var(--ink);border-radius:4px 14px 6px 6px;box-shadow:6px 6px 0 var(--ink);padding:24px 20px 18px;text-align:center}
+.map::before{content:"BERKAS";position:absolute;left:14px;top:-17px;background:#E9C98F;border:3px solid var(--ink);border-bottom:0;border-radius:8px 8px 0 0;padding:0 12px;font-family:var(--piksel);font-size:.78rem;font-weight:700}
+.map .no{font-family:var(--ketik);font-size:.85rem}
+.map h1{font-family:var(--piksel);font-weight:700;font-size:1.5rem;line-height:1.15;margin:4px 0 8px}
+.map .tgl{font-family:var(--ketik);font-size:1rem;background:#fff;border:2px solid var(--ink);padding:6px 10px;display:inline-block;margin-bottom:12px}
+.map p{font-size:.94rem;margin-bottom:12px}
+.petunjuk{display:flex;justify-content:center;gap:16px;margin:2px 0 12px;font-size:.8rem;font-weight:600;color:#5A4F63}
+.petunjuk span{display:flex;align-items:center;gap:6px}
+.petunjuk i{display:inline-block;width:24px;height:24px;border-radius:50%;border:2.5px solid var(--ink);flex:none}
+.petunjuk .ij{background:#fff;box-shadow:inset 0 0 0 5px #fff,inset 0 0 0 11px var(--coral)}
+.petunjuk .ia{background:var(--amber)}
+
+#toast{
+  position:fixed;left:50%;top:calc(92px + env(safe-area-inset-top));transform:translate(-50%,-10px);opacity:0;z-index:30;
+  background:var(--ink);color:#FFF4E2;padding:9px 15px;border-radius:10px;font-weight:600;font-size:.86rem;
+  max-width:88vw;text-align:center;transition:.25s;pointer-events:none
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.05s!important;animation-duration:.05s!important}}
+</style>
+</head>
+<body>
+
+<canvas id="dunia" aria-label="Sketsa hari pertama yang bisa dijalani"></canvas>
+
+<div id="atas">
+  <span id="jam">—</span>
+  <span id="kantong"><span class="kata">bukti</span> <i></i><i></i><i></i><i></i></span>
+  <button class="kecil" id="lewati">lewati</button>
+  <button class="kecil" id="suara" aria-label="Suara">🔊</button>
+  <span id="langkahT">Cari empat barang bukti di sketsa ini</span>
+</div>
+
+<div id="joy" aria-label="Joystick">
+  <i class="setrip s1"></i><i class="setrip s2"></i><i class="setrip s3"></i><i class="setrip s4"></i>
+  <div id="joyBola"></div>
+</div>
+<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">—</span></button>
+
+<div id="toast"></div>
+<div id="tirai" hidden><div class="kartu" id="kartu"></div></div>
+
+<div id="pembuka">
+  <div class="map">
+    <p class="no">Berkas rekonstruksi · untuk <span id="pbNama"></span></p>
+    <h1>Hari Pertama</h1>
+    <p class="tgl" id="pbTgl"></p>
+    <p>Hari itu tinggal sketsa. Jalan ke tiap tempat, kumpulkan barang buktinya, lalu susun ulang urutan jamnya — sampai harinya hidup lagi.</p>
+    <div class="petunjuk">
+      <span><i class="ij"></i>lingkaran kiri: jalan</span>
+      <span><i class="ia"></i>tombol kanan: periksa</span>
+    </div>
+    <button class="tbl" id="mulai">Buka sketsanya</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   FOREVERSE · mesin tema "Rekonstruksi Hari Pertama" (Anniversary)
+
+   Dipakai ulang dari tema dunia-dijalani lain HANYA infrastruktur:
+   suara, pemutar lagu / kotak musik, toast, joystick + tombol aksi
+   (skema kontrol bersama), pembantu kecil, dan penggambar tokoh balok.
+   Peta sketsa, palet ganda, garis waktu, pemutaran ulang, dan
+   penutupnya ditulis baru.
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+"use strict";
+
+var D = {};
+try { D = JSON.parse(document.getElementById('foreverse-data').textContent) || {}; }
+catch(e){ D = {}; console.error('Data Foreverse tidak terbaca', e); }
+
+var $ = function(s){ return document.querySelector(s); };
+var el = function(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; };
+var klem = function(v,a,b){ return v<a?a:(v>b?b:v); };
+var buzz = function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+function tk(v){ return String(v == null ? '' : v).trim(); }
+
+/* ── isian pembeli — dipakai persis apa adanya ── */
+var PENERIMA = tk(D.penerima) || 'kamu';
+var PENGIRIM = tk(D.pengirim) || 'aku';
+var KAR_A = D.karakterPenerima === 'laki' ? 'laki' : 'perempuan';
+var KAR_B = D.karakterPengirim === 'perempuan' ? 'perempuan' : 'laki';
+var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,3);
+var SEMBUNYI = !!D.sembunyikanTahun;
+var PENUTUP = tk(D.penutup);
+var SURAT = (D.surat || []).map(tk).filter(Boolean);
+if(!SURAT.length) SURAT = ['Ini laporannya.'];
+var CONTOH = [
+  { tempat:'Toko buku', jam:'10:15', cerita:'Kita rebutan buku terakhir di rak diskon.' },
+  { tempat:'Kedai mi', jam:'12:40', cerita:'Kamu bilang lapar. Aku pura-pura lapar juga.' },
+  { tempat:'Halte', jam:'16:05', cerita:'Hujan. Kita nunggu bis yang sama.' },
+  { tempat:'Taman kota', jam:'19:30', cerita:'Kamu minta nomorku.' }
+];
+function menit(j){ var m = String(j||'').match(/^(\d{1,2}):(\d{2})$/); return m ? (+m[1])*60 + (+m[2]) : -1; }
+function tulisJam(j){ var m = String(j||'').match(/^(\d{1,2}):(\d{2})$/); return m ? ('0'+m[1]).slice(-2) + '.' + m[2] : '--.--'; }
+var KJ = [0,1,2,3].map(function(i){
+  var k = (D.kejadian || [])[i] || {}, c = CONTOH[i];
+  var tempat = tk(k.tempat), jam = tk(k.jam), cerita = tk(k.cerita);
+  return {
+    i:i,
+    tempat: tempat || c.tempat,
+    jam: menit(jam) >= 0 ? jam : c.jam,
+    cerita: cerita || c.cerita,
+    foto: FOTO[i] || null
+  };
+});
+/* urutan kronologis — penentu jawaban garis waktu & urutan pemutaran */
+var URUT = KJ.slice().sort(function(a,b){ return menit(a.jam) - menit(b.jam) || a.i - b.i; });
+
+/* tanggal hari pertama & hitungan hari */
+var HARI_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+var BLN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+var TGL = (function(){ var s = tk(D.tanggalMulai); return /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(s + 'T00:00:00') : null; })();
+function tulisTgl(d){
+  if(!d || isNaN(d)) return 'hari pertama';
+  var s = HARI_ID[d.getDay()] + ', ' + d.getDate() + ' ' + BLN[d.getMonth()];
+  return SEMBUNYI ? s : s + ' ' + d.getFullYear();
+}
+function tulisTglPendek(d){
+  if(!d || isNaN(d)) return 'hari itu';
+  var s = d.getDate() + ' ' + BLN[d.getMonth()].slice(0,3);
+  return SEMBUNYI ? s : s + ' ' + d.getFullYear();
+}
+var HARI_INI = new Date(); HARI_INI.setHours(0,0,0,0);
+var SELISIH = TGL ? Math.max(0, Math.round((HARI_INI - TGL) / 86400000)) : 0;
+
+/* ══════════════ suara (infrastruktur bersama) ══════════════ */
+var AC = null, bisu = false;
+function ac(){
+  if(!AC){ var C = window.AudioContext || window.webkitAudioContext; if(C) AC = new C(); }
+  if(AC && AC.state === 'suspended') AC.resume();
+  return AC;
+}
+function tone(f, dur, o){
+  o = o || {}; var a = ac(); if(!a || bisu) return;
+  var t = a.currentTime + (o.when||0), vol = o.vol || .12;
+  var osc = a.createOscillator(), g = a.createGain();
+  osc.type = o.type || 'triangle'; osc.frequency.setValueAtTime(f, t);
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + .01);
+  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + dur + .05);
+}
+var SFX = {
+  langkah: function(){ tone(150, .03, { vol:.022 }); },
+  periksa: function(){ tone(520,.06,{vol:.06}); tone(780,.08,{vol:.05,when:.06}); },
+  bukti:   function(){ [392,523,659].forEach(function(f,i){ tone(f,.16,{when:i*.08,vol:.06}); }); },
+  salah:   function(){ tone(170,.16,{vol:.05,type:'sawtooth'}); },
+  pasang:  function(){ tone(660,.07,{vol:.07}); },
+  warna:   function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.22,{when:i*.07,vol:.05}); }); },
+  detak:   function(){ tone(1200,.02,{vol:.03,type:'square'}); }
+};
+function musicBox(){
+  var a = ac(); if(!a) return function(){};
+  var stop = false, i = 0, pola = [0,4,7,12,11,7,4,2,0,5,9,12,9,5,4,2];
+  function ping(midi, t){
+    var f = 440 * Math.pow(2, (midi - 69) / 12), o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(bisu ? .0001 : .045, t + .01);
+    g.gain.exponentialRampToValueAtTime(.0001, t + .85);
+    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .95);
+  }
+  (function loop(){
+    if(stop) return;
+    var t = a.currentTime + .05;
+    for(var k=0;k<4;k++) ping(60 + pola[(i+k) % pola.length], t + k*.46);
+    i += 4; setTimeout(loop, 1840);
+  })();
+  return function(){ stop = true; };
+}
+var MU = (function(){
+  var L = D.lagu || {}, punya = !!(L.src && String(L.src).trim());
+  var audio = punya ? new Audio() : null, mulai = +L.mulai || 0, selesai = +L.selesai || 0, mati = null;
+  if(audio){
+    audio.src = L.src; audio.preload = 'auto'; audio.loop = !selesai;
+    audio.addEventListener('timeupdate', function(){ if(selesai > mulai && audio.currentTime >= selesai) audio.currentTime = mulai; });
+    audio.addEventListener('ended', function(){ audio.currentTime = mulai; audio.play().catch(function(){}); });
+  }
+  return {
+    main: function(){
+      if(audio){ try{ if(audio.currentTime < mulai) audio.currentTime = mulai; }catch(e){} audio.volume = .75; audio.muted = bisu; audio.play().catch(function(){}); }
+      else if(!mati) mati = musicBox();
+    },
+    bisukan: function(m){ if(audio) audio.muted = m; }
+  };
+})();
+
+var tt;
+function toast(m, ms){
+  var t = $('#toast'); t.textContent = m; t.classList.add('show');
+  clearTimeout(tt); tt = setTimeout(function(){ t.classList.remove('show'); }, ms || 2500);
+}
+
+['contextmenu','selectstart','dragstart'].forEach(function(ev){
+  document.addEventListener(ev, function(e){
+    if(e.target && e.target.closest && e.target.closest('textarea')) return;
+    e.preventDefault();
+  }, true);
+});
+document.addEventListener('touchmove', function(e){
+  if(e.target && e.target.closest && e.target.closest('.kartu')) return;
+  e.preventDefault();
+}, { passive:false });
+
+/* ══════════════════════════════════════════════════════════════
+   PETA — alun-alun kecil. Empat bangunan di empat sudut; pintunya
+   persis di empat sudut sebuah LINGKARAN JALAN. Dua sosok "dulu" hanya
+   meluncur di sepanjang lingkaran itu — rutenya pasti, tidak mungkin
+   nyangkut di benda apa pun.
+   ══════════════════════════════════════════════════════════════ */
+var COLS = 22, ROWS = 14;
+var BANGUN = [   // c0,c1,r0,r1 · pintu (titik bukti) · sisi pintu
+  { c0:1,  c1:6,  r0:1, r1:4,  px:3.5,  py:5.5, hadap:'bawah', atap:'#E39B7B', dinding:'#F6D2BF' },
+  { c0:15, c1:20, r0:1, r1:4,  px:18.5, py:5.5, hadap:'bawah', atap:'#7FB3A0', dinding:'#CFE6DA' },
+  { c0:15, c1:20, r0:9, r1:12, px:18.5, py:8.5, hadap:'atas',  atap:'#8C93C9', dinding:'#D9DCF2' },
+  { c0:1,  c1:6,  r0:9, r1:12, px:3.5,  py:8.5, hadap:'atas',  atap:'#D6AE57', dinding:'#F4E2B4' }
+];
+var LINGKAR = [[3.5,5.5],[18.5,5.5],[18.5,8.5],[3.5,8.5]];   // TL, TR, BR, BL = urutan bangunan
+var TITIK_KINI = [11, 11.2];                                  // "hari ini"
+var MEJA = { c0:10, c1:11, r0:6, r1:7 };
+
+var SOLID = {};
+function blok(c, r){ SOLID[r*COLS + c] = 1; }
+for(var c=0;c<COLS;c++){ blok(c,0); blok(c,ROWS-1); }
+for(var r=0;r<ROWS;r++){ blok(0,r); blok(COLS-1,r); }
+BANGUN.forEach(function(b){ for(var rr=b.r0; rr<=b.r1; rr++) for(var cc=b.c0; cc<=b.c1; cc++) blok(cc, rr); });
+for(var mr=MEJA.r0; mr<=MEJA.r1; mr++) for(var mc=MEJA.c0; mc<=MEJA.c1; mc++) blok(mc, mr);
+var POHON = [[8,2],[13,2],[8,12],[14,12]];
+POHON.forEach(function(t){ blok(t[0], t[1]); });
+function padat(c, r){
+  if(c < 0 || r < 0 || c >= COLS || r >= ROWS) return true;
+  return !!SOLID[r*COLS + c];
+}
+
+/* ══════════════ keadaan ══════════════ */
+var ST = { bukti:[false,false,false,false], garis:false, putar:false, laporan:false, akhir:false };
+var nyala = [false,false,false,false];   // jendela menyala saat pemutaran ulang
+var hidup = false;                        // seluruh alun-alun berwarna (setelah laporan)
+var jamTampil = null;
+function jumlah(){ return ST.bukti.filter(Boolean).length; }
+
+var IA = BANGUN.map(function(b, i){
+  return { id:'b' + i, ox:b.px, oy:b.py, r:1.3, kata:'Periksa', aksi:function(){ bukaBukti(i); } };
+});
+IA.push({ id:'meja', ox:11, oy:7, r:1.75, kata:'Susun', aksi:bukaGaris });
+function tujuan(){
+  if(ST.akhir) return { o:null, t:'Harinya hidup lagi. Jalan-jalan aja dulu.' };
+  if(ST.laporan) return { o:null, t:'Ke titik "hari ini" di bawah alun-alun' };
+  if(ST.garis) return { o:null, t:'Hari itu sedang diputar ulang…' };
+  for(var i=0;i<4;i++) if(!ST.bukti[i]) return { o:IA[i], t:'Periksa barang bukti di depan ' + KJ[i].tempat };
+  return { o:IA[4], t:'Bawa keempat bukti ke meja rekonstruksi, susun urutan jamnya' };
+}
+
+/* ══════════════ pemain & dua sosok "dulu" ══════════════ */
+var P = { x:11, y:10.4, hadap:'atas', jalan:0, langkahT:0 };
+var KEC = 3.3, LEBAR = 0.24, TINGGI = 0.17;
+function bisaDi(x, y){
+  return !padat(Math.floor(x - LEBAR), Math.floor(y - TINGGI)) &&
+         !padat(Math.floor(x + LEBAR), Math.floor(y - TINGGI)) &&
+         !padat(Math.floor(x - LEBAR), Math.floor(y + TINGGI)) &&
+         !padat(Math.floor(x + LEBAR), Math.floor(y + TINGGI));
+}
+var DULU = { tampil:false, x:0, y:0, hadap:'bawah', jalan:0, t:0, padat:false };
+/* setelah penutup: pemain menjadi salah satu dari "kalian", dan sosok
+   pengirim mengikuti dengan menapaki ulang JEJAK pemain sendiri — jalur
+   yang pasti bisa dilewati, jadi pengikutnya tidak mungkin menembus apa pun */
+var BERSAMA = false, IKUT = { x:0, y:0, hadap:'bawah', jalan:0, t:0 }, JEJAK = [];
+
+/* ══════════════ masukan (skema bersama) ══════════════ */
+var JV = { x:0, y:0 }, KB = {}, jid = null;
+var joy = $('#joy'), bola = $('#joyBola');
+var MAKS = 46, MATI = 10;
+function arahJoy(e){
+  var r = joy.getBoundingClientRect();
+  var dx = e.clientX - (r.left + r.width/2), dy = e.clientY - (r.top + r.height/2);
+  var len = Math.hypot(dx, dy), tampil = len > MAKS ? MAKS / len : 1;
+  bola.style.transform = 'translate(calc(-50% + ' + (dx*tampil).toFixed(1) + 'px), calc(-50% + ' + (dy*tampil).toFixed(1) + 'px))';
+  if(len < MATI){ JV.x = 0; JV.y = 0; return; }
+  var kuat = klem((len - MATI) / (MAKS - MATI), 0, 1);
+  JV.x = dx / len * kuat; JV.y = dy / len * kuat;
+}
+function lepasJoy(e){
+  if(e && e.pointerId !== jid) return;
+  jid = null; JV.x = 0; JV.y = 0;
+  bola.style.transform = 'translate(-50%,-50%)';
+}
+joy.addEventListener('touchstart', function(e){ e.preventDefault(); }, { passive:false });
+joy.addEventListener('pointerdown', function(e){
+  e.preventDefault(); if(jid !== null) return;
+  jid = e.pointerId; ac();
+  try{ joy.setPointerCapture(e.pointerId); }catch(err){}
+  arahJoy(e);
+});
+joy.addEventListener('pointermove', function(e){ if(e.pointerId === jid){ e.preventDefault(); arahJoy(e); } });
+joy.addEventListener('pointerup', lepasJoy);
+joy.addEventListener('pointercancel', lepasJoy);
+joy.addEventListener('lostpointercapture', lepasJoy);
+window.addEventListener('keydown', function(e){
+  var k = e.key.toLowerCase();
+  if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].indexOf(k) > -1){ KB[k] = 1; e.preventDefault(); }
+  if((k === ' ' || k === 'enter') && !panelBuka && bisaMain()){ e.preventDefault(); tekanAksi(); }
+});
+window.addEventListener('keyup', function(e){ delete KB[e.key.toLowerCase()]; });
+window.addEventListener('blur', function(){ KB = {}; lepasJoy({ pointerId:jid }); });
+function arahKB(){
+  var x = (KB.arrowright||KB.d ? 1 : 0) - (KB.arrowleft||KB.a ? 1 : 0);
+  var y = (KB.arrowdown||KB.s ? 1 : 0) - (KB.arrowup||KB.w ? 1 : 0);
+  var l = Math.hypot(x, y); return l ? { x:x/l, y:y/l } : null;
+}
+var aksiBtn = $('#aksi'), aksiT = $('#aksiT'), dekat = null, sentuhAksi = false;
+aksiBtn.addEventListener('touchstart', function(e){ e.preventDefault(); sentuhAksi = true; }, { passive:false });
+aksiBtn.addEventListener('touchend', function(e){ e.preventDefault(); if(sentuhAksi){ sentuhAksi = false; tekanAksi(); } }, { passive:false });
+aksiBtn.addEventListener('touchcancel', function(){ sentuhAksi = false; });
+aksiBtn.addEventListener('click', function(){ tekanAksi(); });
+var sudahMulai = false, sinema = false;
+function bisaMain(){ return sudahMulai && !sinema; }
+function tekanAksi(){
+  if(panelBuka || !bisaMain()) return;
+  ac();
+  if(dekat){ dekat.aksi(); return; }
+  toast('Dekati barang bukti atau meja yang berlabel dulu, ya.');
+}
+function cariDekat(){
+  if(!bisaMain()) return null;
+  var terbaik = null, jt = 1e9;
+  IA.forEach(function(o){
+    var j = Math.hypot(o.ox - P.x, o.oy - P.y);
+    if(j <= o.r && j < jt){ jt = j; terbaik = o; }
+  });
+  return terbaik;
+}
+function segarAksi(){
+  var d = cariDekat();
+  if(d === dekat) return;
+  dekat = d;
+  aksiT.textContent = d ? d.kata : '—';
+  aksiBtn.classList.toggle('mati', !d);
+  if(d) buzz(12);
+}
+
+/* ══════════════ panel ══════════════ */
+var panelBuka = false, panelSejak = 0, kartu = $('#kartu');
+function buka(isi){
+  kartu.innerHTML = '';
+  isi.forEach(function(n){ kartu.appendChild(n); });
+  $('#tirai').hidden = false; kartu.scrollTop = 0;
+  panelBuka = true; panelSejak = performance.now();
+  lepasJoy({ pointerId:jid }); KB = {};
+}
+function tutup(){ $('#tirai').hidden = true; kartu.innerHTML = ''; panelBuka = false; segarBar(); }
+function siap(){ return performance.now() - panelSejak >= 400; }
+function tombol(label, fn, cls){
+  var b = el('button', 'tbl ' + (cls || ''), label);
+  b.type = 'button';
+  b.addEventListener('click', function(){ if(siap()) fn(b); });
+  return b;
+}
+function h3(t){ return el('h3', '', t); }
+function p(t, c){ return el('p', c || '', t); }
+
+/* ── barang bukti di depan tiap bangunan ── */
+function bukaBukti(i){
+  var k = KJ[i];
+  SFX.periksa();
+  var kotakB = el('div', 'bukti');
+  kotakB.appendChild(el('div', 'stempel-jam', tulisJam(k.jam)));
+  kotakB.appendChild(el('div', 'cerita', k.cerita));
+  if(k.foto){ var img = el('img'); img.alt = ''; img.src = k.foto.src; kotakB.appendChild(img); if(k.foto.caption) kotakB.appendChild(p(k.foto.caption)); }
+  buka([
+    h3(k.tempat),
+    p(ST.bukti[i] ? 'Bukti ini sudah ada di berkas.' : 'Ada yang tertinggal di depan pintunya. Jamnya masih kebaca:'),
+    kotakB,
+    tombol(ST.bukti[i] ? 'Tutup' : 'Simpan ke berkas', function(){
+      if(!ST.bukti[i]){
+        ST.bukti[i] = true; jamTampil = k.jam;
+        SFX.bukti(); SFX.warna(); buzz(25);
+        toast(k.tempat + ' kembali berwarna. Bukti ' + jumlah() + ' dari 4.');
+      }
+      tutup();
+    })
+  ]);
+}
+
+/* ── game garis waktu: pasang tiap bukti di jam yang tepat ──
+   Pasaknya bertuliskan jam (urut), kartunya bertuliskan tempat & cerita.
+   Ketuk kartu, lalu ketuk pasaknya. Bukan "susun ke slot bernomor". */
+function bukaGaris(){
+  if(jumlah() < 4){ SFX.salah(); toast('Buktinya baru ' + jumlah() + ' dari 4. Cari sisanya dulu.'); return; }
+  if(ST.garis){ toast('Garis waktunya sudah tersusun.'); return; }
+  SFX.periksa();
+  var garis = el('div', 'garis'), daftar = el('div', 'kartu-bukti'), dipilih = null, terpasang = 0;
+  var lanjut = tombol('Putar ulang hari itu', function(){ ST.garis = true; tutup(); mulaiPutar(); });
+  var judulKartu = el('div', 'ket-kecil', 'KARTU BUKTI');
+  lanjut.hidden = true;
+  var nodeK = {};
+  URUT.forEach(function(k){
+    var ps = el('button', 'pasak'); ps.type = 'button';
+    ps.appendChild(el('span', 'bulat')); ps.appendChild(el('span', 'jamnya', tulisJam(k.jam)));
+    var slot = el('span', 'slot', 'kosong'); ps.appendChild(slot);
+    ps.addEventListener('click', function(){
+      if(!siap() || ps.classList.contains('isi')) return;
+      if(dipilih === null){ toast('Pilih kartu buktinya dulu, baru jamnya.'); return; }
+      var kb = KJ[dipilih];
+      if(menit(kb.jam) !== menit(k.jam)){ SFX.salah(); toast('Jamnya nggak cocok. Coba ingat-ingat lagi, atau cek buktinya.'); return; }
+      ps.classList.add('isi'); slot.textContent = kb.tempat;
+      nodeK[dipilih].classList.add('pakai'); dipilih = null; terpasang++;
+      SFX.pasang(); buzz(20);
+      if(terpasang >= 4){ SFX.warna(); lanjut.hidden = false; judulKartu.hidden = true; }
+    });
+    garis.appendChild(ps);
+  });
+  /* kartu diacak tetap (bukan urutan kronologis, bukan urutan isian) */
+  [2,0,3,1].forEach(function(i){
+    var k = KJ[i], b = el('button', 'kb'); b.type = 'button';
+    b.appendChild(el('b', '', k.tempat)); b.appendChild(document.createTextNode(k.cerita));
+    b.addEventListener('click', function(){
+      if(!siap()) return;
+      dipilih = dipilih === i ? null : i;
+      Object.keys(nodeK).forEach(function(x){ nodeK[x].classList.toggle('pilih', +x === dipilih); });
+      SFX.pasang();
+    });
+    nodeK[i] = b; daftar.appendChild(b);
+  });
+  buka([
+    h3('Meja rekonstruksi'),
+    p('Ketuk satu kartu bukti, lalu ketuk jam saat itu terjadi.'),
+    el('div', 'ket-kecil', 'GARIS WAKTU · ' + tulisTgl(TGL).toUpperCase()), garis,
+    judulKartu, daftar,
+    lanjut
+  ]);
+}
+
+/* ══════════════ pemutaran ulang — rute lingkaran yang pasti ══════════════
+   Sosok "dulu" berangkat dari pintu kejadian pertama, lalu menyusuri
+   lingkaran ke pintu kejadian berikutnya (jalur terpendek searah atau
+   berlawanan jarum jam). Tidak ada pencarian jalan sama sekali. */
+function ruteLingkar(dari, ke){
+  if(dari === ke) return [LINGKAR[ke]];
+  var maju = (ke - dari + 4) % 4, arah = maju <= 2 ? 1 : -1, n = arah > 0 ? maju : 4 - maju, rute = [];
+  for(var s=1; s<=n; s++) rute.push(LINGKAR[(dari + arah*s + 4) % 4]);
+  return rute;
+}
+var antri = [], tunda = 0, setelah = null;
+function mulaiPutar(){
+  sinema = true; document.body.classList.add('sinema');
+  lepasJoy({ pointerId:jid });
+  var awal = URUT[0].i;
+  DULU.tampil = true; DULU.padat = false; DULU.x = LINGKAR[awal][0]; DULU.y = LINGKAR[awal][1];
+  antri = [];
+  var kini = awal;
+  URUT.forEach(function(k, n){
+    if(n > 0) ruteLingkar(kini, k.i).forEach(function(t){ antri.push({ x:t[0], y:t[1] }); });
+    antri.push({ tiba:k.i, tunggu:1500 });
+    kini = k.i;
+  });
+  setelah = function(){ setTimeout(function(){ bukaLaporan(); }, 500); };
+  segarBar();
+}
+function majuPutar(dt){
+  if(!antri.length){ if(setelah){ var f = setelah; setelah = null; DULU.jalan = 0; f(); } return; }
+  var a = antri[0];
+  if(a.tiba != null){
+    if(tunda === 0){
+      tunda = a.tunggu; nyala[a.tiba] = true; jamTampil = KJ[a.tiba].jam;
+      SFX.warna(); buzz(15);
+      toast(tulisJam(KJ[a.tiba].jam) + ' · ' + KJ[a.tiba].tempat + ' — ' + KJ[a.tiba].cerita, 1500);
+      segarBar();
+    }
+    DULU.jalan = 0;
+    tunda -= dt * 1000;
+    if(tunda <= 0){ tunda = 0; antri.shift(); }
+    return;
+  }
+  var dx = a.x - DULU.x, dy = a.y - DULU.y, d = Math.hypot(dx, dy), langkah = 3.0 * dt;
+  if(d <= langkah){ DULU.x = a.x; DULU.y = a.y; antri.shift(); return; }
+  DULU.x += dx / d * langkah; DULU.y += dy / d * langkah;
+  DULU.hadap = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'kanan' : 'kiri') : (dy > 0 ? 'bawah' : 'atas');
+  DULU.jalan = 1; DULU.t += dt;
+  if(Math.floor(DULU.t / .3) !== Math.floor((DULU.t - dt) / .3)) SFX.detak();
+}
+
+/* ── laporan (surat) ── */
+function bukaLaporan(){
+  var lap = el('div', 'laporan');
+  lap.appendChild(el('div', 'kop',
+    'LAPORAN REKONSTRUKSI\nTanggal kejadian : ' + tulisTgl(TGL) +
+    '\nUntuk            : ' + PENERIMA + '\nDisusun oleh     : ' + PENGIRIM));
+  SURAT.forEach(function(t){ lap.appendChild(el('p', '', t)); });
+  lap.appendChild(el('p', 'ttd', '— ' + PENGIRIM));
+  buka([
+    h3('Laporan rekonstruksi'),
+    lap,
+    tombol(ST.laporan ? 'Tutup' : 'Kembali ke hari ini', function(){
+      tutup();
+      if(!ST.laporan){ ST.laporan = true; keHariIni(); }
+    })
+  ]);
+}
+
+/* ── penutup: jam meloncat ke hari ini, dua sosok berjalan ke titik
+   "hari ini", berhenti jadi sosok utuh (bukan lagi garis putus-putus) ── */
+function keHariIni(){
+  hidup = true; jamTampil = 'kini';
+  sinema = true; document.body.classList.add('sinema');
+  var dekatnya = 0, jt = 1e9;
+  LINGKAR.forEach(function(t, i){ var j = Math.hypot(t[0] - DULU.x, t[1] - DULU.y); if(j < jt){ jt = j; dekatnya = i; } });
+  var bawahKe = dekatnya === 2 || dekatnya === 3 ? dekatnya : (dekatnya === 0 ? 3 : 2);
+  antri = ruteLingkar(dekatnya, bawahKe).map(function(t){ return { x:t[0], y:t[1] }; });
+  if(dekatnya === bawahKe) antri = [];
+  antri.push({ x:TITIK_KINI[0], y:LINGKAR[bawahKe][1] }, { x:TITIK_KINI[0], y:TITIK_KINI[1] });
+  setelah = function(){
+    DULU.padat = true; DULU.hadap = 'bawah';
+    SFX.warna(); buzz([30,40,60]);
+    setTimeout(function(){ jadiBersama(); sinema = false; document.body.classList.remove('sinema'); bukaAkhir(); }, 700);
+  };
+  toast('Kembali ke hari ini.');
+  segarBar();
+}
+function jadiBersama(){
+  if(BERSAMA) return;
+  BERSAMA = true; DULU.tampil = false;
+  P.x = TITIK_KINI[0] - .32; P.y = TITIK_KINI[1]; P.hadap = 'bawah';
+  IKUT.x = TITIK_KINI[0] + .32; IKUT.y = TITIK_KINI[1]; IKUT.hadap = 'bawah';
+  JEJAK = [{ x:IKUT.x, y:IKUT.y }, { x:P.x, y:P.y }];
+}
+function majuIkut(dt){
+  var akhir = JEJAK[JEJAK.length - 1];
+  if(Math.hypot(P.x - akhir.x, P.y - akhir.y) > .06){ JEJAK.push({ x:P.x, y:P.y }); if(JEJAK.length > 400) JEJAK.shift(); }
+  /* titik jejak terjauh yang masih ≥ 0,75 petak di belakang pemain */
+  var sasaran = null;
+  for(var i=JEJAK.length-1; i>=0; i--){ if(Math.hypot(P.x - JEJAK[i].x, P.y - JEJAK[i].y) >= .75){ sasaran = JEJAK[i]; break; } }
+  if(!sasaran){ IKUT.jalan = 0; return; }
+  var dx = sasaran.x - IKUT.x, dy = sasaran.y - IKUT.y, d = Math.hypot(dx, dy), lk = KEC * 1.15 * dt;
+  if(d < .02){ IKUT.jalan = 0; return; }
+  if(d <= lk){ IKUT.x = sasaran.x; IKUT.y = sasaran.y; } else { IKUT.x += dx / d * lk; IKUT.y += dy / d * lk; }
+  IKUT.hadap = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'kanan' : 'kiri') : (dy > 0 ? 'bawah' : 'atas');
+  IKUT.jalan = 1; IKUT.t += dt;
+  /* buang jejak yang sudah dilewati pengikut */
+  while(JEJAK.length > 2 && Math.hypot(JEJAK[0].x - IKUT.x, JEJAK[0].y - IKUT.y) < .08) JEJAK.shift();
+}
+function bukaAkhir(){
+  jadiBersama();
+  ST.akhir = true;
+  var hari = el('div', 'hari');
+  if(SEMBUNYI || !TGL){ hari.appendChild(el('b', '', 'sampai hari ini')); hari.appendChild(document.createTextNode('sejak hari pertama itu.')); }
+  else { hari.appendChild(el('b', '', SELISIH.toLocaleString('id-ID') + ' hari')); hari.appendChild(document.createTextNode('sejak ' + tulisTgl(TGL) + '.')); }
+  var isi = [ h3('Dan sekarang'), hari ];
+  if(PENUTUP) isi.push(p(PENUTUP + ' — ' + PENGIRIM));
+  var wa = String(D.waPengirim || '').replace(/\D/g, '');
+  var nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
+  if(nomor.length >= 10){
+    var ta = el('textarea', 'balas'); ta.value = 'Aku masih inget hari itu. Selamat hari jadi, ' + PENGIRIM + '.';
+    var kirim = el('a', 'tbl', 'Balas lewat WhatsApp');
+    kirim.target = '_blank'; kirim.rel = 'noopener'; kirim.href = 'https://wa.me/' + nomor;
+    kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
+    isi.push(ta, kirim);
+  }
+  var bar = el('div', 'baris-tbl');
+  bar.appendChild(tombol('Lihat alun-alunnya', function(){ tutup(); }, 'putih'));
+  bar.appendChild(tombol('Baca laporannya lagi', function(){ tutup(); bukaLaporan(); }, 'putih'));
+  isi.push(bar);
+  var jejak = el('div', 'jejak');
+  jejak.innerHTML = '<svg width="20" height="12" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 11C1 5 4.5 1 8 1" fill="none" stroke="#241C2E" stroke-width="2" stroke-linecap="round"/><path d="M19 11C19 5 15.5 1 12 1" fill="none" stroke="#E8734A" stroke-width="2" stroke-linecap="round"/></svg>';
+  var a = el('a', '', 'Dibuat dengan Foreverse');
+  var fu = D.foreverseUrl || 'https://foreverse.id';
+  a.href = fu + (fu.indexOf('?') > -1 ? '&' : '?') + 'ref=rekonstruksi'; a.target = '_blank'; a.rel = 'noopener';
+  jejak.appendChild(a); isi.push(jejak);
+  buka(isi);
+  segarBar();
+}
+
+function segarBar(){
+  var n = jumlah();
+  [].forEach.call($('#kantong').querySelectorAll('i'), function(x, i){ x.classList.toggle('isi', i < n); });
+  $('#langkahT').textContent = tujuan().t;
+  $('#jam').textContent = jamTampil === 'kini'
+    ? 'Hari ini · ' + tulisTglPendek(HARI_INI)
+    : tulisTglPendek(TGL) + ' · ' + (jamTampil ? tulisJam(jamTampil) : '--.--');
+}
+
+/* ── lewati: langsung ke laporan (pemutaran ulang ikut dilewati) ── */
+$('#lewati').addEventListener('click', function(){
+  if(panelBuka || ST.laporan) return;
+  ac();
+  ST.bukti = [true,true,true,true]; ST.garis = true;
+  nyala = [true,true,true,true];
+  antri = []; setelah = null; tunda = 0;
+  var akhir = URUT[URUT.length - 1].i;
+  DULU.tampil = true; DULU.x = LINGKAR[akhir][0]; DULU.y = LINGKAR[akhir][1];
+  jamTampil = URUT[URUT.length - 1].jam;
+  sinema = true; document.body.classList.add('sinema');
+  segarBar(); bukaLaporan();
+});
+$('#suara').addEventListener('click', function(){
+  bisu = !bisu; MU.bisukan(bisu);
+  try{ if(AC){ bisu ? AC.suspend() : AC.resume(); } }catch(e){}
+  this.textContent = bisu ? '🔇' : '🔊';
+});
+
+/* ══════════════════════════════════════════════════════════════
+   GAMBAR — kertas berpetak + garis pensil; palet berwarna dipasang
+   per bangunan (sekali), tanpa animasi peralihan.
+   ══════════════════════════════════════════════════════════════ */
+var cv = $('#dunia'), g = cv.getContext('2d');
+var VW = 0, VH = 0, S = 40, CAMX = 0, CAMY = 0, ATAS = 60, BAWAH = 0, OX = 0, OY = 0;
+function ukur(){
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  VW = innerWidth; VH = innerHeight;
+  cv.width = Math.round(VW * dpr); cv.height = Math.round(VH * dpr);
+  cv.style.width = VW + 'px'; cv.style.height = VH + 'px';
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ATAS = $('#atas').offsetHeight;
+  BAWAH = VH > VW ? 168 : 0;
+  S = Math.max(26, Math.min((VH - ATAS - BAWAH) / 9, VW / 7.2));
+}
+window.addEventListener('resize', ukur);
+window.addEventListener('orientationchange', function(){ setTimeout(ukur, 120); });
+function sx(x){ return x * S - CAMX + OX; }
+function sy(y){ return y * S - CAMY + OY; }
+function kamera(){
+  var fx = P.x, fy = P.y;
+  if(sinema && DULU.tampil){ fx = DULU.x; fy = DULU.y; }
+  var lebarW = COLS * S, tinggiW = ROWS * S, tinggiV = VH - ATAS - BAWAH;
+  if(lebarW <= VW){ CAMX = 0; OX = (VW - lebarW) / 2; }
+  else { CAMX = klem(fx * S - VW / 2, 0, lebarW - VW); OX = 0; }
+  if(tinggiW <= tinggiV){ CAMY = 0; OY = ATAS + (tinggiV - tinggiW) / 2; }
+  else { CAMY = klem(fy * S - tinggiV / 2, 0, tinggiW - tinggiV); OY = ATAS; }
+}
+var PENSIL = '#5E5A6A';
+function kotak(x, y, w, h, isi, garis){
+  if(isi){ g.fillStyle = isi; g.fillRect(x, y, w, h); }
+  if(garis){ g.strokeStyle = garis; g.lineWidth = Math.max(1.5, S/22); g.strokeRect(x, y, w, h); }
+}
+function hurufPiksel(px, berat){ return (berat || 600) + ' ' + Math.round(px) + "px 'Pixelify Sans', ui-monospace, 'Courier New', monospace"; }
+function hurufTangan(px){ return '700 ' + Math.round(px) + "px Caveat, 'Comic Sans MS', cursive"; }
+
+function lantai(){
+  /* kertas berpetak (sketsa) atau paving hangat (setelah harinya hidup) */
+  var x0 = sx(0), y0 = sy(0), w = COLS * S, h = ROWS * S;
+  g.fillStyle = hidup ? '#EADBC0' : '#F4F1EA'; g.fillRect(x0, y0, w, h);
+  g.strokeStyle = hidup ? 'rgba(160,120,80,.25)' : '#D7E0E8'; g.lineWidth = 1;
+  g.beginPath();
+  for(var c=0;c<=COLS;c++){ var x = Math.round(sx(c)) + .5; g.moveTo(x, y0); g.lineTo(x, y0 + h); }
+  for(var r=0;r<=ROWS;r++){ var y = Math.round(sy(r)) + .5; g.moveTo(x0, y); g.lineTo(x0 + w, y); }
+  g.stroke();
+  /* lingkaran jalan: digambar sebagai jalan setapak putus-putus pensil */
+  g.strokeStyle = hidup ? '#C9A77C' : 'rgba(94,90,106,.35)'; g.lineWidth = Math.max(2, S*.08);
+  g.setLineDash([S*.2, S*.18]);
+  g.beginPath();
+  LINGKAR.concat([LINGKAR[0]]).forEach(function(t, i){ var X = sx(t[0]), Y = sy(t[1]); if(i) g.lineTo(X, Y); else g.moveTo(X, Y); });
+  g.stroke(); g.setLineDash([]);
+  /* pagar tepi */
+  g.strokeStyle = PENSIL; g.lineWidth = Math.max(2, S/16);
+  g.strokeRect(sx(.5), sy(.5), (COLS - 1) * S, (ROWS - 1) * S);
+  /* titik "hari ini" */
+  var hx = sx(TITIK_KINI[0]), hy = sy(TITIK_KINI[1]);
+  g.strokeStyle = hidup ? '#E8734A' : 'rgba(94,90,106,.5)'; g.lineWidth = 2.5; g.setLineDash([5,4]);
+  g.beginPath(); g.ellipse(hx, hy + S*.15, S*.9, S*.45, 0, 0, 7); g.stroke(); g.setLineDash([]);
+}
+
+function bangunan(b, i){
+  var warna = ST.bukti[i];
+  var x = sx(b.c0), y = sy(b.r0), w = (b.c1 - b.c0 + 1) * S, h = (b.r1 - b.r0 + 1) * S;
+  var muka = S * 1.1;                                       // tinggi dinding depan
+  var atasH = h - muka;
+  /* atap */
+  kotak(x, y, w, atasH, warna ? b.atap : '#FFFFFF', warna ? '#241C2E' : PENSIL);
+  if(!warna){                                                // arsiran pensil di atap
+    g.save(); g.beginPath(); g.rect(x, y, w, atasH); g.clip();
+    g.strokeStyle = 'rgba(94,90,106,.28)'; g.lineWidth = 1;
+    for(var k=-h; k<w; k+=S*.32){ g.beginPath(); g.moveTo(x + k, y + atasH); g.lineTo(x + k + atasH, y); g.stroke(); }
+    g.restore();
+  }
+  /* dinding depan + jendela + pintu */
+  kotak(x, y + atasH, w, muka, warna ? b.dinding : '#FAF9F5', warna ? '#241C2E' : PENSIL);
+  var nyalaJ = nyala[i] || hidup;
+  for(var j=0;j<3;j++){
+    var jx = x + S*.4 + j * (w - S*.8) / 2.6, jy = y + atasH + S*.22;
+    kotak(jx, jy, S*.7, S*.42, warna ? (nyalaJ ? '#FFE08A' : '#BFE1EE') : null, warna ? '#241C2E' : PENSIL);
+  }
+  var pintuX = sx(b.px) - S*.32;
+  kotak(pintuX, y + h - S*.78, S*.64, S*.78, warna ? '#7A5536' : null, warna ? '#241C2E' : PENSIL);
+  /* papan nama: tulisan tangan di sketsa, papan berwarna setelahnya */
+  var nx = x + w/2, ny = y + atasH * .48, nama = KJ[i].tempat;
+  if(warna){
+    g.font = hurufPiksel(Math.max(11, S*.26), 700);
+    var tw = g.measureText(nama).width + S*.4;
+    tw = Math.min(tw, w - S*.2);
+    kotak(nx - tw/2, ny - S*.24, tw, S*.48, '#FFFCF4', '#241C2E');
+    g.fillStyle = '#241C2E'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(nama, nx, ny + 1, tw - S*.2);
+  } else {
+    g.font = hurufTangan(Math.max(15, S*.42));
+    g.fillStyle = PENSIL; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(nama, nx, ny, w - S*.3);
+  }
+}
+function meja(){
+  var x = sx(MEJA.c0), y = sy(MEJA.r0), w = 2 * S, h = 2 * S;
+  kotak(x + S*.08, y + S*.15, w - S*.16, h - S*.6, hidup ? '#C99A63' : '#FFFFFF', hidup ? '#241C2E' : PENSIL);
+  kotak(x + S*.08, y + h - S*.45, w - S*.16, S*.3, hidup ? '#9A6B42' : '#FAF9F5', hidup ? '#241C2E' : PENSIL);
+  /* garis waktu kecil di atas meja */
+  g.strokeStyle = '#241C2E'; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(x + S*.3, y + S*.7); g.lineTo(x + w - S*.3, y + S*.7); g.stroke();
+  for(var i=0;i<4;i++){
+    g.fillStyle = (ST.garis ? '#E8734A' : '#FFFFFF');
+    g.beginPath(); g.arc(x + S*.3 + i * (w - S*.6) / 3, y + S*.7, S*.09, 0, 7); g.fill(); g.stroke();
+  }
+}
+function pohon(t){
+  var x = sx(t[0] + .5), y = sy(t[1] + .5);
+  g.fillStyle = hidup ? '#7FAE6E' : '#FFFFFF'; g.strokeStyle = hidup ? '#241C2E' : PENSIL; g.lineWidth = 2;
+  g.beginPath(); g.arc(x, y - S*.1, S*.42, 0, 7); g.fill(); g.stroke();
+  g.fillStyle = hidup ? '#8C6142' : '#FAF9F5'; g.fillRect(x - S*.06, y + S*.28, S*.12, S*.22); g.strokeRect(x - S*.06, y + S*.28, S*.12, S*.22);
+}
+function tandaBukti(i){
+  if(ST.bukti[i]) return;
+  var b = BANGUN[i], x = sx(b.px), y = sy(b.py) + (b.hadap === 'atas' ? -S*.15 : S*.05);
+  kotak(x - S*.2, y - S*.12, S*.4, S*.26, '#FFFFFF', '#241C2E');
+  g.fillStyle = '#C8372D'; g.fillRect(x - S*.2, y - S*.12, S*.4, S*.06);
+}
+
+/* tokoh balok — dipakai untuk pemain dan dua sosok "dulu" */
+function orang(x, y, o){
+  var X = sx(x), Y = sy(y), u = S / 38;
+  var ayun = o.jalan ? Math.sin(o.t * 14) * 2.4 * u : 0;
+  var garis = '#241C2E';
+  g.save();
+  if(o.hantu){ g.globalAlpha = .62; g.setLineDash([3, 2.5]); }
+  if(!o.hantu){ g.fillStyle = 'rgba(0,0,0,.16)'; g.beginPath(); g.ellipse(X, Y + u, 9*u, 3.5*u, 0, 0, 7); g.fill(); }
+  var isi = function(w){ return o.hantu ? '#FFFFFF' : w; };
+  kotak(X - 6*u, Y - 9*u + ayun, 5*u, 9*u - ayun, isi(o.celana || '#3B4A72'), garis);
+  kotak(X + 1*u, Y - 9*u - ayun, 5*u, 9*u + ayun, isi(o.celana || '#3B4A72'), garis);
+  var by = Y - 21*u, hy = by - 13*u;
+  kotak(X - 8*u, by, 16*u, 13*u, isi(o.baju), garis);
+  kotak(X - 7*u, hy, 14*u, 13*u, isi('#F2C9A0'), garis);
+  g.fillStyle = isi(o.rambut);
+  if(o.hadap === 'atas'){
+    g.fillRect(X - 7*u, hy, 14*u, 11*u);
+    if(o.panjang) kotak(X - 7*u, hy + 6*u, 14*u, 12*u, isi(o.rambut), garis);
+  } else {
+    if(o.panjang){ kotak(X - 8.5*u, hy, 3.6*u, 19*u, isi(o.rambut), garis); kotak(X + 4.9*u, hy, 3.6*u, 19*u, isi(o.rambut), garis); }
+    g.fillStyle = isi(o.rambut); g.fillRect(X - 7*u, hy, 14*u, 4*u);
+    g.fillStyle = '#241C2E';
+    if(o.hadap === 'bawah'){ g.fillRect(X - 4*u, hy + 6*u, 2*u, 2.5*u); g.fillRect(X + 2*u, hy + 6*u, 2*u, 2.5*u); }
+    else if(o.hadap === 'kiri') g.fillRect(X - 5*u, hy + 6*u, 2*u, 2.5*u);
+    else g.fillRect(X + 3*u, hy + 6*u, 2*u, 2.5*u);
+  }
+  g.restore();
+}
+
+function pil(x, y, teks, gaya){
+  if(x < -S*.5 || x > VW + S*.5 || y < ATAS - 4 || y > VH + S) return;
+  var fs = Math.max(10.5, S * .21);
+  g.font = hurufPiksel(fs, 700);
+  var w = g.measureText(teks).width + fs*1.1, h = fs * 1.55;
+  x = klem(x, w/2 + 4, VW - w/2 - 4);
+  var bx = Math.round(x - w/2), by = Math.round(y - h);
+  g.fillStyle = gaya === 'aktif' ? '#FFC24A' : gaya === 'kamu' ? '#241C2E' : gaya === 'selesai' ? 'rgba(255,252,244,.8)' : '#FFFCF4';
+  g.fillRect(bx, by, w, h);
+  g.strokeStyle = gaya === 'selesai' ? 'rgba(36,28,46,.45)' : '#241C2E'; g.lineWidth = 2; g.strokeRect(bx, by, w, h);
+  g.fillStyle = gaya === 'kamu' ? '#FFC24A' : gaya === 'selesai' ? 'rgba(36,28,46,.55)' : '#241C2E';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(teks, x, by + h/2 + 1);
+}
+
+function gambarPenunjuk(now){
+  var t = tujuan().o; if(!t || panelBuka || sinema) return;
+  var X = sx(t.ox), Y = sy(t.oy);
+  g.strokeStyle = '#E8734A'; g.lineWidth = Math.max(2, S/14); g.setLineDash([S*.16, S*.12]);
+  g.beginPath(); g.ellipse(X, Y + S*.15, S*.9, S*.5, 0, 0, 7); g.stroke(); g.setLineDash([]);
+  var kiri = 22, kanan = VW - 22, atas = ATAS + 26, bawah = VH - (BAWAH || 150) - 10;
+  if(X < kiri || X > kanan || Y < atas || Y > bawah){
+    var cx = VW / 2, cy = (atas + bawah) / 2, dx = X - cx, dy = Y - cy;
+    var k = Math.min(Math.abs((dx > 0 ? kanan - cx : kiri - cx) / (dx || 1e-6)), Math.abs((dy > 0 ? bawah - cy : atas - cy) / (dy || 1e-6)));
+    g.save(); g.translate(cx + dx * k, cy + dy * k); g.rotate(Math.atan2(dy, dx));
+    g.fillStyle = '#E8734A'; g.strokeStyle = '#241C2E'; g.lineWidth = 2.5;
+    g.beginPath(); g.moveTo(12, 0); g.lineTo(-12, -14); g.lineTo(-12, 14); g.closePath(); g.fill(); g.stroke();
+    g.restore();
+    return;
+  }
+  var ay = Y - S*1.25 + Math.sin(now / 220) * S * .08;
+  g.fillStyle = '#E8734A'; g.strokeStyle = '#241C2E'; g.lineWidth = 2.5;
+  g.beginPath(); g.moveTo(X, ay + S*.3); g.lineTo(X - S*.22, ay); g.lineTo(X + S*.22, ay); g.closePath(); g.fill(); g.stroke();
+}
+
+function gambar(now){
+  g.fillStyle = hidup ? '#D9C7A6' : '#E9E5DC'; g.fillRect(0, 0, VW, VH);
+  lantai();
+  var L = [];
+  BANGUN.forEach(function(b, i){ L.push({ y:b.r1 + 1, f:function(){ bangunan(b, i); } }); });
+  L.push({ y:MEJA.r1 + 1, f:meja });
+  POHON.forEach(function(t){ L.push({ y:t[1] + 1, f:function(){ pohon(t); } }); });
+  for(var i=0;i<4;i++) (function(i){ L.push({ y:BANGUN[i].py, f:function(){ tandaBukti(i); } }); })(i);
+  if(DULU.tampil){
+    L.push({ y:DULU.y + .01, f:function(){
+      var hantu = !DULU.padat;
+      orang(DULU.x - .32, DULU.y, { baju:'#E8734A', rambut:'#3A2A2E', panjang:KAR_A === 'perempuan', hadap:DULU.hadap, jalan:DULU.jalan, t:DULU.t, hantu:hantu });
+      orang(DULU.x + .32, DULU.y, { baju:'#3B6FA8', rambut:'#2A2228', panjang:KAR_B === 'perempuan', hadap:DULU.hadap, jalan:DULU.jalan, t:DULU.t + .15, hantu:hantu });
+    }});
+  }
+  if(!sinema || !DULU.tampil){
+    L.push({ y:P.y, f:function(){ orang(P.x, P.y, { baju:'#E8734A', rambut:'#3A2A2E', panjang:KAR_A === 'perempuan', hadap:P.hadap, jalan:P.jalan > 0, t:P.langkahT }); } });
+  }
+  if(BERSAMA){
+    L.push({ y:IKUT.y, f:function(){ orang(IKUT.x, IKUT.y, { baju:'#3B6FA8', rambut:'#2A2228', panjang:KAR_B === 'perempuan', hadap:IKUT.hadap, jalan:IKUT.jalan, t:IKUT.t }); } });
+  }
+  L.sort(function(a,b){ return a.y - b.y; });
+  L.forEach(function(o){ o.f(); });
+
+  /* label */
+  if(!sinema){
+    for(var k=0;k<4;k++){
+      var b = BANGUN[k], ly = b.hadap === 'bawah' ? b.py + .95 : b.py - .3;
+      var gaya = ST.bukti[k] ? 'selesai' : (IA[k] === dekat ? 'aktif' : '');
+      pil(sx(b.px), sy(ly), ST.bukti[k] ? '✓ bukti' : 'bukti', gaya);
+    }
+    pil(sx(11), sy(MEJA.r0) - S*.05, 'meja rekonstruksi', ST.garis ? 'selesai' : (IA[4] === dekat ? 'aktif' : ''));
+    if(!dekat) pil(sx(BERSAMA ? (P.x + IKUT.x) / 2 : P.x), sy(Math.min(P.y, BERSAMA ? IKUT.y : P.y)) - S*1.12, BERSAMA ? 'kalian, hari ini' : 'kamu', 'kamu');
+  }
+  if(DULU.tampil){
+    pil(sx(DULU.x), sy(DULU.y) - S*1.12, DULU.padat ? 'kalian, hari ini' : 'kalian, waktu itu', 'kamu');
+  }
+  pil(sx(TITIK_KINI[0]), sy(TITIK_KINI[1] + .95), 'hari ini', ST.laporan ? 'aktif' : 'selesai');
+  gambarPenunjuk(now);
+}
+
+/* ══════════════ putaran utama ══════════════ */
+var lalu = performance.now();
+function tik(now){
+  var dt = Math.min(.05, (now - lalu) / 1000); lalu = now;
+  if(sinema && !panelBuka) majuPutar(dt);
+  var v = (!panelBuka && bisaMain()) ? (arahKB() || JV) : { x:0, y:0 };
+  var kec = Math.hypot(v.x, v.y);
+  if(kec > .01){
+    var nx = P.x + v.x * KEC * dt, ny = P.y + v.y * KEC * dt;
+    if(bisaDi(nx, P.y)) P.x = nx;
+    if(bisaDi(P.x, ny)) P.y = ny;
+    P.hadap = Math.abs(v.x) > Math.abs(v.y) ? (v.x > 0 ? 'kanan' : 'kiri') : (v.y > 0 ? 'bawah' : 'atas');
+    P.jalan = kec; P.langkahT += dt;
+    if(Math.floor(P.langkahT / .3) !== Math.floor((P.langkahT - dt) / .3)) SFX.langkah();
+  } else P.jalan = 0;
+  if(BERSAMA) majuIkut(dt);
+  kamera();
+  segarAksi();
+  gambar(now);
+  requestAnimationFrame(tik);
+}
+
+$('#pbNama').textContent = PENERIMA;
+$('#pbTgl').textContent = tulisTgl(TGL);
+document.title = 'Rekonstruksi hari pertama — ' + PENERIMA;
+$('#mulai').addEventListener('click', function(){
+  ac(); MU.main(); sudahMulai = true;
+  $('#pembuka').hidden = true;
+  ukur();
+  toast('Semuanya masih sketsa. Mulai dari barang bukti yang ditandai.');
+});
+ukur(); segarBar();
+requestAnimationFrame(tik);
+
+window.__fv = function(){
+  return { x:P.x, y:P.y, bukti:jumlah(), st:JSON.parse(JSON.stringify(ST)), dekat:dekat ? dekat.id : null,
+           panel:panelBuka, sinema:sinema, dulu:{ x:DULU.x, y:DULU.y, padat:DULU.padat, tampil:DULU.tampil },
+           bersama:BERSAMA, ikut:{ x:IKUT.x, y:IKUT.y },
+           nyala:nyala.slice(), hidup:hidup, urut:URUT.map(function(k){ return k.i; }),
+           layarY:sy(P.y), batasBawah:VH - BAWAH };
+};
+})();
+</script>
+</body>
+</html>
