@@ -363,7 +363,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 dosis:90, aturanDosis:40, enakan:60, airPesan:80,
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
-                catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50,
+                catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50, janji:90,
                 tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
@@ -387,6 +387,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "pasar-malam":       { nama:"Pasar Malam",           nfoto:3, mesin:"/pasar-malam.html",     momen:"askout" },
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:3, mesin:"/lewat-duluan.html",    momen:"lovenote" },
     "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:3, mesin:"/kasus-pengirim.html", momen:"confess" },
+    "rumah-contoh":      { nama:"Rumah Contoh", nfoto:3, mesin:"/rumah-contoh.html", momen:"proposal" },
     "rekonstruksi":      { nama:"Rekonstruksi Hari Pertama", nfoto:3, mesin:"/rekonstruksi.html",   momen:"anniversary" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
@@ -571,6 +572,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<input id="sembunyikanHari" type="checkbox">' +
         '<label for="sembunyikanHari">Sembunyikan hitungan harinya — tampilkan suratnya saja.</label>' +
         '</div></div></div>';
+    } else if(momen === "proposal"){
+      html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
+        '<p class="jelas">Lamaran ini tidak butuh tanggal atau angka apa pun. Lanjut ke foto dan janji di tiap ruangannya.</p>';
     } else if(momen === "lovenote"){
       html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
         '<p class="jelas">Love note bisa dikirim hari apa saja — tidak ada tanggal atau angka yang perlu diisi. Lanjut ke foto dan isinya.</p>';
@@ -875,6 +879,19 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="catatanTunda"><label for="catatanTunda">Kalimatnya (opsional)</label>' +
         '<textarea id="catatanTunda" maxlength="90" style="min-height:70px" placeholder="Nggak apa-apa. Aku nunggu sampai kamu siap."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "rumah-contoh"){
+      var ruangRc = ["Teras — diikat di kunci di bawah keset", "Ruang tamu — catatan di meja", "Dapur — tulisan di bawah cangkir teh", "Halaman belakang — diukir di sandaran bangku"];
+      var contohRc = ["Aku yang selalu inget naruh kunci di tempat yang sama.", "Dinding ini buat foto-foto kita, termasuk yang kamu bilang jelek.", "Teh pertama tiap pagi aku yang bikinin.", "Tiap sore yang capek, kita duduk di sini aja."];
+      html = '<h2><span class="n">5</span> Satu janji per ruangan</h2>' +
+        '<p class="jelas">Dia keliling rumah contoh. Di tiap ruangan ada satu janji kecil darimu. Foto-fotomu dipajang di dinding ruang tamu, suratnya di atas bantal kamar.</p>' +
+        [0,1,2,3].map(function(i){ return '<div class="baris" data-f="janji'+i+'"><label for="janji'+i+'">'+ruangRc[i]+'</label>' +
+          '<textarea id="janji'+i+'" maxlength="90" style="min-height:62px" placeholder="'+contohRc[i]+'"></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Janji ini belum diisi.</p></div>'; }).join("") +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Di bawah pertanyaannya</h2>' +
+        '<p class="jelas">Muncul di bawah "mau tinggal di rumah ini sama aku?". Boleh dikosongkan.</p>' +
+        '<div class="baris" data-f="penutup"><label for="penutup">Kalimatnya (opsional)</label>' +
+        '<textarea id="penutup" maxlength="120" style="min-height:70px" placeholder="Nggak usah buru-buru jawab. Aku tunggu di depan pintu."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "confess-kunang"){
       var contohKn = ["Caramu bilang “bentar ya” padahal udah siap dari tadi", "Kamu selalu nyisain satu gorengan buat orang lain", "Ketawamu yang kedengeran sampai ujung lorong"];
       html = '<h2><span class="n">5</span> Tiga kunang-kunang</h2>' +
@@ -921,6 +938,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       pasangHitung("penutup", BATAS.penutup);
     } else if(tema === "rekonstruksi"){
       for(var hj=0;hj<4;hj++){ pasangHitung("kjTempat"+hj, BATAS.tempatKj); pasangHitung("kjCerita"+hj, BATAS.ceritaKj); }
+      pasangHitung("penutup", BATAS.penutup);
+    } else if(tema === "rumah-contoh"){
+      for(var jr=0;jr<4;jr++) pasangHitung("janji"+jr, BATAS.janji);
       pasangHitung("penutup", BATAS.penutup);
     } else if(tema === "confess-kunang"){
       for(var kn=0;kn<3;kn++) pasangHitung("kunang"+kn, BATAS.kunangKu);
@@ -992,6 +1012,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         penutup: $("penutup").value
       };
     }
+    if(TEMA === "rumah-contoh"){
+      return {
+        janji: [0,1,2,3].map(function(i){ return $("janji"+i).value; }),
+        penutup: $("penutup").value
+      };
+    }
     if(TEMA === "confess-kunang"){
       return {
         kunang: [0,1,2].map(function(i){ return $("kunang"+i).value; }),
@@ -1049,7 +1075,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         sembunyikanHari: $("sembunyikanHari").checked
       };
     }
-    if(MOMEN_GRUP === "lovenote"){
+    if(MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal"){
       return {};
     }
     if(MOMEN_GRUP === "askout"){
@@ -1174,7 +1200,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["wisuda","wisuda"]]
       : MOMEN_GRUP === "getwell"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["sakit","sakit"]]
-      : MOMEN_GRUP === "lovenote"
+      : MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"]]
       : MOMEN_GRUP === "askout"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["tglAjak","tglAjak"],["jamAjak","jamAjak"]]
@@ -1228,6 +1254,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           tandai(nm+i, kosong);
           if(kosong) kurang.push(nm+i);
         });
+      });
+    } else if(TEMA === "rumah-contoh"){
+      [0,1,2,3].forEach(function(i){
+        var kosong = !$("janji"+i).value.trim();
+        tandai("janji"+i, kosong);
+        if(kosong) kurang.push("janji"+i);
       });
     } else if(TEMA === "confess-kunang"){
       ["kunang0","kunang1","kunang2","sejak"].forEach(function(nm){
@@ -1300,7 +1332,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : MOMEN_GRUP === "proposal" ? "Lamaran" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       isi: Object.assign({
@@ -1447,6 +1479,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
             if(!$("kjTempat"+n)) return;
             $("kjTempat"+n).value = (k && k.tempat) || ""; $("kjJam"+n).value = (k && k.jam) || ""; $("kjCerita"+n).value = (k && k.cerita) || "";
           });
+          if($("penutup")) $("penutup").value = i.penutup || "";
+        } else if(TEMA === "rumah-contoh"){
+          (i.janji||[]).forEach(function(v,n){ if($("janji"+n)) $("janji"+n).value = v || ""; });
           if($("penutup")) $("penutup").value = i.penutup || "";
         } else if(TEMA === "confess-kunang"){
           (i.kunang||[]).forEach(function(v,n){ if($("kunang"+n)) $("kunang"+n).value = v || ""; });

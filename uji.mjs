@@ -122,6 +122,14 @@ function isiDrafTema(tema) {
     d.isi.kangen = ["Hal satu.", "Hal dua.", "Hal tiga."];
     d.isi.barang = ["Susu stroberi", "Roti sobek", "Keripik"];
     d.isi.penutup = "Besok aku lewat sini duluan lagi.";
+  } else if (tema === "rumah-contoh") {
+    d.momen = "proposal";
+    delete d.isi.ucapan;
+    delete d.isi.tanggalLahir;
+    delete d.isi.sembunyikanUmur;
+    delete d.isi.rahasia;
+    d.isi.janji = ["Janji teras.", "Janji tamu.", "Janji dapur.", "Janji halaman."];
+    d.isi.penutup = "";
   } else if (tema === "kasus-pengirim") {
     d.momen = "confess";
     delete d.isi.ucapan;
@@ -578,7 +586,24 @@ await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", asy
   sama(j.minat["pasar-malam"].demo, 3, "dibuka");
   sama(j.minat["pasar-malam"].form, 1, "mulai isi");
   sama(j.minat["bait"].lunas, 1, "terbayar");
-  sama(Object.keys(j.minat).length, 12, "semua tema terdaftar");
+  sama(Object.keys(j.minat).length, 13, "semua tema terdaftar");
+});
+
+await uji("rumah-contoh · pesanan lengkap diterima, momen proposal, empat janji tersimpan", async () => {
+  const L = await buatLingkungan();
+  const j = await draf(L, isiDrafTema("rumah-contoh"));
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT tema,momen,isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  sama(b.tema, "rumah-contoh", "tema"); sama(b.momen, "proposal", "momen");
+  const i = JSON.parse(b.isi);
+  sama(i.janji[3], "Janji halaman.", "janji 4"); harus(!("tanggalLahir" in i), "isian birthday tidak boleh nyangkut");
+});
+
+await uji("rumah-contoh · janji kosong ditolak", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("rumah-contoh"); d.isi.janji[1] = "";
+  const r = await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) });
+  sama(r.status, 400, "status");
 });
 
 await uji("password salah ditolak", async () => {
@@ -643,6 +668,7 @@ for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.htm
                       "lewat-duluan.html", "lewat-duluan-demo.html",
                       "kasus-pengirim.html", "kasus-pengirim-demo.html",
                       "rekonstruksi.html", "rekonstruksi-demo.html",
+                      "rumah-contoh.html", "rumah-contoh-demo.html",
                       "index.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
@@ -674,7 +700,7 @@ await uji("pesan.html · mode edit mengisi ulang isian dasar SETIAP momen yang p
   const t = await readFile("./pesan.html", "utf8");
   const edit = t.slice(t.indexOf("siapkanTema(h.j.tema"), t.indexOf("var lagu = i.lagu"));
   const momen = [...new Set([...t.matchAll(/momen:"([a-z]+)"/g)].map(m => m[1]))];
-  const tanpaIsianDasar = ["birthday", "confess", "lovenote"];   // birthday = cabang bawaan
+  const tanpaIsianDasar = ["birthday", "confess", "lovenote", "proposal"];   // birthday = cabang bawaan
   for (const m of momen) {
     if (tanpaIsianDasar.includes(m)) continue;
     harus(edit.includes('MOMEN_GRUP === "' + m + '"'), "momen " + m + " tidak punya cabang isi-ulang di mode edit");
@@ -703,7 +729,7 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
    "match" — tapi mencaplok sampai </script> SKRIP BERIKUTNYA, menghapus
    skrip bootstrap pratinjau. Uji ini memastikan match-nya selalu pas
    satu skrip saja. */
-for (const berkas of ["kado-riang.html", "langit-harapan.html", "peta-perjalanan.html", "zona-waktu.html", "graduation-benih.html", "confess-kunang.html", "getwell-365.html", "pasar-malam.html", "lewat-duluan.html", "kasus-pengirim.html", "rekonstruksi.html"]) {
+for (const berkas of ["kado-riang.html", "langit-harapan.html", "peta-perjalanan.html", "zona-waktu.html", "graduation-benih.html", "confess-kunang.html", "getwell-365.html", "pasar-malam.html", "lewat-duluan.html", "kasus-pengirim.html", "rekonstruksi.html", "rumah-contoh.html"]) {
   await uji(berkas + " · pola sisip data worker.js pas satu skrip, tidak mencaplok skrip berikutnya", async () => {
     const t = await readFile("./" + berkas, "utf8");
     const re = /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/;

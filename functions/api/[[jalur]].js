@@ -39,7 +39,7 @@ const BATAS = {
   kegiatan: 24, alasan: 90, titikTemu: 40, catatanTunda: 90,
   kebiasaan: 90, kangen: 70, barang: 24, penutup: 120,
   catatan: 90, pesanan: 40, tahu: 90,
-  kunangKu: 70, sejak: 50,
+  kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
@@ -81,7 +81,8 @@ const TEMA_SKEMA = {
   "pasar-malam":       { nfoto: 3, momen: "askout" },
   "lewat-duluan":      { nfoto: 3, momen: "lovenote" },
   "kasus-pengirim":    { nfoto: 3, momen: "confess" },
-  "rekonstruksi":      { nfoto: 3, momen: "anniversary" }
+  "rekonstruksi":      { nfoto: 3, momen: "anniversary" },
+  "rumah-contoh":      { nfoto: 3, momen: "proposal" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -442,7 +443,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.titikTemu = teks(p.titikTemu, BATAS.titikTemu);
     if (!isi.tanggalAjak) throw new Error("Tanggal ajakannya belum diisi.");
     if (!isi.jamAjak) throw new Error("Jam ajakannya belum diisi.");
-  } else if (skema.momen === "lovenote") {
+  } else if (skema.momen === "lovenote" || skema.momen === "proposal") {
     /* Love Note: tidak butuh tanggal atau angka apa pun — surat sayang
        yang bisa dikirim hari apa saja. Hanya nama, foto, surat, dan isian
        khas temanya. */
@@ -547,6 +548,14 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
       if (!k.jam) throw new Error("Jam kejadian " + (i + 1) + " belum diisi.");
       if (!k.cerita) throw new Error("Cerita kejadian " + (i + 1) + " belum diisi.");
     });
+    isi.penutup = teks(p.penutup, BATAS.penutup);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "rumah-contoh") {
+    /* "Rumah Contoh": `janji` = satu janji per ruangan (teras, ruang tamu,
+       dapur, halaman belakang); kamar membawa surat & kotak cincin.
+       `penutup` = kalimat di bawah pertanyaan lamaran, opsional. */
+    isi.janji = [0, 1, 2, 3].map(i => teks((p.janji || [])[i], BATAS.janji));
+    if (isi.janji.some(j => !j)) throw new Error("Keempat janji untuk tiap ruangan belum diisi.");
     isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "confess-kunang") {
