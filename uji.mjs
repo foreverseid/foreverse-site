@@ -61,9 +61,13 @@ function isiDrafTema(tema) {
     delete d.isi.ucapan;
     delete d.isi.tanggalLahir;
     delete d.isi.sembunyikanUmur;
+    delete d.isi.rahasia;
     d.isi.kotaPengirim = "tokyo";
     d.isi.kotaPenerima = "jakarta";
-    d.isi.rahasia = "Jarak ini sementara. Aku di sini, nungguin.";
+    d.isi.rutinitas = [{ jam: "07:30", kegiatan: "berangkat kerja" }, { jam: "12:15", kegiatan: "makan siang" }, { jam: "22:30", kegiatan: "siap tidur" }];
+    d.isi.oleh = ["Gantungan kunci", "Teh", "Peluk"];
+    d.isi.tanggalKetemu = "";
+    d.isi.penutup = "";
   } else if (tema === "graduation-benih") {
     d.momen = "graduation";
     delete d.isi.ucapan;
@@ -984,12 +988,32 @@ await uji("zona-waktu · kota di luar daftar ditolak (bukan jatuh ke bawaan — 
   harus(!j.ok, "seharusnya ditolak karena kota tidak dikenal");
 });
 
-await uji("zona-waktu · rahasia/pesan penutup boleh kosong (opsional)", async () => {
+await uji("zona-waktu · rutinitas & isi paket tersimpan; tanggal ketemu & penutup opsional", async () => {
   const L = await buatLingkungan();
-  const d = isiDrafTema("zona-waktu");
-  d.isi.rahasia = "";
-  const j = await draf(L, d);
+  const j = await draf(L, isiDrafTema("zona-waktu"));
   harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  const isi = JSON.parse(b.isi);
+  sama(isi.rutinitas[2].jam, "22:30", "jam rutinitas tersimpan");
+  sama(isi.oleh.length, 3, "tiga lapis paket");
+  harus(!("rahasia" in isi), "versi baru tidak lagi memakai pesan rahasia");
+});
+
+await uji("zona-waktu · jam rutinitas ngawur ditolak (dipakai kuis & samakan jadwal)", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("zona-waktu"); d.isi.rutinitas[1].jam = "30:00";
+  const j = await draf(L, d);
+  harus(!j.ok && /Jam rutinitas 2/.test(j.pesan || ""), "harus ditolak: " + JSON.stringify(j));
+});
+
+await uji("zona-waktu · kegiatan rutinitas & isi paket kosong ditolak", async () => {
+  const L = await buatLingkungan();
+  const d1 = isiDrafTema("zona-waktu"); d1.isi.rutinitas[0].kegiatan = "";
+  const j1 = await draf(L, d1);
+  harus(!j1.ok && /Kegiatan rutinitas 1/.test(j1.pesan || ""), "kegiatan kosong harus ditolak");
+  const d2 = isiDrafTema("zona-waktu"); d2.isi.oleh[2] = "";
+  const j2 = await draf(L, d2);
+  harus(!j2.ok && /paket/i.test(j2.pesan || ""), "isi paket kosong harus ditolak");
 });
 
 /* ═══════════ tema Benih & Pohon Cita-Cita (Graduation) ═══════════ */

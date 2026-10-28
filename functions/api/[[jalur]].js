@@ -40,6 +40,7 @@ const BATAS = {
   kebiasaan: 90, kangen: 70, barang: 24, penutup: 120,
   catatan: 90, pesanan: 40, tahu: 90,
   tempatKj: 24, ceritaKj: 90,
+  kegiatanRut: 50, oleh: 50,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -504,6 +505,25 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.alasan = [0, 1, 2].map(i => teks((p.alasan || [])[i], BATAS.alasan));
     if (isi.alasan.some(a => !a)) throw new Error("Ketiga alasannya belum diisi.");
     isi.catatanTunda = teks(p.catatanTunda, BATAS.catatanTunda);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "zona-waktu") {
+    /* "Dua Jendela" (menggantikan Zona Waktu lama, id tetap): `rutinitas`
+       = 3 kebiasaan harian pengirim dengan jam di KOTANYA — dipakai kuis
+       "jam segini aku lagi apa" & game samakan jadwal, jadi jamnya wajib
+       jam sungguhan. `oleh` = isi paket 3 lapis. `tanggalKetemu`
+       opsional (hitung mundur di penutup). */
+    isi.rutinitas = [0, 1, 2].map(i => {
+      const r = (p.rutinitas || [])[i] || {};
+      return { jam: jamSah(r.jam), kegiatan: teks(r.kegiatan, BATAS.kegiatanRut) };
+    });
+    isi.rutinitas.forEach((r, i) => {
+      if (!r.jam) throw new Error("Jam rutinitas " + (i + 1) + " belum diisi.");
+      if (!r.kegiatan) throw new Error("Kegiatan rutinitas " + (i + 1) + " belum diisi.");
+    });
+    isi.oleh = [0, 1, 2].map(i => teks((p.oleh || [])[i], BATAS.oleh));
+    if (isi.oleh.some(o => !o)) throw new Error("Ketiga isi paketnya belum diisi.");
+    isi.tanggalKetemu = tanggalSah(p.tanggalKetemu);
+    isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "rekonstruksi") {
     /* "Rekonstruksi Hari Pertama": empat kejadian di hari pertama —

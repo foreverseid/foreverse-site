@@ -364,7 +364,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
                 catatan:90, pesanan:40, tahu:90,
-                tempatKj:24, ceritaKj:90 };
+                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -380,7 +380,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "kado-riang":        { nama:"Kado Riang",        nfoto:3, mesin:"/kado-riang.html",        momen:"birthday" },
     "langit-harapan":    { nama:"Langit Harapan",    nfoto:4, mesin:"/langit-harapan.html",    momen:"birthday" },
     "peta-perjalanan":   { nama:"Peta Perjalanan",   nfoto:3, mesin:"/peta-perjalanan.html",   momen:"anniversary" },
-    "zona-waktu":        { nama:"Zona Waktu",        nfoto:3, mesin:"/zona-waktu.html",        momen:"ldr" },
+    "zona-waktu":        { nama:"Dua Jendela",       nfoto:3, mesin:"/zona-waktu.html",        momen:"ldr" },
     "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:3, mesin:"/confess-kunang.html",  momen:"confess" },
     "getwell-365":       { nama:"36,5",                  nfoto:3, mesin:"/getwell-365.html",     momen:"getwell" },
@@ -710,10 +710,30 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Destinasi berikutnya, kamu yang pilih."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "zona-waktu"){
-      html = '<h2><span class="n">5</span> Pesan penutup</h2>' +
-        '<p class="jelas">Muncul di akhir, setelah "isyarat pelukan" dikirim — boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
-        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan penutupnya (opsional)</label>' +
-        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Jarak ini sementara. Aku di sini, nungguin."></textarea>' +
+      html = '<h2><span class="n">5</span> Tiga kebiasaanmu sehari-hari</h2>' +
+        '<p class="jelas">Pakai jam di KOTAMU. Dia akan menebak "jam segini kamu lagi apa?" berdasarkan jam asli kotamu saat suratnya dibuka, lalu mencocokkan jadwal kalian.</p>';
+      var contohRut = [["07:30","berangkat kerja, sambil dengerin lagu yang kamu kirim"],["12:15","makan siang, sambil lihat fotomu"],["22:30","siap-siap tidur, nungguin chat darimu"]];
+      for(var ru=0;ru<3;ru++){
+        html += '<div class="dua" style="margin-top:'+(ru?'14':'4')+'px">' +
+          '<div class="baris" data-f="rutJam'+ru+'"><label for="rutJam'+ru+'">Jam '+(ru+1)+'</label>' +
+          '<input id="rutJam'+ru+'" type="time"><p class="galat">Jamnya belum diisi.</p></div>' +
+          '<div class="baris" data-f="rutKeg'+ru+'"><label for="rutKeg'+ru+'">Lagi ngapain</label>' +
+          '<input id="rutKeg'+ru+'" type="text" maxlength="50" placeholder="'+contohRut[ru][1]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Kegiatannya belum diisi.</p></div></div>';
+      }
+      html += '<h2 style="margin-top:28px"><span class="n">5</span> Isi paket kiriman</h2>' +
+        '<p class="jelas">Paket menyeberang dari kotamu ke kotanya, dibuka tiga lapis. Foto ketiga ikut terselip di lapis terakhir.</p>';
+      var contohOleh = ["Gantungan kunci dari kota ini","Teh yang kamu suka","Satu peluk yang ketunda"];
+      for(var ol=0;ol<3;ol++){
+        html += '<div class="baris" data-f="oleh'+ol+'"><label for="oleh'+ol+'">Lapis '+(ol+1)+'</label>' +
+          '<input id="oleh'+ol+'" type="text" maxlength="50" placeholder="'+contohOleh[ol]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Lapis '+(ol+1)+' belum diisi.</p></div>';
+      }
+      html += '<h2 style="margin-top:28px"><span class="n">5</span> Penutup</h2>' +
+        '<div class="baris" data-f="tglKetemu"><label for="tglKetemu">Tanggal kalian ketemu lagi (opsional)</label>' +
+        '<input id="tglKetemu" type="date"><p class="jelas" style="margin-top:4px">Kalau diisi, muncul hitung mundurnya di akhir.</p></div>' +
+        '<div class="baris" data-f="penutup"><label for="penutup">Kalimat terakhir (opsional)</label>' +
+        '<textarea id="penutup" maxlength="120" style="min-height:70px" placeholder="Jarak ini sementara. Aku di sini, nungguin."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "graduation-benih"){
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
@@ -885,6 +905,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       }
       pasangHitung("airPesan", BATAS.airPesan);
       pasangHitung("rahasia", BATAS.rahasia);
+    } else if(tema === "zona-waktu"){
+      for(var hz=0;hz<3;hz++){ pasangHitung("rutKeg"+hz, BATAS.kegiatanRut); pasangHitung("oleh"+hz, BATAS.oleh); }
+      pasangHitung("penutup", BATAS.penutup);
     } else if(tema === "rekonstruksi"){
       for(var hj=0;hj<4;hj++){ pasangHitung("kjTempat"+hj, BATAS.tempatKj); pasangHitung("kjCerita"+hj, BATAS.ceritaKj); }
       pasangHitung("penutup", BATAS.penutup);
@@ -933,6 +956,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           };
         }),
         harapan: [0,1,2].map(function(h){ return $("harapan"+h).value; })
+      };
+    }
+    if(TEMA === "zona-waktu"){
+      return {
+        rutinitas: [0,1,2].map(function(i){ return { jam: $("rutJam"+i).value, kegiatan: $("rutKeg"+i).value }; }),
+        oleh: [0,1,2].map(function(i){ return $("oleh"+i).value; }),
+        tanggalKetemu: $("tglKetemu").value,
+        penutup: $("penutup").value
       };
     }
     if(TEMA === "rekonstruksi"){
@@ -1157,6 +1188,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tandai("harapan"+h, kosongH);
         if(kosongH) kurang.push("harapan"+h);
       });
+    } else if(TEMA === "zona-waktu"){
+      [0,1,2].forEach(function(i){
+        ["rutJam","rutKeg","oleh"].forEach(function(nm){
+          var kosong = !$(nm+i).value.trim();
+          tandai(nm+i, kosong);
+          if(kosong) kurang.push(nm+i);
+        });
+      });
     } else if(TEMA === "rekonstruksi"){
       [0,1,2,3].forEach(function(i){
         ["kjTempat","kjJam","kjCerita"].forEach(function(nm){
@@ -1364,6 +1403,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
             if(r) r.checked = true;
           });
           (i.harapan||[]).forEach(function(v,n){ if($("harapan"+n)) $("harapan"+n).value = v || ""; });
+        } else if(TEMA === "zona-waktu"){
+          (i.rutinitas||[]).forEach(function(r,n){ if(!$("rutJam"+n)) return; $("rutJam"+n).value = (r && r.jam) || ""; $("rutKeg"+n).value = (r && r.kegiatan) || ""; });
+          (i.oleh||[]).forEach(function(v,n){ if($("oleh"+n)) $("oleh"+n).value = v || ""; });
+          if($("tglKetemu")) $("tglKetemu").value = i.tanggalKetemu || "";
+          /* pesanan dari versi lama: pesan rahasianya jadi kalimat penutup */
+          if($("penutup")) $("penutup").value = i.penutup || i.rahasia || "";
         } else if(TEMA === "rekonstruksi"){
           if($("karA")) $("karA").value = i.karakterPenerima === "laki" ? "laki" : "perempuan";
           if($("karB")) $("karB").value = i.karakterPengirim === "perempuan" ? "perempuan" : "laki";
