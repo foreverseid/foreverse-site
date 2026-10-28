@@ -37,6 +37,7 @@ const BATAS = {
   kupon: 50, harapan: 90, kuisTanya: 70, kuisPilihan: 30,
   dosis: 90, aturanDosis: 40, enakan: 60, airPesan: 80,
   kegiatan: 24, alasan: 90, titikTemu: 40, catatanTunda: 90,
+  kebiasaan: 90, kangen: 70, barang: 24, penutup: 120,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -71,7 +72,8 @@ const TEMA_SKEMA = {
   "graduation-benih":  { nfoto: 3, momen: "graduation" },
   "confess-kunang":    { nfoto: 3, momen: "confess" },
   "getwell-365":       { nfoto: 3, momen: "getwell" },
-  "pasar-malam":       { nfoto: 3, momen: "askout" }
+  "pasar-malam":       { nfoto: 3, momen: "askout" },
+  "lewat-duluan":      { nfoto: 3, momen: "lovenote" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -428,6 +430,10 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.titikTemu = teks(p.titikTemu, BATAS.titikTemu);
     if (!isi.tanggalAjak) throw new Error("Tanggal ajakannya belum diisi.");
     if (!isi.jamAjak) throw new Error("Jam ajakannya belum diisi.");
+  } else if (skema.momen === "lovenote") {
+    /* Love Note: tidak butuh tanggal atau angka apa pun — surat sayang
+       yang bisa dikirim hari apa saja. Hanya nama, foto, surat, dan isian
+       khas temanya. */
   } else if (skema.momen === "confess") {
     /* Confess sengaja TIDAK punya isian dasar tambahan — tidak ada
        tanggal atau angka berulang yang masuk akal untuk satu
@@ -492,6 +498,19 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.alasan = [0, 1, 2].map(i => teks((p.alasan || [])[i], BATAS.alasan));
     if (isi.alasan.some(a => !a)) throw new Error("Ketiga alasannya belum diisi.");
     isi.catatanTunda = teks(p.catatanTunda, BATAS.catatanTunda);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "lewat-duluan") {
+    /* "Dia Lewat Sini Duluan": `kebiasaan` = tulisan di rak mug dapur,
+       `kangen` = tiga kertas di tas yang menyisakan kursi halte,
+       `barang` = tiga barang kesukaan penerima di rak minimarket (game),
+       `penutup` = kalimat terakhir saat lampu jalan menyala. */
+    isi.kebiasaan = teks(p.kebiasaan, BATAS.kebiasaan);
+    if (!isi.kebiasaan) throw new Error("Kebiasaan kecilnya belum diisi.");
+    isi.kangen = [0, 1, 2].map(i => teks((p.kangen || [])[i], BATAS.kangen));
+    if (isi.kangen.some(k => !k)) throw new Error("Ketiga hal yang kamu kangenin belum diisi.");
+    isi.barang = [0, 1, 2].map(i => teks((p.barang || [])[i], BATAS.barang));
+    if (isi.barang.some(b => !b)) throw new Error("Ketiga barang kesukaannya belum diisi.");
+    isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
     /* bait, peta-perjalanan, zona-waktu, graduation-benih &
