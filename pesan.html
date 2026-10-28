@@ -363,7 +363,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 dosis:90, aturanDosis:40, enakan:60, airPesan:80,
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
-                catatan:90, pesanan:40, tahu:90,
+                catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50,
                 tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
@@ -876,10 +876,21 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<textarea id="catatanTunda" maxlength="90" style="min-height:70px" placeholder="Nggak apa-apa. Aku nunggu sampai kamu siap."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "confess-kunang"){
-      html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
-        '<p class="jelas">Muncul di akhir, setelah toplesnya dilontarkan ke langit — kalimat terakhir dari pengakuannya.</p>' +
-        '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
-        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Aku cuma butuh satu kesempatan buat bilang ini langsung."></textarea>' +
+      var contohKn = ["Caramu bilang “bentar ya” padahal udah siap dari tadi", "Kamu selalu nyisain satu gorengan buat orang lain", "Ketawamu yang kedengeran sampai ujung lorong"];
+      html = '<h2><span class="n">5</span> Tiga kunang-kunang</h2>' +
+        '<p class="jelas">Tiap kunang-kunang yang dia tampung di toples membawa satu hal kecil yang kamu simpan tentang dia.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="kunang'+i+'"><label for="kunang'+i+'">Kunang-kunang '+(i+1)+'</label>' +
+          '<input id="kunang'+i+'" type="text" maxlength="70" placeholder="'+contohKn[i]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Hal kecil ini belum diisi.</p></div>'; }).join("") +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Sejak kapan</h2>' +
+        '<p class="jelas">Tersusun pelan-pelan setiap dia menemukan pasangan cahaya yang sama, lalu muncul lagi di pengakuannya.</p>' +
+        '<div class="baris" data-f="sejak"><label for="sejak">Aku suka kamu sejak…</label>' +
+        '<input id="sejak" type="text" maxlength="50" placeholder="kamu minjemin payung di halte itu">' +
+        '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Bagian ini belum diisi.</p></div>' +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Kalimat terakhir</h2>' +
+        '<p class="jelas">Muncul di penutup, di atas tombol balasan WhatsApp. Boleh dikosongkan.</p>' +
+        '<div class="baris" data-f="rahasia"><label for="rahasia">Kalimatnya (opsional)</label>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Aku nggak butuh jawaban sekarang."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
@@ -911,6 +922,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     } else if(tema === "rekonstruksi"){
       for(var hj=0;hj<4;hj++){ pasangHitung("kjTempat"+hj, BATAS.tempatKj); pasangHitung("kjCerita"+hj, BATAS.ceritaKj); }
       pasangHitung("penutup", BATAS.penutup);
+    } else if(tema === "confess-kunang"){
+      for(var kn=0;kn<3;kn++) pasangHitung("kunang"+kn, BATAS.kunangKu);
+      pasangHitung("sejak", BATAS.sejak);
+      pasangHitung("rahasia", BATAS.rahasia);
     } else if(tema === "kasus-pengirim"){
       pasangHitung("catatan", BATAS.catatan);
       pasangHitung("pesanan", BATAS.pesanan);
@@ -975,6 +990,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         karakterPengirim: $("karB").value || "laki",
         kejadian: [0,1,2,3].map(function(i){ return { tempat: $("kjTempat"+i).value, jam: $("kjJam"+i).value, cerita: $("kjCerita"+i).value }; }),
         penutup: $("penutup").value
+      };
+    }
+    if(TEMA === "confess-kunang"){
+      return {
+        kunang: [0,1,2].map(function(i){ return $("kunang"+i).value; }),
+        sejak: $("sejak").value,
+        rahasia: $("rahasia").value
       };
     }
     if(TEMA === "kasus-pengirim"){
@@ -1207,6 +1229,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           if(kosong) kurang.push(nm+i);
         });
       });
+    } else if(TEMA === "confess-kunang"){
+      ["kunang0","kunang1","kunang2","sejak"].forEach(function(nm){
+        var kosong = !$(nm).value.trim();
+        tandai(nm, kosong);
+        if(kosong) kurang.push(nm);
+      });
     } else if(TEMA === "kasus-pengirim"){
       ["catatan","pesanan","tahu"].forEach(function(nm){
         var kosong = !$(nm).value.trim();
@@ -1420,6 +1448,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
             $("kjTempat"+n).value = (k && k.tempat) || ""; $("kjJam"+n).value = (k && k.jam) || ""; $("kjCerita"+n).value = (k && k.cerita) || "";
           });
           if($("penutup")) $("penutup").value = i.penutup || "";
+        } else if(TEMA === "confess-kunang"){
+          (i.kunang||[]).forEach(function(v,n){ if($("kunang"+n)) $("kunang"+n).value = v || ""; });
+          if($("sejak")) $("sejak").value = i.sejak || "";
+          if($("rahasia")) $("rahasia").value = i.rahasia || "";
         } else if(TEMA === "kasus-pengirim"){
           if($("karakter")) $("karakter").value = i.karakter === "laki" ? "laki" : "perempuan";
           ["catatan","pesanan","tahu","penutup"].forEach(function(nm){ if($(nm)) $(nm).value = i[nm] || ""; });

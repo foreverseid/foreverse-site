@@ -39,6 +39,7 @@ const BATAS = {
   kegiatan: 24, alasan: 90, titikTemu: 40, catatanTunda: 90,
   kebiasaan: 90, kangen: 70, barang: 24, penutup: 120,
   catatan: 90, pesanan: 40, tahu: 90,
+  kunangKu: 70, sejak: 50,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
@@ -548,6 +549,17 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     });
     isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "confess-kunang") {
+    /* "Toples Kunang-Kunang": `kunang` = tiga hal kecil yang pengirim
+       simpan tentang penerima, satu per kunang-kunang yang ditampung
+       (game 1); `sejak` = sejak kapan suka, tersusun dari pasangan nyala
+       (game 2); `rahasia` = kalimat penutup, opsional. */
+    isi.kunang = [0, 1, 2].map(i => teks((p.kunang || [])[i], BATAS.kunangKu));
+    if (isi.kunang.some(k => !k)) throw new Error("Ketiga hal kecil untuk kunang-kunangnya belum diisi.");
+    isi.sejak = teks(p.sejak, BATAS.sejak);
+    if (!isi.sejak) throw new Error("Sejak kapan kamu suka dia belum diisi.");
+    isi.rahasia = teks(p.rahasia, BATAS.rahasia);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "kasus-pengirim") {
     /* "Kasus Pengirim Tanpa Nama": `catatan` = kertas tanpa nama di meja
        langganan (bukti 1), `pesanan` = kebiasaan pesanan si pengirim yang
@@ -579,11 +591,8 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
-    /* bait, peta-perjalanan, zona-waktu, graduation-benih &
-       confess-kunang: satu pesan rahasia/penutup, diungkap di balik
-       lapisan interaktif tema masing-masing (tinta rahasia / debu di
-       kompas / sinyal telepon / buah yang dipetik / toples yang
-       dilepas ke langit). */
+    /* bait, peta-perjalanan & graduation-benih: satu pesan rahasia,
+       diungkap di balik lapisan interaktif tema masing-masing. */
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   }

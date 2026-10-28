@@ -83,6 +83,8 @@ function isiDrafTema(tema) {
     delete d.isi.tanggalLahir;
     delete d.isi.sembunyikanUmur;
     d.isi.rahasia = "Aku cuma butuh satu kesempatan buat bilang ini langsung.";
+    d.isi.kunang = ["Caramu bilang bentar ya", "Satu gorengan yang disisain", "Ketawamu di ujung lorong"];
+    d.isi.sejak = "kamu minjemin payung di halte";
   } else if (tema === "getwell-365") {
     d.momen = "getwell";
     delete d.isi.ucapan;
@@ -1103,6 +1105,24 @@ await uji("confess-kunang · momen confess tidak punya isian dasar tambahan — 
   harus(!("jenjang" in isi) && !("tanggalWisuda" in isi), "isian graduation tidak boleh ikut");
   harus(!("sembunyikanTahun" in isi), "sembunyikanTahun (momen lain) tidak boleh ikut di confess");
 });
+
+await uji("confess-kunang · tiga kunang-kunang & 'sejak' tersimpan persis", async () => {
+  const L = await buatLingkungan();
+  const j = await draf(L, isiDrafTema("confess-kunang"));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  const i = JSON.parse(b.isi);
+  sama(i.kunang[1], "Satu gorengan yang disisain", "kunang 2");
+  sama(i.sejak, "kamu minjemin payung di halte", "sejak");
+});
+
+for (const [kunci, ubah] of [["kunang", d => { d.isi.kunang[2] = ""; }], ["sejak", d => { d.isi.sejak = " "; }]]) {
+  await uji("confess-kunang · " + kunci + " kosong ditolak", async () => {
+    const L = await buatLingkungan();
+    const d = isiDrafTema("confess-kunang"); ubah(d);
+    const r = await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) });
+    sama(r.status, 400, "status");
+  });
+}
 
 await uji("confess-kunang · pesan rahasia boleh kosong (opsional, sama seperti tema lain)", async () => {
   const L = await buatLingkungan();
