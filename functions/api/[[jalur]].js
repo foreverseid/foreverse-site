@@ -38,12 +38,15 @@ const BATAS = {
   dosis: 90, aturanDosis: 40, enakan: 60, airPesan: 80,
   kegiatan: 24, alasan: 90, titikTemu: 40, catatanTunda: 90,
   kebiasaan: 90, kangen: 70, barang: 24, penutup: 120,
+  catatan: 90, pesanan: 40, tahu: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
 const UCAPAN_SAH = ["selamat", "barakallah", "happy"];
 const JENIS_HARI_SAH = ["pacaran", "tunangan", "menikah"];
 const JENJANG_SAH = ["sma", "d3", "s1", "s2", "s3"];
+/* Tampilan tokoh yang mewakili penerima di tema dunia-dijalani. */
+const KARAKTER_SAH = ["perempuan", "laki"];
 
 /* Kota yang bisa dipilih untuk momen LDR (tema Zona Waktu). Zona IANA
    dipakai di mesin tema untuk menghitung jam & selisihnya secara hidup
@@ -73,7 +76,8 @@ const TEMA_SKEMA = {
   "confess-kunang":    { nfoto: 3, momen: "confess" },
   "getwell-365":       { nfoto: 3, momen: "getwell" },
   "pasar-malam":       { nfoto: 3, momen: "askout" },
-  "lewat-duluan":      { nfoto: 3, momen: "lovenote" }
+  "lewat-duluan":      { nfoto: 3, momen: "lovenote" },
+  "kasus-pengirim":    { nfoto: 3, momen: "confess" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -498,6 +502,23 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.alasan = [0, 1, 2].map(i => teks((p.alasan || [])[i], BATAS.alasan));
     if (isi.alasan.some(a => !a)) throw new Error("Ketiga alasannya belum diisi.");
     isi.catatanTunda = teks(p.catatanTunda, BATAS.catatanTunda);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "kasus-pengirim") {
+    /* "Kasus Pengirim Tanpa Nama": `catatan` = kertas tanpa nama di meja
+       langganan (bukti 1), `pesanan` = kebiasaan pesanan si pengirim yang
+       diceritakan barista (bukti 2), `tahu` = tulisan di balik foto, satu
+       hal yang cuma pengirim tahu tentang penerima (bukti penentu).
+       `karakter` = tampilan detektifnya; di luar daftar jatuh ke
+       perempuan. Inisial di kertas dihitung mesin tema dari nama
+       pengirim, jadi tidak perlu diisi. */
+    isi.karakter = KARAKTER_SAH.includes(p.karakter) ? p.karakter : "perempuan";
+    isi.catatan = teks(p.catatan, BATAS.catatan);
+    if (!isi.catatan) throw new Error("Isi kertas tanpa namanya belum diisi.");
+    isi.pesanan = teks(p.pesanan, BATAS.pesanan);
+    if (!isi.pesanan) throw new Error("Pesanan langgananmu belum diisi.");
+    isi.tahu = teks(p.tahu, BATAS.tahu);
+    if (!isi.tahu) throw new Error("Hal kecil yang cuma kamu tahu belum diisi.");
+    isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "lewat-duluan") {
     /* "Dia Lewat Sini Duluan": `kebiasaan` = tulisan di rak mug dapur,
