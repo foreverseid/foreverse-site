@@ -636,6 +636,38 @@ for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.htm
   });
 }
 
+/* Penjaga untuk tiga bug formulir yang lolos sampai live (29-10-2026):
+   (1) penghitung karakter yang melempar galat di kolom tanpa tempat angka
+       mematikan seluruh formulir Langit Harapan saat dibuka;
+   (2)(3) tautan edit LDR & Get Well tidak mengisi ulang isian dasarnya,
+       dan 36,5 tidak mengisi ulang isian khasnya, sehingga pembeli tidak
+       bisa menyimpan perubahan. */
+await uji("pesan.html · penghitung karakter tidak boleh melempar galat di kolom tanpa tempat angka", async () => {
+  const t = await readFile("./pesan.html", "utf8");
+  const fn = t.slice(t.indexOf("function pasangHitung"), t.indexOf("function pasangHitung") + 700);
+  harus(/if\(!tampil\) return;/.test(fn), "pasangHitung harus berhenti diam-diam kalau .angka tidak ada");
+});
+
+await uji("pesan.html · mode edit mengisi ulang isian dasar SETIAP momen yang punya isian dasar", async () => {
+  const t = await readFile("./pesan.html", "utf8");
+  const edit = t.slice(t.indexOf("siapkanTema(h.j.tema"), t.indexOf("var lagu = i.lagu"));
+  const momen = [...new Set([...t.matchAll(/momen:"([a-z]+)"/g)].map(m => m[1]))];
+  const tanpaIsianDasar = ["birthday", "confess", "lovenote"];   // birthday = cabang bawaan
+  for (const m of momen) {
+    if (tanpaIsianDasar.includes(m)) continue;
+    harus(edit.includes('MOMEN_GRUP === "' + m + '"'), "momen " + m + " tidak punya cabang isi-ulang di mode edit");
+  }
+});
+
+await uji("pesan.html · mode edit mengisi ulang isian khas setiap tema yang punya isian khas sendiri", async () => {
+  const t = await readFile("./pesan.html", "utf8");
+  const edit = t.slice(t.indexOf("siapkanTema(h.j.tema"), t.indexOf("var lagu = i.lagu"));
+  const khusus = t.slice(t.indexOf("function isiKhusus"), t.indexOf("function fotoRange"));
+  const tema = [...khusus.matchAll(/TEMA === "([a-z0-9-]+)"/g)].map(m => m[1]);
+  harus(tema.length >= 7, "daftar tema di isiKhusus() tidak terbaca (" + tema.length + ")");
+  for (const x of tema) harus(edit.includes('TEMA === "' + x + '"'), "tema " + x + " tidak punya cabang isi-ulang di mode edit");
+});
+
 await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
   const t = await readFile("./pesan.html", "utf8");
   for (const hilang of ["muatSnap", "window.snap", "client_key", "bayar.token"])

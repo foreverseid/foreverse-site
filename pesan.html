@@ -536,7 +536,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
      di HTML. */
   function pasangHitung(id, maks){
     var el = $(id); if(!el) return;
-    var tampil = el.closest(".baris").querySelector(".angka");
+    /* Kolom tanpa tempat angka (mis. pilihan jawaban kuis Langit Harapan)
+       dilewati. Dulu ini melempar galat saat halaman dibuka, dan karena
+       siapkanTema() jalan di level atas, SELURUH sisa skrip formulir —
+       termasuk tombol bayar — tidak pernah terpasang. Batasnya tetap
+       dijaga oleh atribut maxlength. */
+    var baris = el.closest(".baris"), tampil = baris && baris.querySelector(".angka");
+    if(!tampil) return;
     function segar(){
       var n = el.value.length;
       tampil.textContent = n + " / " + maks;
@@ -1331,6 +1337,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           $("jenjang").value = i.jenjang || "s1";
           $("wisuda").value = i.tanggalWisuda || "";
           $("sembunyikanTahun").checked = !!i.sembunyikanTahun;
+        } else if(MOMEN_GRUP === "ldr"){
+          $("kotaPengirim").value = i.kotaPengirim || "";
+          $("kotaPenerima").value = i.kotaPenerima || "";
+        } else if(MOMEN_GRUP === "getwell"){
+          $("sakit").value = i.tanggalSakit || "";
+          $("sembunyikanHari").checked = !!i.sembunyikanHari;
         } else if(MOMEN_GRUP === "askout"){
           $("tglAjak").value = i.tanggalAjak || "";
           $("jamAjak").value = i.jamAjak || "";
@@ -1368,6 +1380,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           (i.kangen||[]).forEach(function(v,n){ if($("kangen"+n)) $("kangen"+n).value = v || ""; });
           (i.barang||[]).forEach(function(v,n){ if($("barang"+n)) $("barang"+n).value = v || ""; });
           if($("penutup")) $("penutup").value = i.penutup || "";
+        } else if(TEMA === "getwell-365"){
+          (i.dosis||[]).forEach(function(d,n){
+            if(!$("dosisT"+n)) return;
+            $("dosisT"+n).value = (d && d.teks) || ""; $("dosisA"+n).value = (d && d.aturan) || "";
+          });
+          (i.enakan||[]).forEach(function(v,n){ if($("enakan"+n)) $("enakan"+n).value = v || ""; });
+          if($("airPesan")) $("airPesan").value = i.airPesan || "";
+          if($("rahasia")) $("rahasia").value = i.rahasia || "";
         } else if(TEMA === "pasar-malam"){
           (i.kegiatan||[]).forEach(function(v,n){ if($("kegiatan"+n)) $("kegiatan"+n).value = v || ""; });
           (i.alasan||[]).forEach(function(v,n){ if($("alasan"+n)) $("alasan"+n).value = v || ""; });
