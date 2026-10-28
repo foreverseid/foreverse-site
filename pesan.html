@@ -939,7 +939,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     renderBlokKhusus(TEMA);
     $("labelSurat").textContent = "Surat digital — " + TEMA_INFO[TEMA].nama;
   }
-  if(!MODE_EDIT) siapkanTema(TEMA);
+  if(!MODE_EDIT){
+    siapkanTema(TEMA);
+    try{ navigator.sendBeacon("/api/catat", new Blob([JSON.stringify({tema:TEMA,jenis:"form"})],{type:"application/json"})); }catch(e){}
+  }
 
   /* ══ isi khusus tema, dipakai pratinjau & pengiriman ══ */
   function isiKhusus(){

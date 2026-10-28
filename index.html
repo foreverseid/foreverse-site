@@ -669,6 +669,10 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   var s=M.map(function(m){ return "<span>"+m.emoji+" "+esc(m.nama)+"</span>"; }).join("");
   $("strip").innerHTML=s+s;
 
+  /* hitungan minat tema untuk dasbor — hanya nama tema, tanpa data pengunjung */
+  function catat(tema,jenis){
+    try{ navigator.sendBeacon("/api/catat", new Blob([JSON.stringify({tema:tema,jenis:jenis})],{type:"application/json"})); }catch(e){}
+  }
   /* contoh */
   var current=null, currentMomen=M[0]?M[0].nama:"";
   function show(k,momen){
@@ -704,7 +708,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
         esc(wa("Halo Foreverse, saya punya ide tema untuk momen "+m.nama+"."))+'">Kirim ide</a></div></div></article>';
       cards.querySelectorAll("[data-try]").forEach(function(b){
-        b.addEventListener("click",function(){ show(b.getAttribute("data-try"),m.nama); $("contoh").scrollIntoView({behavior:"smooth",block:"start"}); });
+        b.addEventListener("click",function(){ catat(b.getAttribute("data-try"),"demo"); show(b.getAttribute("data-try"),m.nama); $("contoh").scrollIntoView({behavior:"smooth",block:"start"}); });
       });
       show(m.tema[0],m.nama);
     } else {

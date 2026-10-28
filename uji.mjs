@@ -563,6 +563,22 @@ await uji("daftar pesanan tampil dengan status yang benar", async () => {
   harus(!("isi" in baris), "isi mentah tidak boleh ikut");
 });
 
+await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", async () => {
+  const L = await buatLingkungan();
+  const catat = b => L.panggil("/api/catat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(b) });
+  for (let i = 0; i < 3; i++) sama((await catat({ tema: "pasar-malam", jenis: "demo" })).status, 200, "catat demo");
+  await catat({ tema: "pasar-malam", jenis: "form" });
+  sama((await catat({ tema: "tidak-ada", jenis: "demo" })).status, 400, "tema asing ditolak");
+  sama((await catat({ tema: "bait", jenis: "klik" })).status, 400, "jenis asing ditolak");
+  const p = await buatPesanan(L);
+  await L.notifikasi(notifSukses(p.faktur)); await L.tunggu();
+  const { j } = await dev(L, { aksi: "daftar" });
+  sama(j.minat["pasar-malam"].demo, 3, "dibuka");
+  sama(j.minat["pasar-malam"].form, 1, "mulai isi");
+  sama(j.minat["bait"].lunas, 1, "terbayar");
+  sama(Object.keys(j.minat).length, 12, "semua tema terdaftar");
+});
+
 await uji("password salah ditolak", async () => {
   const L = await buatLingkungan();
   const r = await L.panggil("/api/developer", {

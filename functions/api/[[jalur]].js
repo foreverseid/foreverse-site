@@ -277,6 +277,10 @@ async function siapkan(db) {
       aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
+    /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
+       beranda, "form" = formulir pesan untuk tema itu dibuka */
+    db.prepare(`CREATE TABLE IF NOT EXISTS kunjungan(
+      hari TEXT, tema TEXT, jenis TEXT, n INTEGER DEFAULT 0, PRIMARY KEY(hari,tema,jenis))`),
     db.prepare(`CREATE TABLE IF NOT EXISTS foto(
       kunci TEXT PRIMARY KEY, kode TEXT, mime TEXT, isi BLOB, dibuat INTEGER)`)
   ]);
@@ -699,6 +703,16 @@ export async function onRequest(ctx) {
     let badan = {};
     if (mentah) { try { badan = JSON.parse(mentah) || {}; } catch (_) { badan = {}; } }
 
+    /* ── catat kunjungan tema (tanpa data pribadi apa pun) ───── */
+    if (jalur === "catat" && request.method === "POST") {
+      const tema = teks(badan.tema, 40), jenis = teks(badan.jenis, 10);
+      if (!TEMA_SKEMA[tema] || !["demo", "form"].includes(jenis)) return salah("Catatan tidak sah.");
+      const hari = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);   // tanggal WIB
+      await db.prepare(`INSERT INTO kunjungan(hari,tema,jenis,n) VALUES(?,?,?,1)
+        ON CONFLICT(hari,tema,jenis) DO UPDATE SET n=n+1`).bind(hari, tema, jenis).run();
+      return jwb({ ok: true });
+    }
+
     /* ── buat atau perbarui draf ─────────────────────────────── */
     if (jalur === "draf" && request.method === "POST") {
       ctx.waitUntil(bersihkan(db, env));
@@ -937,7 +951,16 @@ export async function onRequest(ctx) {
         const hit = await db.prepare(
           `SELECT COUNT(*) n, COALESCE(SUM(jumlah),0) rp FROM pesanan WHERE status='lunas'`).first();
         const semua = await db.prepare(`SELECT COUNT(*) n FROM pesanan`).first();
-        return jwb({ ok: true, baris, lunas: hit.n, pendapatan: hit.rp, total: semua.n, sekarang: Date.now() });
+        /* minat per tema, 30 hari terakhir: dibuka, mulai isi formulir, terbayar */
+        const sejak = new Date(Date.now() + 7 * 3600000 - 29 * 86400000).toISOString().slice(0, 10);
+        const kj = await db.prepare(`SELECT tema, jenis, SUM(n) n FROM kunjungan WHERE hari >= ? GROUP BY tema, jenis`).bind(sejak).all();
+        const ls = await db.prepare(`SELECT tema, COUNT(*) n FROM pesanan WHERE status='lunas' AND COALESCE(dibayar,dibuat) >= ? GROUP BY tema`)
+          .bind(Date.now() - 30 * 86400000).all();
+        const minat = {};
+        for (const t of Object.keys(TEMA_SKEMA)) minat[t] = { demo: 0, form: 0, lunas: 0 };
+        for (const r of (kj.results || [])) if (minat[r.tema]) minat[r.tema][r.jenis] = r.n;
+        for (const r of (ls.results || [])) if (minat[r.tema || "bait"]) minat[r.tema || "bait"].lunas = r.n;
+        return jwb({ ok: true, baris, lunas: hit.n, pendapatan: hit.rp, total: semua.n, minat, sekarang: Date.now() });
       }
 
       if (aksi === "email") return jwb(await kirimEmailKode(env, db, teks(badan.kode, 12), asal));

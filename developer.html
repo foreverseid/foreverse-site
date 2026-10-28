@@ -184,6 +184,11 @@ section{scroll-margin-top:16px;margin-bottom:26px}
 #kiat em{font-style:normal;color:rgba(255,255,255,.66)}
 
 /* ══ batang mendatar (corong & rincian) ══ */
+.minat{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:8px}
+.minat th{text-align:right;font-weight:600;color:var(--ink-faint);font-size:.74rem;padding:6px 8px;border-bottom:1px solid var(--cream-lift)}
+.minat th:first-child,.minat td:first-child{text-align:left}
+.minat td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--cream-lift);font-variant-numeric:tabular-nums}
+.minat td em{font-style:normal;color:var(--ink-faint);font-size:.74rem;margin-left:4px}
 .rinci{display:flex;flex-direction:column;gap:11px;margin-top:2px}
 .rinci .baris{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:baseline}
 .rinci .nama{font-size:.82rem;color:var(--ink-soft)}
@@ -378,6 +383,15 @@ a.tautan:hover{text-decoration:underline}
       <div class="petak p4" id="ubin"></div>
 
       <div class="judulbagian" style="margin-top:24px">
+        <h2>Minat per tema</h2>
+        <span>30 hari terakhir</span>
+      </div>
+      <div class="kartu">
+        <p class="ket">Dibuka = tombol "lihat contoh" diketuk di beranda. Mulai isi = formulir pesan dibuka. Terbayar = surat lunas.</p>
+        <div class="gulung"><table class="minat" id="minat"></table></div>
+      </div>
+
+      <div class="judulbagian" style="margin-top:24px">
         <h2>Perlu tindakan</h2>
         <span>hal yang menunggu dikerjakan</span>
       </div>
@@ -561,6 +575,20 @@ a.tautan:hover{text-decoration:underline}
            '<path d="M8 2.8 14 13H2z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M8 6.6v2.6M8 11h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>');
 
     void baru;
+    gambarMinat(d.minat || {});
+  }
+  var NAMA_TEMA = { "bait":"Bait", "kado-riang":"Kado Riang", "langit-harapan":"Langit Harapan",
+    "peta-perjalanan":"Peta Perjalanan", "rekonstruksi":"Rekonstruksi Hari Pertama", "zona-waktu":"Dua Jendela",
+    "graduation-benih":"Benih & Pohon", "confess-kunang":"Toples Kunang-Kunang", "kasus-pengirim":"Kasus Pengirim",
+    "getwell-365":"36,5", "pasar-malam":"Pasar Malam", "lewat-duluan":"Dia Lewat Sini Duluan" };
+  function gambarMinat(m){
+    var k = Object.keys(m).sort(function(a,b){ return (m[b].demo+m[b].form*3+m[b].lunas*10) - (m[a].demo+m[a].form*3+m[a].lunas*10); });
+    function pr(a,b){ return b ? '<em>' + Math.round(a/b*100) + '%</em>' : ''; }
+    $("minat").innerHTML = '<tr><th>Tema</th><th>Dibuka</th><th>Mulai isi</th><th>Terbayar</th></tr>' +
+      (k.length ? k.map(function(t){ var x=m[t];
+        return '<tr><td>' + esc(NAMA_TEMA[t] || t) + '</td><td>' + x.demo + '</td><td>' + x.form + pr(x.form,x.demo) +
+          '</td><td>' + x.lunas + pr(x.lunas,x.form) + '</td></tr>'; }).join("")
+        : '<tr><td colspan="4">Belum ada data.</td></tr>');
   }
   function ubin(sorot, lbl, nilai, kaki, ikon){
     return '<div class="ubin' + (sorot ? " sorot" : "") + '">' +
