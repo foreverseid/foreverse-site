@@ -13,7 +13,7 @@
      selain itu    → file biasa (index.html, gambar, dll)
    ══════════════════════════════════════════════════════════════════ */
 
-import { onRequest as tanganiApi } from "./functions/api/[[jalur]].js";
+import { onRequest as tanganiApi, rawatHarian } from "./functions/api/[[jalur]].js";
 import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
 
 /* Ambil satu halaman statis TANPA membiarkan pengalihan sampai ke browser.
@@ -76,6 +76,11 @@ function sisipDibuka(html, kode) {
 export default {
   async fetch(request, env, ctx) {
     return pasangKeamanan(await tangani(request, env, ctx));
+  },
+  /* Cron Trigger harian (wrangler.jsonc → triggers.crons): pengingat masa
+     simpan, penghapusan surat yang masanya habis, dan pembersihan draf. */
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(rawatHarian(env));
   }
 };
 
@@ -121,14 +126,16 @@ async function tangani(request, env, ctx) {
       if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) {
         const kode = p.split("/")[2];
         let baris = null;
-        try { baris = env.DB && await env.DB.prepare("SELECT tema,isi,status,aktif FROM pesanan WHERE kode=?").bind(kode).first(); }
+        try { baris = env.DB && await env.DB.prepare("SELECT tema,isi,status,aktif,simpan_sampai FROM pesanan WHERE kode=?").bind(kode).first(); }
         catch (_) { baris = null; }
 
         if (!baris || baris.status !== "lunas" || !baris.aktif) {
           return new Response(
             "<!doctype html><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\">" +
             "<body style=\"font-family:system-ui;background:#FAF3E8;color:#1B1B2F;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;text-align:center\">" +
-            "<p>Surat ini tidak ditemukan atau belum aktif.</p></body>",
+            "<p>" + (baris && baris.simpan_sampai && baris.simpan_sampai <= Date.now()
+              ? "Masa simpan surat ini sudah habis, jadi isi dan fotonya sudah kami hapus untuk menjaga privasi kalian."
+              : "Surat ini tidak ditemukan atau belum aktif.") + "</p></body>",
             { status: 404, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } }
           );
         }

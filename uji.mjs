@@ -1593,6 +1593,62 @@ await uji("kegagalan tercatat di tab Sistem dan pemilik dikabari maks. sekali pe
   sama(L.catatan.email.filter(e => /kegagalan/.test(e.subject)).length, 1, "email pemilik");
 });
 
+/* ═══════════ masa simpan 6 bulan ═══════════ */
+judul("Masa simpan 6 bulan");
+const { rawatHarian } = await import("./functions/api/[[jalur]].js");
+
+await uji("lunas → simpan_sampai = 6 bulan setelah bayar", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const b = await L.env.DB.prepare("SELECT dibayar,simpan_sampai FROM pesanan WHERE kode=?").bind(p.kode).first();
+  const hari = (b.simpan_sampai - b.dibayar) / 86400000;
+  harus(hari >= 181 && hari <= 184, "selisih hari: " + hari);
+});
+
+await uji("pengingat dikirim sekali, 14 hari sebelum habis", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=? WHERE kode=?").bind(Date.now() + 10 * 86400000, p.kode).run();
+  const awal = L.catatan.email.length;
+  await rawatHarian(L.env); await rawatHarian(L.env);
+  const baru = L.catatan.email.slice(awal);
+  sama(baru.length, 1, "jumlah email pengingat");
+  harus(/disimpan sampai/.test(baru[0].subject), "subjek pengingat");
+  sama((await L.panggil("/s/" + p.kode)).status, 200, "surat masih terbuka");
+});
+
+await uji("belum masuk 14 hari terakhir → tidak ada pengingat", async () => {
+  const L = await buatLingkungan();
+  await lunaskan(L);
+  const awal = L.catatan.email.length;
+  await rawatHarian(L.env);
+  sama(L.catatan.email.length, awal, "email");
+});
+
+await uji("masa habis → isi, kontak, token, foto dihapus; tautan menjelaskan", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=? WHERE kode=?").bind(Date.now() - 1000, p.kode).run();
+  const h = await rawatHarian(L.env);
+  sama(h.dihapus, 1, "dihapus");
+  const b = await L.env.DB.prepare("SELECT isi,email,whatsapp,token,aktif,status,jumlah FROM pesanan WHERE kode=?").bind(p.kode).first();
+  sama(b.isi, "{}", "isi"); sama(b.email, "", "email"); sama(b.whatsapp, "", "wa"); sama(b.token, null, "token"); sama(b.aktif, 0, "aktif");
+  sama(b.status, "lunas", "catatan transaksi tetap"); sama(b.jumlah, 15000, "jumlah tetap");
+  const f = await L.env.DB.prepare("SELECT COUNT(*) n FROM foto WHERE kode=?").bind(p.kode).first();
+  sama(f.n, 0, "foto");
+  const r = await L.panggil("/s/" + p.kode);
+  sama(r.status, 404, "status");
+  harus(/Masa simpan surat ini sudah habis/.test(await r.text()), "pesan masa habis");
+});
+
+await uji("pesanan lama (tanpa simpan_sampai) tidak disentuh", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=NULL WHERE kode=?").bind(p.kode).run();
+  await rawatHarian(L.env);
+  sama((await L.panggil("/s/" + p.kode)).status, 200, "masih terbuka");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

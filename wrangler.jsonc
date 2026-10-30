@@ -16,5 +16,6 @@
   "r2_buckets": [
     { "binding": "FOTO", "bucket_name": "foreverse-foto" }
   ],
+  "triggers": { "crons": ["0 19 * * *"] },
   "observability": { "enabled": true }
 }

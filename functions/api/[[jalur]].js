@@ -24,6 +24,8 @@ const BIAYA_TRANSAKSI = 560;
 const TOTAL_BAYAR = HARGA + BIAYA_TRANSAKSI;   // yang sungguh ditagihkan ke pembeli
 const HARI_EDIT = 3;                 // masa berlaku tautan edit
 const JAM_DRAF = 24;
+const BULAN_SIMPAN = 6;               // surat & foto disimpan sekian bulan sejak dibayar
+const HARI_PENGINGAT = 14;            // email pengingat sekian hari sebelum masa simpan habis
 const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6 huruf tetap berlaku
 /* Batas laju per alamat IP: [maks permintaan, jendela detik].
    Alamat IP tidak disimpan mentah — hanya sidik SHA-256 pendeknya. */
@@ -284,7 +286,7 @@ async function siapkan(db) {
       status TEXT DEFAULT 'draf', order_id TEXT, jumlah INTEGER,
       dibuat INTEGER, dibayar INTEGER, batas_edit INTEGER,
       aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0,
-      dibuka INTEGER, n_buka INTEGER DEFAULT 0)`),
+      dibuka INTEGER, n_buka INTEGER DEFAULT 0, simpan_sampai INTEGER, pengingat INTEGER)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
     /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
@@ -301,7 +303,7 @@ async function siapkan(db) {
       id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`)
   ]);
   /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
-  for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0"]) {
+  for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER"]) {
     try { await db.prepare("ALTER TABLE pesanan ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
   }
   tabelSiap = true;
@@ -715,6 +717,7 @@ function badanEmail(o) {
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah jadi.</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">
       Surat untuk <strong>${esc(o.penerima)}</strong> sudah aktif. Tinggal kirim tautan di bawah ini ke dia.
+      Suratnya bisa dibuka selama ${BULAN_SIMPAN} bulan; kami ingatkan lewat email ${HARI_PENGINGAT} hari sebelum masanya habis.
     </p>
     <a href="${esc(tautan)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
     <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(tautan)}</p>
@@ -797,9 +800,74 @@ async function lunasi(env, db, kode, asal) {
   const b = await db.prepare(`SELECT * FROM pesanan WHERE kode=?`).bind(kode).first();
   if (!b || b.status === "lunas") return;
   const skr = Date.now();
-  await db.prepare(`UPDATE pesanan SET status='lunas', dibayar=?, batas_edit=? WHERE kode=?`)
-    .bind(skr, skr + HARI_EDIT * 86400000, kode).run();
+  await db.prepare(`UPDATE pesanan SET status='lunas', dibayar=?, batas_edit=?, simpan_sampai=? WHERE kode=?`)
+    .bind(skr, skr + HARI_EDIT * 86400000, tambahBulan(skr, BULAN_SIMPAN), kode).run();
   await kirimEmailKode(env, db, kode, asal);
+}
+
+/* ══════════════════ masa simpan ══════════════════ */
+
+function tambahBulan(ms, n) { const d = new Date(ms); d.setUTCMonth(d.getUTCMonth() + n); return d.getTime(); }
+function tglPanjang(ms) {
+  return new Date(ms).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
+}
+
+/* Dijalankan sekali sehari oleh Cron Trigger (lihat worker.js & wrangler.jsonc):
+   1. email pengingat ke pembeli 14 hari sebelum masa simpan habis — sekali saja;
+   2. surat yang masa simpannya habis: foto & lagu dihapus, isi dan kontak dikosongkan,
+      tautan dinonaktifkan. Yang tersisa hanya catatan transaksi (kode, tema, jumlah, tanggal).
+   Pesanan lunas sebelum aturan ini (simpan_sampai kosong) tidak disentuh. */
+export async function rawatHarian(env) {
+  if (!env.DB) return { ok: false };
+  const db = env.DB;
+  await siapkan(db);
+  await bersihkan(db, env);
+  const skr = Date.now();
+  let diingatkan = 0, dihapus = 0;
+
+  const ingat = await db.prepare(`SELECT kode,email,isi,simpan_sampai FROM pesanan
+    WHERE status='lunas' AND aktif=1 AND pengingat IS NULL AND simpan_sampai IS NOT NULL
+      AND simpan_sampai > ? AND simpan_sampai <= ?`).bind(skr, skr + HARI_PENGINGAT * 86400000).all();
+  for (const b of (ingat.results || [])) {
+    if (env.RESEND_API_KEY && b.email) {
+      const isi = JSON.parse(b.isi || "{}");
+      const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+      const r = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+        body: JSON.stringify({
+          from: "Foreverse <" + dari + ">", to: [b.email], reply_to: dari,
+          subject: "Surat untuk " + (isi.penerima || "dia") + " disimpan sampai " + tglPanjang(b.simpan_sampai),
+          html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
+<div style="max-width:520px;margin:0 auto;padding:32px 20px">
+  <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
+    <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Simpan kenangannya, ya.</h1>
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#4E4A5E">
+      Surat untuk <strong>${esc(isi.penerima || "")}</strong> masih bisa dibuka sampai <strong>${esc(tglPanjang(b.simpan_sampai))}</strong>.
+      Setelah itu foto dan isinya kami hapus untuk menjaga privasi kalian.
+    </p>
+    <p style="margin:0 0 18px;font-size:15px;line-height:1.65;color:#4E4A5E">Kalau ada foto atau kalimat yang ingin kamu simpan, buka suratnya dan simpan sekarang.</p>
+    <a href="https://foreverse.id/s/${esc(b.kode)}?pratinjau=1" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
+  </div>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
+</div></body></html>`
+        })
+      }).catch(() => null);
+      if (!r || !r.ok) { await catatKejadian(env, db, "email pengingat gagal", r ? String(r.status) : "jaringan", b.kode); continue; }
+    }
+    await db.prepare(`UPDATE pesanan SET pengingat=? WHERE kode=?`).bind(skr, b.kode).run();
+    diingatkan++;
+  }
+
+  const habis = await db.prepare(`SELECT kode FROM pesanan WHERE status='lunas'
+    AND simpan_sampai IS NOT NULL AND simpan_sampai <= ? AND isi != '{}'`).bind(skr).all();
+  for (const b of (habis.results || [])) {
+    await hapusFoto(env, db, b.kode);
+    await db.prepare(`UPDATE pesanan SET isi='{}', email='', whatsapp='', token=NULL, aktif=0 WHERE kode=?`).bind(b.kode).run();
+    dihapus++;
+  }
+  return { ok: true, diingatkan, dihapus };
 }
 
 /* ══════════════════ router ══════════════════ */
@@ -1148,6 +1216,7 @@ export async function onRequest(ctx) {
           harga: HARGA,
           jam_draf: JAM_DRAF,
           hari_edit: HARI_EDIT,
+          bulan_simpan: BULAN_SIMPAN,
           kejadian: ((await db.prepare(
             `SELECT waktu,jenis,pesan,kode FROM kejadian ORDER BY waktu DESC LIMIT 20`).all()).results || [])
         });

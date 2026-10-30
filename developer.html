@@ -309,10 +309,7 @@ a.tautan:hover{text-decoration:underline}
 <div class="gerbang" id="pMasuk">
   <div class="kotak">
     <div class="merek">
-      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="#3B3168" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M6 22c0 4 4.5 6 10 6s10-2 10-6" stroke="#E8734A" stroke-width="2.6" stroke-linecap="round"/>
-      </svg>
+      <img src="/favicon.svg" width="26" height="26" alt="" aria-hidden="true">
       <b>Foreverse</b>
     </div>
     <h1>Developer Control</h1>
@@ -330,10 +327,7 @@ a.tautan:hover{text-decoration:underline}
 
   <aside class="sisi">
     <div class="merek">
-      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="#3B3168" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M6 22c0 4 4.5 6 10 6s10-2 10-6" stroke="#E8734A" stroke-width="2.6" stroke-linecap="round"/>
-      </svg>
+      <img src="/favicon.svg" width="24" height="24" alt="" aria-hidden="true">
       <b>Foreverse</b>
     </div>
 
@@ -796,6 +790,7 @@ a.tautan:hover{text-decoration:underline}
       sbNetral("Harga satu surat", rp(p.harga)) +
       sbNetral("Masa berlaku tautan edit", (p.hari_edit || 3) + " hari") +
       sbNetral("Draf dihapus setelah", (p.jam_draf || 24) + " jam") +
+      sbNetral("Surat disimpan", (p.bulan_simpan || 6) + " bulan sejak dibayar") +
       sbNetral("Mode pembayaran", p.mode || "—");
 
     var k = p.kejadian || [];
