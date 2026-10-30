@@ -1516,8 +1516,8 @@ await uji("header keamanan ada di halaman, aset, dan API", async () => {
   const p = await lunaskan(L);
   for (const jalan of ["/", "/s/" + p.kode, "/api/status?kode=" + p.kode]) {
     const r = await L.panggil(jalan);
-    sama(r.headers.get("x-frame-options"), "DENY", jalan + " x-frame-options");
-    harus(/frame-ancestors 'none'/.test(r.headers.get("content-security-policy") || ""), jalan + " CSP");
+    sama(r.headers.get("x-frame-options"), "SAMEORIGIN", jalan + " x-frame-options");
+    harus(/frame-ancestors 'self'/.test(r.headers.get("content-security-policy") || ""), jalan + " CSP");
     harus(/max-age=/.test(r.headers.get("strict-transport-security") || ""), jalan + " HSTS");
     sama(r.headers.get("x-content-type-options"), "nosniff", jalan + " nosniff");
   }

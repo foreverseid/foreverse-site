@@ -371,8 +371,12 @@ header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdro
 .pv-grid{display:grid;gap:clamp(32px,5vw,64px);align-items:center;margin-top:36px}
 @media(min-width:900px){.pv-grid{grid-template-columns:350px 1fr}}
 .phone{justify-self:center;width:350px;max-width:100%;background:#1D1B26;border-radius:46px;padding:11px;box-shadow:0 34px 70px rgba(59,49,104,.22)}
-.phone .screen{position:relative;border-radius:36px;overflow:hidden;background:#FAF3E8;aspect-ratio:9/18.5}
-.phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.phone .screen{position:relative;border-radius:36px;overflow:hidden;background:#FAF3E8;aspect-ratio:390/780}
+/* Tema selalu digambar di ukuran HP sungguhan (390×780), lalu diperkecil
+   utuh. Tanpa ini, tema dipaksa tampil di lebar ±250px dan tata letaknya
+   rusak (tulisan bertumpuk), dan tingginya ikut berubah saat bilah alamat
+   browser HP muncul-hilang ketika digulir. */
+.phone iframe{position:absolute;left:0;top:0;width:390px;height:780px;border:0;transform-origin:0 0;transform:scale(var(--skala,1))}
 .pv-info h3{font-size:clamp(26px,3.4vw,34px)}
 .pv-info .lbl{font-size:14px;color:var(--ink-faint);margin-top:16px}
 .flow{list-style:none;padding:0;margin:10px 0 0;counter-reset:f}
@@ -449,7 +453,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 /* ══════════ tampilan HP ══════════
    Patokan: semua bagian penting muat di satu layar HP (±375×700),
    teks tidak melebar, dan deretan kartu digeser ke samping, bukan ditumpuk. */
-.phone{width:min(350px,74vw,calc((100svh - 230px) * 9 / 18.5));min-width:220px}
+.phone{width:min(330px,78vw)}
 @media(max-width:699px){
   body{font-size:15.5px;line-height:1.6}
   section{padding:52px 0}
@@ -900,12 +904,21 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   }
   /* contoh */
   var current=null, currentMomen=M[0]?M[0].nama:"";
+  /* skala iframe mengikuti lebar layar ponsel — hanya dihitung ulang saat
+     LEBAR berubah, bukan saat tinggi berubah karena bilah alamat */
+  var lebarTerakhir=0;
+  function skalaPonsel(){
+    var sc=document.querySelector(".phone .screen"); if(!sc) return;
+    var w=sc.clientWidth; if(!w || w===lebarTerakhir) return;
+    lebarTerakhir=w; sc.style.setProperty("--skala",(w/390).toFixed(4));
+  }
+  addEventListener("resize",function(){ skalaPonsel(); });
   function show(k,momen){
     var t=T[k]; if(!t) return;
     if(momen) currentMomen=momen;
     $("pvOrder").href=orderLink(k,currentMomen);
     if(k===current) return; current=k;
-    $("pvFrame").src=t.file; $("pvFrame").title="Contoh tema "+t.nama;
+    $("pvFrame").src=t.file; $("pvFrame").title="Contoh tema "+t.nama; skalaPonsel();
     $("pvFull").href=t.file; $("pvName").textContent=t.nama;
     $("pvFlow").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
     $("pvPilih").querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.t===k ? "true" : "false"); });
@@ -1013,6 +1026,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     else if(!current && semuaTema.length) show(semuaTema[0],momenDari(semuaTema[0]));
     var aktif=document.querySelector('.nav-m a[aria-current="page"]');
     if(aktif && aktif.scrollIntoView) aktif.scrollIntoView({block:"nearest",inline:"center"});
+    lebarTerakhir=0; skalaPonsel();
   }
   function pergi(url){
     history.pushState(null,"",url);
@@ -1026,8 +1040,10 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     e.preventDefault(); pergi(a.getAttribute("href"));
   });
   addEventListener("popstate",tampilkan);
-  var tuju=ALIAS[location.pathname.replace(/\/+$/,"")]||ALIAS[location.hash];
-  if(tuju) history.replaceState(null,"",tuju);
+  /* alias alamat lama: path lama, atau #bagian di beranda — query (?tema=) ikut dibawa */
+  var jl=location.pathname.replace(/\/+$/,"")||"/";
+  var tuju=ALIAS[jl]||(jl==="/" && ALIAS[location.hash]);
+  if(tuju){ var bag=tuju.split("#"); history.replaceState(null,"",bag[0]+location.search+(bag[1]?"#"+bag[1]:"")); }
   tampilkan();
   if(location.hash){ var el0=document.getElementById(location.hash.slice(1)); if(el0) setTimeout(function(){ el0.scrollIntoView({block:"start"}); },60); }
 

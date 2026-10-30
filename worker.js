@@ -50,10 +50,10 @@ async function ambilHalaman(env, asal, nama, request) {
 const KEAMANAN = {
   "strict-transport-security": "max-age=31536000; includeSubDomains",
   "x-content-type-options": "nosniff",
-  "x-frame-options": "DENY",
+  "x-frame-options": "SAMEORIGIN",
   "referrer-policy": "strict-origin-when-cross-origin",
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
-  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
+  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'"
 };
 function pasangKeamanan(r, jalur) {
   const kepala = new Headers(r.headers);
