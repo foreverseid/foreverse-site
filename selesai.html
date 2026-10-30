@@ -76,8 +76,13 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
 .tbl-garis:hover{background:var(--cream-lift)}
 
 #qr[hidden]{display:none}
-#qr{display:grid;place-items:center;padding:16px;background:#fff;border-radius:12px;border:1px solid var(--stone);margin-top:14px}
-#qr canvas,#qr img{display:block}
+#qr{padding:14px;background:var(--cream);border-radius:14px;border:1px solid var(--stone);margin-top:14px;text-align:center}
+.qr-pilih{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.qr-pilih button{font:inherit;font-size:.86rem;padding:8px 14px;border-radius:999px;border:1.5px solid var(--stone);background:#fff;color:var(--ink);cursor:pointer;min-height:40px}
+.qr-pilih button[aria-pressed="true"]{border-color:var(--violet);background:var(--violet-tint);color:var(--violet);font-weight:600}
+#qrKanvas{width:100%;max-width:300px;height:auto;display:block;margin:0 auto;border-radius:12px}
+#qr .aksi{justify-content:center;margin-top:12px}
+#qrSimpan{min-height:44px}
 .qr-buka{background:none;border:0;font:inherit;font-size:.86rem;color:var(--violet);cursor:pointer;padding:10px 0 0;text-decoration:underline;text-underline-offset:3px}
 
 .tip{margin:0;font-size:.86rem;color:var(--ink-soft);line-height:1.6}
@@ -138,7 +143,16 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
         <a class="tbl tbl-lihat" id="tblLihat" target="_blank" rel="noopener">Lihat dulu suratnya</a>
       </div>
       <button class="qr-buka" id="qrBuka" type="button">Tampilkan kode QR</button>
-      <div id="qr" hidden></div>
+      <div id="qr" hidden>
+        <div class="qr-pilih" role="group" aria-label="Bentuk kode QR">
+          <button type="button" data-bentuk="hati" aria-pressed="true">Hati</button>
+          <button type="button" data-bentuk="amplop" aria-pressed="false">Amplop</button>
+          <button type="button" data-bentuk="sederhana" aria-pressed="false">Sederhana</button>
+        </div>
+        <canvas id="qrKanvas" width="1080" height="1080" aria-label="Kode QR menuju suratmu"></canvas>
+        <div class="aksi"><button class="tbl" id="qrSimpan" type="button">Simpan gambar</button></div>
+        <p class="tip" style="margin-top:10px">Kirim gambarnya bersama tautan, atau cetak dan selipkan di kado. Dia tinggal memindainya dengan kamera HP.</p>
+      </div>
     </div>
 
     <div class="kartu" id="kartuEdit">
@@ -271,22 +285,124 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
   salinKe($("tblSalin"), function(){ return $("tautanTeks").textContent; });
   salinKe($("tblSalinEdit"), function(){ return $("editTeks").textContent; });
 
-  /* kode QR dibuat di HP-mu sendiri, tidak dikirim ke mana-mana */
+  /* ── kode QR bergaya Foreverse ──
+     Dibuat di HP-mu sendiri, tidak dikirim ke mana-mana. Pustaka qrcodejs hanya
+     dipakai untuk menghitung pola titiknya (koreksi galat tingkat H, tahan
+     ±30% tertutup); gambarnya digambar sendiri di kanvas. Kode QR selalu
+     berada di kartu putih dengan tepi diam 4 modul supaya tetap terbaca. */
+  var QR = { pola:null, n:0, bentuk:"hati" };
   function siapkanQr(tautan){
-    $("qrBuka").addEventListener("click", function(){
+    function bukaQr(){
       var kotak = $("qr");
-      if(!kotak.hidden){ kotak.hidden = true; this.textContent = "Tampilkan kode QR"; return; }
-      kotak.hidden = false; this.textContent = "Sembunyikan kode QR";
-      if(kotak.dataset.jadi) return;
+      kotak.hidden = false; $("qrBuka").textContent = "Sembunyikan kode QR";
+      if(QR.pola){ gambarQr(); return; }
       var s = document.createElement("script");
       s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
       s.onload = function(){
-        new QRCode(kotak, { text: tautan, width: 188, height: 188, correctLevel: QRCode.CorrectLevel.M });
-        kotak.dataset.jadi = "1";
+        var tamp = document.createElement("div");
+        var q = new QRCode(tamp, { text: tautan, width: 64, height: 64, correctLevel: QRCode.CorrectLevel.H });
+        var m = q._oQRCode, n = m.getModuleCount(), pola = [];
+        for(var r=0;r<n;r++){ pola[r]=[]; for(var c=0;c<n;c++) pola[r][c]=m.isDark(r,c); }
+        QR.pola = pola; QR.n = n; gambarQr();
       };
       s.onerror = function(){ kotak.textContent = "Kode QR tidak bisa dimuat. Pakai tautannya saja, ya."; };
       document.head.appendChild(s);
+    }
+    $("qrBuka").addEventListener("click", function(){
+      if(!$("qr").hidden){ $("qr").hidden = true; this.textContent = "Tampilkan kode QR"; return; }
+      bukaQr();
     });
+    document.querySelector(".qr-pilih").addEventListener("click", function(e){
+      var t = e.target.closest("[data-bentuk]"); if(!t) return;
+      QR.bentuk = t.dataset.bentuk;
+      this.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b===t ? "true" : "false"); });
+      gambarQr();
+    });
+    $("qrSimpan").addEventListener("click", function(){
+      $("qrKanvas").toBlob(function(blob){
+        var nama = "foreverse-qr-" + QR.bentuk + ".png";
+        var berkas = new File([blob], nama, { type:"image/png" });
+        if(navigator.canShare && navigator.canShare({ files:[berkas] })){
+          navigator.share({ files:[berkas] }).catch(function(){});
+          return;
+        }
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = nama;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+      }, "image/png");
+    });
+    if(location.hash === "#qr") bukaQr();
+  }
+
+  function jalurHati(x, cx, cy, w){
+    /* hati dari dua lengkung bezier; (cx,cy) titik lekuk atas, lebar w */
+    var h = w * 0.92;
+    x.beginPath();
+    x.moveTo(cx, cy + h*0.26);
+    x.bezierCurveTo(cx, cy - h*0.08, cx - w*0.5, cy - h*0.10, cx - w*0.5, cy + h*0.24);
+    x.bezierCurveTo(cx - w*0.5, cy + h*0.56, cx - w*0.12, cy + h*0.72, cx, cy + h*0.90);
+    x.bezierCurveTo(cx + w*0.12, cy + h*0.72, cx + w*0.5, cy + h*0.56, cx + w*0.5, cy + h*0.24);
+    x.bezierCurveTo(cx + w*0.5, cy - h*0.10, cx, cy - h*0.08, cx, cy + h*0.26);
+    x.closePath();
+  }
+  function kotakBulat(x, X, Y, W, H, R){
+    x.beginPath(); x.moveTo(X+R,Y); x.arcTo(X+W,Y,X+W,Y+H,R); x.arcTo(X+W,Y+H,X,Y+H,R);
+    x.arcTo(X,Y+H,X,Y,R); x.arcTo(X,Y,X+W,Y,R); x.closePath();
+  }
+  /* kode QR di kartu putih: modul kotak bersudut lembut, mata membulat tipis.
+     Pembulatan sengaja kecil — titik bulat penuh dan mata yang terlalu bulat
+     terbukti gagal dibaca pemindai saat diuji. */
+  function gambarKode(x, X, Y, S, warna){
+    var n = QR.n, tepi = 4, u = S / (n + tepi*2);
+    x.fillStyle = "#FFFFFF"; kotakBulat(x, X, Y, S, S, u*2.2); x.fill();
+    var ox = X + tepi*u, oy = Y + tepi*u;
+    function mata(r, c){ return (r<7&&c<7)||(r<7&&c>=n-7)||(r>=n-7&&c<7); }
+    x.fillStyle = warna;
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){
+      if(!QR.pola[r][c] || mata(r,c)) continue;
+      kotakBulat(x, ox+c*u, oy+r*u, u+0.6, u+0.6, u*0.3); x.fill();
+    }
+    [[0,0],[0,n-7],[n-7,0]].forEach(function(p){
+      var ex = ox + p[1]*u, ey = oy + p[0]*u;
+      kotakBulat(x, ex, ey, 7*u, 7*u, u*0.75); x.fill();
+      x.fillStyle = "#FFFFFF"; kotakBulat(x, ex+u, ey+u, 5*u, 5*u, u*0.5); x.fill();
+      x.fillStyle = warna; kotakBulat(x, ex+2*u, ey+2*u, 3*u, 3*u, u*0.35); x.fill();
+    });
+  }
+  function gambarQr(){
+    if(!QR.pola) return;
+    var k = $("qrKanvas"), x = k.getContext("2d"), L = 1080;
+    x.clearRect(0,0,L,L);
+    var tinta = "#2C2450", serif = "600 46px Georgia, 'Times New Roman', serif";
+    if(QR.bentuk === "hati"){
+      x.fillStyle = "#FBF1EC"; x.fillRect(0,0,L,L);
+      x.fillStyle = "#E8A5B0"; jalurHati(x, L/2, 120, 980); x.fill();
+      x.fillStyle = "#E8734A"; jalurHati(x, L/2, 176, 820); x.fill();
+      gambarKode(x, L/2-240, 300, 480, tinta);
+    } else if(QR.bentuk === "amplop"){
+      x.fillStyle = "#FAF3E8"; x.fillRect(0,0,L,L);
+      /* amplop terbuka di belakang: badan, lalu tutupnya terbuka ke atas */
+      x.lineJoin = "round"; x.lineWidth = 10; x.strokeStyle = "#3B3168";
+      x.fillStyle = "#F2BFC6";
+      x.beginPath(); x.moveTo(150,470); x.lineTo(L/2,250); x.lineTo(L-150,470); x.closePath(); x.fill(); x.stroke();
+      x.fillStyle = "#E8A5B0"; kotakBulat(x, 150, 470, L-300, 520, 28); x.fill(); x.stroke();
+      /* surat yang ditarik keluar, kode di atasnya — tidak tertutup apa pun */
+      x.fillStyle = "#FFFFFF"; x.strokeStyle = "#E4E2DC"; x.lineWidth = 4;
+      kotakBulat(x, 260, 90, 560, 700, 24); x.fill(); x.stroke();
+      gambarKode(x, 290, 120, 500, tinta);
+      x.fillStyle = tinta; x.font = serif; x.textAlign = "center";
+      x.fillText("ada surat untukmu", L/2, 700);
+      x.fillStyle = "#18171C"; jalurHati(x, L/2, 840, 110); x.fill();
+    } else {
+      x.fillStyle = "#FFFFFF"; x.fillRect(0,0,L,L);
+      gambarKode(x, 140, 110, 800, tinta);
+      /* hati kecil di tengah — ditutupi aman berkat koreksi galat tingkat H */
+      x.fillStyle = "#FFFFFF"; x.beginPath(); x.arc(L/2, 510, 70, 0, Math.PI*2); x.fill();
+      x.fillStyle = "#E8734A"; jalurHati(x, L/2, 462, 100); x.fill();
+      x.fillStyle = tinta; x.font = serif; x.textAlign = "center";
+      x.fillText("untukmu", L/2, 1000);
+    }
   }
 
   function cek(){

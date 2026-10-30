@@ -1641,11 +1641,17 @@ await uji("masa habis → isi, kontak, token, foto dihapus; tautan menjelaskan",
   harus(/Masa simpan surat ini sudah habis/.test(await r.text()), "pesan masa habis");
 });
 
-await uji("pesanan lama (tanpa simpan_sampai) tidak disentuh", async () => {
+await uji("pesanan lama ikut diberi masa simpan, minimal 30 hari dari sekarang", async () => {
   const L = await buatLingkungan();
   const p = await lunaskan(L);
-  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=NULL WHERE kode=?").bind(p.kode).run();
-  await rawatHarian(L.env);
+  const lamaSekali = Date.now() - 300 * 86400000;     // dibayar ±10 bulan lalu
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=NULL, dibayar=? WHERE kode=?").bind(lamaSekali, p.kode).run();
+  const h = await rawatHarian(L.env);
+  sama(h.dihapus, 0, "tidak langsung dihapus");
+  const b = await L.env.DB.prepare("SELECT simpan_sampai,isi FROM pesanan WHERE kode=?").bind(p.kode).first();
+  const hari = (b.simpan_sampai - Date.now()) / 86400000;
+  harus(hari > 29 && hari <= 30.01, "sisa hari: " + hari);
+  harus(b.isi !== "{}", "isi tetap ada");
   sama((await L.panggil("/s/" + p.kode)).status, 200, "masih terbuka");
 });
 

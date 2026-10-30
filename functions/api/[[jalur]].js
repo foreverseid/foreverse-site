@@ -721,6 +721,7 @@ function badanEmail(o) {
     </p>
     <a href="${esc(tautan)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
     <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(tautan)}</p>
+    <p style="margin:12px 0 0;font-size:14px;line-height:1.6"><a href="${esc(o.asal + "/selesai?kode=" + o.kode + "#qr")}" style="color:#3B3168">Buat kode QR berbentuk hati atau amplop</a> untuk dikirim bersama tautannya.</p>
   </div>
 
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:22px 24px;margin-top:14px">
@@ -816,7 +817,9 @@ function tglPanjang(ms) {
    1. email pengingat ke pembeli 14 hari sebelum masa simpan habis — sekali saja;
    2. surat yang masa simpannya habis: foto & lagu dihapus, isi dan kontak dikosongkan,
       tautan dinonaktifkan. Yang tersisa hanya catatan transaksi (kode, tema, jumlah, tanggal).
-   Pesanan lunas sebelum aturan ini (simpan_sampai kosong) tidak disentuh. */
+   Pesanan lunas sebelum aturan ini dibuat (simpan_sampai masih kosong) ikut
+   diberi masa simpan: 6 bulan sejak tanggal bayarnya, paling cepat 30 hari
+   dari sekarang supaya pembelinya tetap sempat menerima pengingat. */
 export async function rawatHarian(env) {
   if (!env.DB) return { ok: false };
   const db = env.DB;
@@ -824,6 +827,13 @@ export async function rawatHarian(env) {
   await bersihkan(db, env);
   const skr = Date.now();
   let diingatkan = 0, dihapus = 0;
+
+  const lama = await db.prepare(`SELECT kode,dibayar,dibuat FROM pesanan
+    WHERE status='lunas' AND simpan_sampai IS NULL`).all();
+  for (const b of (lama.results || [])) {
+    const sampai = Math.max(tambahBulan(b.dibayar || b.dibuat || skr, BULAN_SIMPAN), skr + 30 * 86400000);
+    await db.prepare(`UPDATE pesanan SET simpan_sampai=? WHERE kode=?`).bind(sampai, b.kode).run();
+  }
 
   const ingat = await db.prepare(`SELECT kode,email,isi,simpan_sampai FROM pesanan
     WHERE status='lunas' AND aktif=1 AND pengingat IS NULL AND simpan_sampai IS NOT NULL
