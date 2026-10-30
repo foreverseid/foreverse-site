@@ -44,8 +44,42 @@ async function ambilHalaman(env, asal, nama, request) {
   return new Response(r.body, { status: r.status, headers: kepala });
 }
 
+/* ── header keamanan untuk SEMUA jawaban ──
+   CSP sengaja dibatasi ke yang tidak bisa merusak tema: tema memakai
+   skrip & gaya sebaris, Google Fonts, foto blob/data, dan audio unggahan. */
+const KEAMANAN = {
+  "strict-transport-security": "max-age=31536000; includeSubDomains",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
+  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
+};
+function pasangKeamanan(r) {
+  const kepala = new Headers(r.headers);
+  for (const [k, v] of Object.entries(KEAMANAN)) kepala.set(k, v);
+  return new Response(r.body, { status: r.status, statusText: r.statusText, headers: kepala });
+}
+
+/* Skrip kecil yang disisipkan ke setiap /s/<kode>: mengabari server bahwa
+   surat dibuka, kecuali di perangkat yang baru saja membayar surat itu
+   (penanda "fv-edit-<kode>" dipasang pesan.html saat memesan atau membuka tautan edit),
+   dan kecuali dibuka dari /developer (alamat berakhiran ?pratinjau=1). */
+function sisipDibuka(html, kode) {
+  const skrip = "<script>(function(){if(/[?&]pratinjau=1/.test(location.search))return;try{if(localStorage.getItem(\"fv-edit-" + kode +
+    "\"))return}catch(_){}fetch(\"/api/dibuka\",{method:\"POST\",headers:{\"content-type\":\"application/json\"}," +
+    "body:JSON.stringify({kode:\"" + kode + "\"}),keepalive:true}).catch(function(){})})()</script>";
+  const i = html.lastIndexOf("</body>");
+  return i < 0 ? html + skrip : html.slice(0, i) + skrip + html.slice(i);
+}
+
 export default {
   async fetch(request, env, ctx) {
+    return pasangKeamanan(await tangani(request, env, ctx));
+  }
+};
+
+async function tangani(request, env, ctx) {
     const url = new URL(request.url);
     const p = url.pathname;
 
@@ -115,16 +149,17 @@ export default {
           : "surat";
         const r = await ambilHalaman(env, url.origin, nama, request);
 
-        if (nama === "surat") return r;   // Bait: ambil datanya sendiri lewat /api/surat
-
         const html = await r.text();
+        if (nama === "surat")   // Bait: ambil datanya sendiri lewat /api/surat
+          return new Response(sisipDibuka(html, kode), { status: r.status, headers: new Headers(r.headers) });
+
         const aman = JSON.stringify(JSON.parse(baris.isi || "{}")).replace(/<\/script/gi, "<\\/script");
         const ditulis = html.replace(
           /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/,
           "$1" + aman + "$2"
         );
         const kepala = new Headers(r.headers);
-        return new Response(ditulis, { status: r.status, headers: kepala });
+        return new Response(sisipDibuka(ditulis, kode), { status: r.status, headers: kepala });
       }
 
       /* ── sisanya: file biasa ── */
@@ -136,5 +171,4 @@ export default {
         { status: 500, headers: { "content-type": "application/json; charset=utf-8" } }
       );
     }
-  }
-};
+}

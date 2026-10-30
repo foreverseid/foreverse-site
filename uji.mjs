@@ -417,7 +417,8 @@ await uji("jumlah kurang dari harga ditolak", async () => {
   await L.tunggu();
   const s = await (await L.panggil("/api/status?kode=" + p.kode)).json();
   harus(s.status !== "lunas", "tidak boleh lunas");
-  sama(L.catatan.email.length, 0, "tidak boleh ada email");
+  sama(L.catatan.email.filter(e => e.to[0] === "pembeli@contoh.id").length, 0, "tidak boleh ada email ke pembeli");
+  sama(L.catatan.email.filter(e => /kegagalan/.test(e.subject)).length, 1, "pemilik harus dikabari sekali");
 });
 
 await uji("faktur yang tidak dikenal dibalas 2xx tanpa efek", async () => {
@@ -1484,6 +1485,112 @@ await uji("tema terkunci — tidak bisa diganti lewat edit", async () => {
   const b2 = await L.env.DB.prepare("SELECT tema,isi FROM pesanan WHERE kode=?").bind(j.kode).first();
   sama(b2.tema, "kado-riang", "tema tidak boleh berubah lewat edit");
   harus(!!JSON.parse(b2.isi).kupon, "isian kupon (milik kado-riang) harus tetap ada, bukan ketiban isian bait");
+});
+
+/* ═══════════ paket keamanan & pengawasan (31-10-2026) ═══════════ */
+judul("Keamanan, batas laju, kabar dibuka, pencarian");
+
+async function admin(L, isi) {
+  return (await L.panggil("/api/developer", {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ sandi: KUNCI.ADMIN_PASSWORD, ...isi })
+  })).json();
+}
+async function lunaskan(L) {
+  const p = await buatPesanan(L);
+  await L.notifikasi(notifSukses(p.faktur));
+  await L.tunggu();
+  return p;
+}
+
+await uji("kode surat baru 10 huruf, kode lama 6 huruf tetap terbuka", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  sama(p.kode.length, 10, "panjang kode baru");
+  await L.env.DB.prepare("UPDATE pesanan SET kode='abc234' WHERE kode=?").bind(p.kode).run();
+  sama((await L.panggil("/s/abc234")).status, 200, "kode lama 6 huruf");
+});
+
+await uji("header keamanan ada di halaman, aset, dan API", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  for (const jalan of ["/", "/s/" + p.kode, "/api/status?kode=" + p.kode]) {
+    const r = await L.panggil(jalan);
+    sama(r.headers.get("x-frame-options"), "DENY", jalan + " x-frame-options");
+    harus(/frame-ancestors 'none'/.test(r.headers.get("content-security-policy") || ""), jalan + " CSP");
+    harus(/max-age=/.test(r.headers.get("strict-transport-security") || ""), jalan + " HSTS");
+    sama(r.headers.get("x-content-type-options"), "nosniff", jalan + " nosniff");
+  }
+});
+
+await uji("batas laju: draf ke-13 dari IP yang sama dalam 10 menit ditolak 429", async () => {
+  const L = await buatLingkungan();
+  const kirim = (ip) => L.panggil("/api/draf", {
+    method: "POST", headers: { "content-type": "application/json", "cf-connecting-ip": ip },
+    body: JSON.stringify(isiDraf())
+  });
+  for (let i = 0; i < 12; i++) sama((await kirim("203.0.113.7")).status, 200, "draf ke-" + (i + 1));
+  sama((await kirim("203.0.113.7")).status, 429, "draf ke-13");
+  sama((await kirim("203.0.113.8")).status, 200, "IP lain tidak ikut tertahan");
+  const isiLaju = await L.env.DB.prepare("SELECT kunci FROM laju").all();
+  harus(!JSON.stringify(isiLaju.results).includes("203.0.113"), "IP mentah tidak boleh tersimpan");
+});
+
+await uji("surat dibuka: skrip tersisip di semua mesin tema", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  for (const tema of ["bait", "kado-riang", "rumah-contoh"]) {
+    await L.env.DB.prepare("UPDATE pesanan SET tema=? WHERE kode=?").bind(tema, p.kode).run();
+    const html = await (await L.panggil("/s/" + p.kode)).text();
+    harus(html.includes('"/api/dibuka"') && html.includes('fv-edit-' + p.kode), tema + ": skrip dibuka tidak tersisip");
+    harus(html.indexOf("/api/dibuka") < html.lastIndexOf("</body>"), tema + ": skrip harus sebelum </body>");
+  }
+});
+
+await uji("surat dibuka: email ke pembeli sekali saja, hitungan bertambah", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const awal = L.catatan.email.length;
+  for (let i = 0; i < 3; i++) {
+    await L.panggil("/api/dibuka", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode: p.kode }) });
+    await L.tunggu();
+  }
+  const baru = L.catatan.email.slice(awal);
+  sama(baru.length, 1, "email dibuka");
+  harus(/sudah dibuka/.test(baru[0].subject) && baru[0].to[0] === "pembeli@contoh.id", "isi email dibuka");
+  const b = await L.env.DB.prepare("SELECT n_buka,dibuka FROM pesanan WHERE kode=?").bind(p.kode).first();
+  sama(b.n_buka, 3, "hitungan bukaan");
+  harus(b.dibuka > 0, "waktu pertama dibuka");
+  const d = await admin(L, { aksi: "daftar" });
+  sama(d.baris[0].n_buka, 3, "tampil di developer");
+});
+
+await uji("surat dibuka: draf belum lunas tidak dihitung", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  await L.panggil("/api/dibuka", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode: p.kode }) });
+  await L.tunggu();
+  const b = await L.env.DB.prepare("SELECT n_buka,dibuka FROM pesanan WHERE kode=?").bind(p.kode).first();
+  sama(b.n_buka, 0, "hitungan"); sama(b.dibuka, null, "dibuka");
+});
+
+await uji("pencarian pesanan: kode, email, nama, dan tanpa hasil", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  for (const cari of [p.kode.slice(2, 7), "PEMBELI@contoh", "amira"])
+    sama((await admin(L, { aksi: "daftar", cari })).baris.length, 1, "cari " + cari);
+  sama((await admin(L, { aksi: "daftar", cari: "tidak-ada-%" })).baris.length, 0, "cari tanpa hasil");
+});
+
+await uji("kegagalan tercatat di tab Sistem dan pemilik dikabari maks. sekali per jam", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  await L.notifikasi(notifSukses(p.faktur), { rusak: true });
+  await L.notifikasi(notifSukses(p.faktur), { rusak: true });
+  const k = (await admin(L, { aksi: "periksa" })).kejadian;
+  sama(k.length, 2, "dua kejadian tercatat");
+  sama(k[0].jenis, "notifikasi DOKU ditolak", "jenis");
+  sama(L.catatan.email.filter(e => /kegagalan/.test(e.subject)).length, 1, "email pemilik");
 });
 
 /* ═══════════ hasil ═══════════ */

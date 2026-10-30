@@ -23,7 +23,14 @@ const HARGA = 15000;                 // rupiah, bersih yang masuk ke Foreverse
 const BIAYA_TRANSAKSI = 560;
 const TOTAL_BAYAR = HARGA + BIAYA_TRANSAKSI;   // yang sungguh ditagihkan ke pembeli
 const HARI_EDIT = 3;                 // masa berlaku tautan edit
-const JAM_DRAF = 24;                 // draf belum dibayar dihapus setelah ini
+const JAM_DRAF = 24;
+const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6 huruf tetap berlaku
+/* Batas laju per alamat IP: [maks permintaan, jendela detik].
+   Alamat IP tidak disimpan mentah — hanya sidik SHA-256 pendeknya. */
+const LAJU = {
+  draf: [12, 600], simpan: [30, 600], bayar: [20, 600], catat: [80, 600],
+  status: [150, 600], surat: [150, 600], dibuka: [40, 600], developer: [25, 600]
+};                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
 const MAKS_LAGU = 10 * 1024 * 1024;  // batas file lagu yang diunggah
 
@@ -276,7 +283,8 @@ async function siapkan(db) {
       email TEXT, whatsapp TEXT, isi TEXT,
       status TEXT DEFAULT 'draf', order_id TEXT, jumlah INTEGER,
       dibuat INTEGER, dibayar INTEGER, batas_edit INTEGER,
-      aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0)`),
+      aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0,
+      dibuka INTEGER, n_buka INTEGER DEFAULT 0)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
     /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
@@ -284,8 +292,18 @@ async function siapkan(db) {
     db.prepare(`CREATE TABLE IF NOT EXISTS kunjungan(
       hari TEXT, tema TEXT, jenis TEXT, n INTEGER DEFAULT 0, PRIMARY KEY(hari,tema,jenis))`),
     db.prepare(`CREATE TABLE IF NOT EXISTS foto(
-      kunci TEXT PRIMARY KEY, kode TEXT, mime TEXT, isi BLOB, dibuat INTEGER)`)
+      kunci TEXT PRIMARY KEY, kode TEXT, mime TEXT, isi BLOB, dibuat INTEGER)`),
+    /* hitungan batas laju per sidik IP per jendela waktu */
+    db.prepare(`CREATE TABLE IF NOT EXISTS laju(
+      kunci TEXT PRIMARY KEY, sampai INTEGER, n INTEGER)`),
+    /* catatan kegagalan untuk tab Sistem di /developer */
+    db.prepare(`CREATE TABLE IF NOT EXISTS kejadian(
+      id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`)
   ]);
+  /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
+  for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0"]) {
+    try { await db.prepare("ALTER TABLE pesanan ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
+  }
   tabelSiap = true;
 }
 
@@ -296,6 +314,61 @@ async function bersihkan(db, env) {
     `SELECT kode FROM pesanan WHERE status='draf' AND dibuat < ?`).bind(batas).all();
   for (const r of (lama.results || [])) await hapusFoto(env, db, r.kode);
   await db.prepare(`DELETE FROM pesanan WHERE status='draf' AND dibuat < ?`).bind(batas).run();
+}
+
+/* ══════════════════ batas laju ══════════════════
+   Di Cloudflare, header cf-connecting-ip selalu ada. Tanpa header itu
+   (simulator lokal) pembatasan dilewati. */
+async function sidikIp(request) {
+  const ip = request.headers.get("cf-connecting-ip");
+  if (!ip) return null;
+  const h = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("fv|" + ip)));
+  return Array.from(h.slice(0, 8), b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function lewatBatas(db, request, nama) {
+  const aturan = LAJU[nama];
+  const sidik = aturan && await sidikIp(request);
+  if (!sidik) return false;
+  const [maks, detik] = aturan;
+  const skr = Date.now(), kunci = nama + ":" + sidik;
+  const b = await db.prepare(`SELECT sampai,n FROM laju WHERE kunci=?`).bind(kunci).first();
+  if (!b || b.sampai < skr) {
+    await db.prepare(`INSERT OR REPLACE INTO laju(kunci,sampai,n) VALUES(?,?,1)`).bind(kunci, skr + detik * 1000).run();
+    if (Math.random() < 0.02) await db.prepare(`DELETE FROM laju WHERE sampai < ?`).bind(skr).run();
+    return false;
+  }
+  if (b.n >= maks) return true;
+  await db.prepare(`UPDATE laju SET n=n+1 WHERE kunci=?`).bind(kunci).run();
+  return false;
+}
+
+/* ══════════════════ catatan kegagalan ══════════════════
+   Disimpan untuk tab Sistem, dan dikabarkan ke email pemilik — paling
+   sering satu email per jenis kegagalan per jam, supaya tidak banjir. */
+async function catatKejadian(env, db, jenis, pesan, kode) {
+  try {
+    const skr = Date.now();
+    const terakhir = await db.prepare(
+      `SELECT waktu FROM kejadian WHERE jenis=? ORDER BY waktu DESC LIMIT 1`).bind(jenis).first();
+    await db.prepare(`INSERT INTO kejadian(waktu,jenis,pesan,kode) VALUES(?,?,?,?)`)
+      .bind(skr, jenis, String(pesan || "").slice(0, 300), kode || "").run();
+    await db.prepare(`DELETE FROM kejadian WHERE waktu < ?`).bind(skr - 60 * 86400000).run();
+    const tujuan = env.EMAIL_PEMILIK || env.EMAIL_PENGIRIM || "halo@foreverse.id";
+    if (env.RESEND_API_KEY && (!terakhir || skr - terakhir.waktu > 3600000)) {
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+        body: JSON.stringify({
+          from: "Foreverse Sistem <" + (env.EMAIL_PENGIRIM || "halo@foreverse.id") + ">",
+          to: [tujuan],
+          subject: "[Foreverse] Ada kegagalan: " + jenis,
+          text: "Jenis: " + jenis + "\nKode pesanan: " + (kode || "-") + "\nKeterangan: " + pesan +
+                "\n\nRinciannya ada di /developer → tab Sistem. Email jenis ini paling sering dikirim sekali per jam."
+        })
+      });
+    }
+  } catch (_) { /* pencatatan tidak boleh menggagalkan alur pembeli */ }
 }
 
 /* ══════════════════ foto ══════════════════ */
@@ -688,7 +761,34 @@ async function kirimEmailKode(env, db, kode, asal) {
     email: b.email, kode: b.kode, token: b.token, penerima: isi.penerima || "", asal
   });
   if (hasil.ok) await db.prepare(`UPDATE pesanan SET email_terkirim=1 WHERE kode=?`).bind(kode).run();
+  else if (b.email) await catatKejadian(env, db, "email gagal", hasil.pesan, kode);
   return hasil;
+}
+
+/* Kabar ke pembeli saat suratnya pertama kali dibuka — dikirim sekali saja. */
+async function kirimEmailDibuka(env, b, asal) {
+  if (!env.RESEND_API_KEY || !b.email) return;
+  const isi = JSON.parse(b.isi || "{}");
+  const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      from: "Foreverse <" + dari + ">", to: [b.email], reply_to: dari,
+      subject: "Suratmu untuk " + (isi.penerima || "dia") + " sudah dibuka",
+      html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
+<div style="max-width:520px;margin:0 auto;padding:32px 20px">
+  <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
+    <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah sampai.</h1>
+    <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">
+      Surat untuk <strong>${esc(isi.penerima || "")}</strong> baru saja dibuka untuk pertama kalinya.
+    </p>
+  </div>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
+</div></body></html>`
+    })
+  }).catch(() => {});
 }
 
 /* ══════════════════ pelunasan ══════════════════ */
@@ -721,6 +821,25 @@ export async function onRequest(ctx) {
     let badan = {};
     if (mentah) { try { badan = JSON.parse(mentah) || {}; } catch (_) { badan = {}; } }
 
+    const namaLaju = jalur === "admin" ? "developer" : jalur;
+    if (await lewatBatas(db, request, namaLaju))
+      return salah("Terlalu banyak permintaan dalam waktu singkat. Coba lagi beberapa menit lagi, ya.", 429);
+
+    /* ── surat dibuka penerima ───────────────────────────────────
+       Dipanggil skrip kecil yang disisipkan worker.js ke /s/<kode>.
+       Perangkat yang baru saja membayar (penanda di selesai.html)
+       tidak ikut dihitung, supaya pembeli yang mengecek suratnya
+       sendiri tidak memicu kabar "sudah dibuka".                   */
+    if (jalur === "dibuka" && request.method === "POST") {
+      const kode = teks(badan.kode, 16);
+      const b = await db.prepare(`SELECT kode,email,isi,status,aktif,dibuka FROM pesanan WHERE kode=?`).bind(kode).first();
+      if (!b || b.status !== "lunas" || !b.aktif) return jwb({ ok: true });
+      await db.prepare(`UPDATE pesanan SET n_buka=COALESCE(n_buka,0)+1, dibuka=COALESCE(dibuka,?) WHERE kode=?`)
+        .bind(Date.now(), kode).run();
+      if (!b.dibuka) ctx.waitUntil(kirimEmailDibuka(env, b, asal));
+      return jwb({ ok: true });
+    }
+
     /* ── catat kunjungan tema (tanpa data pribadi apa pun) ───── */
     if (jalur === "catat" && request.method === "POST") {
       const tema = teks(badan.tema, 40), jenis = teks(badan.jenis, 10);
@@ -734,7 +853,7 @@ export async function onRequest(ctx) {
     /* ── buat atau perbarui draf ─────────────────────────────── */
     if (jalur === "draf" && request.method === "POST") {
       ctx.waitUntil(bersihkan(db, env));
-      const kode = acak(6), token = acak(22), skr = Date.now();
+      const kode = acak(PANJANG_KODE), token = acak(22), skr = Date.now();
       const tema = temaSah(teks(badan.tema, 40));
       const isi = await rapikanIsi(env, kode, badan, null, tema);
       await db.prepare(`INSERT INTO pesanan
@@ -755,7 +874,7 @@ export async function onRequest(ctx) {
       if (!env.DOKU_CLIENT_ID || !env.DOKU_SECRET_KEY)
         return salah("Kunci DOKU belum dipasang di Cloudflare.", 500);
 
-      const kode = teks(badan.kode, 12);
+      const kode = teks(badan.kode, 16);
       const b = await db.prepare(`SELECT * FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Pesanan tidak ditemukan.", 404);
       if (b.status === "lunas") return jwb({ ok: true, sudah: true, kode });
@@ -795,6 +914,7 @@ export async function onRequest(ctx) {
       const urlBayar = r.isi && r.isi.payment && r.isi.payment.url;
       if (!r.ok || !urlBayar) {
         const kabar = (r.asli && (r.asli.error_messages || r.asli.message)) || r.asli;
+        await catatKejadian(env, db, "DOKU menolak pembayaran", JSON.stringify(kabar).slice(0, 300), kode);
         return salah("DOKU menolak: " + JSON.stringify(kabar).slice(0, 300), 502);
       }
 
@@ -836,8 +956,10 @@ export async function onRequest(ctx) {
       const digest = await digestDoku(mentah);
       const harusnya = await hmacDoku(env.DOKU_SECRET_KEY,
         rangkaiTandaTangan(kepalaId, kepalaReq, kepalaWaktu, url.pathname, digest));
-      if (!samaAman(kepalaTanda, harusnya))
+      if (!samaAman(kepalaTanda, harusnya)) {
+        await catatKejadian(env, db, "notifikasi DOKU ditolak", "Tanda tangan tidak cocok.", "");
         return salah("Tanda tangan tidak cocok.", 403);
+      }
 
       const pesananDoku = badan.order || {};
       const transaksi   = badan.transaction || {};
@@ -854,8 +976,10 @@ export async function onRequest(ctx) {
       if (transaksi.status !== "SUCCESS")
         return jwb({ ok: true, catatan: "Belum lunas." });
 
-      if (Number(pesananDoku.amount) !== TOTAL_BAYAR)
+      if (Number(pesananDoku.amount) !== TOTAL_BAYAR) {
+        await catatKejadian(env, db, "notifikasi DOKU ditolak", "Jumlah " + pesananDoku.amount + " tidak sama dengan " + TOTAL_BAYAR + ".", b.kode);
         return salah("Jumlah pembayaran tidak sesuai harga.", 403);
+      }
 
       /* Idempoten: lunasi() berhenti sendiri kalau sudah lunas, jadi
          notifikasi dobel tidak pernah mengirim email dua kali.       */
@@ -867,7 +991,7 @@ export async function onRequest(ctx) {
        Catatan penting: kode surat itu umum — dikirim ke penerima.
        Jadi jawaban di sini TIDAK BOLEH memuat token edit.        */
     if (jalur === "status") {
-      const kode = teks(url.searchParams.get("kode"), 12);
+      const kode = teks(url.searchParams.get("kode"), 16);
       const b = await db.prepare(`SELECT kode,status,order_id,isi FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Pesanan tidak ditemukan.", 404);
 
@@ -893,7 +1017,7 @@ export async function onRequest(ctx) {
 
     /* ── isi surat untuk ditampilkan ke penerima ─────────────── */
     if (jalur === "surat") {
-      const kode = teks(url.searchParams.get("kode"), 12);
+      const kode = teks(url.searchParams.get("kode"), 16);
       const b = await db.prepare(`SELECT tema,isi,status,aktif FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Surat tidak ditemukan.", 404);
       if (b.status !== "lunas") return salah("Surat ini belum aktif.", 404);
@@ -946,9 +1070,15 @@ export async function onRequest(ctx) {
       const aksi = teks(badan.aksi, 20);
 
       if (aksi === "daftar") {
-        const r = await db.prepare(
-          `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,isi
-           FROM pesanan ORDER BY dibuat DESC LIMIT 200`).all();
+        /* cari: kode, email, nomor WA, atau nama di isi surat */
+        const cari = teks(badan.cari, 60).toLowerCase();
+        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,isi FROM pesanan`;
+        const pola = "%" + cari.replace(/[%_\\]/g, "\\$&") + "%";
+        const r = cari
+          ? await db.prepare(kolom + ` WHERE lower(kode) LIKE ?1 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?1 ESCAPE '\\'
+              OR lower(COALESCE(whatsapp,'')) LIKE ?1 ESCAPE '\\' OR lower(COALESCE(isi,'')) LIKE ?1 ESCAPE '\\'
+              ORDER BY dibuat DESC LIMIT 200`).bind(pola).all()
+          : await db.prepare(kolom + ` ORDER BY dibuat DESC LIMIT 200`).all();
         const baris = (r.results || []).map(b => {
           const i = JSON.parse(b.isi || "{}");
           const l = i.lagu || {};
@@ -978,25 +1108,25 @@ export async function onRequest(ctx) {
         for (const t of Object.keys(TEMA_SKEMA)) minat[t] = { demo: 0, form: 0, lunas: 0 };
         for (const r of (kj.results || [])) if (minat[r.tema]) minat[r.tema][r.jenis] = r.n;
         for (const r of (ls.results || [])) if (minat[r.tema || "bait"]) minat[r.tema || "bait"].lunas = r.n;
-        return jwb({ ok: true, baris, lunas: hit.n, pendapatan: hit.rp, total: semua.n, minat, sekarang: Date.now() });
+        return jwb({ ok: true, cari, baris, lunas: hit.n, pendapatan: hit.rp, total: semua.n, minat, sekarang: Date.now() });
       }
 
-      if (aksi === "email") return jwb(await kirimEmailKode(env, db, teks(badan.kode, 12), asal));
+      if (aksi === "email") return jwb(await kirimEmailKode(env, db, teks(badan.kode, 16), asal));
 
       if (aksi === "aktif") {
         await db.prepare(`UPDATE pesanan SET aktif=? WHERE kode=?`)
-          .bind(badan.nilai ? 1 : 0, teks(badan.kode, 12)).run();
+          .bind(badan.nilai ? 1 : 0, teks(badan.kode, 16)).run();
         return jwb({ ok: true });
       }
 
       if (aksi === "perpanjang") {
         await db.prepare(`UPDATE pesanan SET batas_edit=? WHERE kode=?`)
-          .bind(Date.now() + HARI_EDIT * 86400000, teks(badan.kode, 12)).run();
+          .bind(Date.now() + HARI_EDIT * 86400000, teks(badan.kode, 16)).run();
         return jwb({ ok: true });
       }
 
       if (aksi === "hapus") {
-        const kode = teks(badan.kode, 12);
+        const kode = teks(badan.kode, 16);
         await hapusFoto(env, db, kode);
         await db.prepare(`DELETE FROM pesanan WHERE kode=?`).bind(kode).run();
         return jwb({ ok: true });
@@ -1017,7 +1147,9 @@ export async function onRequest(ctx) {
           pengirim: env.EMAIL_PENGIRIM || "(belum diisi)",
           harga: HARGA,
           jam_draf: JAM_DRAF,
-          hari_edit: HARI_EDIT
+          hari_edit: HARI_EDIT,
+          kejadian: ((await db.prepare(
+            `SELECT waktu,jenis,pesan,kode FROM kejadian ORDER BY waktu DESC LIMIT 20`).all()).results || [])
         });
       }
 

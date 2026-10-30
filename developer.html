@@ -224,6 +224,14 @@ section{scroll-margin-top:16px;margin-bottom:26px}
 .sistem .sb .nilai{margin-left:auto;font-size:.79rem;color:var(--ink-faint);text-align:right;padding-left:12px}
 .sistem .sb.tidak .nilai{color:var(--gawat-ink);font-weight:600}
 
+/* ══ pencarian & kejadian ══ */
+.cari{width:100%;box-sizing:border-box;margin:0 0 10px;padding:10px 14px;border:1px solid var(--cream-lift);
+  border-radius:10px;background:var(--paper);color:inherit;font:inherit;font-size:.9rem}
+.kejadian{list-style:none;margin:0;padding:0;font-size:.84rem}
+.kejadian li{padding:8px 0;border-bottom:1px solid var(--cream-lift)}
+.kejadian li:last-child{border-bottom:0}
+.kejadian b{color:var(--gawat);font-weight:600}
+
 /* ══ tabel ══ */
 .saring{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
 .cip{
@@ -421,6 +429,8 @@ a.tautan:hover{text-decoration:underline}
         </div>
       </div>
 
+      <input class="cari" id="cari" type="search" autocomplete="off"
+             placeholder="Cari kode, email, nomor WA, atau nama…" aria-label="Cari pesanan">
       <div class="saring" id="saring"></div>
       <div class="gulung"><div id="tabel"></div></div>
       <p class="catatan">Menampilkan maksimal 200 pesanan terakhir. Draf yang tidak dibayar terhapus sendiri setelah <span id="jamDraf">24</span> jam.</p>
@@ -456,6 +466,11 @@ a.tautan:hover{text-decoration:underline}
           <div class="sistem" id="aturan"></div>
         </div>
       </div>
+      <div class="kartu" style="margin-top:12px">
+        <h3>Kegagalan terbaru</h3>
+        <p class="ket">Email gagal terkirim, pembayaran ditolak DOKU, notifikasi palsu/rusak. Disimpan 60 hari; kamu juga dikabari lewat email (paling sering sekali per jam per jenis).</p>
+        <ul class="kejadian" id="kejadian"></ul>
+      </div>
     </section>
   </main>
 </div>
@@ -467,7 +482,7 @@ a.tautan:hover{text-decoration:underline}
   "use strict";
   var $ = function(id){ return document.getElementById(id); };
   var sandi = sessionStorage.getItem("fv-sandi") || "";
-  var DATA = { baris:[], periksa:{} }, saringKini = "semua";
+  var DATA = { baris:[], periksa:{} }, saringKini = "semua", CARI = "";
 
   /* ── alat kecil ── */
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
@@ -519,7 +534,7 @@ a.tautan:hover{text-decoration:underline}
   async function muat(){
     $("segar").disabled = true;
     try{
-      var d = await panggil({ aksi:"daftar" });
+      var d = await panggil({ aksi:"daftar", cari: CARI });
       var p = await panggil({ aksi:"periksa" });
       DATA = { baris: d.baris || [], periksa: p, jumlah: d, sekarang: d.sekarang || Date.now() };
 
@@ -535,7 +550,7 @@ a.tautan:hover{text-decoration:underline}
 
       $("meta").textContent =
         "Diperbarui " + new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"}) +
-        " · " + DATA.baris.length + " pesanan";
+        " · " + DATA.baris.length + " pesanan" + (CARI ? " cocok dengan “" + CARI + "”" : "");
       $("jamDraf").textContent = p.jam_draf || 24;
     }catch(err){
       if(/[Pp]assword/.test(err.message)){ sessionStorage.removeItem("fv-sandi"); location.reload(); return; }
@@ -782,7 +797,24 @@ a.tautan:hover{text-decoration:underline}
       sbNetral("Masa berlaku tautan edit", (p.hari_edit || 3) + " hari") +
       sbNetral("Draf dihapus setelah", (p.jam_draf || 24) + " jam") +
       sbNetral("Mode pembayaran", p.mode || "—");
+
+    var k = p.kejadian || [];
+    $("kejadian").innerHTML = k.length
+      ? k.map(function(x){
+          return '<li><b>' + esc(x.jenis) + '</b> · ' + esc(tgl(x.waktu)) +
+                 (x.kode ? ' · <span class="kode">' + esc(x.kode) + '</span>' : '') +
+                 '<br><span class="redup">' + esc(x.pesan) + '</span></li>';
+        }).join("")
+      : '<li class="redup">Belum ada kegagalan tercatat.</li>';
   }
+
+  /* ── pencarian pesanan (di server, jadi menjangkau semua pesanan) ── */
+  var jedaCari = 0;
+  $("cari").addEventListener("input", function(){
+    clearTimeout(jedaCari);
+    var nilai = this.value.trim();
+    jedaCari = setTimeout(function(){ CARI = nilai; muat(); }, 450);
+  });
   function sb(nama, ya, teksYa, teksTidak){
     return '<div class="sb ' + (ya ? "ya" : "tidak") + '"><span class="titik"></span><b>' + esc(nama) +
            '</b><span class="nilai">' + esc(ya ? teksYa : teksTidak) + '</span></div>';
@@ -862,7 +894,9 @@ a.tautan:hover{text-decoration:underline}
         '<td class="redup" style="white-space:nowrap">' + b.foto_n + ' foto · ' + b.surat_n + ' paragraf<br>' +
           esc(namaLagu) + '</td>' +
         '<td>' + (st === "lunas"
-            ? '<a class="tautan kode-tautan" href="/s/' + esc(b.kode) + '" target="_blank" rel="noopener">/s/' + esc(b.kode) + '</a>' +
+            ? '<a class="tautan kode-tautan" href="/s/' + esc(b.kode) + '?pratinjau=1" target="_blank" rel="noopener">/s/' + esc(b.kode) + '</a>' +
+              '<br><span class="redup" style="color:' + (b.dibuka ? "var(--baik)" : "inherit") + '">' +
+                (b.dibuka ? "dibuka " + (b.n_buka || 1) + "× · pertama " + esc(tgl(b.dibuka)) : "belum dibuka") + '</span>' +
               '<br><a class="tautan redup" href="/edit/' + esc(b.token) + '" target="_blank" rel="noopener">tautan edit</a>'
             : '<span class="redup">—</span>') + '</td>' +
         '<td><div class="aksi">' +

@@ -1425,6 +1425,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tirai(false);
         if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Tautan edit tidak dikenal.");
         var i = h.j.isi || {};
+        /* perangkat pemilik: bukaannya tidak dihitung sebagai "surat sudah dibuka" */
+        try{ localStorage.setItem("fv-edit-" + h.j.kode, TOKEN); }catch(_){}
         siapkanTema(h.j.tema || "bait");
         $("penerima").value = i.penerima || "";
         $("pengirim").value = i.pengirim || "";
