@@ -169,6 +169,12 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
       <p class="tip" style="margin-top:14px"><strong>Jangan kirim tautan edit ini ke dia</strong> — nanti kejutannya ketahuan.</p>
     </div>
 
+    <div class="kartu" id="kartuIngat" hidden>
+      <h2>Ingetin aku tahun depan</h2>
+      <p class="tip" id="ingatKet">Kami kirim satu email 7 hari sebelum harinya tahun depan, supaya kamu sempat menyiapkan sesuatu lagi. Tidak ada promosi lain, dan bisa dihapus kapan saja.</p>
+      <div class="aksi"><button class="tbl tbl-garis" id="tblIngat" type="button">Ingetin aku</button></div>
+    </div>
+
     <div class="kartu">
       <h2>Simpan juga</h2>
       <p class="tip">Kedua tautan tadi sudah kami kirim ke <strong id="emailTeks">emailmu</strong>. Cek folder spam kalau tidak ketemu.</p>
@@ -248,6 +254,23 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
     $("tblLihat").href = tautan;
     $("tblWa").href = "https://wa.me/?text=" + encodeURIComponent("Ada sesuatu untukmu. Buka pelan-pelan, ya.\n" + tautan);
     $("kodeTeks").textContent = data.kode;
+
+    /* "Ingetin aku" — hanya di HP pemesan (punya token edit) dan surat bertanggal */
+    if(data.bisa_ingat && token){
+      $("kartuIngat").hidden = false;
+      $("tblIngat").addEventListener("click", function(){
+        var b = this; b.disabled = true; b.textContent = "Menyimpan…";
+        fetch("/api/ingat", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ kode: data.kode, token: token }) })
+          .then(function(r){ return r.json(); })
+          .then(function(j){
+            if(!j.ok) throw new Error(j.pesan || "Belum berhasil.");
+            b.textContent = "Siap, kami ingatkan ✓";
+            $("ingatKet").textContent = "Kami kirim email " + j.hari_sebelum + " hari sebelum " + j.tanggal +
+              ". Konfirmasinya sudah masuk ke emailmu, lengkap dengan tautan untuk menghapusnya.";
+          })
+          .catch(function(e){ b.disabled = false; b.textContent = "Coba lagi"; $("ingatKet").textContent = e.message; });
+      });
+    }
     if(data.penerima) $("namaDia").textContent = data.penerima;
 
     if(edit){

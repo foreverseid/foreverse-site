@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════
-   FOREVERSE · Tanya Foreverse (tombol bantuan mengambang)
+   FOREVERSE · Tanya Vera (asisten bantuan mengambang)
 
    Jawaban sudah disiapkan di daftar TANYA di bawah — tidak ada AI,
    tidak ada server, tidak ada biaya per pesan. Pertanyaan yang diketik
@@ -67,24 +67,34 @@
       j: "Bisa. Setiap tema punya contoh lengkap yang bisa dimainkan gratis di beranda. Saat mengisi formulir pun ada <b>pratinjau langsung</b> yang berubah sesuai isianmu." },
     { id: "privasi", t: "Data dan fotoku aman?",
       k: ["aman", "privasi", "data", "rahasia", "orang lain", "tebak", "bocor", "pribadi"],
-      j: "Tautan surat memakai kode acak yang panjang, jadi tidak bisa ditebak. Data hanya dipakai untuk membuat dan mengirim suratmu, tidak dijual atau dibagikan, dan dihapus otomatis setelah 6 bulan. Rinciannya di Kebijakan Privasi." },
+      j: "Tautan surat memakai kode acak yang panjang, jadi tidak bisa ditebak. Mau lebih aman lagi? Pasang <b>kunci pembuka</b> (PIN, pertanyaan rahasia, atau tanggal). Data hanya dipakai untuk membuat dan mengirim suratmu, tidak dijual atau dibagikan, dan dihapus otomatis setelah 6 bulan. Rinciannya di Kebijakan Privasi." },
     { id: "jadwal", t: "Bisa dijadwalkan terbuka jam 00.00?",
       k: ["jadwal", "terjadwal", "tengah malam", "jam 12", "00 00", "0000", "kirim otomatis", "nanti"],
-      j: "Belum ada fitur jadwal. Tautannya langsung aktif setelah dibayar, jadi kamu bebas mengirimnya tepat tengah malam sendiri. Dia tidak akan tahu isinya sebelum kamu kirim." },
+      j: "Bisa, pakai <b>kunci waktu</b> di formulir. Tautannya boleh kamu kirim lebih dulu — sebelum waktunya, dia hanya melihat hitung mundur, lalu suratnya terbuka tepat di jam yang kamu pilih (WIB)." },
     { id: "pengirim", t: "Dia tahu ini dari siapa?",
       k: ["anonim", "nama pengirim", "siapa pengirim", "rahasia nama", "tanpa nama", "dari siapa"],
       j: "Nama pengirim yang tampil adalah nama yang <b>kamu tulis sendiri</b> di formulir — boleh nama asli, nama panggilan, atau sebutan sayang. Beberapa tema (misalnya Kasus Pengirim Tanpa Nama) memang dirancang supaya dia menebak dulu." }
+    ,{ id: "kunci", t: "Suratnya bisa dikunci?",
+      k: ["kunci", "pin", "password", "sandi", "kata sandi", "pertanyaan rahasia", "dikunci", "gembok", "lock"],
+      j: "Bisa. Di formulir ada <b>kunci pembuka</b>: PIN 4–6 angka, pertanyaan rahasia, atau tanggal penting kalian — plus petunjuk kalau perlu. Jawabannya dicek di server, jadi tidak bisa diintip. Bisa juga ditambah <b>kunci waktu</b> supaya baru terbuka di jam tertentu." },
+    { id: "ingat", t: "Bisa diingatkan tahun depan?",
+      k: ["ingetin", "ingatkan", "pengingat", "reminder", "tahun depan", "lupa"],
+      j: "Bisa, untuk surat ulang tahun dan anniversary. Setelah bayar, ketuk <b>Ingetin aku</b> — kami kirim satu email 7 hari sebelum harinya tahun depan. Yang disimpan hanya tanggal, bulan, dan nama panggilannya, dan bisa dihapus kapan saja." },
+    { id: "vera", t: "Vera itu siapa?",
+      k: ["vera", "kamu siapa", "siapa kamu", "bot", "robot", "ai", "manusia", "admin", "chatgpt"],
+      j: "Aku Vera, asisten otomatis Foreverse 👋 Aku menjawab dari daftar pertanyaan yang sudah disiapkan tim — bukan AI, dan pertanyaanmu tidak dikirim ke mana-mana. Kalau aku belum bisa bantu, tim kami siap lewat WhatsApp." }
   ];
-  var POPULER = ["harga", "jadi", "ubah", "kirim", "lama"];
+  var POPULER = ["harga", "jadi", "kunci", "ubah", "kirim"];
 
   /* ── gaya ── */
   var css =
     ".fvb-tbl{position:fixed;right:16px;bottom:16px;z-index:70;display:inline-flex;align-items:center;gap:9px;border:0;cursor:pointer;" +
     "background:#3B3168;color:#fff;font:600 14px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:12px 17px 12px 14px;" +
     "border-radius:999px;box-shadow:0 12px 30px rgba(22,22,26,.22);transition:transform .16s ease,opacity .2s ease;-webkit-tap-highlight-color:transparent}" +
-    ".fvb-tbl:hover{transform:translateY(-2px)}.fvb-tbl svg{width:20px;height:20px;flex:none}" +
+    ".fvb-tbl:hover{transform:translateY(-2px)}.fvb-tbl svg{width:34px;height:34px;flex:none;margin:-6px 0 -6px -6px}" +
+    ".fvb-ava{width:34px;height:34px;border-radius:50%;flex:none;display:block}.fvb-ava svg{width:100%;height:100%}" +
     ".fvb-tbl.fvb-sembunyi{opacity:0;pointer-events:none}" +
-    "@media(max-width:699px){.fvb-tbl{padding:14px}.fvb-tbl .fvb-tt{display:none}}" +
+    "@media(max-width:699px){.fvb-tbl{padding:9px}.fvb-tbl svg{margin:0;width:40px;height:40px}.fvb-tbl .fvb-tt{display:none}}" +
     ".fvb-panel{position:fixed;right:16px;bottom:16px;z-index:90;width:min(380px,calc(100vw - 32px));height:min(600px,calc(100dvh - 32px));" +
     "display:flex;flex-direction:column;margin:0;padding:0;box-sizing:border-box;background:#FBFAF7;color:#16161A;border:1px solid #E4E2DC;border-radius:20px;overflow:hidden;" +
     "box-shadow:0 24px 60px rgba(22,22,26,.25);font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}" +
@@ -105,29 +115,37 @@
     ".fvb-kaki{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #E4E2DC;background:#fff}" +
     ".fvb-kaki input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #E4E2DC;border-radius:12px;background:#FBFAF7;color:inherit}" +
     ".fvb-kaki button{border:0;border-radius:12px;background:#E8734A;color:#fff;font-weight:600;font-size:14px;padding:0 14px;cursor:pointer;min-width:64px}" +
+    ".fvb-kurang{align-self:flex-start;border:0;background:none;color:#83808C;font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0 4px}" +
     ".fvb-ketik{align-self:flex-start;color:#83808C;font-size:13px;padding:2px 6px}";
   var gaya = document.createElement("style");
   gaya.textContent = css;
   document.head.appendChild(gaya);
 
+  /* Avatar Vera: amplop kecil bermata — gaya "benda yang diberi wajah" khas tema Foreverse */
+  var VERA = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#FAF3E8"/>' +
+    '<rect x="9" y="14" width="30" height="22" rx="5" fill="#E8A5B0"/><path d="M10 16l14 11 14-11" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>' +
+    '<circle cx="19" cy="29" r="1.8" fill="#2C2450"/><circle cx="29" cy="29" r="1.8" fill="#2C2450"/>' +
+    '<path d="M21.5 32.2q2.5 2 5 0" fill="none" stroke="#2C2450" stroke-width="1.6" stroke-linecap="round"/>' +
+    '<circle cx="15.5" cy="31.5" r="1.6" fill="#E8734A" opacity=".55"/><circle cx="32.5" cy="31.5" r="1.6" fill="#E8734A" opacity=".55"/>' +
+    '<path d="M34 8.5c-.5 0-3.5-2-3.5-4 0-1 .7-1.7 1.6-1.7.7 0 1.3.4 1.6.9.3-.5.9-.9 1.6-.9.9 0 1.6.7 1.6 1.7 0 2-3 4-3.3 4z" fill="#E8734A"/></svg>';
   var IKON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
              '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.8A8 8 0 1 1 21 12z"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.4v.3M12 16.5h.01"/></svg>';
 
   var tbl = document.createElement("button");
   tbl.type = "button";
   tbl.className = "fvb-tbl";
-  tbl.setAttribute("aria-label", "Tanya Foreverse");
+  tbl.setAttribute("aria-label", "Tanya Vera, asisten Foreverse");
   tbl.setAttribute("aria-expanded", "false");
-  tbl.innerHTML = IKON + '<span class="fvb-tt">Ada pertanyaan?</span>';
+  tbl.innerHTML = VERA + '<span class="fvb-tt">Tanya Vera</span>';
 
   var panel = document.createElement("div");   /* div, bukan section: gaya section halaman tidak boleh ikut */
   panel.className = "fvb-panel";
   panel.hidden = true;
   panel.setAttribute("role", "dialog");
-  panel.setAttribute("aria-label", "Tanya Foreverse");
+  panel.setAttribute("aria-label", "Tanya Vera");
   panel.innerHTML =
-    '<div class="fvb-kepala">' + IKON.replace("<svg ", '<svg width="22" height="22" ') +
-      '<div><b>Tanya Foreverse</b><small>Jawaban cepat, kapan saja</small></div>' +
+    '<div class="fvb-kepala"><span class="fvb-ava">' + VERA + '</span>' +
+      '<div><b>Vera</b><small>Asisten Foreverse · menjawab otomatis</small></div>' +
       '<button class="fvb-tutup" type="button" aria-label="Tutup">×</button></div>' +
     '<div class="fvb-isi" aria-live="polite"></div>' +
     '<form class="fvb-kaki"><input type="text" placeholder="Ketik pertanyaanmu…" aria-label="Pertanyaan" maxlength="200" enterkeyhint="send">' +
@@ -181,7 +199,7 @@
   function sapa() {
     if (sudahSapa) return;
     sudahSapa = true;
-    gelembung("Hai! Ada yang bisa dibantu? Pilih pertanyaan di bawah, atau ketik sendiri.", "kami");
+    gelembung("Hai, aku Vera 👋 Ini yang paling sering ditanyakan. Pilih salah satu, atau ketik pertanyaanmu sendiri.", "kami");
     pilihan(POPULER, false);
   }
 
@@ -299,6 +317,14 @@
         gelembung(q.j, "kami");
         var lain = POPULER.concat(TANYA.map(function (x) { return x.id; }))
           .filter(function (id, i, a) { return id !== q.id && a.indexOf(id) === i; }).slice(0, 3);
+        var kp = document.createElement("button");
+        kp.type = "button"; kp.className = "fvb-kurang"; kp.textContent = "Jawaban ini kurang pas";
+        kp.addEventListener("click", function () {
+          kp.remove();
+          gelembung("Maaf ya, jawabanku belum pas 🙏 Tim kami bisa bantu lebih lengkap lewat WhatsApp.", "kami");
+          pilihan([], true, "Halo Foreverse, saya mau tanya soal: " + q.t + " — ");
+        });
+        isi.appendChild(kp);
         pilihan(lain, true, "Halo Foreverse, saya mau tanya soal: " + q.t);
       } else if (saran && saran.length) {
         gelembung("Aku belum yakin maksudnya. Mungkin salah satu ini?", "kami");

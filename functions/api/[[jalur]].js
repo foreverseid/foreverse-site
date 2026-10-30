@@ -300,6 +300,10 @@ async function siapkan(db) {
     db.prepare(`CREATE TABLE IF NOT EXISTS laju(
       kunci TEXT PRIMARY KEY, sampai INTEGER, n INTEGER)`),
     /* catatan kegagalan untuk tab Sistem di /developer */
+    /* "Ingetin aku": hanya tanggal & bulan, nama panggilan penerima, email pembeli.
+       Terpisah dari isi surat; dihapus begitu pengingatnya terkirim. */
+    db.prepare(`CREATE TABLE IF NOT EXISTS pengingat(
+      id TEXT PRIMARY KEY, kode TEXT UNIQUE, email TEXT, nama TEXT, jenis TEXT, bulan INTEGER, hari INTEGER, dibuat INTEGER)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS kejadian(
       id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`)
   ]);
@@ -947,7 +951,76 @@ export async function rawatHarian(env) {
     await db.prepare(`UPDATE pesanan SET isi='{}', email='', whatsapp='', token=NULL, aktif=0 WHERE kode=?`).bind(b.kode).run();
     dihapus++;
   }
-  return { ok: true, diingatkan, dihapus };
+  const ingatMomen = await kirimPengingatJatuhTempo(env, db);
+  return { ok: true, diingatkan, dihapus, ingatMomen };
+}
+
+/* ══════════════════ "Ingetin aku" ══════════════════ */
+const HARI_SEBELUM_INGAT = 7;
+const NAMA_BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+function tanggalIngat(isi) {
+  if (isi.tanggalLahir) return { jenis: "ultah", tgl: isi.tanggalLahir };
+  if (isi.tanggalMulai) return { jenis: "jadian", tgl: isi.tanggalMulai };
+  return null;
+}
+/* hari ini menurut WIB, sebagai Date UTC tengah malam */
+function hariIniWib() { const d = new Date(Date.now() + 7 * 3600000); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()); }
+function berikutnya(bulan, hari, dari) {
+  const y0 = new Date(dari).getUTCFullYear();
+  for (const y of [y0, y0 + 1]) {
+    const kabisat = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+    const h = bulan === 2 && hari === 29 && !kabisat ? 28 : hari;
+    const t = Date.UTC(y, bulan - 1, h);
+    if (t >= dari) return t;
+  }
+}
+function judulIngat(r) {
+  return r.jenis === "ultah" ? "Ulang tahun " + (r.nama || "dia") : "Hari jadi kalian";
+}
+async function kirimEmailIngat(env, r, asal, konfirmasi) {
+  if (!env.RESEND_API_KEY || !r.email) return false;
+  const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+  const tgl = r.hari + " " + NAMA_BULAN[r.bulan - 1];
+  const batal = asal + "/api/ingat/batal?id=" + r.id;
+  const momen = r.jenis === "ultah" ? "Birthday" : "Anniversary";
+  const judul = konfirmasi
+    ? "Siap, kami ingatkan menjelang " + judulIngat(r).toLowerCase().replace(/^ulang/, "ulang")
+    : judulIngat(r) + " tinggal " + HARI_SEBELUM_INGAT + " hari lagi";
+  const isi = konfirmasi
+    ? `Kami akan mengirim satu email ${HARI_SEBELUM_INGAT} hari sebelum <strong>${esc(tgl)}</strong>, supaya kamu sempat menyiapkan sesuatu. Hanya itu — tidak ada promosi lain.`
+    : `<strong>${esc(tgl)}</strong> sebentar lagi. Mau menyiapkan surat baru untuknya? Masih ada waktu untuk menulis pelan-pelan.`;
+  const r2 = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      from: "Foreverse <" + dari + ">", to: [r.email], reply_to: dari, subject: judul,
+      html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
+<div style="max-width:520px;margin:0 auto;padding:32px 20px">
+  <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
+    <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">${esc(judul)}</h1>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">${isi}</p>
+    ${konfirmasi ? "" : `<a href="${esc(asal + "/template?momen=" + momen)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Lihat tema ${momen}</a>`}
+  </div>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Tidak mau diingatkan? <a href="${esc(batal)}" style="color:#8A8598">Hapus pengingat ini</a> — tanggal dan namanya langsung kami hapus.</p>
+</div></body></html>`
+    })
+  }).catch(() => null);
+  return !!(r2 && r2.ok);
+}
+async function kirimPengingatJatuhTempo(env, db) {
+  const hariIni = hariIniWib();
+  const semua = await db.prepare(`SELECT * FROM pengingat`).all();
+  let n = 0;
+  for (const r of (semua.results || [])) {
+    const t = berikutnya(r.bulan, r.hari, hariIni);
+    if (Math.round((t - hariIni) / 86400000) !== HARI_SEBELUM_INGAT) continue;
+    if (await kirimEmailIngat(env, r, "https://foreverse.id", false)) {
+      await db.prepare(`DELETE FROM pengingat WHERE id=?`).bind(r.id).run();
+      n++;
+    } else await catatKejadian(env, db, "email pengingat momen gagal", r.jenis, r.kode);
+  }
+  return n;
 }
 
 /* ══════════════════ router ══════════════════ */
@@ -972,6 +1045,32 @@ export async function onRequest(ctx) {
     const namaLaju = jalur === "admin" ? "developer" : jalur;
     if (await lewatBatas(db, request, namaLaju))
       return salah("Terlalu banyak permintaan dalam waktu singkat. Coba lagi beberapa menit lagi, ya.", 429);
+
+    /* ── "Ingetin aku": hanya pemilik (memegang token edit) ──────── */
+    if (jalur === "ingat" && request.method === "POST") {
+      const b = await db.prepare(`SELECT kode,token,email,isi,status FROM pesanan WHERE kode=?`).bind(teks(badan.kode, 16)).first();
+      if (!b || b.status !== "lunas" || !b.token || !samaAman(teks(badan.token, 30), b.token)) return salah("Pesanan tidak dikenali.", 403);
+      if (!b.email) return salah("Pesanan ini tidak punya email.", 400);
+      const isi = JSON.parse(b.isi || "{}");
+      const t = tanggalIngat(isi);
+      if (!t) return salah("Surat ini tidak punya tanggal yang berulang tiap tahun.", 400);
+      const [, bln, hr] = t.tgl.split("-").map(Number);
+      const lama = await db.prepare(`SELECT id FROM pengingat WHERE kode=?`).bind(b.kode).first();
+      const r = { id: (lama && lama.id) || acak(20), kode: b.kode, email: b.email,
+        nama: t.jenis === "ultah" ? teks(isi.penerima, 30) : "", jenis: t.jenis, bulan: bln, hari: hr };
+      await db.prepare(`INSERT OR REPLACE INTO pengingat(id,kode,email,nama,jenis,bulan,hari,dibuat) VALUES(?,?,?,?,?,?,?,?)`)
+        .bind(r.id, r.kode, r.email, r.nama, r.jenis, r.bulan, r.hari, Date.now()).run();
+      if (!lama) ctx.waitUntil(kirimEmailIngat(env, r, asal, true));
+      return jwb({ ok: true, tanggal: hr + " " + NAMA_BULAN[bln - 1], jenis: t.jenis, hari_sebelum: HARI_SEBELUM_INGAT });
+    }
+    if (jalur === "ingat/batal") {
+      const id = teks(url.searchParams.get("id"), 30);
+      if (id) await db.prepare(`DELETE FROM pengingat WHERE id=?`).bind(id).run();
+      return new Response(`<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content=noindex>
+<title>Pengingat dihapus · Foreverse</title><body style="font-family:system-ui;background:#FAF3E8;color:#1B1B2F;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;text-align:center">
+<div><h1 style="font-weight:500;font-size:22px">Pengingatnya sudah dihapus.</h1><p style="color:#5A5668">Tanggal dan nama yang tersimpan untuk pengingat ini sudah tidak ada di sistem kami.</p>
+<p><a href="/" style="color:#3B3168">Kembali ke Foreverse</a></p></div></body>`, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
+    }
 
     /* ── coba membuka kunci surat ─────────────────────────────── */
     if (jalur === "buka" && request.method === "POST") {
@@ -1172,10 +1271,13 @@ export async function onRequest(ctx) {
         const o = (r.isi && r.isi.order) || {};
         if (t.status === "SUCCESS" && Number(o.amount) === TOTAL_BAYAR) {
           await lunasi(env, db, b.kode, asal);
-          return jwb({ ok: true, status: "lunas", kode: b.kode, penerima });
+          const isiSt2 = JSON.parse(b.isi || "{}");
+          return jwb({ ok: true, status: "lunas", kode: b.kode, penerima, bisa_ingat: !!tanggalIngat(isiSt2), dikunci: !!isiSt2.kunci });
         }
       }
-      return jwb({ ok: true, status: b.status, kode: b.kode, penerima: b.status === "lunas" ? penerima : "" });
+      const isiSt = JSON.parse(b.isi || "{}");
+      return jwb({ ok: true, status: b.status, kode: b.kode, penerima: b.status === "lunas" ? penerima : "",
+        bisa_ingat: b.status === "lunas" && !!tanggalIngat(isiSt), dikunci: b.status === "lunas" && !!isiSt.kunci });
     }
 
     /* ── isi surat untuk ditampilkan ke penerima ─────────────── */

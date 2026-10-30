@@ -1747,6 +1747,56 @@ await uji("tebakan beruntun dibatasi", async () => {
   sama(terakhir, 429, "tebakan ke-13");
 });
 
+/* ═══════════ "Ingetin aku" ═══════════ */
+judul("Ingetin aku");
+
+function tglNanti(hari) { const d = new Date(Date.now() + 7 * 3600000 + hari * 86400000); return "2001-" + d.toISOString().slice(5, 10); }
+
+await uji("pemilik bisa minta diingatkan; konfirmasi terkirim; status memberi tahu bisa_ingat", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const s = await (await L.panggil("/api/status?kode=" + p.kode)).json();
+  harus(s.bisa_ingat === true, "bisa_ingat");
+  const awal = L.catatan.email.length;
+  const r = await (await L.panggil("/api/ingat", { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kode: p.kode, token: p.token }) })).json();
+  harus(r.ok && r.tanggal === "14 Mei", "jawaban: " + JSON.stringify(r));
+  await L.tunggu();
+  sama(L.catatan.email.length - awal, 1, "email konfirmasi");
+  const row = await L.env.DB.prepare("SELECT * FROM pengingat WHERE kode=?").bind(p.kode).first();
+  sama(row.bulan, 5, "bulan"); sama(row.hari, 14, "hari"); sama(row.nama, "Amira", "nama");
+  harus(!("tahun" in row), "tahun tidak disimpan");
+});
+
+await uji("tanpa token yang benar ditolak", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  sama((await L.panggil("/api/ingat", { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kode: p.kode, token: "salah" }) })).status, 403, "status");
+});
+
+await uji("cron: email terkirim tepat 7 hari sebelum, lalu datanya dihapus; hari lain tidak", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  for (const [kode, hari] of [[p.kode, 7], ["lain", 8]]) {
+    const t = tglNanti(hari).split("-").map(Number);
+    await L.env.DB.prepare("INSERT INTO pengingat(id,kode,email,nama,jenis,bulan,hari,dibuat) VALUES(?,?,?,?,?,?,?,?)")
+      .bind("id-" + kode, kode, "pembeli@contoh.id", "Amira", "ultah", t[1], t[2], Date.now()).run();
+  }
+  const awal = L.catatan.email.length;
+  const h = await rawatHarian(L.env);
+  sama(h.ingatMomen, 1, "satu pengingat");
+  harus(/tinggal 7 hari lagi/.test(L.catatan.email[awal].subject), "subjek");
+  sama((await L.env.DB.prepare("SELECT COUNT(*) n FROM pengingat").first()).n, 1, "yang terkirim dihapus");
+});
+
+await uji("tautan hapus pengingat bekerja", async () => {
+  const L = await buatLingkungan();
+  await L.env.DB.prepare("INSERT INTO pengingat(id,kode,email,nama,jenis,bulan,hari,dibuat) VALUES('abc','k','e','n','ultah',1,1,0)").run();
+  sama((await L.panggil("/api/ingat/batal?id=abc")).status, 200, "status");
+  sama((await L.env.DB.prepare("SELECT COUNT(*) n FROM pengingat").first()).n, 0, "terhapus");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
