@@ -1655,6 +1655,98 @@ await uji("pesanan lama ikut diberi masa simpan, minimal 30 hari dari sekarang",
   sama((await L.panggil("/s/" + p.kode)).status, 200, "masih terbuka");
 });
 
+/* ═══════════ kunci pembuka surat ═══════════ */
+judul("Kunci pembuka surat");
+
+async function lunasBerkunci(L, kunci, tema = "bait") {
+  const d = isiDrafTema ? (tema === "bait" ? isiDraf() : isiDrafTema(tema)) : isiDraf();
+  d.isi.kunci = kunci;
+  const j = await draf(L, d);
+  harus(j.ok, "draf berkunci gagal: " + JSON.stringify(j));
+  await L.env.DB.prepare("UPDATE pesanan SET status='lunas', dibayar=? WHERE kode=?").bind(Date.now(), j.kode).run();
+  return j.kode;
+}
+const bukaKunci = (L, kode, jawab) => L.panggil("/api/buka", { method: "POST",
+  headers: { "content-type": "application/json" }, body: JSON.stringify({ kode, jawab }) });
+
+for (const tema of ["bait", "kado-riang"]) {
+  await uji(tema + " · PIN: gerbang tampil, isi & PIN tidak bocor, PIN benar membuka", async () => {
+    const L = await buatLingkungan();
+    const kode = await lunasBerkunci(L, { jenis: "pin", pin: "2410", petunjuk: "tanggal jadian" }, tema);
+    const g = await (await L.panggil("/s/" + kode)).text();
+    harus(/Masukkan PIN-nya/.test(g) && /tanggal jadian/.test(g), "gerbang PIN tampil dengan petunjuk");
+    harus(!g.includes("2410") && !g.includes("Selamat ulang tahun"), "PIN / isi surat bocor ke gerbang");
+    harus(!g.includes("/api/dibuka"), "gerbang tidak boleh menghitung 'dibuka'");
+    sama((await L.panggil("/api/surat?kode=" + kode)).status, 403, "/api/surat terkunci");
+    sama((await bukaKunci(L, kode, "1234")).status, 401, "PIN salah");
+    const r = await bukaKunci(L, kode, "2410");
+    sama(r.status, 200, "PIN benar");
+    const ck = (r.headers.get("set-cookie") || "").split(";")[0];
+    harus(ck.startsWith("fvk_" + kode + "="), "cookie tiket");
+    const s = await (await L.panggil("/s/" + kode, { headers: { cookie: ck } })).text();
+    harus(!/Masukkan PIN-nya/.test(s) && s.includes("/api/dibuka"), "surat terbuka setelah PIN benar");
+    harus(!s.includes('"kunci"'), "data kunci tidak boleh ikut ke halaman surat");
+    const api = await (await L.panggil("/api/surat?kode=" + kode, { headers: { cookie: ck } })).json();
+    harus(api.ok && !("kunci" in api.isi), "/api/surat terbuka tanpa data kunci");
+  });
+}
+
+await uji("pertanyaan rahasia: huruf besar/kecil, spasi, tanda baca diabaikan", async () => {
+  const L = await buatLingkungan();
+  const kode = await lunasBerkunci(L, { jenis: "tanya", tanya: "Kencan pertama kita makan apa?", jawab: "Mie Ayam" });
+  harus((await (await L.panggil("/s/" + kode)).text()).includes("Kencan pertama kita makan apa?"), "pertanyaan tampil");
+  sama((await bukaKunci(L, kode, "bakso")).status, 401, "jawaban salah");
+  sama((await bukaKunci(L, kode, "  mie-AYAM! ")).status, 200, "jawaban longgar diterima");
+});
+
+await uji("kunci tanggal", async () => {
+  const L = await buatLingkungan();
+  const kode = await lunasBerkunci(L, { jenis: "tanggal", tanggal: "2021-10-24" });
+  sama((await bukaKunci(L, kode, "2021-10-25")).status, 401, "tanggal salah");
+  sama((await bukaKunci(L, kode, "2021-10-24")).status, 200, "tanggal benar");
+});
+
+await uji("kunci waktu: belum waktunya → hitung mundur, tidak bisa dipaksa; lewat waktu → terbuka", async () => {
+  const L = await buatLingkungan();
+  const kode = await lunasBerkunci(L, { buka: Date.now() + 3600000 });
+  const g = await (await L.panggil("/s/" + kode)).text();
+  harus(/Sebentar lagi/.test(g) && g.includes('id="jam"'), "gerbang hitung mundur");
+  sama((await L.panggil("/api/surat?kode=" + kode)).status, 403, "api terkunci");
+  const isi = JSON.parse((await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(kode).first()).isi);
+  isi.kunci.buka = Date.now() - 1000;
+  await L.env.DB.prepare("UPDATE pesanan SET isi=? WHERE kode=?").bind(JSON.stringify(isi), kode).run();
+  harus((await (await L.panggil("/s/" + kode)).text()).includes("/api/dibuka"), "terbuka setelah waktunya");
+});
+
+await uji("kunci waktu + PIN: PIN benar pun tetap menunggu waktunya", async () => {
+  const L = await buatLingkungan();
+  const kode = await lunasBerkunci(L, { jenis: "pin", pin: "1111", buka: Date.now() + 3600000 });
+  sama((await bukaKunci(L, kode, "1111")).status, 403, "belum waktunya");
+});
+
+await uji("validasi kunci: PIN 3 angka & pertanyaan tanpa jawaban ditolak; tanpa kunci tetap jalan", async () => {
+  const L = await buatLingkungan();
+  for (const k of [{ jenis: "pin", pin: "123" }, { jenis: "tanya", tanya: "Apa?", jawab: "" }]) {
+    const d = isiDraf(); d.isi.kunci = k;
+    harus(!(await draf(L, d)).ok, "harus ditolak: " + JSON.stringify(k));
+  }
+  const d = isiDraf(); d.isi.kunci = { jenis: "" };
+  const j = await draf(L, d);
+  harus(j.ok, "tanpa kunci");
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  harus(!("kunci" in JSON.parse(b.isi)), "tanpa kunci tidak menyimpan apa pun");
+});
+
+await uji("tebakan beruntun dibatasi", async () => {
+  const L = await buatLingkungan();
+  const kode = await lunasBerkunci(L, { jenis: "pin", pin: "2410" });
+  let terakhir = 0;
+  for (let i = 0; i < 13; i++) terakhir = (await L.panggil("/api/buka", { method: "POST",
+    headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.9" },
+    body: JSON.stringify({ kode, jawab: "0000" }) })).status;
+  sama(terakhir, 429, "tebakan ke-13");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

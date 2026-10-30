@@ -74,13 +74,23 @@ body{
 @media (max-width:520px){ .blok > .jelas{margin-left:0} }
 
 /* ══ isian ══ */
+/* kunci pembuka */
+.pil-kunci{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+@media(min-width:560px){.pil-kunci{grid-template-columns:repeat(4,1fr)}}
+.pil-kunci button{font:inherit;font-size:.86rem;text-align:left;padding:11px 12px;border-radius:14px;border:1.5px solid var(--stone);background:#fff;color:var(--ink);cursor:pointer;line-height:1.3}
+.pil-kunci button b{display:block;font-size:.92rem;margin-bottom:2px}
+.pil-kunci button span{color:var(--ink-faint);font-size:.78rem}
+.pil-kunci button[aria-pressed="true"]{border-color:var(--violet);background:var(--violet-tint, #EEEBF7)}
+.kunci-isi[hidden]{display:none}
+.centang{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;cursor:pointer;margin:6px 0 10px}
+.centang input{margin-top:3px;width:18px;height:18px;flex:none}
 .baris{margin-bottom:16px}
 .baris:last-child{margin-bottom:0}
 .dua{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:520px){ .dua{grid-template-columns:1fr} }
 label{display:block;font-size:.87rem;font-weight:600;margin-bottom:5px}
 .bantu{font-size:.8rem;color:var(--ink-faint);margin:4px 0 0;line-height:1.5}
-input[type=text],input[type=email],input[type=tel],input[type=date],input[type=url],textarea{
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=datetime-local],input[type=url],textarea{
   width:100%;font:inherit;font-size:1rem;color:var(--ink);background:var(--cream);
   border:1.5px solid var(--stone);border-radius:11px;padding:11px 13px;
   transition:border-color .16s,background .16s;
@@ -286,8 +296,48 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         </div>
       </section>
 
+      <section class="blok" id="blokKunci">
+        <h2><span class="n">7</span> Kunci pembuka <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
+        <p class="jelas">Kunci kecil sebelum suratnya terbuka — dia harus menjawab dulu. Jawabannya dicek di server kami, jadi tidak bisa diintip lewat kode halaman.</p>
+        <div class="pil-kunci" role="group" aria-label="Jenis kunci">
+          <button type="button" data-kunci="" aria-pressed="true"><b>Tanpa kunci</b><span>langsung terbuka</span></button>
+          <button type="button" data-kunci="pin" aria-pressed="false"><b>PIN</b><span>4–6 angka</span></button>
+          <button type="button" data-kunci="tanya" aria-pressed="false"><b>Pertanyaan</b><span>rahasia kalian</span></button>
+          <button type="button" data-kunci="tanggal" aria-pressed="false"><b>Tanggal</b><span>tanggal penting</span></button>
+        </div>
+        <div class="kunci-isi" data-isi-kunci="pin" hidden>
+          <div class="baris"><label for="kPin">PIN (4–6 angka)</label>
+            <input id="kPin" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="mis. 2410">
+            <p class="galat">PIN harus 4–6 angka.</p></div>
+        </div>
+        <div class="kunci-isi" data-isi-kunci="tanya" hidden>
+          <div class="baris"><label for="kTanya">Pertanyaannya</label>
+            <input id="kTanya" type="text" maxlength="120" placeholder="mis. Kencan pertama kita makan apa?"></div>
+          <div class="baris"><label for="kJawab">Jawabannya</label>
+            <input id="kJawab" type="text" maxlength="60" autocomplete="off" placeholder="mis. mie ayam">
+            <p class="bantu">Huruf besar/kecil, spasi, dan tanda baca tidak dipersoalkan. Pilih jawaban yang cuma dia yang tahu.</p>
+            <p class="galat">Pertanyaan dan jawabannya harus diisi.</p></div>
+        </div>
+        <div class="kunci-isi" data-isi-kunci="tanggal" hidden>
+          <div class="baris"><label for="kTanggal">Tanggal kuncinya</label>
+            <input id="kTanggal" type="date">
+            <p class="bantu">Dia memilih tanggal ini di kalender untuk membuka suratnya — misalnya hari jadian atau kencan pertama.</p>
+            <p class="galat">Tanggalnya belum diisi.</p></div>
+        </div>
+        <div class="kunci-isi" data-isi-kunci="petunjuk" hidden>
+          <div class="baris"><label for="kPetunjuk">Petunjuk <span style="font-weight:400;color:var(--ink-faint)">opsional</span></label>
+            <input id="kPetunjuk" type="text" maxlength="90" placeholder="mis. hari kita resmi"></div>
+        </div>
+        <label class="centang"><input type="checkbox" id="kWaktuNyala">
+          <span><b>Kunci waktu</b> — suratnya baru bisa dibuka mulai jam tertentu, misalnya tepat 00.00 di hari ulang tahunnya. Bisa digabung dengan kunci di atas.</span></label>
+        <div class="baris" id="kWaktuBaris" hidden><label for="kWaktu">Bisa dibuka mulai (WIB)</label>
+          <input id="kWaktu" type="datetime-local">
+          <p class="bantu">Sebelum waktunya, dia hanya melihat hitung mundur. Tautannya boleh kamu kirim lebih dulu.</p>
+          <p class="galat">Pilih waktu yang belum lewat, paling lambat setahun dari sekarang.</p></div>
+      </section>
+
       <section class="blok" id="blokKontak">
-        <h2><span class="n">7</span> Ke mana tautannya dikirim?</h2>
+        <h2><span class="n">8</span> Ke mana tautannya dikirim?</h2>
         <p class="jelas">Tautan suratnya langsung muncul di layar setelah bayar. Salinannya juga kami kirim ke email ini, supaya tidak hilang.</p>
         <div class="baris" data-f="email">
           <label for="email">Email kamu</label>
@@ -1306,6 +1356,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       });
     }
 
+    kurang = kurang.concat(cekKunci());
+
     if(!MODE_EDIT){
       var em = $("email").value.trim();
       var emOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em);
@@ -1328,6 +1380,49 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   }
 
   /* ══ 6 · badan kiriman ══ */
+  /* ── kunci pembuka ── */
+  var KUNCI = "";
+  function pilihKunci(j){
+    KUNCI = j || "";
+    document.querySelectorAll("[data-kunci]").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.kunci === KUNCI ? "true" : "false"); });
+    document.querySelectorAll("[data-isi-kunci]").forEach(function(d){
+      d.hidden = d.dataset.isiKunci === "petunjuk" ? !KUNCI : d.dataset.isiKunci !== KUNCI;
+    });
+  }
+  document.querySelector(".pil-kunci").addEventListener("click", function(e){
+    var b = e.target.closest("[data-kunci]"); if(b) pilihKunci(b.dataset.kunci);
+  });
+  $("kWaktuNyala").addEventListener("change", function(){ $("kWaktuBaris").hidden = !this.checked; });
+  $("kPin").addEventListener("input", function(){ this.value = this.value.replace(/\D/g, "").slice(0, 6); });
+  /* datetime-local dibaca sebagai WIB, apa pun zona HP-nya */
+  function waktuWib(v){ return v ? Date.parse(v + ":00+07:00") : 0; }
+  function wibKeLokal(ms){ return new Date(ms + 7*3600000).toISOString().slice(0, 16); }
+  function kunciUntukServer(){
+    var k = { jenis: KUNCI };
+    if(KUNCI === "pin") k.pin = $("kPin").value;
+    if(KUNCI === "tanya"){ k.tanya = $("kTanya").value.trim(); k.jawab = $("kJawab").value.trim(); }
+    if(KUNCI === "tanggal") k.tanggal = $("kTanggal").value;
+    if(KUNCI) k.petunjuk = $("kPetunjuk").value.trim();
+    if($("kWaktuNyala").checked) k.buka = waktuWib($("kWaktu").value);
+    return k;
+  }
+  function cekKunci(){
+    var salah = [];
+    function tanda(id, ok){ var b = $(id).closest(".baris"); if(b) b.classList.toggle("salah", !ok); if(!ok) salah.push(id); }
+    if(KUNCI === "pin") tanda("kPin", /^\d{4,6}$/.test($("kPin").value));
+    if(KUNCI === "tanya") tanda("kJawab", !!$("kTanya").value.trim() && !!$("kJawab").value.trim());
+    if(KUNCI === "tanggal") tanda("kTanggal", !!$("kTanggal").value);
+    if($("kWaktuNyala").checked){ var w = waktuWib($("kWaktu").value); tanda("kWaktu", w > Date.now() && w < Date.now() + 366*86400000); }
+    return salah;
+  }
+  function isiKunciDari(k){
+    if(!k) return;
+    pilihKunci(k.jenis || "");
+    $("kPin").value = k.pin || ""; $("kTanya").value = k.tanya || ""; $("kJawab").value = k.jawab || "";
+    $("kTanggal").value = k.tanggal || ""; $("kPetunjuk").value = k.petunjuk || "";
+    if(k.buka){ $("kWaktuNyala").checked = true; $("kWaktuBaris").hidden = false; $("kWaktu").value = wibKeLokal(k.buka); }
+  }
+
   function badan(){
     var q = new URLSearchParams(location.search);
     return {
@@ -1340,7 +1435,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         pengirim: $("pengirim").value.trim(),
         surat: [$("surat1").value, $("surat2").value, $("surat3").value],
         waPengirim: $("wa").value.trim(),
-        lagu: laguUntukServer()
+        lagu: laguUntukServer(),
+        kunci: kunciUntukServer()
       }, isiDasarUntuk("kirim"), isiKhusus()),
       foto: fotoRange().map(function(i){
         var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
@@ -1433,6 +1529,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         $("surat1").value = (i.surat||[])[0] || "";
         $("surat2").value = (i.surat||[])[1] || "";
         $("surat3").value = (i.surat||[])[2] || "";
+        isiKunciDari(i.kunci);
         if(MOMEN_GRUP === "anniversary"){
           $("jenisHariJadi").value = i.jenisHariJadi || "pacaran";
           $("mulai").value = i.tanggalMulai || "";

@@ -13,7 +13,8 @@
      selain itu    → file biasa (index.html, gambar, dll)
    ══════════════════════════════════════════════════════════════════ */
 
-import { onRequest as tanganiApi, rawatHarian } from "./functions/api/[[jalur]].js";
+import { onRequest as tanganiApi, rawatHarian, infoGerbang, isiUntukPenerima } from "./functions/api/[[jalur]].js";
+import { halamanGerbang } from "./functions/gerbang.js";
 import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
 
 /* Ambil satu halaman statis TANPA membiarkan pengalihan sampai ke browser.
@@ -155,6 +156,15 @@ async function tangani(request, env, ctx) {
           );
         }
 
+        /* kunci pembuka: selama belum terbuka, yang disajikan hanya gerbangnya */
+        let isiPenuh = {};
+        try { isiPenuh = JSON.parse(baris.isi || "{}"); } catch (_) {}
+        const gerbang = infoGerbang(isiPenuh, request.headers.get("cookie"), kode);
+        if (gerbang)
+          return new Response(halamanGerbang(gerbang, kode), {
+            headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" }
+          });
+
         const tema = baris.tema;
         const nama = tema === "kado-riang" ? "kado-riang"
           : tema === "langit-harapan" ? "langit-harapan"
@@ -175,7 +185,7 @@ async function tangani(request, env, ctx) {
         if (nama === "surat")   // Bait: ambil datanya sendiri lewat /api/surat
           return new Response(sisipDibuka(html, kode), { status: r.status, headers: new Headers(r.headers) });
 
-        const aman = JSON.stringify(JSON.parse(baris.isi || "{}")).replace(/<\/script/gi, "<\\/script");
+        const aman = JSON.stringify(isiUntukPenerima(isiPenuh)).replace(/<\/script/gi, "<\\/script");
         const ditulis = html.replace(
           /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/,
           "$1" + aman + "$2"

@@ -31,7 +31,8 @@ const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6
    Alamat IP tidak disimpan mentah — hanya sidik SHA-256 pendeknya. */
 const LAJU = {
   draf: [12, 600], simpan: [30, 600], bayar: [20, 600], catat: [80, 600],
-  status: [150, 600], surat: [150, 600], dibuka: [40, 600], developer: [25, 600]
+  status: [150, 600], surat: [150, 600], dibuka: [40, 600], developer: [25, 600],
+  buka: [12, 600], ingat: [10, 600]
 };                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
 const MAKS_LAGU = 10 * 1024 * 1024;  // batas file lagu yang diunggah
@@ -464,6 +465,73 @@ async function rapikanLagu(env, kode, masuk, lama) {
   return kosong;
 }
 
+/* ══════════════════ kunci pembuka ══════════════════
+   jenis: "pin" (4–6 angka) · "tanya" (pertanyaan + jawaban) · "tanggal"
+   (YYYY-MM-DD), ditambah opsional "buka" = waktu paling cepat surat bisa
+   dibuka (milidetik). Kunci TIDAK PERNAH dikirim ke penerima: worker.js
+   menyajikan halaman gerbang, dan isi surat baru dikirim setelah kuncinya
+   benar (cookie berisi tiket acak per surat).                              */
+const JENIS_KUNCI = ["pin", "tanya", "tanggal"];
+function normalJawab(s) {
+  return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, " ").trim();
+}
+function rapikanKunci(masuk, lama) {
+  const k = masuk || {};
+  const hasil = {};
+  const jenis = JENIS_KUNCI.includes(k.jenis) ? k.jenis : "";
+  if (jenis === "pin") {
+    const pin = String(k.pin || "").replace(/\D/g, "");
+    if (pin.length < 4 || pin.length > 6) throw new Error("PIN kunci harus 4–6 angka.");
+    hasil.jenis = "pin"; hasil.pin = pin;
+  } else if (jenis === "tanya") {
+    const tanya = teks(k.tanya, 120), jawab = teks(k.jawab, 60);
+    if (!tanya || !normalJawab(jawab)) throw new Error("Pertanyaan rahasia dan jawabannya belum lengkap.");
+    hasil.jenis = "tanya"; hasil.tanya = tanya; hasil.jawab = jawab;
+  } else if (jenis === "tanggal") {
+    const tgl = tanggalSah(k.tanggal);
+    if (!tgl) throw new Error("Tanggal kunci belum diisi.");
+    hasil.jenis = "tanggal"; hasil.tanggal = tgl;
+  }
+  if (hasil.jenis) hasil.petunjuk = teks(k.petunjuk, 90);
+  const buka = Number(k.buka) || 0;
+  if (buka) {
+    if (buka > Date.now() + 366 * 86400000) throw new Error("Waktu buka paling lambat satu tahun dari sekarang.");
+    hasil.buka = buka;
+  }
+  if (!hasil.jenis && !hasil.buka) return null;
+  hasil.tiket = (lama && lama.tiket) || acak(24);
+  return hasil;
+}
+/* isi surat yang aman dikirim ke penerima: tanpa kunci */
+export function isiUntukPenerima(isi) {
+  const salin = Object.assign({}, isi || {});
+  delete salin.kunci;
+  return salin;
+}
+export function cocokKunci(kunci, jawab) {
+  if (!kunci || !kunci.jenis) return true;
+  if (kunci.jenis === "pin") return String(jawab || "").replace(/\D/g, "") === kunci.pin;
+  if (kunci.jenis === "tanggal") return tanggalSah(jawab) === kunci.tanggal;
+  return normalJawab(jawab) === normalJawab(kunci.jawab);
+}
+/* gerbang perlu ditampilkan? null = tidak; selain itu info aman untuk gerbang */
+export function infoGerbang(isi, cookie, kode) {
+  const k = isi && isi.kunci;
+  if (!k) return null;
+  const terbuka = !k.jenis || bacaCookie(cookie, "fvk_" + kode) === k.tiket;
+  const tunggu = k.buka && Date.now() < k.buka;
+  if (terbuka && !tunggu) return null;
+  return {
+    jenis: terbuka ? "" : k.jenis, tanya: k.tanya || "", petunjuk: k.petunjuk || "",
+    panjangPin: k.pin ? k.pin.length : 0, buka: tunggu ? k.buka : 0, penerima: (isi && isi.penerima) || ""
+  };
+}
+function bacaCookie(cookie, nama) {
+  const m = String(cookie || "").match(new RegExp("(?:^|;\\s*)" + nama + "=([^;]+)"));
+  return m ? m[1] : "";
+}
+
 async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   const p = badan.isi || {};
   const skema = TEMA_SKEMA[tema] || TEMA_SKEMA.bait;
@@ -697,6 +765,8 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   }
   if (isi.foto.length < 1) throw new Error("Minimal satu foto harus diunggah.");
   isi.lagu = await rapikanLagu(env, kode, p.lagu, lamaIsi && lamaIsi.lagu);
+  const kunci = rapikanKunci(p.kunci, lamaIsi && lamaIsi.kunci);
+  if (kunci) isi.kunci = kunci;
   return isi;
 }
 
@@ -903,6 +973,21 @@ export async function onRequest(ctx) {
     if (await lewatBatas(db, request, namaLaju))
       return salah("Terlalu banyak permintaan dalam waktu singkat. Coba lagi beberapa menit lagi, ya.", 429);
 
+    /* ── coba membuka kunci surat ─────────────────────────────── */
+    if (jalur === "buka" && request.method === "POST") {
+      const kode = teks(badan.kode, 16);
+      const b = await db.prepare(`SELECT isi,status,aktif FROM pesanan WHERE kode=?`).bind(kode).first();
+      if (!b || b.status !== "lunas" || !b.aktif) return salah("Surat tidak ditemukan.", 404);
+      const k = JSON.parse(b.isi || "{}").kunci;
+      if (!k) return jwb({ ok: true });
+      if (k.buka && Date.now() < k.buka) return salah("Suratnya belum boleh dibuka. Sabar sebentar lagi, ya.", 403);
+      if (!cocokKunci(k, badan.jawab)) return salah("Belum tepat. Coba lagi, ya.", 401);
+      return new Response(JSON.stringify({ ok: true }), { headers: {
+        "content-type": "application/json; charset=utf-8",
+        "set-cookie": "fvk_" + kode + "=" + k.tiket + "; Path=/; Max-Age=15552000; HttpOnly; Secure; SameSite=Lax"
+      } });
+    }
+
     /* ── surat dibuka penerima ───────────────────────────────────
        Dipanggil skrip kecil yang disisipkan worker.js ke /s/<kode>.
        Perangkat yang baru saja membayar (penanda di selesai.html)
@@ -1100,8 +1185,10 @@ export async function onRequest(ctx) {
       if (!b) return salah("Surat tidak ditemukan.", 404);
       if (b.status !== "lunas") return salah("Surat ini belum aktif.", 404);
       if (!b.aktif) return salah("Surat ini sudah dinonaktifkan.", 410);
-      return new Response(JSON.stringify({ ok: true, tema: b.tema, isi: JSON.parse(b.isi || "{}") }), {
-        headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60" }
+      const isiS = JSON.parse(b.isi || "{}");
+      if (infoGerbang(isiS, request.headers.get("cookie"), kode)) return salah("Surat ini masih terkunci.", 403);
+      return new Response(JSON.stringify({ ok: true, tema: b.tema, isi: isiUntukPenerima(isiS) }), {
+        headers: { "content-type": "application/json; charset=utf-8", "cache-control": "private, no-store" }
       });
     }
 
