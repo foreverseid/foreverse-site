@@ -1148,16 +1148,24 @@ export async function onRequest(ctx) {
       const aksi = teks(badan.aksi, 20);
 
       if (aksi === "daftar") {
-        /* cari: kode, email, nomor WA, atau nama di isi surat */
+        /* Periode: dari–sampai (milidetik). Kosong = sejak hari pertama.
+           Pesanan dihitung masuk periode menurut tanggal dibuat; penjualan
+           (lunas & pendapatan) menurut tanggal dibayar. Periode sebelumnya
+           yang sama panjang ikut dihitung untuk perbandingan.            */
+        const skr = Date.now();
+        const sampai = Number(badan.sampai) > 0 ? Number(badan.sampai) : skr;
+        const dari = Number(badan.dari) > 0 ? Number(badan.dari) : 0;
+        const panjang = sampai - dari;
         const cari = teks(badan.cari, 60).toLowerCase();
-        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,isi FROM pesanan`;
+        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,isi FROM pesanan`;
         const pola = "%" + cari.replace(/[%_\\]/g, "\\$&") + "%";
-        const r = cari
-          ? await db.prepare(kolom + ` WHERE lower(kode) LIKE ?1 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?1 ESCAPE '\\'
-              OR lower(COALESCE(whatsapp,'')) LIKE ?1 ESCAPE '\\' OR lower(COALESCE(isi,'')) LIKE ?1 ESCAPE '\\'
-              ORDER BY dibuat DESC LIMIT 200`).bind(pola).all()
-          : await db.prepare(kolom + ` ORDER BY dibuat DESC LIMIT 200`).all();
-        const baris = (r.results || []).map(b => {
+        const syaratCari = cari
+          ? ` AND (lower(kode) LIKE ?3 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?3 ESCAPE '\\'
+              OR lower(COALESCE(whatsapp,'')) LIKE ?3 ESCAPE '\\' OR lower(COALESCE(isi,'')) LIKE ?3 ESCAPE '\\')`
+          : "";
+        const q = db.prepare(kolom + ` WHERE dibuat >= ?1 AND dibuat <= ?2` + syaratCari + ` ORDER BY dibuat DESC LIMIT 2000`);
+        const r = cari ? await q.bind(dari, sampai, pola).all() : await q.bind(dari, sampai).all();
+        const ringkas = (b) => {
           const i = JSON.parse(b.isi || "{}");
           const l = i.lagu || {};
           delete b.isi;
@@ -1173,20 +1181,51 @@ export async function onRequest(ctx) {
             punya_rahasia: !!i.rahasia,
             sembunyikan_umur: !!i.sembunyikanUmur
           };
-        });
-        const hit = await db.prepare(
-          `SELECT COUNT(*) n, COALESCE(SUM(jumlah),0) rp FROM pesanan WHERE status='lunas'`).first();
-        const semua = await db.prepare(`SELECT COUNT(*) n FROM pesanan`).first();
-        /* minat per tema, 30 hari terakhir: dibuka, mulai isi formulir, terbayar */
-        const sejak = new Date(Date.now() + 7 * 3600000 - 29 * 86400000).toISOString().slice(0, 10);
-        const kj = await db.prepare(`SELECT tema, jenis, SUM(n) n FROM kunjungan WHERE hari >= ? GROUP BY tema, jenis`).bind(sejak).all();
-        const ls = await db.prepare(`SELECT tema, COUNT(*) n FROM pesanan WHERE status='lunas' AND COALESCE(dibayar,dibuat) >= ? GROUP BY tema`)
-          .bind(Date.now() - 30 * 86400000).all();
+        };
+        const baris = (r.results || []).map(ringkas);
+
+        const jual = async (a, b) => db.prepare(`SELECT COUNT(*) n, COALESCE(SUM(jumlah),0) rp FROM pesanan
+          WHERE status='lunas' AND COALESCE(dibayar,dibuat) >= ? AND COALESCE(dibayar,dibuat) <= ?`).bind(a, b).first();
+        const hit = await jual(dari, sampai);
+        const lalu = dari > 0 ? await jual(Math.max(0, dari - panjang), dari - 1) : null;
+        const masukLalu = dari > 0 ? await db.prepare(`SELECT COUNT(*) n FROM pesanan WHERE dibuat >= ? AND dibuat < ?`)
+          .bind(Math.max(0, dari - panjang), dari).first() : null;
+        const semua = await db.prepare(`SELECT COUNT(*) n, COALESCE(SUM(CASE WHEN status='lunas' THEN jumlah END),0) rp,
+          SUM(CASE WHEN status='lunas' THEN 1 ELSE 0 END) lunas FROM pesanan`).first();
+
+        /* penjualan per tema & per momen dalam periode */
+        const perTema = await db.prepare(`SELECT COALESCE(tema,'bait') tema, COUNT(*) n, COALESCE(SUM(jumlah),0) rp FROM pesanan
+          WHERE status='lunas' AND COALESCE(dibayar,dibuat) BETWEEN ? AND ? GROUP BY 1 ORDER BY n DESC`).bind(dari, sampai).all();
+        const perMomen = await db.prepare(`SELECT COALESCE(momen,'') momen, COUNT(*) n, COALESCE(SUM(jumlah),0) rp FROM pesanan
+          WHERE status='lunas' AND COALESCE(dibayar,dibuat) BETWEEN ? AND ? GROUP BY 1 ORDER BY n DESC`).bind(dari, sampai).all();
+
+        /* minat per tema dalam periode (tanggal WIB) */
+        const hariWib = (ms) => new Date(ms + 7 * 3600000).toISOString().slice(0, 10);
+        const kj = await db.prepare(`SELECT tema, jenis, SUM(n) n FROM kunjungan WHERE hari >= ? AND hari <= ? GROUP BY tema, jenis`)
+          .bind(hariWib(dari), hariWib(sampai)).all();
         const minat = {};
         for (const t of Object.keys(TEMA_SKEMA)) minat[t] = { demo: 0, form: 0, lunas: 0 };
-        for (const r of (kj.results || [])) if (minat[r.tema]) minat[r.tema][r.jenis] = r.n;
-        for (const r of (ls.results || [])) if (minat[r.tema || "bait"]) minat[r.tema || "bait"].lunas = r.n;
-        return jwb({ ok: true, cari, baris, lunas: hit.n, pendapatan: hit.rp, total: semua.n, minat, sekarang: Date.now() });
+        for (const x of (kj.results || [])) if (minat[x.tema]) minat[x.tema][x.jenis] = x.n;
+        for (const x of (perTema.results || [])) if (minat[x.tema]) minat[x.tema].lunas = x.n;
+
+        /* hal yang perlu tindakan — selalu dari SEMUA pesanan, tidak ikut periode */
+        const perlu = await db.prepare(kolom + ` WHERE
+            (status='lunas' AND email_terkirim=0 AND COALESCE(email,'')!='')
+            OR (status='lunas' AND aktif=0 AND isi!='{}')
+            OR (status='lunas' AND batas_edit > ?1 AND batas_edit < ?1 + 172800000)
+            OR (status='lunas' AND aktif=1 AND simpan_sampai IS NOT NULL AND simpan_sampai < ?1 + ?2)
+          ORDER BY dibuat DESC LIMIT 200`).bind(skr, HARI_PENGINGAT * 86400000).all();
+        const draf = await db.prepare(`SELECT COUNT(*) n FROM pesanan WHERE status!='lunas'`).first();
+
+        return jwb({
+          ok: true, cari, dari, sampai, baris,
+          lunas: hit.n, pendapatan: hit.rp,
+          lalu: lalu ? { lunas: lalu.n, pendapatan: lalu.rp, masuk: masukLalu.n } : null,
+          semua: { total: semua.n, lunas: semua.lunas || 0, pendapatan: semua.rp },
+          per_tema: perTema.results || [], per_momen: perMomen.results || [],
+          minat, perlu: (perlu.results || []).map(ringkas), draf: draf.n,
+          sekarang: skr
+        });
       }
 
       if (aksi === "email") return jwb(await kirimEmailKode(env, db, teks(badan.kode, 16), asal));

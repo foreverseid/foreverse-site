@@ -346,6 +346,9 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
     x.bezierCurveTo(cx + w*0.5, cy - h*0.10, cx, cy - h*0.08, cx, cy + h*0.26);
     x.closePath();
   }
+  /* hati yang titik tengah kotak batasnya tepat di (cx,cy) —
+     jalurHati() berpatokan pada lekuk atas, bukan tengah bentuknya */
+  function hatiDiTengah(x, cx, cy, w){ jalurHati(x, cx, cy - w*0.4116, w); }
   function kotakBulat(x, X, Y, W, H, R){
     x.beginPath(); x.moveTo(X+R,Y); x.arcTo(X+W,Y,X+W,Y+H,R); x.arcTo(X+W,Y+H,X,Y+H,R);
     x.arcTo(X,Y+H,X,Y,R); x.arcTo(X,Y,X+W,Y,R); x.closePath();
@@ -399,7 +402,7 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
       gambarKode(x, 140, 110, 800, tinta);
       /* hati kecil di tengah — ditutupi aman berkat koreksi galat tingkat H */
       x.fillStyle = "#FFFFFF"; x.beginPath(); x.arc(L/2, 510, 70, 0, Math.PI*2); x.fill();
-      x.fillStyle = "#E8734A"; jalurHati(x, L/2, 462, 100); x.fill();
+      x.fillStyle = "#E8734A"; hatiDiTengah(x, L/2, 510, 100); x.fill();
       x.fillStyle = tinta; x.font = serif; x.textAlign = "center";
       x.fillText("untukmu", L/2, 1000);
     }
@@ -429,5 +432,6 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
   cek();
 })();
 </script>
+<script src="/bantuan.js" defer></script>
 </body>
 </html>

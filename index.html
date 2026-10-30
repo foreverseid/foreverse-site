@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foreverse — Surat Digital untuk Orang yang Kamu Sayang</title>
-<meta name="description" content="Tulis pesanmu, pilih fotonya, bayar Rp15.000. Link surat digitalnya masuk ke WhatsApp-mu, tinggal kamu kirim ke dia.">
+<meta name="description" content="Surat digital yang bisa dimainkan. Tulis pesanmu, pilih fotonya, bayar lewat QRIS — tautannya langsung jadi, tinggal kamu kirim ke dia.">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="id_ID">
@@ -395,14 +395,6 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 .foot a{text-decoration:none;color:var(--ink-soft)}
 .foot a:hover{color:var(--ink);text-decoration:underline}
 
-/* WA mengambang */
-.float{position:fixed;right:16px;bottom:16px;z-index:70;display:inline-flex;align-items:center;gap:9px;text-decoration:none;
-  background:var(--paper);color:var(--ink);border:1px solid var(--stone);font-size:14px;font-weight:600;
-  padding:11px 17px 11px 13px;border-radius:100px;box-shadow:0 12px 30px rgba(22,22,26,.14);transition:transform .16s ease,opacity .2s ease}
-.float:hover{transform:translateY(-2px)}
-.float svg{width:21px;height:21px;color:#25D366}
-.float.gone{opacity:0;pointer-events:none}
-@media(max-width:699px){.float{padding:13px}.float .fl-t{display:none}}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -650,10 +642,6 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </div>
 </footer>
 
-<a id="float" class="float" href="#" target="_blank" rel="noopener" aria-label="Tanya lewat WhatsApp">
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-2-1.2 7.4 7.4 0 01-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.1.6a2.7 2.7 0 001.8-1.2 2.2 2.2 0 00.1-1.2c0-.1-.2-.2-.4-.3z"/></svg>
-  <span class="fl-t">Ada pertanyaan?</span>
-</a>
 
 <script>
 (function(){
@@ -673,7 +661,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   }
 
   document.querySelectorAll("[data-v]").forEach(function(el){ var v=C[el.getAttribute("data-v")]; if(v) el.textContent=v; });
-  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("fWa",wa("")); href("float",wa("Halo Foreverse, saya mau tanya."));
+  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("fWa",wa(""));
   href("fIg",C.instagram); href("fTt",C.tiktok); href("fPrivasi",C.privasi); href("fSyarat",C.syarat);
 
   /* strip momen */
@@ -742,10 +730,8 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   });
   if(M.length) pick(0);
 
-  /* WA mengambang disembunyikan di bagian penutup */
-  var fl=$("float"), fin=$("kontak");
-  if("IntersectionObserver" in window){ new IntersectionObserver(function(es){ fl.classList.toggle("gone",es[0].isIntersecting); },{threshold:.25}).observe(fin); }
 })();
 </script>
+<script src="/bantuan.js" defer></script>
 </body>
 </html>

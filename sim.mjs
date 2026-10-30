@@ -111,7 +111,10 @@ export function buatAssets() {
           const isi = await readFile(berkas);
           const jenis = calon.endsWith(".html") ? "text/html; charset=utf-8"
             : calon.endsWith(".json") ? "application/json"
-            : calon.endsWith(".svg") ? "image/svg+xml" : "application/octet-stream";
+            : calon.endsWith(".svg") ? "image/svg+xml"
+            : calon.endsWith(".js") ? "text/javascript; charset=utf-8"
+            : calon.endsWith(".png") ? "image/png"
+            : calon.endsWith(".jpg") ? "image/jpeg" : "application/octet-stream";
           return new Response(isi, { status: 200, headers: { "content-type": jenis } });
         }
       }
