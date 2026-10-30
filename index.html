@@ -225,20 +225,14 @@ h3{font-size:19px;line-height:1.3}
 
 /* halaman terpisah */
 main{min-height:60vh}
-.hal-atas{padding-top:clamp(40px,6vw,64px)}
+section{scroll-margin-top:120px}
+body:not([data-hal-aktif="beranda"]) .hal-atas{padding-top:clamp(40px,6vw,64px)}
 .nav a[aria-current="page"]{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:2px;text-decoration-color:var(--coral)}
 .nav-m{display:flex;gap:6px;overflow-x:auto;padding:0 var(--gut) 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .nav-m::-webkit-scrollbar{display:none}
 .nav-m a{flex:none;font-size:13.5px;text-decoration:none;color:var(--ink-soft);padding:7px 13px;border-radius:100px;border:1px solid var(--stone);background:var(--paper);font-weight:500}
 .nav-m a[aria-current="page"]{background:var(--ink);color:#fff;border-color:var(--ink)}
 @media(min-width:900px){.nav-m{display:none}}
-.jelajah{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:28px}
-.jelajah a{display:block;text-decoration:none;background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:22px;transition:transform .16s ease,border-color .16s ease}
-.jelajah a:hover{transform:translateY(-3px);border-color:var(--ink)}
-.jelajah .ji{font-size:26px}
-.jelajah h3{margin-top:10px}
-.jelajah p{margin-top:6px;color:var(--ink-soft);font-size:14.5px}
-.jelajah .ke{display:inline-block;margin-top:12px;font-size:14px;font-weight:600;color:var(--violet)}
 .pv-pilih{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
 .pv-pilih button{font-size:14px;padding:8px 14px;border-radius:100px;border:1px solid var(--stone);background:var(--paper);cursor:pointer}
 .pv-pilih button[aria-pressed="true"]{background:var(--violet);color:#fff;border-color:var(--violet)}
@@ -425,12 +419,12 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   <div class="wrap bar">
     <a href="/" class="brand" data-rute><img src="/foreverse-logo.png" alt=""><span>foreverse</span></a>
     <nav class="nav" aria-label="Navigasi utama">
-      <a href="/momen" data-rute>Momen</a><a href="/contoh" data-rute>Contoh</a><a href="/cara-pesan" data-rute>Cara pesan</a><a href="/harga" data-rute>Harga</a><a href="/faq" data-rute>FAQ</a>
+      <a href="/" data-rute>Beranda</a><a href="/template" data-rute>Template</a><a href="/cara-pesan" data-rute>Cara pesan &amp; harga</a><a href="/faq" data-rute>FAQ</a>
     </nav>
-    <a class="btn btn-main btn-sm" href="/momen" data-rute>Pilih momen</a>
+    <a class="btn btn-main btn-sm" href="/template" data-rute>Pilih momen</a>
   </div>
   <nav class="nav-m" aria-label="Navigasi utama (HP)">
-    <a href="/" data-rute>Beranda</a><a href="/momen" data-rute>Momen</a><a href="/contoh" data-rute>Contoh</a><a href="/cara-pesan" data-rute>Cara pesan</a><a href="/harga" data-rute>Harga</a><a href="/faq" data-rute>FAQ</a>
+    <a href="/" data-rute>Beranda</a><a href="/template" data-rute>Template</a><a href="/cara-pesan" data-rute>Cara pesan &amp; harga</a><a href="/faq" data-rute>FAQ</a>
   </nav>
 </header>
 
@@ -444,8 +438,8 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <h1>Surat digital untuk orang yang <em>kamu sayang.</em></h1>
         <p class="hero-sub">Bukan sekadar dibaca — suratnya dimainkan. Tulis pesanmu, pilih fotonya, bayar <span data-v="harga">Rp15.000</span>. Tautannya langsung jadi, tinggal kamu kirim ke dia.</p>
         <div class="hero-cta">
-          <a href="/momen" class="btn btn-main" data-rute>Pilih momen</a>
-          <a href="/contoh" class="btn btn-ghost" data-rute>Coba contohnya</a>
+          <a href="/template" class="btn btn-main" data-rute>Pilih momen</a>
+          <a href="/template#contoh" class="btn btn-ghost" data-rute>Coba contohnya</a>
         </div>
         <ul class="facts">
           <li><b data-v="harga">Rp15.000</b> + biaya transaksi QRIS</li>
@@ -477,24 +471,8 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 
   <div class="strip" aria-hidden="true" data-hal="beranda"><div class="strip-track" id="strip"></div></div>
 
-  <!-- ═════ BERANDA: jelajah ═════ -->
-  <section data-hal="beranda">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">Mulai dari mana?</span>
-        <h2>Pilih jalanmu.</h2>
-      </div>
-      <div class="jelajah">
-        <a href="/momen" data-rute><span class="ji">🎂</span><h3>Momen &amp; tema</h3><p>Ulang tahun, anniversary, LDR, sampai lamaran — tiap momen punya tema sendiri.</p><span class="ke">Pilih momen →</span></a>
-        <a href="/contoh" data-rute><span class="ji">📱</span><h3>Coba contohnya</h3><p>Mainkan contoh lengkapnya, persis seperti yang dia lihat nanti.</p><span class="ke">Lihat contoh →</span></a>
-        <a href="/cara-pesan" data-rute><span class="ji">✍️</span><h3>Cara pesan</h3><p>Isi dulu, bayar terakhir. Tautannya langsung jadi.</p><span class="ke">Lihat caranya →</span></a>
-        <a href="/harga" data-rute><span class="ji">🏷️</span><h3>Harga</h3><p>Satu harga untuk semua tema, tanpa paket tambahan.</p><span class="ke">Lihat harga →</span></a>
-      </div>
-    </div>
-  </section>
-
   <!-- ═════ MOMEN → TEMA ═════ -->
-  <section id="momen" data-hal="momen" class="hal-atas">
+  <section id="momen" data-hal="beranda template" class="hal-atas">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Pilih momen</span>
@@ -508,7 +486,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ CONTOH ═════ -->
-  <section class="preview hal-atas" id="contoh" data-hal="contoh">
+  <section class="preview hal-atas" id="contoh" data-hal="beranda template">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Coba dulu</span>
@@ -533,7 +511,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ CARA PESAN ═════ -->
-  <section id="cara" data-hal="cara" class="hal-atas">
+  <section id="cara" data-hal="beranda cara" class="hal-atas">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Cara pesan</span>
@@ -550,7 +528,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ KENAPA ═════ -->
-  <section class="why" data-hal="cara">
+  <section class="why" data-hal="beranda cara">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Yang bisa kamu pegang</span>
@@ -582,7 +560,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ HARGA ═════ -->
-  <section id="harga" data-hal="harga" class="hal-atas">
+  <section id="harga" data-hal="beranda cara" class="hal-atas">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Harga</span>
@@ -593,7 +571,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
           <span class="lbl">Per surat</span>
           <div class="amt" data-v="harga">Rp15.000</div>
           <p class="per">Ditambah biaya transaksi QRIS <span data-v="biaya">Rp560</span> dari penyedia pembayaran — rinciannya tampil sebelum kamu bayar.</p>
-          <a class="btn btn-main" href="/momen" data-rute>Pilih momen</a>
+          <a class="btn btn-main" href="/template" data-rute>Pilih momen</a>
         </div>
         <div class="right">
           <ul>
@@ -608,7 +586,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ FAQ ═════ -->
-  <section id="faq" data-hal="faq" class="hal-atas" style="background:var(--cream-lift);border-top:1px solid var(--stone)">
+  <section id="faq" data-hal="beranda faq" class="hal-atas" style="background:var(--cream-lift);border-top:1px solid var(--stone)">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">FAQ</span>
@@ -664,13 +642,13 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ PENUTUP ═════ -->
-  <section class="final" id="kontak" data-hal="beranda cara harga faq">
+  <section class="final" id="kontak" data-hal="beranda cara faq">
     <div class="wrap">
       <span class="eyebrow">Mulai dari sini</span>
       <h2>Sudah tahu momennya? Tinggal pilih temanya.</h2>
       <p class="lede">Masih ragu? Tanya dulu lewat WhatsApp.</p>
       <div class="final-cta">
-        <a href="/momen" class="btn btn-main" data-rute>Pilih momen</a>
+        <a href="/template" class="btn btn-main" data-rute>Pilih momen</a>
         <a id="waFinal" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Tanya lewat WhatsApp</a>
       </div>
     </div>
@@ -740,7 +718,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   $("pvPilih").addEventListener("click",function(e){
     var b=e.target.closest("[data-t]"); if(!b) return;
     catat(b.dataset.t,"demo"); show(b.dataset.t,momenDari(b.dataset.t));
-    history.replaceState(null,"","/contoh?tema="+encodeURIComponent(b.dataset.t));
+
   });
 
   /* momen → tema */
@@ -766,7 +744,10 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
         esc(wa("Halo Foreverse, saya punya ide tema untuk momen "+m.nama+"."))+'">Kirim ide</a></div></div></article>';
       cards.querySelectorAll("[data-try]").forEach(function(b){
-        b.addEventListener("click",function(){ pergi("/contoh?tema="+encodeURIComponent(b.getAttribute("data-try"))); });
+        b.addEventListener("click",function(){
+          var k=b.getAttribute("data-try"); catat(k,"demo"); show(k,m.nama);
+          $("contoh").scrollIntoView({behavior:"smooth",block:"start"});
+        });
       });
     } else {
       cards.innerHTML='<article class="card empty"><div class="cov">'+m.emoji+'</div><div class="body">'+
@@ -792,34 +773,37 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
      Satu berkas, enam alamat: /, /momen, /contoh, /cara-pesan, /harga, /faq
      (worker.js menyajikan index.html untuk semuanya). Tiap bagian punya
      data-hal; hanya bagian milik halaman yang sedang dibuka yang tampil. */
-  var RUTE={ "/":"beranda", "/momen":"momen", "/contoh":"contoh", "/cara-pesan":"cara", "/harga":"harga", "/faq":"faq" };
-  var JUDUL={ beranda:"Foreverse — Surat Digital untuk Orang yang Kamu Sayang", momen:"Pilih momen · Foreverse",
-    contoh:"Contoh surat · Foreverse", cara:"Cara pesan · Foreverse", harga:"Harga · Foreverse", faq:"FAQ · Foreverse" };
-  var LAMA={ "#momen":"/momen", "#contoh":"/contoh", "#cara":"/cara-pesan", "#harga":"/harga", "#faq":"/faq" };
+  /* Beranda memuat semuanya; tiga halaman lain berisi bagiannya masing-masing.
+     Alamat lama (/momen, /contoh, /harga, #harga, …) tetap diarahkan. */
+  var RUTE={ "/":"beranda", "/template":"template", "/cara-pesan":"cara", "/faq":"faq" };
+  var ALIAS={ "/momen":"/template", "/contoh":"/template#contoh", "/harga":"/cara-pesan#harga",
+    "#momen":"/template", "#contoh":"/template#contoh", "#cara":"/cara-pesan", "#harga":"/cara-pesan#harga", "#faq":"/faq" };
+  var JUDUL={ beranda:"Foreverse — Surat Digital untuk Orang yang Kamu Sayang", template:"Template & contoh · Foreverse",
+    cara:"Cara pesan & harga · Foreverse", faq:"FAQ · Foreverse" };
   function tampilkan(){
     var jalur=location.pathname.replace(/\/+$/,"")||"/";
     if(jalur==="/index.html") jalur="/";
     var hal=RUTE[jalur]||"beranda";
+    document.body.setAttribute("data-hal-aktif",hal);
     document.querySelectorAll("[data-hal]").forEach(function(el){
       el.hidden=(" "+el.getAttribute("data-hal")+" ").indexOf(" "+hal+" ")<0;
     });
     document.querySelectorAll("a[data-rute]").forEach(function(a){
-      var ya=a.getAttribute("href")===jalur && !a.classList.contains("btn") && !a.classList.contains("brand");
+      var ya=a.getAttribute("href").split("#")[0]===jalur && !a.classList.contains("btn") && !a.classList.contains("brand");
       if(ya) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
     });
     document.title=JUDUL[hal];
-    if(hal==="contoh"){
-      var k=new URLSearchParams(location.search).get("tema");
-      if(k && T[k]){ catat(k,"demo"); show(k,momenDari(k)); }
-      else if(!current && semuaTema.length) show(semuaTema[0],momenDari(semuaTema[0]));
-    }
+    var k=new URLSearchParams(location.search).get("tema");
+    if(k && T[k]) show(k,momenDari(k));
+    else if(!current && semuaTema.length) show(semuaTema[0],momenDari(semuaTema[0]));
     var aktif=document.querySelector('.nav-m a[aria-current="page"]');
     if(aktif && aktif.scrollIntoView) aktif.scrollIntoView({block:"nearest",inline:"center"});
   }
   function pergi(url){
     history.pushState(null,"",url);
     tampilkan();
-    window.scrollTo(0,0);
+    var h=url.split("#")[1], el=h && document.getElementById(h);
+    if(el) el.scrollIntoView({block:"start"}); else window.scrollTo(0,0);
   }
   document.addEventListener("click",function(e){
     var a=e.target.closest("a[data-rute]");
@@ -827,8 +811,10 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     e.preventDefault(); pergi(a.getAttribute("href"));
   });
   addEventListener("popstate",tampilkan);
-  if(LAMA[location.hash]) history.replaceState(null,"",LAMA[location.hash]);
+  var tuju=ALIAS[location.pathname.replace(/\/+$/,"")]||ALIAS[location.hash];
+  if(tuju) history.replaceState(null,"",tuju);
   tampilkan();
+  if(location.hash){ var el0=document.getElementById(location.hash.slice(1)); if(el0) setTimeout(function(){ el0.scrollIntoView({block:"start"}); },60); }
 
 })();
 </script>

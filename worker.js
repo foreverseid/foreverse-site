@@ -117,7 +117,7 @@ async function tangani(request, env, ctx) {
       }
 
       /* ── halaman beranda yang terpisah: satu berkas index.html ── */
-      if (/^\/(momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
+      if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "index", request);
 
       /* ── alamat pendek: /edit/<token> ── */
