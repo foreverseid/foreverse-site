@@ -30,10 +30,10 @@
       k: ["bayar pakai", "metode", "qris", "dana", "ovo", "gopay", "shopeepay", "transfer", "rekening", "bank", "kartu kredit", "va", "virtual account", "indomaret", "alfamart"],
       j: "Pembayaran lewat <b>QRIS</b>, diproses DOKU. QRIS bisa dibayar dari DANA, OVO, ShopeePay, GoPay, atau aplikasi m-banking mana pun. Kami <b>tidak pernah</b> meminta transfer ke rekening pribadi lewat chat." },
     { id: "jadi", t: "Kapan tautannya jadi?",
-      k: ["kapan", "berapa lama", "jadi", "selesai", "dikirim", "sampai", "proses", "langsung", "nunggu", "menunggu"],
+      k: ["kapan", "berapa lama", "jadi", "selesai", "dikirim", "proses", "langsung", "nunggu", "menunggu"],
       j: "Beberapa saat setelah pembayaran berhasil, tautan surat langsung <b>muncul di layar</b> dan <b>dikirim ke email</b> yang kamu isi. Tidak perlu menunggu admin — semuanya otomatis." },
     { id: "belum", t: "Sudah bayar, tapi tautannya belum muncul",
-      k: ["belum muncul", "belum masuk", "belum dapat", "tidak muncul", "gak muncul", "ga muncul", "nggak muncul", "tidak masuk", "email tidak", "spam", "hilang", "gagal", "error", "sudah bayar", "udah bayar", "terpotong"],
+      k: ["belum muncul", "belum masuk", "belum dapat", "belum dikirim", "tautan tidak muncul", "tautan tidak masuk", "email tidak masuk", "spam", "tautan hilang", "gagal", "error", "sudah bayar", "sudah lunas", "padahal lunas", "terpotong"],
       j: "Tunggu 1–2 menit, lalu cek email (termasuk folder <b>spam/promosi</b>). Kalau tetap belum ada, kirim <b>kode pesananmu</b> ke WhatsApp kami. Uangmu aman — kalau karena kendala di pihak kami tautannya tidak sampai dalam 1×24 jam, dana dikembalikan penuh." },
     { id: "ubah", t: "Bisa mengubah isinya setelah bayar?",
       k: ["ubah", "edit", "ganti", "revisi", "salah ketik", "typo", "salah", "perbaiki", "koreksi", "ganti foto", "tukar"],
@@ -185,24 +185,111 @@
     pilihan(POPULER, false);
   }
 
-  function rapikan(s) {
-    return " " + String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
-      .replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim() + " ";
+  /* ── pencocokan pertanyaan ──
+     Pertanyaan dipecah jadi kata, bahasa gaul dibakukan (gak → tidak, link →
+     tautan, gmn → bagaimana), akhiran -nya/-kah/-lah dibuang, lalu tiap
+     kata dicocokkan dengan kata kunci secara longgar: sama persis, salah
+     satu awalan yang lain (min. 4 huruf), atau beda satu huruf (salah ketik).
+     Kalau yakin → langsung dijawab; kalau ragu → ditawarkan 2–3 pertanyaan
+     yang paling mirip ("Mungkin maksudmu…"); kalau sama sekali tidak ada
+     yang mirip → diarahkan ke WhatsApp/email. */
+  var BAKU = {
+    gak: "tidak", ga: "tidak", gk: "tidak", nggak: "tidak", ngga: "tidak", enggak: "tidak", engga: "tidak", tdk: "tidak", ndak: "tidak",
+    gmn: "bagaimana", gimana: "bagaimana", gmna: "bagaimana", bgmn: "bagaimana", caranya: "cara",
+    brp: "berapa", berapaan: "berapa", udh: "sudah", udah: "sudah", sdh: "sudah", dah: "sudah", blm: "belum", blum: "belum",
+    bs: "bisa", bsa: "bisa", yg: "yang", dgn: "dengan", krn: "karena", tp: "tapi", kalo: "kalau", klo: "kalau", kl: "kalau",
+    link: "tautan", linknya: "tautan", url: "tautan", lnk: "tautan", gimanakah: "bagaimana", ngasih: "kasih", ngirim: "kirim", ngirimin: "kirim", kasihkan: "kasih", dibaca: "baca", membaca: "baca",
+    expire: "expired", exp: "expired", kadaluarsa: "kedaluwarsa", kadaluwarsa: "kedaluwarsa",
+    pacar: "dia", ayang: "dia", doi: "dia", pasangan: "dia", cewek: "dia", cowok: "dia",
+    hp: "hp", handphone: "hp", ponsel: "hp", gratisan: "gratis", ongkir: "biaya", duit: "uang", wa: "whatsapp", whatsap: "whatsapp"
+  };
+  var BUANG = { kak: 1, ka: 1, kakak: 1, min: 1, admin: 1, mimin: 1, sis: 1, gan: 1, bang: 1, mas: 1, mbak: 1, dong: 1, ya: 1, yah: 1,
+    nih: 1, sih: 1, deh: 1, kok: 1, apa: 1, apakah: 1, ada: 1, aku: 1, saya: 1, gue: 1, gw: 1, ini: 1, itu: 1, nya: 1, mau: 1, tanya: 1,
+    halo: 1, hai: 1, hi: 1, permisi: 1, the: 1, di: 1, ke: 1, dan: 1, atau: 1, untuk: 1, buat: 1, yang: 1, kalau: 1, tolong: 1 };
+  /* kata yang muncul di banyak topik: tidak dihitung untuk kecocokan sebagian */
+  var UMUM = { tidak: 1, bisa: 1, sudah: 1, belum: 1, berapa: 1, dibuka: 1, buka: 1, cara: 1, lama: 1, masih: 1, surat: 1,
+    tautan: 1, email: 1, bayar: 1, setelah: 1, ganti: 1, kirim: 1, bagaimana: 1, dari: 1, siapa: 1 };
+  var TAMBAH = {
+    harga: ["15rb", "15 ribu", "termasuk", "sudah semua", "harganya", "price", "pricelist", "bayarnya berapa", "kena berapa", "total"],
+    bayar: ["e wallet", "ewallet", "m banking", "mbanking", "cash", "cod", "pembayaran"],
+    jadi: ["berapa menit", "lama tidak", "otomatis", "instan", "admin manual"],
+    belum: ["sudah transfer", "belum ada", "tidak ada email", "belum terima", "tidak terkirim", "pending", "nyangkut", "kepotong"],
+    ubah: ["edit foto", "setelah bayar", "update", "salah tulis", "salah nama", "salah foto", "keliru", "rubah", "diganti"],
+    lama: ["beberapa bulan", "hilang sendiri", "masih bisa dibuka", "expired", "kedaluwarsa", "hangus", "batas waktu", "berapa lama bisa dibuka", "bisa dibuka lagi", "tahun depan", "simpan"],
+    refund: ["dana kembali", "balikin uang", "tidak jadi"],
+    kirim: ["kasih", "qr code", "kode qr", "kirimnya", "caranya kirim", "lewat apa", "ig", "instagram", "dm"],
+    hp: ["perlu apa", "dibuka pakai apa", "ios", "pc", "komputer"],
+    dibuka: ["baca", "sudah baca", "dikabari", "sudah buka", "dia buka", "udah dibuka", "notif", "pemberitahuan", "seen"],
+    lagu: ["ganti lagu", "ganti musik", "backsound", "lagunya", "playlist", "upload lagu"],
+    foto: ["fotonya", "berapa gambar", "upload foto", "resolusi"],
+    tema: ["template", "desain", "model", "pilihan", "yang mana"],
+    coba: ["gratis", "trial", "free"],
+    privasi: ["keamanan", "orang lain bisa buka", "disebar", "dijual"],
+    jadwal: ["timer", "tepat waktu", "jam tertentu", "hari h"],
+    pengirim: ["namaku", "nama aku", "nama saya", "nama pengirim", "ketahuan", "identitas", "nama samaran"]
+  };
+  TANYA.forEach(function (q) { if (TAMBAH[q.id]) q.k = q.k.concat(TAMBAH[q.id]); });
+
+  function kata(s) {
+    var t = String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9 ]+/g, " ").split(/\s+/);
+    var hasil = [];
+    t.forEach(function (w) {
+      if (!w) return;
+      if (BAKU[w]) w = BAKU[w];
+      else {
+        var w2 = w.replace(/(nya|kah|lah|pun)$/, "");
+        if (w2.length >= 3) w = w2;
+        if (BAKU[w]) w = BAKU[w];
+      }
+      if (!BUANG[w]) hasil.push(w);
+    });
+    return hasil;
+  }
+  function jarak1(a, b) {                       // beda paling banyak satu huruf?
+    if (Math.abs(a.length - b.length) > 1) return false;
+    var i = 0, j = 0, beda = 0;
+    while (i < a.length && j < b.length) {
+      if (a[i] === b[j]) { i++; j++; continue; }
+      if (++beda > 1) return false;
+      if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; }
+    }
+    return beda + (a.length - i) + (b.length - j) <= 1;
+  }
+  function samaKata(a, b) {
+    if (a === b) return true;
+    var p = a.length < b.length ? a : b, q = a.length < b.length ? b : a;
+    if (p.length >= 4 && q.indexOf(p) === 0) return true;
+    return p.length >= 5 && jarak1(a, b);
+  }
+  var KUNCI = TANYA.map(function (q) {
+    var lihat = {};
+    return q.k.map(function (k) { return kata(k); }).filter(function (k) {
+      var id = k.join(" ");
+      if (!k.length || lihat[id]) return false;     // "foto" dan "fotonya" dihitung sekali
+      return (lihat[id] = true);
+    });
+  });
+  function nilaiSemua(teks) {
+    var t = kata(teks);
+    return TANYA.map(function (q, i) {
+      var n = 0, sebagian = 0;
+      KUNCI[i].forEach(function (k) {
+        var semua = k.every(function (w) { return t.some(function (x) { return samaKata(x, w); }); });
+        if (semua) n += k.length > 1 ? 3 : 2;
+        else if (k.length > 1 && k.some(function (w) {
+          return w.length >= 4 && !UMUM[w] && t.some(function (x) { return samaKata(x, w); }); })) sebagian = 1;
+      });
+      /* kecocokan sebagian paling banyak bernilai 1 — tidak pernah cukup
+         untuk menjawab sendiri, hanya untuk saran "Mungkin maksudmu…" */
+      return { q: q, n: n + sebagian };
+    }).sort(function (a, b) { return b.n - a.n; });
   }
   function cocokkan(teks) {
-    var t = rapikan(teks), terbaik = null, nilai = 0;
-    TANYA.forEach(function (q) {
-      var n = 0;
-      q.k.forEach(function (k) {
-        var kk = rapikan(k);
-        if (t.indexOf(kk) >= 0) n += kk.trim().indexOf(" ") > 0 ? 3 : 2;           // frasa lebih berbobot
-        else if (kk.trim().length >= 5 && t.indexOf(" " + kk.trim().slice(0, 5)) >= 0) n += 1; // awalan kata
-      });
-      if (n > nilai) { nilai = n; terbaik = q; }
-    });
-    return nilai >= 2 ? terbaik : null;
+    var r = nilaiSemua(teks);
+    return r[0].n >= 2 ? r[0].q : null;
   }
-  function jawab(q) {
+  function jawab(q, saran) {
     var ketik = document.createElement("div");
     ketik.className = "fvb-ketik"; ketik.textContent = "mengetik…";
     isi.appendChild(ketik); gulir();
@@ -213,6 +300,9 @@
         var lain = POPULER.concat(TANYA.map(function (x) { return x.id; }))
           .filter(function (id, i, a) { return id !== q.id && a.indexOf(id) === i; }).slice(0, 3);
         pilihan(lain, true, "Halo Foreverse, saya mau tanya soal: " + q.t);
+      } else if (saran && saran.length) {
+        gelembung("Aku belum yakin maksudnya. Mungkin salah satu ini?", "kami");
+        pilihan(saran, true, "Halo Foreverse, saya mau tanya: ");
       } else {
         gelembung("Maaf, aku belum punya jawaban untuk itu. Tim kami bisa bantu langsung lewat WhatsApp, atau email ke <a href=\"mailto:" + EMAIL + "\">" + EMAIL + "</a>.", "kami");
         pilihan(["harga", "belum", "ubah"], true, "Halo Foreverse, saya mau tanya: ");
@@ -244,9 +334,12 @@
     var t = masukan.value.trim(); if (!t) return;
     masukan.value = "";
     gelembung(t, "kamu");
-    jawab(cocokkan(t));
+    var q = cocokkan(t);
+    if (q) jawab(q);
+    else jawab(null, nilaiSemua(t).filter(function (x) { return x.n >= 1; }).slice(0, 3).map(function (x) { return x.q.id; }));
   });
 
   /* untuk uji otomatis */
   window.__fvCocokkan = function (t) { var q = cocokkan(t); return q ? q.id : null; };
+  window.__fvNilai = function (t) { return nilaiSemua(t).slice(0, 3).map(function (x) { return x.q.id + ":" + x.n; }).join(" "); };
 })();

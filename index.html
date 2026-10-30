@@ -48,8 +48,9 @@ const FOREVERSE_SITE = {
   /* --- Angka & janji --- */
   harga:       "Rp15.000",
   waktuKirim:  "beberapa menit",  // ganti di sini kalau janjinya berubah
-  revisi:      "1x revisi gratis",
-  batasRevisi: "3 hari",
+  masaEdit:    "3 hari",          // tautan edit pribadi
+  masaSimpan:  "6 bulan",         // surat bisa dibuka selama ini
+  biaya:       "Rp560",           // biaya transaksi QRIS
 
   /* ═══ TEMA ═══
      Tema = bentuk suratnya. Satu tema bisa dipakai di beberapa momen. */
@@ -221,6 +222,26 @@ h3{font-size:19px;line-height:1.3}
 .btn-ghost{border-color:var(--stone);background:var(--paper);color:var(--ink)}
 .btn-ghost:hover{border-color:var(--ink)}
 .btn-sm{padding:10px 18px;font-size:14px}
+
+/* halaman terpisah */
+main{min-height:60vh}
+.hal-atas{padding-top:clamp(40px,6vw,64px)}
+.nav a[aria-current="page"]{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:2px;text-decoration-color:var(--coral)}
+.nav-m{display:flex;gap:6px;overflow-x:auto;padding:0 var(--gut) 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.nav-m::-webkit-scrollbar{display:none}
+.nav-m a{flex:none;font-size:13.5px;text-decoration:none;color:var(--ink-soft);padding:7px 13px;border-radius:100px;border:1px solid var(--stone);background:var(--paper);font-weight:500}
+.nav-m a[aria-current="page"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media(min-width:900px){.nav-m{display:none}}
+.jelajah{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:28px}
+.jelajah a{display:block;text-decoration:none;background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:22px;transition:transform .16s ease,border-color .16s ease}
+.jelajah a:hover{transform:translateY(-3px);border-color:var(--ink)}
+.jelajah .ji{font-size:26px}
+.jelajah h3{margin-top:10px}
+.jelajah p{margin-top:6px;color:var(--ink-soft);font-size:14.5px}
+.jelajah .ke{display:inline-block;margin-top:12px;font-size:14px;font-weight:600;color:var(--violet)}
+.pv-pilih{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.pv-pilih button{font-size:14px;padding:8px 14px;border-radius:100px;border:1px solid var(--stone);background:var(--paper);cursor:pointer}
+.pv-pilih button[aria-pressed="true"]{background:var(--violet);color:#fff;border-color:var(--violet)}
 
 /* header */
 header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(228,226,220,.8)}
@@ -402,39 +423,42 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 
 <header>
   <div class="wrap bar">
-    <a href="#top" class="brand"><img src="/foreverse-logo.png" alt=""><span>foreverse</span></a>
+    <a href="/" class="brand" data-rute><img src="/foreverse-logo.png" alt=""><span>foreverse</span></a>
     <nav class="nav" aria-label="Navigasi utama">
-      <a href="#momen">Momen</a><a href="#contoh">Contoh</a><a href="#cara">Cara pesan</a><a href="#harga">Harga</a><a href="#faq">FAQ</a>
+      <a href="/momen" data-rute>Momen</a><a href="/contoh" data-rute>Contoh</a><a href="/cara-pesan" data-rute>Cara pesan</a><a href="/harga" data-rute>Harga</a><a href="/faq" data-rute>FAQ</a>
     </nav>
-    <a class="btn btn-main btn-sm" href="#momen">Pilih momen</a>
+    <a class="btn btn-main btn-sm" href="/momen" data-rute>Pilih momen</a>
   </div>
+  <nav class="nav-m" aria-label="Navigasi utama (HP)">
+    <a href="/" data-rute>Beranda</a><a href="/momen" data-rute>Momen</a><a href="/contoh" data-rute>Contoh</a><a href="/cara-pesan" data-rute>Cara pesan</a><a href="/harga" data-rute>Harga</a><a href="/faq" data-rute>FAQ</a>
+  </nav>
 </header>
 
 <main id="top">
 
   <!-- ═════ HERO ═════ -->
-  <section class="hero">
+  <section class="hero" data-hal="beranda">
     <div class="wrap hero-grid">
       <div>
         <span class="eyebrow">Surat digital interaktif</span>
         <h1>Surat digital untuk orang yang <em>kamu sayang.</em></h1>
-        <p class="hero-sub">Tulis pesanmu, pilih fotonya, bayar <span data-v="harga">Rp15.000</span>. Link-nya masuk ke WhatsApp-mu dalam <span data-v="waktuKirim">beberapa menit</span>, tinggal kamu kirim ke dia.</p>
+        <p class="hero-sub">Bukan sekadar dibaca — suratnya dimainkan. Tulis pesanmu, pilih fotonya, bayar <span data-v="harga">Rp15.000</span>. Tautannya langsung jadi, tinggal kamu kirim ke dia.</p>
         <div class="hero-cta">
-          <a href="#momen" class="btn btn-main">Pilih momen</a>
-          <a href="#contoh" class="btn btn-ghost">Coba contohnya</a>
+          <a href="/momen" class="btn btn-main" data-rute>Pilih momen</a>
+          <a href="/contoh" class="btn btn-ghost" data-rute>Coba contohnya</a>
         </div>
         <ul class="facts">
           <li><b data-v="harga">Rp15.000</b> + biaya transaksi QRIS</li>
           <li>Dibuka di HP, tanpa aplikasi</li>
-          <li>Link tidak kedaluwarsa</li>
+          <li>Bisa diubah sendiri <span data-v="masaEdit">3 hari</span></li>
         </ul>
       </div>
 
       <div class="scene" aria-hidden="true">
         <span class="chip c1 on">🎂 Birthday</span>
-        <span class="chip c2">🥂 Anniversary <small>segera</small></span>
-        <span class="chip c3">✈️ LDR <small>segera</small></span>
-        <span class="chip c4">🎓 Graduation <small>segera</small></span>
+        <span class="chip c2">🥂 Anniversary</span>
+        <span class="chip c3">✈️ LDR</span>
+        <span class="chip c4">🎓 Graduation</span>
         <i class="spark" style="left:22%;top:30%;background:var(--gold)"></i>
         <i class="spark" style="right:24%;top:22%;background:var(--blush);animation-delay:-1s"></i>
         <i class="spark" style="left:30%;bottom:22%;background:var(--coral);animation-delay:-2s"></i>
@@ -451,10 +475,26 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     </div>
   </section>
 
-  <div class="strip" aria-hidden="true"><div class="strip-track" id="strip"></div></div>
+  <div class="strip" aria-hidden="true" data-hal="beranda"><div class="strip-track" id="strip"></div></div>
+
+  <!-- ═════ BERANDA: jelajah ═════ -->
+  <section data-hal="beranda">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Mulai dari mana?</span>
+        <h2>Pilih jalanmu.</h2>
+      </div>
+      <div class="jelajah">
+        <a href="/momen" data-rute><span class="ji">🎂</span><h3>Momen &amp; tema</h3><p>Ulang tahun, anniversary, LDR, sampai lamaran — tiap momen punya tema sendiri.</p><span class="ke">Pilih momen →</span></a>
+        <a href="/contoh" data-rute><span class="ji">📱</span><h3>Coba contohnya</h3><p>Mainkan contoh lengkapnya, persis seperti yang dia lihat nanti.</p><span class="ke">Lihat contoh →</span></a>
+        <a href="/cara-pesan" data-rute><span class="ji">✍️</span><h3>Cara pesan</h3><p>Isi dulu, bayar terakhir. Tautannya langsung jadi.</p><span class="ke">Lihat caranya →</span></a>
+        <a href="/harga" data-rute><span class="ji">🏷️</span><h3>Harga</h3><p>Satu harga untuk semua tema, tanpa paket tambahan.</p><span class="ke">Lihat harga →</span></a>
+      </div>
+    </div>
+  </section>
 
   <!-- ═════ MOMEN → TEMA ═════ -->
-  <section id="momen">
+  <section id="momen" data-hal="momen" class="hal-atas">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Pilih momen</span>
@@ -468,13 +508,14 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ CONTOH ═════ -->
-  <section class="preview" id="contoh">
+  <section class="preview hal-atas" id="contoh" data-hal="contoh">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Coba dulu</span>
         <h2>Begini yang dia lihat waktu buka linknya.</h2>
-        <p class="lede">Contohnya bisa langsung kamu mainkan di sini. Tarik segelnya.</p>
+        <p class="lede">Pilih temanya, lalu mainkan contohnya langsung di sini.</p>
       </div>
+      <div class="pv-pilih" id="pvPilih" role="group" aria-label="Pilih tema contoh"></div>
       <div class="pv-grid">
         <div class="phone"><div class="screen"><iframe id="pvFrame" title="Contoh tema" loading="lazy"></iframe></div></div>
         <div class="pv-info">
@@ -492,7 +533,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ CARA PESAN ═════ -->
-  <section id="cara">
+  <section id="cara" data-hal="cara" class="hal-atas">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Cara pesan</span>
@@ -500,16 +541,16 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <p class="lede">Kamu baru bayar setelah semua isinya selesai kamu tulis.</p>
       </div>
       <div class="steps">
-        <div class="step"><span class="n">1</span><h3>Pilih momen dan tema</h3><p>Coba contohnya di halaman ini sampai kamu yakin.</p></div>
-        <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, tiga foto, tanggal, dan lagu. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
-        <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS. Ada biaya transaksi kecil dari penyedia pembayaran, rinciannya kelihatan sebelum kamu bayar.</p></div>
-        <div class="step"><span class="n">4</span><h3>Link masuk ke WhatsApp-mu</h3><p>Dalam <span data-v="waktuKirim">beberapa menit</span>. Kamu yang meneruskannya ke dia, kapan pun kamu mau.</p></div>
+        <div class="step"><span class="n">1</span><h3>Pilih momen dan tema</h3><p>Mainkan contohnya dulu sampai kamu yakin.</p></div>
+        <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, foto, dan lagu, dengan pratinjau yang berubah langsung. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
+        <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya kelihatan sebelum kamu bayar.</p></div>
+        <div class="step"><span class="n">4</span><h3>Tautannya langsung jadi</h3><p>Muncul di layar dan masuk ke emailmu, lengkap dengan kode QR berbentuk hati. Kamu yang mengirimnya ke dia, kapan pun kamu mau.</p></div>
       </div>
     </div>
   </section>
 
   <!-- ═════ KENAPA ═════ -->
-  <section class="why">
+  <section class="why" data-hal="cara">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Yang bisa kamu pegang</span>
@@ -518,8 +559,8 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       <div class="why-grid">
         <div class="why-it">
           <span class="ic" style="background:var(--violet-tint);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 13.5a4 4 0 005.7 0l3-3a4 4 0 10-5.7-5.7L12 6.3"/><path d="M13.5 10.5a4 4 0 00-5.7 0l-3 3a4 4 0 105.7 5.7L12 17.7"/></svg></span>
-          <h3>Link tidak kedaluwarsa</h3>
-          <p>Suratnya tetap bisa dibuka lagi kapan saja, bukan cuma beberapa hari setelah dikirim.</p>
+          <h3>Bisa kamu ubah sendiri</h3>
+          <p>Salah ketik atau mau ganti foto? Pakai tautan edit pribadimu selama <span data-v="masaEdit">3 hari</span>, sebanyak yang kamu mau.</p>
         </div>
         <div class="why-it">
           <span class="ic" style="background:var(--blush-tint);color:#C95A6B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h7M7 13h10M7 17h5"/></svg></span>
@@ -529,19 +570,19 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <div class="why-it">
           <span class="ic" style="background:#FDF3DC;color:#B8860B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v1.5M12 16v1.5"/></svg></span>
           <h3>Bayar <span data-v="harga">Rp15.000</span>, selesai</h3>
-          <p>Tidak ada biaya admin, tidak ada paket tambahan, tidak ada fitur yang dikunci.</p>
+          <p>Tidak ada paket tambahan dan tidak ada fitur yang dikunci. Satu-satunya tambahan adalah biaya transaksi QRIS.</p>
         </div>
         <div class="why-it">
           <span class="ic" style="background:#E6F6EC;color:#1E8E4E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z"/></svg></span>
-          <h3>Dibalas orang, bukan bot</h3>
-          <p>Ada kendala atau pertanyaan? Chat kami di WhatsApp dan kamu dibalas langsung.</p>
+          <h3>Ada yang menjawab</h3>
+          <p>Jawaban cepat ada di tombol "Ada pertanyaan?". Kalau masih ada kendala, WhatsApp kami dibalas orang langsung.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═════ HARGA ═════ -->
-  <section id="harga">
+  <section id="harga" data-hal="harga" class="hal-atas">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Harga</span>
@@ -551,15 +592,15 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <div class="left">
           <span class="lbl">Per surat</span>
           <div class="amt" data-v="harga">Rp15.000</div>
-          <p class="per">Yang kamu bayar ya segitu. Tidak ada biaya admin tambahan.</p>
-          <a class="btn btn-main" href="#momen">Pilih momen</a>
+          <p class="per">Ditambah biaya transaksi QRIS <span data-v="biaya">Rp560</span> dari penyedia pembayaran — rinciannya tampil sebelum kamu bayar.</p>
+          <a class="btn btn-main" href="/momen" data-rute>Pilih momen</a>
         </div>
         <div class="right">
           <ul>
             <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Satu surat dengan tema pilihanmu</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Link pribadi dengan kode acak, dikirim ke WhatsApp-mu</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Link tetap bisa dibuka, tidak kedaluwarsa</li>
-            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span><span data-v="revisi">1x revisi gratis</span>, paling lambat <span data-v="batasRevisi">3 hari</span> setelah link dikirim</span></li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Tautan pribadi berkode acak, muncul di layar dan dikirim ke emailmu</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Bisa dibuka selama <span data-v="masaSimpan">6 bulan</span>, plus pengingat sebelum masanya habis</li>
+            <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 10.5l4.2 4.2L16.5 5.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Ubah isinya sendiri lewat tautan edit, <span data-v="masaEdit">3 hari</span> sejak dibayar</span></li>
           </ul>
         </div>
       </div>
@@ -567,7 +608,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ FAQ ═════ -->
-  <section id="faq" style="background:var(--cream-lift);border-top:1px solid var(--stone)">
+  <section id="faq" data-hal="faq" class="hal-atas" style="background:var(--cream-lift);border-top:1px solid var(--stone)">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">FAQ</span>
@@ -576,7 +617,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       <div class="faq">
         <details open>
           <summary>Berapa lama link-nya sampai?</summary>
-          <p>Dalam <span data-v="waktuKirim">beberapa menit</span> setelah pembayaranmu berhasil, link-nya masuk ke WhatsApp yang kamu tulis di formulir.</p>
+          <p>Begitu pembayaranmu berhasil, tautannya langsung muncul di layar dan dikirim ke email yang kamu tulis di formulir. Tidak perlu menunggu admin.</p>
         </details>
         <details>
           <summary>Pesanku bakal diubah?</summary>
@@ -584,11 +625,11 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         </details>
         <details>
           <summary>Bisa dikirim pas jam 12 malam?</summary>
-          <p>Bisa. Link-nya dikirim ke kamu dulu, jadi kamu bebas meneruskannya ke dia kapan saja, termasuk tepat tengah malam.</p>
+          <p>Bisa. Tautannya diberikan ke kamu dulu, jadi kamu bebas meneruskannya ke dia kapan saja, termasuk tepat tengah malam.</p>
         </details>
         <details>
           <summary>Kalau ada yang mau diubah setelah jadi?</summary>
-          <p>Ada <span data-v="revisi">1x revisi gratis</span>, misalnya typo, foto yang ketukar, atau kalimat yang mau diganti. Chat kami di WhatsApp paling lambat <span data-v="batasRevisi">3 hari</span> setelah link dikirim.</p>
+          <p>Kamu dapat tautan edit pribadi yang berlaku <span data-v="masaEdit">3 hari</span> sejak dibayar. Typo, foto yang ketukar, atau kalimat yang mau diganti bisa kamu ubah sendiri, berkali-kali. Perubahannya langsung berlaku di tautan yang sama.</p>
         </details>
         <details>
           <summary>Bayarnya lewat apa?</summary>
@@ -600,7 +641,15 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         </details>
         <details>
           <summary>Link-nya bisa dibuka sampai kapan?</summary>
-          <p>Tidak ada masa berlaku. Suratnya tetap bisa dibuka lagi kapan saja. Kalau kamu mau link-nya dihapus, bilang saja lewat WhatsApp. Kalau suatu saat Foreverse berhenti beroperasi, kami kabari jauh-jauh hari.</p>
+          <p>Selama <span data-v="masaSimpan">6 bulan</span> sejak dibayar. 14 hari sebelum masanya habis kami kirim email pengingat, supaya kamu sempat menyimpan foto atau kalimat yang ingin dikenang. Setelah itu isi dan fotonya dihapus untuk menjaga privasi kalian. Mau dihapus lebih cepat? Bilang saja lewat WhatsApp.</p>
+        </details>
+        <details>
+          <summary>Aku bisa tahu kalau suratnya sudah dibuka?</summary>
+          <p>Bisa. Saat suratnya pertama kali dibuka, kami kirim satu email ke kamu. Bukaan dari HP yang kamu pakai memesan tidak dihitung.</p>
+        </details>
+        <details>
+          <summary>Bisa dikirim dalam bentuk kode QR?</summary>
+          <p>Bisa. Setelah bayar, kamu bisa membuat kode QR berbentuk hati, amplop, atau sederhana. Gambarnya bisa dikirim lewat chat atau dicetak dan diselipkan di kado.</p>
         </details>
         <details>
           <summary>Dia perlu install aplikasi?</summary>
@@ -615,13 +664,13 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ PENUTUP ═════ -->
-  <section class="final" id="kontak">
+  <section class="final" id="kontak" data-hal="beranda cara harga faq">
     <div class="wrap">
       <span class="eyebrow">Mulai dari sini</span>
       <h2>Sudah tahu momennya? Tinggal pilih temanya.</h2>
       <p class="lede">Masih ragu? Tanya dulu lewat WhatsApp.</p>
       <div class="final-cta">
-        <a href="#momen" class="btn btn-main">Pilih momen</a>
+        <a href="/momen" class="btn btn-main" data-rute>Pilih momen</a>
         <a id="waFinal" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Tanya lewat WhatsApp</a>
       </div>
     </div>
@@ -682,7 +731,17 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     $("pvFrame").src=t.file; $("pvFrame").title="Contoh tema "+t.nama;
     $("pvFull").href=t.file; $("pvName").textContent=t.nama;
     $("pvFlow").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
+    $("pvPilih").querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.t===k ? "true" : "false"); });
   }
+  /* momen pertama yang memuat sebuah tema — untuk tautan "Pesan tema ini" di halaman Contoh */
+  function momenDari(k){ for(var i=0;i<M.length;i++) if(M[i].tema.indexOf(k)>-1) return M[i].nama; return ""; }
+  var semuaTema=[]; M.forEach(function(m){ m.tema.forEach(function(k){ if(semuaTema.indexOf(k)<0 && T[k]) semuaTema.push(k); }); });
+  $("pvPilih").innerHTML=semuaTema.map(function(k){ return '<button type="button" data-t="'+esc(k)+'" aria-pressed="false">'+esc(T[k].nama)+'</button>'; }).join("");
+  $("pvPilih").addEventListener("click",function(e){
+    var b=e.target.closest("[data-t]"); if(!b) return;
+    catat(b.dataset.t,"demo"); show(b.dataset.t,momenDari(b.dataset.t));
+    history.replaceState(null,"","/contoh?tema="+encodeURIComponent(b.dataset.t));
+  });
 
   /* momen → tema */
   var tabs=$("tabs"), cards=$("cards"), line=$("momentLine");
@@ -707,9 +766,8 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
         esc(wa("Halo Foreverse, saya punya ide tema untuk momen "+m.nama+"."))+'">Kirim ide</a></div></div></article>';
       cards.querySelectorAll("[data-try]").forEach(function(b){
-        b.addEventListener("click",function(){ catat(b.getAttribute("data-try"),"demo"); show(b.getAttribute("data-try"),m.nama); $("contoh").scrollIntoView({behavior:"smooth",block:"start"}); });
+        b.addEventListener("click",function(){ pergi("/contoh?tema="+encodeURIComponent(b.getAttribute("data-try"))); });
       });
-      show(m.tema[0],m.nama);
     } else {
       cards.innerHTML='<article class="card empty"><div class="cov">'+m.emoji+'</div><div class="body">'+
         '<span class="nm">Segera hadir</span><p class="ds">Tema untuk '+esc(m.nama)+' sedang disiapkan. Kalau kamu butuh, kabari kami. Momen yang paling banyak diminta kami kerjakan duluan.</p>'+
@@ -729,6 +787,48 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     tabs.appendChild(b);
   });
   if(M.length) pick(0);
+
+  /* ── halaman terpisah ──
+     Satu berkas, enam alamat: /, /momen, /contoh, /cara-pesan, /harga, /faq
+     (worker.js menyajikan index.html untuk semuanya). Tiap bagian punya
+     data-hal; hanya bagian milik halaman yang sedang dibuka yang tampil. */
+  var RUTE={ "/":"beranda", "/momen":"momen", "/contoh":"contoh", "/cara-pesan":"cara", "/harga":"harga", "/faq":"faq" };
+  var JUDUL={ beranda:"Foreverse — Surat Digital untuk Orang yang Kamu Sayang", momen:"Pilih momen · Foreverse",
+    contoh:"Contoh surat · Foreverse", cara:"Cara pesan · Foreverse", harga:"Harga · Foreverse", faq:"FAQ · Foreverse" };
+  var LAMA={ "#momen":"/momen", "#contoh":"/contoh", "#cara":"/cara-pesan", "#harga":"/harga", "#faq":"/faq" };
+  function tampilkan(){
+    var jalur=location.pathname.replace(/\/+$/,"")||"/";
+    if(jalur==="/index.html") jalur="/";
+    var hal=RUTE[jalur]||"beranda";
+    document.querySelectorAll("[data-hal]").forEach(function(el){
+      el.hidden=(" "+el.getAttribute("data-hal")+" ").indexOf(" "+hal+" ")<0;
+    });
+    document.querySelectorAll("a[data-rute]").forEach(function(a){
+      var ya=a.getAttribute("href")===jalur && !a.classList.contains("btn") && !a.classList.contains("brand");
+      if(ya) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+    });
+    document.title=JUDUL[hal];
+    if(hal==="contoh"){
+      var k=new URLSearchParams(location.search).get("tema");
+      if(k && T[k]){ catat(k,"demo"); show(k,momenDari(k)); }
+      else if(!current && semuaTema.length) show(semuaTema[0],momenDari(semuaTema[0]));
+    }
+    var aktif=document.querySelector('.nav-m a[aria-current="page"]');
+    if(aktif && aktif.scrollIntoView) aktif.scrollIntoView({block:"nearest",inline:"center"});
+  }
+  function pergi(url){
+    history.pushState(null,"",url);
+    tampilkan();
+    window.scrollTo(0,0);
+  }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest("a[data-rute]");
+    if(!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault(); pergi(a.getAttribute("href"));
+  });
+  addEventListener("popstate",tampilkan);
+  if(LAMA[location.hash]) history.replaceState(null,"",LAMA[location.hash]);
+  tampilkan();
 
 })();
 </script>

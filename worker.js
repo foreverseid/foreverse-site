@@ -108,6 +108,18 @@ async function tangani(request, env, ctx) {
         });
       }
 
+      /* ── www.foreverse.id → foreverse.id ──
+         Satu alamat saja, supaya Cloudflare Access (yang memagari
+         /developer di foreverse.id) tidak bisa dilewati lewat www. */
+      if (url.hostname.startsWith("www.")) {
+        url.hostname = url.hostname.slice(4);
+        return Response.redirect(url.toString(), 301);
+      }
+
+      /* ── halaman beranda yang terpisah: satu berkas index.html ── */
+      if (/^\/(momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
+        return await ambilHalaman(env, url.origin, "index", request);
+
       /* ── alamat pendek: /edit/<token> ── */
       if (/^\/edit\/[A-Za-z0-9]{8,40}\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "pesan", request);
