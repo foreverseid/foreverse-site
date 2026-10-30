@@ -978,7 +978,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         esc(wa("Halo Foreverse, saya butuh tema untuk momen "+m.nama+"."))+'">Kabari saya</a></div></div></article>';
     }
   }
-  M.forEach(function(m,i){
+  function buatTab(m,i){
     var b=document.createElement("button");
     b.type="button"; b.className="tab"; b.setAttribute("role","tab");
     b.innerHTML='<span aria-hidden="true">'+m.emoji+'</span>'+esc(m.nama)+(m.tema.length?'':'<span class="soon">· segera</span>');
@@ -988,13 +988,31 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       if(e.key==="ArrowLeft"){ e.preventDefault(); pick((i-1+M.length)%M.length,true); }
     });
     tabs.appendChild(b);
-  });
+  }
+  M.forEach(buatTab);
   var awalMomen=new URLSearchParams(location.search).get("momen"), iAwal=0;
   M.forEach(function(m,i){ if(awalMomen && m.nama.toLowerCase()===awalMomen.toLowerCase()) iAwal=i; });
   if(M.length) pick(iAwal);
   $("kakiMomen").innerHTML=M.filter(function(m){ return m.tema.length; }).map(function(m){
     return '<a href="/template?momen='+encodeURIComponent(m.nama)+'" data-rute>'+esc(m.nama)+'</a>';
   }).join("");
+
+  /* harga & tema yang dibuka — diatur dari /developer tanpa deploy ulang */
+  fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
+    if(!i || !i.ok) return;
+    var h="Rp"+Number(i.harga).toLocaleString("id-ID"), b="Rp"+Number(i.biaya).toLocaleString("id-ID");
+    document.querySelectorAll('[data-v="harga"]').forEach(function(el){ el.textContent=h; });
+    document.querySelectorAll('[data-v="biaya"]').forEach(function(el){ el.textContent=b; });
+    var mati=i.tema_mati||[];
+    if(!mati.length) return;
+    M.forEach(function(m){ m.tema=m.tema.filter(function(t){ return mati.indexOf(t)<0; }); });
+    semuaTema=semuaTema.filter(function(t){ return mati.indexOf(t)<0; });
+    $("pvPilih").querySelectorAll("[data-t]").forEach(function(btn){ if(mati.indexOf(btn.dataset.t)>-1) btn.remove(); });
+    $("sorot").querySelectorAll("article").forEach(function(a){ var l=a.querySelector("a"); if(l && mati.some(function(t){ return l.href.indexOf("tema="+t)>-1; })) a.remove(); });
+    tabs.innerHTML=""; M.forEach(buatTab);
+    var sel=0; pick(sel);
+    if(current && mati.indexOf(current)>-1 && semuaTema.length){ current=null; show(semuaTema[0],momenDari(semuaTema[0])); }
+  }).catch(function(){});
 
   /* sorotan beranda: tiga tema dengan bentuk dunia yang paling berbeda */
   var SOROT=[["rumah-contoh","Tur rumah orang pertama"],["kasus-pengirim","Misteri yang dijelajah"],["pasar-malam","Pasar malam yang digulir"]];

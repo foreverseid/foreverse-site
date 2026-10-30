@@ -147,6 +147,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
 /* ══ kirim ══ */
 .kirim{background:var(--paper);border:1px solid var(--stone);border-radius:var(--r);padding:clamp(18px,3.4vw,26px)}
+.promo{display:flex;gap:8px;margin-bottom:6px}
+.promo input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:.06em}
+.promo button{font:inherit;font-weight:600;font-size:.9rem;padding:0 16px;border-radius:12px;border:1.5px solid var(--violet);background:#fff;color:var(--violet);cursor:pointer}
+.promo-kabar{font-size:.84rem;margin:0 0 12px;min-height:1em}
+.promo-kabar.ok{color:#1E6B42}.promo-kabar.salah{color:#B33A2B}
+.rincian.potong .rp{color:#1E6B42}
+.tema-tutup{background:#FDECEA;color:#8C2B20;border-radius:12px;padding:12px 14px;font-size:.9rem;margin-bottom:12px}
 .rincian{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--cream-lift);font-size:.92rem}
 .rincian:last-of-type{border:0;padding-bottom:16px}
 .rincian .rp{font-weight:600;font-variant-numeric:tabular-nums}
@@ -362,10 +369,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <div class="pesan-galat" id="kabarGalat"></div>
         <div class="pesan-oke" id="kabarOke"></div>
 
+        <div class="tema-tutup" id="temaTutup" hidden>Tema ini sedang tidak dibuka untuk pesanan baru. Pilih tema lain di <a href="/template">halaman Template</a>, ya.</div>
         <div id="rincianBayar">
-          <div class="rincian"><span id="labelSurat">Surat digital</span><span class="rp">Rp15.000</span></div>
-          <div class="rincian"><span>Biaya transaksi QRIS</span><span class="rp">Rp560</span></div>
-          <div class="rincian total"><span>Yang kamu bayar</span><span class="rp">Rp15.560</span></div>
+          <div class="promo">
+            <input id="promo" type="text" maxlength="20" autocomplete="off" placeholder="Kode promo (opsional)" aria-label="Kode promo">
+            <button type="button" id="tblPromo">Pakai</button>
+          </div>
+          <p class="promo-kabar" id="promoKabar" role="status"></p>
+          <div class="rincian"><span id="labelSurat">Surat digital</span><span class="rp" id="rpHarga">Rp15.000</span></div>
+          <div class="rincian potong" id="barisPotong" hidden><span id="lblPotong">Promo</span><span class="rp" id="rpPotong"></span></div>
+          <div class="rincian"><span>Biaya transaksi QRIS</span><span class="rp" id="rpBiaya">Rp560</span></div>
+          <div class="rincian total"><span>Yang kamu bayar</span><span class="rp" id="rpTotal">Rp15.560</span></div>
         </div>
 
         <button class="tbl tbl-utama tbl-lebar" id="tblKirim" type="submit" style="margin-top:18px">Lanjut ke pembayaran</button>
@@ -1423,6 +1437,44 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     if(k.buka){ $("kWaktuNyala").checked = true; $("kWaktuBaris").hidden = false; $("kWaktu").value = wibKeLokal(k.buka); }
   }
 
+  /* ── harga, tema yang dibuka, dan kode promo (diatur dari /developer) ── */
+  var HARGA_KINI = 15000, BIAYA_KINI = 560, PROMO = { kode:"", potongan:0 };
+  function rpTeks(n){ return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
+  function gambarHarga(){
+    $("rpHarga").textContent = rpTeks(HARGA_KINI);
+    $("rpBiaya").textContent = rpTeks(BIAYA_KINI);
+    $("barisPotong").hidden = !PROMO.potongan;
+    $("lblPotong").textContent = "Promo " + PROMO.kode;
+    $("rpPotong").textContent = "−" + rpTeks(PROMO.potongan);
+    $("rpTotal").textContent = rpTeks(HARGA_KINI - PROMO.potongan + BIAYA_KINI);
+    $("cipHarga").textContent = rpTeks(HARGA_KINI - PROMO.potongan);
+  }
+  fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
+    if(!i || !i.ok) return;
+    HARGA_KINI = i.harga; BIAYA_KINI = i.biaya; gambarHarga();
+    if(!MODE_EDIT && (i.tema_mati || []).indexOf(TEMA) > -1){ $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
+  }).catch(function(){});
+  var promoAwal = new URLSearchParams(location.search).get("promo");
+  if(promoAwal) $("promo").value = promoAwal;
+  function pakaiPromo(){
+    var k = $("promo").value.trim();
+    if(!k){ PROMO = { kode:"", potongan:0 }; $("promoKabar").textContent = ""; gambarHarga(); return; }
+    $("tblPromo").disabled = true;
+    fetch("/api/promo", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ kode: k }) })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        $("tblPromo").disabled = false;
+        var kabar = $("promoKabar");
+        if(!j.ok){ PROMO = { kode:"", potongan:0 }; kabar.className = "promo-kabar salah"; kabar.textContent = j.pesan || "Kode promo tidak berlaku."; }
+        else { PROMO = { kode: j.kode, potongan: j.potongan }; HARGA_KINI = j.harga + j.potongan;
+               kabar.className = "promo-kabar ok"; kabar.textContent = "Kode " + j.kode + " dipakai — hemat " + rpTeks(j.potongan) + "."; }
+        gambarHarga();
+      }).catch(function(){ $("tblPromo").disabled = false; });
+  }
+  $("tblPromo").addEventListener("click", pakaiPromo);
+  $("promo").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); pakaiPromo(); } });
+  if(promoAwal) pakaiPromo();
+
   function badan(){
     var q = new URLSearchParams(location.search);
     return {
@@ -1430,6 +1482,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : MOMEN_GRUP === "proposal" ? "Lamaran" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
+      promo: PROMO.kode,
       isi: Object.assign({
         penerima: $("penerima").value.trim(),
         pengirim: $("pengirim").value.trim(),

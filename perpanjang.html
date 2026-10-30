@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Perpanjang masa simpan · Foreverse</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FBFAF7">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16161A; --ink-soft:#4A4852; --ink-faint:#83808C;
+  --cream:#FBFAF7; --cream-lift:#F5F3EE; --paper:#FFFFFF; --stone:#E4E2DC;
+  --violet:#3B3168; --violet-deep:#2C2450; --violet-tint:#EEEBF7; --coral:#E8734A;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6}
+.wrap{max-width:34rem;margin:0 auto;padding:clamp(28px,7vw,56px) 18px 80px}
+.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;margin-bottom:32px}
+.merk img{width:24px;height:24px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,6vw,1.9rem);line-height:1.2;margin:0 0 10px}
+p{margin:0;color:var(--ink-soft);font-size:.95rem}
+.kartu{background:var(--paper);border:1px solid var(--stone);border-radius:18px;padding:20px;margin-top:22px}
+.baris{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:.92rem;border-bottom:1px solid var(--cream-lift)}
+.baris:last-child{border-bottom:0}
+.baris.total{font-weight:600;font-size:1rem}
+.baris span:first-child{color:var(--ink-soft)}
+.tbl{display:block;width:100%;margin-top:18px;font:inherit;font-weight:600;font-size:1rem;padding:15px;border:0;border-radius:999px;background:var(--violet);color:#fff;cursor:pointer}
+.tbl:disabled{opacity:.6;cursor:wait}
+.kecil{margin-top:12px;font-size:.82rem;color:var(--ink-faint);text-align:center}
+.galat{margin-top:12px;color:#B33A2B;font-size:.9rem}
+.oke{background:var(--violet-tint);color:var(--violet-deep);border-radius:14px;padding:14px 16px;margin-top:18px;font-size:.95rem}
+.putar{width:34px;height:34px;border:3px solid var(--stone);border-top-color:var(--violet);border-radius:50%;animation:putar .8s linear infinite;margin:30px auto 14px}
+@keyframes putar{to{transform:rotate(360deg)}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="merk" href="/"><img src="/favicon.svg" alt="">Foreverse</a>
+
+  <div id="memuat"><div class="putar"></div><p style="text-align:center">Memuat…</p></div>
+
+  <div id="isi" hidden>
+    <h1 id="judul">Perpanjang masa simpan</h1>
+    <p id="ket"></p>
+
+    <div class="kartu">
+      <div class="baris"><span>Bisa dibuka sampai</span><span id="sampai"></span></div>
+      <div class="baris"><span>Setelah diperpanjang</span><span id="baru"></span></div>
+    </div>
+
+    <div class="kartu" id="kartuBayar">
+      <div class="baris"><span id="lblPerpanjang">Perpanjang 6 bulan</span><span id="harga"></span></div>
+      <div class="baris"><span>Biaya transaksi QRIS</span><span id="biaya"></span></div>
+      <div class="baris total"><span>Yang kamu bayar</span><span id="total"></span></div>
+      <button class="tbl" id="tblBayar" type="button">Bayar &amp; perpanjang</button>
+      <div class="galat" id="galat" role="alert"></div>
+      <p class="kecil">Tautan suratnya tetap sama. Isi, foto, dan lagunya tidak berubah.</p>
+    </div>
+
+    <div class="oke" id="oke" hidden></div>
+  </div>
+
+  <div id="gagal" hidden>
+    <h1>Tautan ini tidak bisa dipakai</h1>
+    <p id="gagalKet"></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var TOKEN = (location.pathname.match(/\/perpanjang\/([A-Za-z0-9]+)/) || [])[1] || "";
+  var SESUDAH_BAYAR = /[?&]bayar=1/.test(location.search);
+  function rp(n){ return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
+  function tgl(ms){ return new Date(ms).toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric", timeZone:"Asia/Jakarta" }); }
+  function tambahBulan(ms, n){ var d = new Date(ms); d.setUTCMonth(d.getUTCMonth() + n); return d.getTime(); }
+  function gagal(pesan){ $("memuat").hidden = true; $("isi").hidden = true; $("gagal").hidden = false; $("gagalKet").textContent = pesan; }
+
+  function tampil(d){
+    $("memuat").hidden = true; $("isi").hidden = false;
+    var dasar = Math.max(d.simpan_sampai || 0, Date.now());
+    $("judul").textContent = "Perpanjang surat untuk " + (d.penerima || "dia");
+    $("ket").textContent = "Supaya suratnya masih bisa dibuka lebih lama — misalnya untuk dibuka lagi di hari spesial berikutnya.";
+    $("sampai").textContent = d.simpan_sampai ? tgl(d.simpan_sampai) : "—";
+    $("baru").textContent = tgl(tambahBulan(dasar, d.bulan));
+    $("lblPerpanjang").textContent = "Perpanjang " + d.bulan + " bulan";
+    $("harga").textContent = rp(d.harga); $("biaya").textContent = rp(d.biaya); $("total").textContent = rp(d.harga + d.biaya);
+  }
+
+  function muat(jalur){
+    return fetch("/api/perpanjang/" + jalur + "?token=" + encodeURIComponent(TOKEN))
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok || !j.ok) throw new Error(j.pesan || "Tautan tidak dikenal."); return j; }); });
+  }
+
+  if(!TOKEN){ gagal("Alamatnya tidak lengkap."); return; }
+
+  muat("info").then(function(d){
+    tampil(d);
+    if(!SESUDAH_BAYAR) return;
+    /* kembali dari DOKU: tunggu konfirmasi pembayaran */
+    var awal = d.simpan_sampai, coba = 0;
+    $("kartuBayar").hidden = true;
+    $("oke").hidden = false; $("oke").textContent = "Menunggu konfirmasi pembayaran…";
+    (function cek(){
+      muat("status").then(function(s){
+        if(s.simpan_sampai > awal || (!s.menunggu && coba > 0)){
+          tampil(s); $("kartuBayar").hidden = true;
+          $("oke").textContent = s.simpan_sampai > awal
+            ? "Berhasil ✓ Suratnya sekarang bisa dibuka sampai " + tgl(s.simpan_sampai) + ". Konfirmasinya juga sudah kami kirim ke emailmu."
+            : "Pembayarannya belum terkonfirmasi. Kalau uangmu sudah terpotong, hubungi kami di halo@foreverse.id.";
+          return;
+        }
+        if(++coba > 40){ $("oke").textContent = "Konfirmasinya agak lama. Kalau uangmu sudah terpotong, masa simpannya tetap kami tambahkan — atau hubungi halo@foreverse.id."; return; }
+        setTimeout(cek, coba < 8 ? 2500 : 5000);
+      }).catch(function(e){ $("oke").textContent = e.message; });
+    })();
+  }).catch(function(e){ gagal(e.message); });
+
+  $("tblBayar").addEventListener("click", function(){
+    var b = this; b.disabled = true; b.textContent = "Membuka pembayaran…"; $("galat").textContent = "";
+    fetch("/api/perpanjang", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ token: TOKEN }) })
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(!j.ok) throw new Error(j.pesan || "Belum bisa membuka pembayaran."); location.href = j.url; })
+      .catch(function(e){ b.disabled = false; b.textContent = "Bayar & perpanjang"; $("galat").textContent = e.message; });
+  });
+})();
+</script>
+</body>
+</html>

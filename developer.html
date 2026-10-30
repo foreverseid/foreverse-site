@@ -241,6 +241,19 @@ section{scroll-margin-top:16px;margin-bottom:26px}
 .sistem .sb .nilai{margin-left:auto;font-size:.79rem;color:var(--ink-faint);text-align:right;padding-left:12px}
 .sistem .sb.tidak .nilai{color:var(--gawat-ink);font-weight:600}
 
+/* ══ pengaturan, promo, cadangan ══ */
+.form-atur{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:end}
+.form-atur label{display:block;font-size:.74rem;color:var(--ink-faint);margin-bottom:4px}
+.form-atur input,.form-atur select{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--cream-lift);border-radius:9px;background:var(--paper);color:inherit;font:inherit;font-size:.86rem}
+.tema-sakelar{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));margin-top:12px}
+.tema-sakelar label{display:flex;gap:8px;align-items:center;font-size:.84rem;padding:7px 10px;border:1px solid var(--cream-lift);border-radius:9px;cursor:pointer}
+.tema-sakelar input{width:16px;height:16px}
+.tbl-mini{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:12px;min-width:0!important}
+.tbl-mini th,.tbl-mini td{padding:7px 6px;border-bottom:1px solid var(--cream-lift);text-align:left}
+.tbl-mini th{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:500}
+.kabar-atur{font-size:.8rem;margin-top:8px;min-height:1em;color:var(--baik)}
+.kabar-atur.salah{color:var(--gawat)}
+
 /* ══ pencarian & kejadian ══ */
 .cari{width:100%;box-sizing:border-box;margin:0 0 10px;padding:10px 14px;border:1px solid var(--cream-lift);
   border-radius:10px;background:var(--paper);color:inherit;font:inherit;font-size:.9rem}
@@ -480,6 +493,35 @@ a.tautan:hover{text-decoration:underline}
 
     <!-- ── tab 3 · produk ── -->
     <section id="produk" class="tab" hidden>
+      <div class="kartu" style="margin-bottom:12px">
+        <h3>Harga &amp; tema yang dibuka</h3>
+        <p class="ket">Berlaku langsung tanpa deploy ulang. Pesanan yang sudah dibuat tetap memakai harga saat dipesan.</p>
+        <div class="form-atur">
+          <div><label for="aHarga">Harga satu surat (Rp)</label><input id="aHarga" type="number" min="1000" step="500"></div>
+          <div><label for="aHargaPanjang">Harga perpanjang 6 bulan (Rp)</label><input id="aHargaPanjang" type="number" min="1000" step="500"></div>
+          <div><button class="tbl utamawarna" id="aSimpan" type="button" style="width:100%">Simpan</button></div>
+        </div>
+        <p class="ket" style="margin:14px 0 0">Centang tema yang <b>dibuka</b> untuk pesanan baru:</p>
+        <div class="tema-sakelar" id="aTema"></div>
+        <p class="kabar-atur" id="aKabar"></p>
+      </div>
+
+      <div class="kartu" style="margin-bottom:12px">
+        <h3>Kode promo</h3>
+        <p class="ket">Potongan dihitung dari harga surat (bukan biaya QRIS). Harga setelah promo minimal Rp1.000. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
+        <div class="form-atur">
+          <div><label for="pKode">Kode</label><input id="pKode" type="text" maxlength="20" placeholder="LAUNCH20"></div>
+          <div><label for="pJenis">Jenis</label><select id="pJenis"><option value="persen">Persen (%)</option><option value="rupiah">Rupiah</option></select></div>
+          <div><label for="pNilai">Besar potongan</label><input id="pNilai" type="number" min="1" placeholder="20"></div>
+          <div><label for="pKuota">Kuota (0 = tanpa batas)</label><input id="pKuota" type="number" min="0" value="0"></div>
+          <div><label for="pSampai">Berlaku sampai (opsional)</label><input id="pSampai" type="date"></div>
+          <div><button class="tbl utamawarna" id="pSimpan" type="button" style="width:100%">Simpan promo</button></div>
+        </div>
+        <p class="kabar-atur" id="pKabar"></p>
+        <div class="gulung"><table class="tbl-mini" id="pDaftar"></table></div>
+      </div>
+
+
       <div class="petak p2">
         <div class="kartu">
           <h3>Lagu yang dipakai</h3>
@@ -512,6 +554,16 @@ a.tautan:hover{text-decoration:underline}
         <h3>Kegagalan terbaru</h3>
         <p class="ket">Email gagal terkirim, pembayaran ditolak DOKU, notifikasi palsu/rusak. Disimpan 60 hari; kamu juga dikabari lewat email (paling sering sekali per jam per jenis).</p>
         <ul class="kejadian" id="kejadian"></ul>
+      </div>
+      <div class="kartu" style="margin-top:12px">
+        <h3>Cadangan data</h3>
+        <p class="ket">Dibuat otomatis tiap hari pukul 02.00 WIB ke penyimpanan R2 (disimpan 30 hari): semua pesanan lunas, pengingat, promo, pengaturan. Foto &amp; lagu tetap di R2 — alamatnya ada di dalam cadangan. Unduh sesekali dan simpan di Google Drive untuk salinan di luar Cloudflare.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="tbl utamawarna" id="cUnduh" type="button">Unduh cadangan sekarang (.json)</button>
+          <button class="tbl" id="cBuat" type="button">Buat cadangan ke R2 sekarang</button>
+        </div>
+        <p class="kabar-atur" id="cKabar"></p>
+        <ul class="kejadian" id="cDaftar"></ul>
       </div>
     </section>
   </main>
@@ -639,6 +691,7 @@ a.tautan:hover{text-decoration:underline}
       gambarCorong();
       gambarProduk();
       gambarSistem(p);
+      muatAtur(); muatPromo().catch(function(){}); muatCadangan().catch(function(){});
       gambarSaring();
       gambarTabel();
 
@@ -979,6 +1032,80 @@ a.tautan:hover{text-decoration:underline}
     document.body.appendChild(a); a.click(); a.remove();
   });
 
+  /* ── harga & tema ── */
+  async function muatAtur(){
+    try{
+      var a = await panggil({ aksi:"atur" });
+      $("aHarga").value = a.harga; $("aHargaPanjang").value = a.harga_perpanjang;
+      $("aTema").innerHTML = a.semua_tema.map(function(t){
+        return '<label><input type="checkbox" data-tema="' + esc(t) + '"' + (a.tema_mati.indexOf(t) < 0 ? " checked" : "") + '>' +
+               esc((typeof NAMA_TEMA !== "undefined" && NAMA_TEMA[t]) || t) + '</label>';
+      }).join("");
+    }catch(e){ $("aKabar").className = "kabar-atur salah"; $("aKabar").textContent = e.message; }
+  }
+  $("aSimpan").addEventListener("click", async function(){
+    var mati = []; document.querySelectorAll("[data-tema]").forEach(function(c){ if(!c.checked) mati.push(c.dataset.tema); });
+    try{
+      await panggil({ aksi:"atur", harga: Number($("aHarga").value), harga_perpanjang: Number($("aHargaPanjang").value), tema_mati: mati });
+      $("aKabar").className = "kabar-atur"; $("aKabar").textContent = "Tersimpan. Beranda & formulir memakai pengaturan ini dalam ±1 menit.";
+    }catch(e){ $("aKabar").className = "kabar-atur salah"; $("aKabar").textContent = e.message; }
+  });
+
+  /* ── promo ── */
+  async function muatPromo(){
+    var d = await panggil({ aksi:"promo_daftar" });
+    var rows = d.promo || [];
+    $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Potongan</th><th>Terpakai</th><th>Sampai</th><th></th></tr>' +
+      (rows.length ? rows.map(function(p){
+        var habis = (p.sampai && p.sampai < Date.now()) || (p.kuota && p.terpakai >= p.kuota);
+        return '<tr style="' + (p.aktif && !habis ? "" : "opacity:.5") + '"><td class="kode">' + esc(p.kode) + '</td><td>' +
+          (p.jenis === "persen" ? p.nilai + "%" : rp(p.nilai)) + '</td><td>' + p.terpakai + (p.kuota ? " / " + p.kuota : "") +
+          '</td><td>' + (p.sampai ? esc(new Date(p.sampai).toLocaleDateString("id-ID")) : "—") + '</td><td style="white-space:nowrap">' +
+          '<button class="tbl kecil" data-p="aktif" data-k="' + esc(p.kode) + '" data-n="' + (p.aktif ? 0 : 1) + '">' + (p.aktif ? "Matikan" : "Nyalakan") + '</button> ' +
+          '<button class="tbl kecil bahaya" data-p="hapus" data-k="' + esc(p.kode) + '">Hapus</button></td></tr>';
+      }).join("") : '<tr><td colspan="5" class="redup">Belum ada kode promo.</td></tr>');
+  }
+  $("pSimpan").addEventListener("click", async function(){
+    var sampai = $("pSampai").value ? new Date($("pSampai").value + "T23:59:59+07:00").getTime() : 0;
+    try{
+      var r = await panggil({ aksi:"promo_simpan", kode:$("pKode").value, jenis:$("pJenis").value, nilai:Number($("pNilai").value),
+                              kuota:Number($("pKuota").value), sampai:sampai });
+      $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Promo " + r.kode + " tersimpan.";
+      $("pKode").value = ""; $("pNilai").value = ""; await muatPromo();
+    }catch(e){ $("pKabar").className = "kabar-atur salah"; $("pKabar").textContent = e.message; }
+  });
+  $("pDaftar").addEventListener("click", async function(e){
+    var t = e.target.closest("[data-p]"); if(!t) return;
+    if(t.dataset.p === "hapus" && !confirm("Hapus promo " + t.dataset.k + "?")) return;
+    await panggil({ aksi: t.dataset.p === "hapus" ? "promo_hapus" : "promo_aktif", kode: t.dataset.k, nilai: t.dataset.n === "1" });
+    await muatPromo();
+  });
+
+  /* ── cadangan ── */
+  async function muatCadangan(){
+    var d = await panggil({ aksi:"cadangan_daftar" });
+    $("cDaftar").innerHTML = (d.daftar || []).slice(0, 10).map(function(c){
+      return '<li>' + esc(c.nama.replace("cadangan/","").replace(".json","")) + ' <span class="redup">· ' + Math.ceil(c.ukuran/1024) + ' KB</span></li>';
+    }).join("") || '<li class="redup">Belum ada cadangan otomatis. Yang pertama dibuat malam ini pukul 02.00 WIB.</li>';
+  }
+  $("cUnduh").addEventListener("click", async function(){
+    var b = this; b.disabled = true;
+    try{
+      var d = await panggil({ aksi:"cadangan" });
+      var blob = new Blob([JSON.stringify(d.data, null, 1)], { type:"application/json" });
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+      a.download = "foreverse-cadangan-" + new Date().toISOString().slice(0,10) + ".json";
+      document.body.appendChild(a); a.click(); a.remove();
+      $("cKabar").className = "kabar-atur"; $("cKabar").textContent = d.data.pesanan.length + " pesanan tercadang.";
+    }catch(e){ $("cKabar").className = "kabar-atur salah"; $("cKabar").textContent = e.message; }
+    b.disabled = false;
+  });
+  $("cBuat").addEventListener("click", async function(){
+    try{ var r = await panggil({ aksi:"cadangan_sekarang" }); $("cKabar").className = "kabar-atur";
+         $("cKabar").textContent = r.hasil ? "Tersimpan: " + r.hasil.nama : "R2 belum tersambung."; await muatCadangan(); }
+    catch(e){ $("cKabar").className = "kabar-atur salah"; $("cKabar").textContent = e.message; }
+  });
+
   /* ── pencarian pesanan (di server, jadi menjangkau semua pesanan) ── */
   var jedaCari = 0;
   $("cari").addEventListener("input", function(){
@@ -1051,6 +1178,8 @@ a.tautan:hover{text-decoration:underline}
         '<td><strong>' + esc(b.penerima || "—") + '</strong><br>' +
           '<span class="redup">dari ' + esc(b.pengirim || "—") + '</span></td>' +
         '<td><span class="st ' + esc(st) + '">' + esc(st) + '</span>' +
+          (b.promo ? '<br><span class="redup">promo ' + esc(b.promo) + '</span>' : "") +
+          (b.n_panjang ? '<br><span class="redup">diperpanjang ' + b.n_panjang + '×</span>' : "") +
           (b.aktif ? "" : '<br><span class="redup" style="color:var(--gawat)">nonaktif</span>') + '</td>' +
         '<td style="white-space:nowrap">' + esc(tgl(b.dibayar || b.dibuat)) +
           (st==="lunas" && sisaEdit > 0
@@ -1075,7 +1204,8 @@ a.tautan:hover{text-decoration:underline}
             ? '<button class="tbl kecil" data-a="email" data-k="' + esc(b.kode) + '">Kirim ulang email</button>' +
               '<button class="tbl kecil" data-a="aktif" data-k="' + esc(b.kode) + '" data-n="' + (b.aktif ? 0 : 1) + '">' +
                 (b.aktif ? "Nonaktifkan" : "Aktifkan") + '</button>' +
-              '<button class="tbl kecil" data-a="perpanjang" data-k="' + esc(b.kode) + '">Perpanjang edit</button>'
+              '<button class="tbl kecil" data-a="perpanjang" data-k="' + esc(b.kode) + '">Perpanjang edit</button>' +
+              '<button class="tbl kecil" data-a="tambah_simpan" data-k="' + esc(b.kode) + '">+6 bln simpan</button>'
             : '') +
           '<button class="tbl kecil bahaya" data-a="hapus" data-k="' + esc(b.kode) + '">Hapus</button>' +
         '</div></td></tr>';
@@ -1089,6 +1219,7 @@ a.tautan:hover{text-decoration:underline}
     var aksi = t.dataset.a, kode = t.dataset.k;
 
     if(aksi === "hapus" && !confirm("Hapus pesanan " + kode + " beserta foto & lagunya? Tidak bisa dibatalkan.")) return;
+    if(aksi === "tambah_simpan" && !confirm("Tambah masa simpan surat " + kode + " 6 bulan tanpa bayar?")) return;
     if(aksi === "aktif" && t.dataset.n === "0" && !confirm("Nonaktifkan surat " + kode + "? Tautannya jadi tidak bisa dibuka.")) return;
 
     var teksLama = t.textContent;

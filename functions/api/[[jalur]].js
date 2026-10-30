@@ -21,7 +21,6 @@ const HARGA = 15000;                 // rupiah, bersih yang masuk ke Foreverse
    dikonfirmasi langsung oleh DOKU untuk biaya ini — perlu dicek ulang
    di nota transaksi sungguhan nanti.                                  */
 const BIAYA_TRANSAKSI = 560;
-const TOTAL_BAYAR = HARGA + BIAYA_TRANSAKSI;   // yang sungguh ditagihkan ke pembeli
 const HARI_EDIT = 3;                 // masa berlaku tautan edit
 const JAM_DRAF = 24;
 const BULAN_SIMPAN = 6;               // surat & foto disimpan sekian bulan sejak dibayar
@@ -32,7 +31,7 @@ const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6
 const LAJU = {
   draf: [12, 600], simpan: [30, 600], bayar: [20, 600], catat: [80, 600],
   status: [150, 600], surat: [150, 600], dibuka: [40, 600], developer: [25, 600],
-  buka: [12, 600], ingat: [10, 600]
+  buka: [12, 600], ingat: [10, 600], promo: [20, 600], perpanjang: [20, 600]
 };                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
 const MAKS_LAGU = 10 * 1024 * 1024;  // batas file lagu yang diunggah
@@ -287,7 +286,8 @@ async function siapkan(db) {
       status TEXT DEFAULT 'draf', order_id TEXT, jumlah INTEGER,
       dibuat INTEGER, dibayar INTEGER, batas_edit INTEGER,
       aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0,
-      dibuka INTEGER, n_buka INTEGER DEFAULT 0, simpan_sampai INTEGER, pengingat INTEGER)`),
+      dibuka INTEGER, n_buka INTEGER DEFAULT 0, simpan_sampai INTEGER, pengingat INTEGER,
+      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
     /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
@@ -304,11 +304,20 @@ async function siapkan(db) {
        Terpisah dari isi surat; dihapus begitu pengingatnya terkirim. */
     db.prepare(`CREATE TABLE IF NOT EXISTS pengingat(
       id TEXT PRIMARY KEY, kode TEXT UNIQUE, email TEXT, nama TEXT, jenis TEXT, bulan INTEGER, hari INTEGER, dibuat INTEGER)`),
+    /* pengaturan yang bisa diubah dari /developer tanpa deploy ulang */
+    db.prepare(`CREATE TABLE IF NOT EXISTS pengaturan(kunci TEXT PRIMARY KEY, nilai TEXT)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS promo(
+      kode TEXT PRIMARY KEY, jenis TEXT, nilai INTEGER, kuota INTEGER, terpakai INTEGER DEFAULT 0,
+      sampai INTEGER, aktif INTEGER DEFAULT 1, dibuat INTEGER)`),
+    /* pembayaran perpanjangan masa simpan (faktur berawalan FP-) */
+    db.prepare(`CREATE TABLE IF NOT EXISTS perpanjangan(
+      order_id TEXT PRIMARY KEY, kode TEXT, jumlah INTEGER, status TEXT, dibuat INTEGER, dibayar INTEGER)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS kejadian(
       id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`)
   ]);
   /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
-  for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER"]) {
+  for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER",
+                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0"]) {
     try { await db.prepare("ALTER TABLE pesanan ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
   }
   tabelSiap = true;
@@ -879,6 +888,7 @@ async function lunasi(env, db, kode, asal) {
   const skr = Date.now();
   await db.prepare(`UPDATE pesanan SET status='lunas', dibayar=?, batas_edit=?, simpan_sampai=? WHERE kode=?`)
     .bind(skr, skr + HARI_EDIT * 86400000, tambahBulan(skr, BULAN_SIMPAN), kode).run();
+  if (b.promo) await db.prepare(`UPDATE promo SET terpakai=terpakai+1 WHERE kode=?`).bind(b.promo).run();
   await kirimEmailKode(env, db, kode, asal);
 }
 
@@ -911,7 +921,8 @@ export async function rawatHarian(env) {
     await db.prepare(`UPDATE pesanan SET simpan_sampai=? WHERE kode=?`).bind(sampai, b.kode).run();
   }
 
-  const ingat = await db.prepare(`SELECT kode,email,isi,simpan_sampai FROM pesanan
+  const atur = await bacaPengaturan(db);
+  const ingat = await db.prepare(`SELECT kode,token,email,isi,simpan_sampai FROM pesanan
     WHERE status='lunas' AND aktif=1 AND pengingat IS NULL AND simpan_sampai IS NOT NULL
       AND simpan_sampai > ? AND simpan_sampai <= ?`).bind(skr, skr + HARI_PENGINGAT * 86400000).all();
   for (const b of (ingat.results || [])) {
@@ -936,6 +947,7 @@ export async function rawatHarian(env) {
     </p>
     <p style="margin:0 0 18px;font-size:15px;line-height:1.65;color:#4E4A5E">Kalau ada foto atau kalimat yang ingin kamu simpan, buka suratnya dan simpan sekarang.</p>
     <a href="https://foreverse.id/s/${esc(b.kode)}?pratinjau=1" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
+    ${b.token ? `<a href="https://foreverse.id/perpanjang/${esc(b.token)}" style="display:block;margin-top:10px;border:1.5px solid #3B3168;color:#3B3168;text-decoration:none;text-align:center;padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px">Perpanjang ${BULAN_PERPANJANG} bulan · Rp${atur.hargaPerpanjang.toLocaleString("id-ID")}</a>` : ""}
   </div>
   <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
 </div></body></html>`
@@ -955,7 +967,10 @@ export async function rawatHarian(env) {
     dihapus++;
   }
   const ingatMomen = await kirimPengingatJatuhTempo(env, db);
-  return { ok: true, diingatkan, dihapus, ingatMomen };
+  let cadangan = null;
+  try { cadangan = await cadangkanHarian(env, db); }
+  catch (e) { await catatKejadian(env, db, "cadangan harian gagal", e && e.message, ""); }
+  return { ok: true, diingatkan, dihapus, ingatMomen, cadangan };
 }
 
 /* ══════════════════ "Ingetin aku" ══════════════════ */
@@ -1027,6 +1042,108 @@ async function kirimPengingatJatuhTempo(env, db) {
   return n;
 }
 
+/* ══════════════════ pengaturan dari /developer ══════════════════ */
+const HARGA_PERPANJANG = 10000;      // bawaan; bisa diubah di /developer
+const BULAN_PERPANJANG = 6;
+async function bacaPengaturan(db) {
+  const r = await db.prepare(`SELECT kunci,nilai FROM pengaturan`).all();
+  const m = {};
+  for (const x of (r.results || [])) m[x.kunci] = x.nilai;
+  let mati = [];
+  try { mati = JSON.parse(m.tema_mati || "[]").filter(t => TEMA_SKEMA[t]); } catch (_) {}
+  return {
+    harga: Number(m.harga) > 0 ? Number(m.harga) : HARGA,
+    hargaPerpanjang: Number(m.harga_perpanjang) > 0 ? Number(m.harga_perpanjang) : HARGA_PERPANJANG,
+    temaMati: mati
+  };
+}
+async function simpanPengaturan(db, kunci, nilai) {
+  await db.prepare(`INSERT OR REPLACE INTO pengaturan(kunci,nilai) VALUES(?,?)`).bind(kunci, String(nilai)).run();
+}
+
+/* ══════════════════ kode promo ══════════════════ */
+const MIN_SETELAH_PROMO = 1000;      // DOKU perlu nominal; promo tidak bisa menggratiskan
+function normalKodePromo(k) { return String(k || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 20); }
+async function hitungPromo(db, kode, harga) {
+  const k = normalKodePromo(kode);
+  if (!k) return { ok: true, kode: "", potongan: 0, harga };
+  const p = await db.prepare(`SELECT * FROM promo WHERE kode=?`).bind(k).first();
+  if (!p || !p.aktif) return { ok: false, pesan: "Kode promo tidak dikenal." };
+  if (p.sampai && Date.now() > p.sampai) return { ok: false, pesan: "Kode promo ini sudah berakhir." };
+  if (p.kuota && p.terpakai >= p.kuota) return { ok: false, pesan: "Kuota kode promo ini sudah habis." };
+  let pot = p.jenis === "persen" ? Math.round(harga * Math.min(100, p.nilai) / 100) : p.nilai;
+  pot = Math.max(0, Math.min(pot, harga - MIN_SETELAH_PROMO));
+  return { ok: true, kode: k, potongan: pot, harga: harga - pot };
+}
+
+/* ══════════════════ cadangan data ══════════════════
+   Salinan JSON seluruh data penting (pesanan non-draf, pengingat, promo,
+   pengaturan, perpanjangan, kunjungan 90 hari). Dibuat tiap hari ke R2
+   (cadangan/YYYY-MM-DD.json, disimpan 30 hari) dan bisa diunduh dari
+   /developer. Foto & lagu tidak disalin ulang — sudah tersimpan di R2,
+   dan alamatnya ada di dalam isi tiap pesanan. */
+const HARI_CADANGAN = 30;
+async function buatCadangan(db) {
+  const ambil = async (sql, ...a) => ((await db.prepare(sql).bind(...a).all()).results || []);
+  return {
+    dibuat: new Date().toISOString(),
+    versi: 1,
+    pesanan: await ambil(`SELECT * FROM pesanan WHERE status!='draf'`),
+    pengingat: await ambil(`SELECT * FROM pengingat`),
+    promo: await ambil(`SELECT * FROM promo`),
+    pengaturan: await ambil(`SELECT * FROM pengaturan`),
+    perpanjangan: await ambil(`SELECT * FROM perpanjangan`),
+    kunjungan: await ambil(`SELECT * FROM kunjungan WHERE hari >= ?`,
+      new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10))
+  };
+}
+async function cadangkanHarian(env, db) {
+  if (!env.FOTO) return null;
+  const data = await buatCadangan(db);
+  const nama = "cadangan/" + new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10) + ".json";
+  await env.FOTO.put(nama, JSON.stringify(data), { httpMetadata: { contentType: "application/json" } });
+  const batas = new Date(Date.now() + 7 * 3600000 - HARI_CADANGAN * 86400000).toISOString().slice(0, 10);
+  const daftar = await env.FOTO.list({ prefix: "cadangan/" });
+  for (const o of (daftar.objects || [])) if (o.key.slice(9, 19) < batas) await env.FOTO.delete(o.key);
+  return { nama, pesanan: data.pesanan.length };
+}
+
+/* ══════════════════ perpanjangan masa simpan ══════════════════ */
+async function lunasiPerpanjangan(env, db, orderId) {
+  const row = await db.prepare(`SELECT * FROM perpanjangan WHERE order_id=?`).bind(orderId).first();
+  if (!row || row.status === "lunas") return;
+  const b = await db.prepare(`SELECT kode,email,isi,simpan_sampai FROM pesanan WHERE kode=?`).bind(row.kode).first();
+  if (!b) return;
+  const dasar = Math.max(Number(b.simpan_sampai) || 0, Date.now());
+  const baru = tambahBulan(dasar, BULAN_PERPANJANG);
+  await db.batch([
+    db.prepare(`UPDATE perpanjangan SET status='lunas', dibayar=? WHERE order_id=?`).bind(Date.now(), orderId),
+    db.prepare(`UPDATE pesanan SET simpan_sampai=?, pengingat=NULL, n_panjang=COALESCE(n_panjang,0)+1, aktif=1 WHERE kode=?`).bind(baru, row.kode)
+  ]);
+  if (env.RESEND_API_KEY && b.email) {
+    const isi = JSON.parse(b.isi || "{}");
+    const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+      body: JSON.stringify({
+        from: "Foreverse <" + dari + ">", to: [b.email], reply_to: dari,
+        subject: "Surat untuk " + (isi.penerima || "dia") + " diperpanjang sampai " + tglPanjang(baru),
+        html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
+<div style="max-width:520px;margin:0 auto;padding:32px 20px">
+  <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
+  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
+    <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Masa simpannya sudah diperpanjang.</h1>
+    <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">Surat untuk <strong>${esc(isi.penerima || "")}</strong> sekarang bisa dibuka sampai <strong>${esc(tglPanjang(baru))}</strong>, di tautan yang sama. Kami ingatkan lagi 14 hari sebelum masanya habis.</p>
+  </div>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
+</div></body></html>`
+      })
+    }).catch(() => {});
+  }
+}
+
 /* ══════════════════ router ══════════════════ */
 
 export async function onRequest(ctx) {
@@ -1049,6 +1166,78 @@ export async function onRequest(ctx) {
     const namaLaju = jalur === "admin" ? "developer" : jalur;
     if (await lewatBatas(db, request, namaLaju))
       return salah("Terlalu banyak permintaan dalam waktu singkat. Coba lagi beberapa menit lagi, ya.", 429);
+
+    /* ── info publik: harga & tema yang sedang dibuka ───────────── */
+    if (jalur === "info") {
+      const a = await bacaPengaturan(db);
+      return new Response(JSON.stringify({ ok: true, harga: a.harga, biaya: BIAYA_TRANSAKSI, tema_mati: a.temaMati,
+        harga_perpanjang: a.hargaPerpanjang, bulan_perpanjang: BULAN_PERPANJANG }),
+        { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60" } });
+    }
+
+    /* ── cek kode promo ─────────────────────────────────────────── */
+    if (jalur === "promo" && request.method === "POST") {
+      const a = await bacaPengaturan(db);
+      const pr = await hitungPromo(db, badan.kode, a.harga);
+      if (!pr.ok) return salah(pr.pesan, 400);
+      return jwb({ ok: true, kode: pr.kode, potongan: pr.potongan, harga: pr.harga, biaya: BIAYA_TRANSAKSI, total: pr.harga + BIAYA_TRANSAKSI });
+    }
+
+    /* ── perpanjangan masa simpan (pemilik, lewat token edit) ──── */
+    if (jalur === "perpanjang/info" || jalur === "perpanjang/status") {
+      const token = teks(url.searchParams.get("token"), 30);
+      const b = token && await db.prepare(`SELECT kode,isi,status,simpan_sampai,order_id FROM pesanan WHERE token=?`).bind(token).first();
+      if (!b || b.status !== "lunas") return salah("Tautan perpanjangan tidak dikenal atau suratnya sudah dihapus.", 404);
+      const a = await bacaPengaturan(db);
+      let menunggu = await db.prepare(`SELECT order_id FROM perpanjangan WHERE kode=? AND status='menunggu' ORDER BY dibuat DESC LIMIT 1`).bind(b.kode).first();
+      /* cadangan kalau notifikasi DOKU telat: tanya langsung */
+      if (jalur === "perpanjang/status" && menunggu && env.DOKU_CLIENT_ID && env.DOKU_SECRET_KEY) {
+        const r = await panggilDoku(env, { metode: "GET", sasaran: DOKU.jalurStatus + encodeURIComponent(menunggu.order_id) });
+        const t = (r.isi && r.isi.transaction) || {}, o = (r.isi && r.isi.order) || {};
+        const row = await db.prepare(`SELECT jumlah FROM perpanjangan WHERE order_id=?`).bind(menunggu.order_id).first();
+        if (t.status === "SUCCESS" && row && Number(o.amount) === row.jumlah + BIAYA_TRANSAKSI) {
+          await lunasiPerpanjangan(env, db, menunggu.order_id);
+          menunggu = null;
+        }
+      }
+      const kini = await db.prepare(`SELECT simpan_sampai FROM pesanan WHERE kode=?`).bind(b.kode).first();
+      return jwb({ ok: true, kode: b.kode, penerima: JSON.parse(b.isi || "{}").penerima || "",
+        simpan_sampai: kini.simpan_sampai, harga: a.hargaPerpanjang, biaya: BIAYA_TRANSAKSI, bulan: BULAN_PERPANJANG,
+        menunggu: !!menunggu });
+    }
+    if (jalur === "perpanjang" && request.method === "POST") {
+      if (!env.DOKU_CLIENT_ID || !env.DOKU_SECRET_KEY) return salah("Pembayaran belum siap.", 500);
+      const token = teks(badan.token, 30);
+      const b = token && await db.prepare(`SELECT kode,email,whatsapp,isi,status FROM pesanan WHERE token=?`).bind(token).first();
+      if (!b || b.status !== "lunas") return salah("Tautan perpanjangan tidak dikenal atau suratnya sudah dihapus.", 404);
+      const a = await bacaPengaturan(db);
+      const orderId = "FP-" + b.kode + "-" + Date.now().toString(36);
+      const isiP = JSON.parse(b.isi || "{}");
+      const r = await panggilDoku(env, {
+        metode: "POST", sasaran: DOKU.jalurCheckout,
+        badan: {
+          order: {
+            amount: a.hargaPerpanjang + BIAYA_TRANSAKSI, invoice_number: orderId, currency: "IDR",
+            callback_url: asal + "/perpanjang/" + token + "?bayar=1", auto_redirect: true,
+            line_items: [
+              { name: "Perpanjang masa simpan " + BULAN_PERPANJANG + " bulan", quantity: 1, price: a.hargaPerpanjang },
+              { name: "Biaya transaksi", quantity: 1, price: BIAYA_TRANSAKSI }
+            ]
+          },
+          payment: { payment_due_date: DOKU.jatuhTempoMenit, payment_method_types: DOKU.metode },
+          customer: { name: (isiP.pengirim || "Pembeli").slice(0, 50), email: b.email || undefined, phone: b.whatsapp || undefined }
+        }
+      });
+      const urlBayar = r.isi && r.isi.payment && r.isi.payment.url;
+      if (!r.ok || !urlBayar) {
+        const kabar = (r.asli && (r.asli.error_messages || r.asli.message)) || r.asli;
+        await catatKejadian(env, db, "DOKU menolak pembayaran", "perpanjangan: " + JSON.stringify(kabar).slice(0, 250), b.kode);
+        return salah("Pembayaran belum bisa dibuat. Coba lagi sebentar lagi, ya.", 502);
+      }
+      await db.prepare(`INSERT INTO perpanjangan(order_id,kode,jumlah,status,dibuat) VALUES(?,?,?,'menunggu',?)`)
+        .bind(orderId, b.kode, a.hargaPerpanjang, Date.now()).run();
+      return jwb({ ok: true, url: urlBayar, order_id: orderId });
+    }
 
     /* ── "Ingetin aku": hanya pemilik (memegang token edit) ──────── */
     if (jalur === "ingat" && request.method === "POST") {
@@ -1121,18 +1310,22 @@ export async function onRequest(ctx) {
       ctx.waitUntil(bersihkan(db, env));
       const kode = acak(PANJANG_KODE), token = acak(22), skr = Date.now();
       const tema = temaSah(teks(badan.tema, 40));
+      const atur = await bacaPengaturan(db);
+      if (atur.temaMati.includes(tema)) return salah("Tema ini sedang tidak tersedia. Coba tema lain, ya.", 409);
+      const pr = await hitungPromo(db, badan.promo, atur.harga);
+      if (!pr.ok) return salah(pr.pesan, 400);
       const isi = await rapikanIsi(env, kode, badan, null, tema);
       await db.prepare(`INSERT INTO pesanan
-        (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif)
-        VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1)`).bind(
+        (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif,promo,potongan)
+        VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1,?,?)`).bind(
         kode, token,
         tema,
         teks(badan.momen, 40),
         teks(badan.email, BATAS.email),
         teks(badan.whatsapp, BATAS.whatsapp),
-        JSON.stringify(isi), HARGA, skr
+        JSON.stringify(isi), pr.harga, skr, pr.kode || null, pr.potongan
       ).run();
-      return jwb({ ok: true, kode, token, jumlah: HARGA });
+      return jwb({ ok: true, kode, token, jumlah: pr.harga, potongan: pr.potongan });
     }
 
     /* ── minta halaman pembayaran DOKU ───────────────────────── */
@@ -1144,6 +1337,12 @@ export async function onRequest(ctx) {
       const b = await db.prepare(`SELECT * FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Pesanan tidak ditemukan.", 404);
       if (b.status === "lunas") return jwb({ ok: true, sudah: true, kode });
+      if (b.promo) {
+        const p = await db.prepare(`SELECT kuota,terpakai,aktif,sampai FROM promo WHERE kode=?`).bind(b.promo).first();
+        if (!p || !p.aktif || (p.sampai && Date.now() > p.sampai) || (p.kuota && p.terpakai >= p.kuota))
+          return salah("Kode promo yang dipakai sudah tidak berlaku. Isi ulang formulirnya tanpa kode itu, ya.", 409);
+      }
+      const hargaB = Number(b.jumlah) || HARGA;
 
       const isi = JSON.parse(b.isi || "{}");
       const orderId = "FV-" + kode + "-" + Date.now().toString(36);
@@ -1153,14 +1352,14 @@ export async function onRequest(ctx) {
         sasaran: DOKU.jalurCheckout,
         badan: {
           order: {
-            amount: TOTAL_BAYAR,
+            amount: hargaB + BIAYA_TRANSAKSI,
             invoice_number: orderId,
             currency: "IDR",
             /* tempat pembeli mendarat setelah membayar */
             callback_url: asal + "/selesai?kode=" + kode,
             auto_redirect: true,
             line_items: [
-              { name: "Surat digital Foreverse", quantity: 1, price: HARGA },
+              { name: "Surat digital Foreverse" + (b.promo ? " (promo " + b.promo + ")" : ""), quantity: 1, price: hargaB },
               { name: "Biaya transaksi", quantity: 1, price: BIAYA_TRANSAKSI }
             ]
           },
@@ -1232,9 +1431,23 @@ export async function onRequest(ctx) {
       const faktur = teks(pesananDoku.invoice_number, 64);
       if (!faktur) return jwb({ ok: true, catatan: "Tanpa nomor faktur." });
 
-      const b = await db.prepare(`SELECT kode,status FROM pesanan WHERE order_id=?`)
+      /* pembayaran perpanjangan masa simpan */
+      if (faktur.startsWith("FP-")) {
+        const row = await db.prepare(`SELECT * FROM perpanjangan WHERE order_id=?`).bind(faktur).first();
+        if (!row) return jwb({ ok: true, catatan: "Perpanjangan tidak dikenal." });
+        if (transaksi.status !== "SUCCESS") return jwb({ ok: true, catatan: "Belum lunas." });
+        if (Number(pesananDoku.amount) !== row.jumlah + BIAYA_TRANSAKSI) {
+          await catatKejadian(env, db, "notifikasi DOKU ditolak", "Jumlah perpanjangan " + pesananDoku.amount + " tidak sesuai.", row.kode);
+          return salah("Jumlah pembayaran tidak sesuai harga.", 403);
+        }
+        await lunasiPerpanjangan(env, db, faktur);
+        return jwb({ ok: true });
+      }
+
+      const b = await db.prepare(`SELECT kode,status,jumlah FROM pesanan WHERE order_id=?`)
         .bind(faktur).first();
       if (!b) return jwb({ ok: true, catatan: "Pesanan tidak dikenal." });
+      const totalB = (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI;
 
       /* Hanya SUCCESS yang diproses. FAILED diabaikan: di Checkout,
          pembeli masih boleh mencoba lagi di halaman yang sama, jadi
@@ -1242,8 +1455,8 @@ export async function onRequest(ctx) {
       if (transaksi.status !== "SUCCESS")
         return jwb({ ok: true, catatan: "Belum lunas." });
 
-      if (Number(pesananDoku.amount) !== TOTAL_BAYAR) {
-        await catatKejadian(env, db, "notifikasi DOKU ditolak", "Jumlah " + pesananDoku.amount + " tidak sama dengan " + TOTAL_BAYAR + ".", b.kode);
+      if (Number(pesananDoku.amount) !== totalB) {
+        await catatKejadian(env, db, "notifikasi DOKU ditolak", "Jumlah " + pesananDoku.amount + " tidak sama dengan " + totalB + ".", b.kode);
         return salah("Jumlah pembayaran tidak sesuai harga.", 403);
       }
 
@@ -1258,7 +1471,7 @@ export async function onRequest(ctx) {
        Jadi jawaban di sini TIDAK BOLEH memuat token edit.        */
     if (jalur === "status") {
       const kode = teks(url.searchParams.get("kode"), 16);
-      const b = await db.prepare(`SELECT kode,status,order_id,isi FROM pesanan WHERE kode=?`).bind(kode).first();
+      const b = await db.prepare(`SELECT kode,status,order_id,isi,jumlah FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Pesanan tidak ditemukan.", 404);
 
       const penerima = (JSON.parse(b.isi || "{}").penerima) || "";
@@ -1273,7 +1486,7 @@ export async function onRequest(ctx) {
         });
         const t = (r.isi && r.isi.transaction) || {};
         const o = (r.isi && r.isi.order) || {};
-        if (t.status === "SUCCESS" && Number(o.amount) === TOTAL_BAYAR) {
+        if (t.status === "SUCCESS" && Number(o.amount) === (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI) {
           await lunasi(env, db, b.kode, asal);
           const isiSt2 = JSON.parse(b.isi || "{}");
           return jwb({ ok: true, status: "lunas", kode: b.kode, penerima, bisa_ingat: !!tanggalIngat(isiSt2), dikunci: !!isiSt2.kunci });
@@ -1350,7 +1563,7 @@ export async function onRequest(ctx) {
         const dari = Number(badan.dari) > 0 ? Number(badan.dari) : 0;
         const panjang = sampai - dari;
         const cari = teks(badan.cari, 60).toLowerCase();
-        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,isi FROM pesanan`;
+        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,isi FROM pesanan`;
         const pola = "%" + cari.replace(/[%_\\]/g, "\\$&") + "%";
         const syaratCari = cari
           ? ` AND (lower(kode) LIKE ?3 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?3 ESCAPE '\\'
@@ -1423,6 +1636,67 @@ export async function onRequest(ctx) {
 
       if (aksi === "email") return jwb(await kirimEmailKode(env, db, teks(badan.kode, 16), asal));
 
+      /* ── harga & tema yang dibuka ── */
+      if (aksi === "atur") {
+        if (badan.harga !== undefined) {
+          const h = Math.round(Number(badan.harga));
+          if (!(h >= 1000 && h <= 1000000)) return salah("Harga harus antara Rp1.000 dan Rp1.000.000.");
+          await simpanPengaturan(db, "harga", h);
+        }
+        if (badan.harga_perpanjang !== undefined) {
+          const h = Math.round(Number(badan.harga_perpanjang));
+          if (!(h >= 1000 && h <= 1000000)) return salah("Harga perpanjangan harus antara Rp1.000 dan Rp1.000.000.");
+          await simpanPengaturan(db, "harga_perpanjang", h);
+        }
+        if (Array.isArray(badan.tema_mati))
+          await simpanPengaturan(db, "tema_mati", JSON.stringify(badan.tema_mati.filter(t => TEMA_SKEMA[t])));
+        const a = await bacaPengaturan(db);
+        return jwb({ ok: true, harga: a.harga, harga_perpanjang: a.hargaPerpanjang, tema_mati: a.temaMati, semua_tema: Object.keys(TEMA_SKEMA) });
+      }
+
+      /* ── kode promo ── */
+      if (aksi === "promo_daftar") {
+        const r = await db.prepare(`SELECT * FROM promo ORDER BY dibuat DESC`).all();
+        return jwb({ ok: true, promo: r.results || [] });
+      }
+      if (aksi === "promo_simpan") {
+        const kode = normalKodePromo(badan.kode);
+        if (kode.length < 3) return salah("Kode promo minimal 3 huruf/angka.");
+        const jenis = badan.jenis === "persen" ? "persen" : "rupiah";
+        const nilai = Math.round(Number(badan.nilai));
+        if (!(nilai > 0) || (jenis === "persen" && nilai > 100)) return salah("Besar potongan belum benar.");
+        const lama = await db.prepare(`SELECT terpakai,dibuat FROM promo WHERE kode=?`).bind(kode).first();
+        await db.prepare(`INSERT OR REPLACE INTO promo(kode,jenis,nilai,kuota,terpakai,sampai,aktif,dibuat) VALUES(?,?,?,?,?,?,?,?)`)
+          .bind(kode, jenis, nilai, Math.max(0, Math.round(Number(badan.kuota) || 0)), lama ? lama.terpakai : 0,
+            Number(badan.sampai) || null, badan.aktif === false ? 0 : 1, lama ? lama.dibuat : Date.now()).run();
+        return jwb({ ok: true, kode });
+      }
+      if (aksi === "promo_aktif") {
+        await db.prepare(`UPDATE promo SET aktif=? WHERE kode=?`).bind(badan.nilai ? 1 : 0, normalKodePromo(badan.kode)).run();
+        return jwb({ ok: true });
+      }
+      if (aksi === "promo_hapus") {
+        await db.prepare(`DELETE FROM promo WHERE kode=?`).bind(normalKodePromo(badan.kode)).run();
+        return jwb({ ok: true });
+      }
+
+      /* ── cadangan ── */
+      if (aksi === "cadangan") return jwb({ ok: true, data: await buatCadangan(db) });
+      if (aksi === "cadangan_daftar") {
+        const d = env.FOTO ? await env.FOTO.list({ prefix: "cadangan/" }) : { objects: [] };
+        return jwb({ ok: true, daftar: (d.objects || []).map(o => ({ nama: o.key, ukuran: o.size })).sort((a, b) => a.nama < b.nama ? 1 : -1) });
+      }
+      if (aksi === "cadangan_sekarang") return jwb({ ok: true, hasil: await cadangkanHarian(env, db) });
+
+      /* ── tambah masa simpan tanpa bayar (mis. kompensasi) ── */
+      if (aksi === "tambah_simpan") {
+        const b = await db.prepare(`SELECT simpan_sampai FROM pesanan WHERE kode=?`).bind(teks(badan.kode, 16)).first();
+        if (!b) return salah("Pesanan tidak ditemukan.", 404);
+        await db.prepare(`UPDATE pesanan SET simpan_sampai=?, pengingat=NULL WHERE kode=?`)
+          .bind(tambahBulan(Math.max(Number(b.simpan_sampai) || 0, Date.now()), BULAN_PERPANJANG), teks(badan.kode, 16)).run();
+        return jwb({ ok: true });
+      }
+
       if (aksi === "aktif") {
         await db.prepare(`UPDATE pesanan SET aktif=? WHERE kode=?`)
           .bind(badan.nilai ? 1 : 0, teks(badan.kode, 16)).run();
@@ -1455,7 +1729,7 @@ export async function onRequest(ctx) {
           sandbox: modeSandbox(env),
           mode_tegas: modeDitegaskan(env),
           pengirim: env.EMAIL_PENGIRIM || "(belum diisi)",
-          harga: HARGA,
+          harga: (await bacaPengaturan(db)).harga,
           jam_draf: JAM_DRAF,
           hari_edit: HARI_EDIT,
           bulan_simpan: BULAN_SIMPAN,

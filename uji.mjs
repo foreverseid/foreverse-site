@@ -1797,6 +1797,107 @@ await uji("tautan hapus pengingat bekerja", async () => {
   sama((await L.env.DB.prepare("SELECT COUNT(*) n FROM pengingat").first()).n, 0, "terhapus");
 });
 
+/* ═══════════ developer control, promo, perpanjangan, cadangan ═══════════ */
+judul("Pengaturan, promo, perpanjangan, cadangan");
+
+async function buatDrafDengan(L, ubah) {
+  const d = Object.assign(isiDraf(), ubah || {});
+  return (await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) })).json();
+}
+async function bayarDraf(L, kode) {
+  return (await L.panggil("/api/bayar", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode }) })).json();
+}
+
+await uji("harga diubah dari /developer: draf baru & DOKU memakai harga baru, notifikasi dicek ke harga itu", async () => {
+  const L = await buatLingkungan();
+  harus((await admin(L, { aksi: "atur", harga: 20000 })).harga === 20000, "harga tersimpan");
+  const info = await (await L.panggil("/api/info")).json();
+  sama(info.harga, 20000, "info publik");
+  const d = await buatDrafDengan(L);
+  sama(d.jumlah, 20000, "jumlah draf");
+  const b = await bayarDraf(L, d.kode);
+  sama((await L.notifikasi(notifSukses(b.order_id, 15560))).status, 403, "harga lama ditolak");
+  sama((await L.notifikasi(notifSukses(b.order_id, 20560))).status, 200, "harga baru diterima");
+  sama((await (await L.panggil("/api/status?kode=" + d.kode)).json()).status, "lunas", "lunas");
+});
+
+await uji("tema dimatikan: tidak bisa dipesan, muncul di info publik", async () => {
+  const L = await buatLingkungan();
+  await admin(L, { aksi: "atur", tema_mati: ["bait", "tidak-ada"] });
+  const info = await (await L.panggil("/api/info")).json();
+  sama(JSON.stringify(info.tema_mati), '["bait"]', "hanya tema sah");
+  harus(!(await buatDrafDengan(L)).ok, "draf bait harus ditolak");
+  await admin(L, { aksi: "atur", tema_mati: [] });
+  harus((await buatDrafDengan(L)).ok, "bisa lagi");
+});
+
+await uji("promo persen & rupiah: potongan benar, minimal Rp1.000, kuota & tanggal berakhir dihormati", async () => {
+  const L = await buatLingkungan();
+  await admin(L, { aksi: "promo_simpan", kode: "launch20", jenis: "persen", nilai: 20, kuota: 1 });
+  await admin(L, { aksi: "promo_simpan", kode: "GEDE", jenis: "rupiah", nilai: 50000 });
+  await admin(L, { aksi: "promo_simpan", kode: "LEWAT", jenis: "rupiah", nilai: 1000, sampai: Date.now() - 1000 });
+  const cek = async (k) => (await L.panggil("/api/promo", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode: k }) })).json();
+  const a = await cek("launch-20");
+  harus(a.ok && a.potongan === 3000 && a.harga === 12000 && a.total === 12560, "persen: " + JSON.stringify(a));
+  const g = await cek("gede");
+  sama(g.harga, 1000, "tidak bisa di bawah Rp1.000");
+  harus(!(await cek("LEWAT")).ok, "promo berakhir ditolak");
+  harus(!(await cek("ASAL")).ok, "promo asing ditolak");
+  const d = await buatDrafDengan(L, { promo: "LAUNCH20" });
+  sama(d.jumlah, 12000, "draf memakai harga promo");
+  const b = await bayarDraf(L, d.kode);
+  harus(L.catatan.panggilan.some(x => x.badan && x.badan.order && x.badan.order.amount === 12560), "DOKU menagih 12.560");
+  await L.notifikasi(notifSukses(b.order_id, 12560)); await L.tunggu();
+  const p = (await admin(L, { aksi: "promo_daftar" })).promo.find(x => x.kode === "LAUNCH20");
+  sama(p.terpakai, 1, "terpakai bertambah saat lunas");
+  harus(!(await cek("LAUNCH20")).ok, "kuota 1 habis");
+  harus(!(await buatDrafDengan(L, { promo: "ASAL" })).ok, "draf dengan promo asing ditolak");
+});
+
+await uji("perpanjangan: info, bayar ke DOKU, notifikasi FP- menambah 6 bulan & kirim email", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await admin(L, { aksi: "atur", harga_perpanjang: 12000 });
+  const awal = (await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(p.kode).first()).simpan_sampai;
+  const info = await (await L.panggil("/api/perpanjang/info?token=" + p.token)).json();
+  harus(info.ok && info.harga === 12000 && info.penerima === "Amira", "info: " + JSON.stringify(info));
+  sama((await L.panggil("/api/perpanjang/info?token=salah")).status, 404, "token salah");
+  const r = await (await L.panggil("/api/perpanjang", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: p.token }) })).json();
+  harus(r.ok && r.order_id.startsWith("FP-"), "tagihan dibuat");
+  sama((await L.notifikasi(notifSukses(r.order_id, 15560))).status, 403, "jumlah salah ditolak");
+  const nEmail = L.catatan.email.length;
+  sama((await L.notifikasi(notifSukses(r.order_id, 12560))).status, 200, "jumlah benar");
+  await L.notifikasi(notifSukses(r.order_id, 12560));
+  const b = await L.env.DB.prepare("SELECT simpan_sampai,n_panjang FROM pesanan WHERE kode=?").bind(p.kode).first();
+  const hari = (b.simpan_sampai - awal) / 86400000;
+  harus(hari > 180 && hari < 185, "bertambah ±6 bulan: " + hari);
+  sama(b.n_panjang, 1, "dihitung sekali walau notifikasi dobel");
+  sama(L.catatan.email.length - nEmail, 1, "satu email konfirmasi");
+  harus((await (await L.panggil("/perpanjang/" + p.token)).text()).includes("perpanjang"), "halaman perpanjang tersaji");
+});
+
+await uji("email pengingat masa simpan memuat tombol perpanjang", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=? WHERE kode=?").bind(Date.now() + 5 * 86400000, p.kode).run();
+  const awal = L.catatan.email.length;
+  await rawatHarian(L.env);
+  harus(L.catatan.email.slice(awal).some(e => (e.html || "").includes("/perpanjang/" + p.token)), "tombol perpanjang");
+});
+
+await uji("cadangan: harian ke R2 (draf tidak ikut), daftar & unduh dari /developer", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await buatDrafDengan(L);
+  const h = await rawatHarian(L.env);
+  harus(h.cadangan && h.cadangan.nama.startsWith("cadangan/"), "dibuat: " + JSON.stringify(h.cadangan));
+  sama(h.cadangan.pesanan, 1, "hanya pesanan lunas");
+  const d = await admin(L, { aksi: "cadangan_daftar" });
+  sama(d.daftar.length, 1, "terdaftar");
+  const u = await admin(L, { aksi: "cadangan" });
+  harus(u.data.pesanan.some(x => x.kode === p.kode) && Array.isArray(u.data.promo), "isi unduhan");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

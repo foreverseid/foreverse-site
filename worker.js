@@ -60,7 +60,7 @@ function pasangKeamanan(r, jalur) {
   const kepala = new Headers(r.headers);
   for (const [k, v] of Object.entries(KEAMANAN)) kepala.set(k, v);
   /* lapis kedua di samping robots.txt & meta noindex: halaman pribadi tidak diindeks */
-  if (/^\/(s|edit|f|api|developer)(\/|$|\.)|^\/(pesan|selesai)/.test(jalur || ""))
+  if (/^\/(s|edit|f|api|developer|perpanjang)(\/|$|\.)|^\/(pesan|selesai)/.test(jalur || ""))
     kepala.set("x-robots-tag", "noindex, nofollow, noarchive");
   return new Response(r.body, { status: r.status, statusText: r.statusText, headers: kepala });
 }
@@ -123,6 +123,10 @@ async function tangani(request, env, ctx) {
       /* ── halaman beranda yang terpisah: satu berkas index.html ── */
       if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "index", request);
+
+      /* ── perpanjangan masa simpan: /perpanjang/<token> ── */
+      if (/^\/perpanjang\/[A-Za-z0-9]{8,40}\/?$/.test(p))
+        return await ambilHalaman(env, url.origin, "perpanjang", request);
 
       /* ── alamat pendek: /edit/<token> ── */
       if (/^\/edit\/[A-Za-z0-9]{8,40}\/?$/.test(p))
