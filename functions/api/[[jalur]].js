@@ -787,6 +787,7 @@ function badanEmail(o) {
   return `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
 <div style="max-width:520px;margin:0 auto;padding:32px 20px">
   <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah jadi.</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">
@@ -857,6 +858,7 @@ async function kirimEmailDibuka(env, b, asal) {
       html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
 <div style="max-width:520px;margin:0 auto;padding:32px 20px">
   <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah sampai.</h1>
     <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">
@@ -925,6 +927,7 @@ export async function rawatHarian(env) {
           html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
 <div style="max-width:520px;margin:0 auto;padding:32px 20px">
   <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Simpan kenangannya, ya.</h1>
     <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#4E4A5E">
@@ -997,6 +1000,7 @@ async function kirimEmailIngat(env, r, asal, konfirmasi) {
       html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
 <div style="max-width:520px;margin:0 auto;padding:32px 20px">
   <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">${esc(judul)}</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">${isi}</p>

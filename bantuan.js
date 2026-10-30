@@ -199,7 +199,7 @@
   function sapa() {
     if (sudahSapa) return;
     sudahSapa = true;
-    gelembung("Hai, aku Vera 👋 Ini yang paling sering ditanyakan. Pilih salah satu, atau ketik pertanyaanmu sendiri.", "kami");
+    gelembung("Hai, Forevers! Aku Vera 👋 Ini yang paling sering ditanyakan. Pilih salah satu, atau ketik pertanyaanmu sendiri.", "kami");
     pilihan(POPULER, false);
   }
 
