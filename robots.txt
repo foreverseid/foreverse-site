@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /s/
+Disallow: /edit/
+Disallow: /f/
+Disallow: /api/
+Disallow: /developer
+Disallow: /pesan
+Disallow: /selesai

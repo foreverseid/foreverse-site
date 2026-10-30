@@ -55,9 +55,12 @@ const KEAMANAN = {
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
   "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
 };
-function pasangKeamanan(r) {
+function pasangKeamanan(r, jalur) {
   const kepala = new Headers(r.headers);
   for (const [k, v] of Object.entries(KEAMANAN)) kepala.set(k, v);
+  /* lapis kedua di samping robots.txt & meta noindex: halaman pribadi tidak diindeks */
+  if (/^\/(s|edit|f|api|developer)(\/|$|\.)|^\/(pesan|selesai)/.test(jalur || ""))
+    kepala.set("x-robots-tag", "noindex, nofollow, noarchive");
   return new Response(r.body, { status: r.status, statusText: r.statusText, headers: kepala });
 }
 
@@ -75,7 +78,7 @@ function sisipDibuka(html, kode) {
 
 export default {
   async fetch(request, env, ctx) {
-    return pasangKeamanan(await tangani(request, env, ctx));
+    return pasangKeamanan(await tangani(request, env, ctx), new URL(request.url).pathname);
   },
   /* Cron Trigger harian (wrangler.jsonc → triggers.crons): pengingat masa
      simpan, penghapusan surat yang masanya habis, dan pembersihan draf. */

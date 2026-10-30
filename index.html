@@ -445,6 +445,70 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 .foot a:hover{color:var(--ink);text-decoration:underline}
 
 [hidden]{display:none!important}
+
+/* ══════════ tampilan HP ══════════
+   Patokan: semua bagian penting muat di satu layar HP (±375×700),
+   teks tidak melebar, dan deretan kartu digeser ke samping, bukan ditumpuk. */
+.phone{width:min(350px,74vw,calc((100svh - 230px) * 9 / 18.5));min-width:220px}
+@media(max-width:699px){
+  body{font-size:15.5px;line-height:1.6}
+  section{padding:52px 0}
+  h1{font-size:clamp(31px,8.6vw,40px);line-height:1.08}
+  h2{font-size:clamp(25px,6.9vw,32px);line-height:1.15}
+  h3{font-size:17px}
+  .head .lede,.hero-sub{font-size:15.5px;margin-top:12px}
+  .eyebrow{font-size:11.5px}
+  .btn{font-size:14.5px;padding:12px 20px}
+  .btn-sm{padding:8px 14px;font-size:13px}
+  .bar{height:56px}
+  .brand{font-size:19px}.brand img{height:22px}
+  .nav-m{padding-bottom:8px}.nav-m a{font-size:12.5px;padding:6px 11px}
+  .hero{padding-top:28px;padding-bottom:40px}
+  .hero-cta{margin-top:22px}.hero-cta .btn{flex:1}
+  .scene{height:250px;margin-top:8px}
+  .mini{gap:6px 14px}.mini li{font-size:13px}
+  /* deretan geser */
+  .cards,.sorot{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-left:calc(var(--gut) * -1);margin-right:calc(var(--gut) * -1);
+    padding:4px var(--gut) 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;max-width:none}
+  .cards::-webkit-scrollbar,.sorot::-webkit-scrollbar{display:none}
+  .cards>.card{flex:0 0 80%;scroll-snap-align:center}
+  .sorot>article{flex:0 0 82%;scroll-snap-align:center;min-height:330px}
+  .card .cov{aspect-ratio:4/3}
+  .card .nm{font-size:21px}.card .ds{font-size:14px}
+  .card .body{padding:14px 14px 16px;gap:8px}
+  .sorot .isi{padding:18px}.sorot h3{font-size:21px}.sorot p{font-size:13.5px}
+  .geser-tanda{display:block}
+  .tab{font-size:13.5px;padding:7px 13px}
+  .moment-line strong{font-size:21px}.moment-line span{font-size:14px}
+  /* contoh: pilihan tema satu baris geser, ponsel muat satu layar */
+  .pv-pilih{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:calc(var(--gut) * -1);margin-right:calc(var(--gut) * -1);padding:0 var(--gut) 6px}
+  .pv-pilih::-webkit-scrollbar{display:none}
+  .pv-pilih button{flex:none;font-size:13px;padding:7px 12px}
+  .pv-grid{margin-top:18px;gap:24px}
+  .phone{border-radius:34px;padding:8px}.phone .screen{border-radius:27px}
+  .flow li{font-size:14px;padding:8px 0 8px 36px}
+  .fitur{grid-template-columns:1fr 1fr;gap:10px}
+  .fitur div{padding:14px}.fitur .e{font-size:20px}.fitur h3{font-size:15px;margin-top:6px}.fitur p{font-size:13px;line-height:1.5}
+  .why-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .why-it{padding:16px}.why-it h3{font-size:15px}.why-it p{font-size:13px;line-height:1.5}.why-it .ic{width:34px;height:34px;margin-bottom:10px}
+  .steps{gap:10px;margin-top:26px}.step{padding:16px}.step p{font-size:13.5px}
+  .price .amt{font-size:42px}
+  .privat{grid-template-columns:1fr}
+  .ide h3{font-size:20px!important}
+  .faq summary{font-size:15px}
+}
+.geser-tanda{display:none;font-size:12.5px;color:var(--ink-faint);margin-top:6px}
+/* footer lengkap */
+.kaki-grid{display:grid;gap:28px;grid-template-columns:1.3fr 1fr 1fr 1.2fr;padding-bottom:26px;border-bottom:1px solid var(--stone)}
+@media(max-width:899px){.kaki-grid{grid-template-columns:1fr 1fr}}
+.kaki-grid h4{margin:0 0 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.kaki-grid a{display:block;text-decoration:none;color:var(--ink-soft);padding:4px 0;font-size:14.5px}
+.kaki-grid a:hover{color:var(--ink)}
+.kaki-merek img{height:26px;width:auto}
+.kaki-merek p{margin-top:12px;font-size:14px;color:var(--ink-soft);max-width:30ch}
+.kaki-resmi{margin-top:10px;font-size:12.5px;color:var(--ink-faint)}
+.kaki-bawah{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding-top:18px;font-size:13px}
+.kaki-bawah a{color:var(--ink-faint);text-decoration:none;margin-right:16px}
 </style>
 </head>
 <body>
@@ -513,6 +577,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <p class="lede">Bukan halaman yang digulir lalu selesai. Tulisanmu sendiri ikut masuk ke dalam permainannya, sampai suratnya terbuka di akhir.</p>
       </div>
       <div class="sorot" id="sorot"></div>
+      <p class="geser-tanda">Geser ke samping →</p>
     </div>
   </section>
 
@@ -527,6 +592,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       <div class="tabs" id="tabs" role="tablist" aria-label="Pilih momen"></div>
       <div class="moment-line" id="momentLine"></div>
       <div class="cards" id="cards" role="tabpanel"></div>
+      <p class="geser-tanda">Geser ke samping untuk tema lainnya →</p>
     </div>
   </section>
 
@@ -769,14 +835,35 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 </main>
 
 <footer>
-  <div class="wrap foot">
-    <span class="fb"><img src="/foreverse-logo.png" alt="">Foreverse © 2026</span>
-    <div class="fl">
-      <a id="fIg" href="#" target="_blank" rel="noopener">Instagram</a>
-      <a id="fTt" href="#" target="_blank" rel="noopener">TikTok</a>
-      <a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
-      <a id="fPrivasi" href="#">Kebijakan Privasi</a>
-      <a id="fSyarat" href="#">Syarat &amp; Ketentuan</a>
+  <div class="wrap">
+    <div class="kaki-grid">
+      <div class="kaki-merek">
+        <img src="/foreverse-logo.png" alt="Foreverse">
+        <p>Surat digital yang dimainkan, untuk orang yang kamu sayang.</p>
+        <p class="kaki-resmi">Akun resmi kami hanya @foreverse.id. Kami tidak pernah meminta transfer ke rekening pribadi.</p>
+      </div>
+      <div>
+        <h4>Jelajahi</h4>
+        <a href="/template" data-rute>Template &amp; contoh</a>
+        <a href="/cara-pesan" data-rute>Cara pesan &amp; harga</a>
+        <a href="/faq" data-rute>FAQ</a>
+        <a href="/pesan">Mulai pesan</a>
+      </div>
+      <div>
+        <h4>Untuk momen</h4>
+        <div id="kakiMomen"></div>
+      </div>
+      <div>
+        <h4>Kontak</h4>
+        <a href="mailto:halo@foreverse.id">halo@foreverse.id</a>
+        <a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a id="fIg" href="#" target="_blank" rel="noopener">Instagram</a>
+        <a id="fTt" href="#" target="_blank" rel="noopener">TikTok</a>
+      </div>
+    </div>
+    <div class="kaki-bawah">
+      <span>Foreverse © 2026</span>
+      <span><a id="fPrivasi" href="#">Kebijakan Privasi</a><a id="fSyarat" href="#">Syarat &amp; Ketentuan</a></span>
     </div>
   </div>
 </footer>
@@ -879,7 +966,12 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     });
     tabs.appendChild(b);
   });
-  if(M.length) pick(0);
+  var awalMomen=new URLSearchParams(location.search).get("momen"), iAwal=0;
+  M.forEach(function(m,i){ if(awalMomen && m.nama.toLowerCase()===awalMomen.toLowerCase()) iAwal=i; });
+  if(M.length) pick(iAwal);
+  $("kakiMomen").innerHTML=M.filter(function(m){ return m.tema.length; }).map(function(m){
+    return '<a href="/template?momen='+encodeURIComponent(m.nama)+'" data-rute>'+esc(m.nama)+'</a>';
+  }).join("");
 
   /* sorotan beranda: tiga tema dengan bentuk dunia yang paling berbeda */
   var SOROT=[["rumah-contoh","Tur rumah orang pertama"],["kasus-pengirim","Misteri yang dijelajah"],["pasar-malam","Pasar malam yang digulir"]];
@@ -914,6 +1006,8 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       if(ya) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
     });
     document.title=JUDUL[hal];
+    var qm=new URLSearchParams(location.search).get("momen");
+    if(qm) M.forEach(function(m,i){ if(m.nama.toLowerCase()===qm.toLowerCase()) pick(i); });
     var k=new URLSearchParams(location.search).get("tema");
     if(k && T[k]) show(k,momenDari(k));
     else if(!current && semuaTema.length) show(semuaTema[0],momenDari(semuaTema[0]));
