@@ -237,6 +237,40 @@ body:not([data-hal-aktif="beranda"]) .hal-atas{padding-top:clamp(40px,6vw,64px)}
 .pv-pilih button{font-size:14px;padding:8px 14px;border-radius:100px;border:1px solid var(--stone);background:var(--paper);cursor:pointer}
 .pv-pilih button[aria-pressed="true"]{background:var(--violet);color:#fff;border-color:var(--violet)}
 
+/* hero: langkah mini & jaminan */
+.mini{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0;padding:0;list-style:none;counter-reset:m}
+.mini li{counter-increment:m;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-soft)}
+.mini li::before{content:counter(m);width:24px;height:24px;border-radius:50%;background:var(--violet-tint);color:var(--violet);font-weight:600;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+.mini li+li::after{content:none}
+.jamin{margin-top:16px;font-size:13px;color:var(--ink-faint)}
+/* sorotan dunia tema */
+.sorot{display:grid;gap:16px;margin-top:36px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.sorot article{position:relative;border-radius:24px;overflow:hidden;min-height:380px;display:flex;align-items:flex-end;background:var(--ink) center/cover no-repeat;color:#fff;isolation:isolate}
+.sorot article::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(22,22,26,.05) 10%,rgba(22,22,26,.9) 72%)}
+.sorot .isi{padding:22px}
+.sorot .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.sorot h3{color:#fff;font-size:24px;margin-top:6px}
+.sorot p{margin-top:8px;font-size:14.5px;line-height:1.55;opacity:.92}
+.sorot .btn{margin-top:14px;padding:10px 18px;font-size:14px;background:#fff;color:var(--ink)}
+/* fitur */
+.fitur{display:grid;gap:14px;margin-top:36px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.fitur div{background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:22px}
+.fitur .e{font-size:24px}
+.fitur h3{margin-top:10px;font-size:18px}
+.fitur p{margin-top:6px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+/* privat */
+.privat{display:grid;gap:12px;margin-top:30px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.privat div{border-left:3px solid var(--violet);padding:4px 0 4px 16px}
+.privat h3{font-size:17px}.privat p{margin-top:6px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+/* ide tema */
+.ide{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;background:var(--paper);border:1px dashed var(--stone);border-radius:24px;padding:clamp(22px,4vw,36px)}
+.ide p{color:var(--ink-soft);margin-top:8px;max-width:52ch}
+/* faq berkelompok */
+.faq-kat{margin:30px 0 10px;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--violet)}
+body[data-hal-aktif="beranda"] .faq details:not(.utama),body[data-hal-aktif="beranda"] .faq-kat{display:none}
+.faq-semua{display:none;margin-top:22px}
+body[data-hal-aktif="beranda"] .faq-semua{display:inline-flex}
+
 /* header */
 header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(228,226,220,.8)}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:18px;height:64px}
@@ -441,11 +475,10 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
           <a href="/template" class="btn btn-main" data-rute>Pilih momen</a>
           <a href="/template#contoh" class="btn btn-ghost" data-rute>Coba contohnya</a>
         </div>
-        <ul class="facts">
-          <li><b data-v="harga">Rp15.000</b> + biaya transaksi QRIS</li>
-          <li>Dibuka di HP, tanpa aplikasi</li>
-          <li>Bisa diubah sendiri <span data-v="masaEdit">3 hari</span></li>
-        </ul>
+        <ol class="mini" aria-label="Tiga langkah">
+          <li>Pilih tema</li><li>Isi &amp; lihat pratinjau</li><li>Kirim tautan atau QR</li>
+        </ol>
+        <p class="jamin">Tanpa login · Pratinjau dulu sebelum bayar · Dia cukup buka tautannya</p>
       </div>
 
       <div class="scene" aria-hidden="true">
@@ -470,6 +503,18 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <div class="strip" aria-hidden="true" data-hal="beranda"><div class="strip-track" id="strip"></div></div>
+
+  <!-- ═════ SOROTAN: tiap tema adalah dunia kecil ═════ -->
+  <section data-hal="beranda">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Bukan cuma dibaca</span>
+        <h2>Tiap tema adalah dunia kecil yang dia mainkan.</h2>
+        <p class="lede">Bukan halaman yang digulir lalu selesai. Tulisanmu sendiri ikut masuk ke dalam permainannya, sampai suratnya terbuka di akhir.</p>
+      </div>
+      <div class="sorot" id="sorot"></div>
+    </div>
+  </section>
 
   <!-- ═════ MOMEN → TEMA ═════ -->
   <section id="momen" data-hal="beranda template" class="hal-atas">
@@ -523,6 +568,24 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, foto, dan lagu, dengan pratinjau yang berubah langsung. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
         <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya kelihatan sebelum kamu bayar.</p></div>
         <div class="step"><span class="n">4</span><h3>Tautannya langsung jadi</h3><p>Muncul di layar dan masuk ke emailmu, lengkap dengan kode QR berbentuk hati. Kamu yang mengirimnya ke dia, kapan pun kamu mau.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ FITUR ═════ -->
+  <section data-hal="beranda cara">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Yang kamu dapat</span>
+        <h2>Semua yang dibutuhkan, tanpa paket tambahan.</h2>
+      </div>
+      <div class="fitur">
+        <div><span class="e">👀</span><h3>Pratinjau langsung</h3><p>Suratnya berubah sambil kamu mengetik. Kamu tahu persis yang akan dia lihat sebelum membayar.</p></div>
+        <div><span class="e">🎮</span><h3>Tulisanmu jadi permainan</h3><p>Janji, alasan, dan hal kecil yang kamu tulis dibawa masuk ke dalam game-nya, bukan cuma muncul di surat akhir.</p></div>
+        <div><span class="e">🎵</span><h3>Lagu kalian sendiri</h3><p>Unggah MP3 atau M4A dan pilih potongannya. Dikosongkan? Ada kotak musik lembut bawaan.</p></div>
+        <div><span class="e">💌</span><h3>Tautan + QR berbentuk hati</h3><p>Kirim lewat chat, atau cetak kode QR-nya dan selipkan di kado fisik.</p></div>
+        <div><span class="e">🔔</span><h3>Kabar saat dibuka</h3><p>Kamu dapat email begitu dia membuka suratnya untuk pertama kali.</p></div>
+        <div><span class="e">✏️</span><h3>Ubah sendiri <span data-v="masaEdit">3 hari</span></h3><p>Salah ketik atau mau ganti foto? Pakai tautan edit pribadimu, tanpa login, sebanyak yang kamu mau.</p></div>
       </div>
     </div>
   </section>
@@ -585,6 +648,33 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     </div>
   </section>
 
+  <!-- ═════ PRIVAT ═════ -->
+  <section data-hal="cara" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Privat &amp; aman</span>
+        <h2>Isinya hanya untuk kalian berdua.</h2>
+      </div>
+      <div class="privat">
+        <div><h3>Tautan berkode acak</h3><p>Panjang dan tidak bisa ditebak. Hanya orang yang kamu kirimi tautan atau QR-nya yang bisa membuka.</p></div>
+        <div><h3>Tidak muncul di Google</h3><p>Halaman surat sengaja tidak diindeks mesin pencari.</p></div>
+        <div><h3>Dihapus setelah <span data-v="masaSimpan">6 bulan</span></h3><p>Foto dan isi surat dihapus otomatis setelah masa simpannya habis. Kami ingatkan 14 hari sebelumnya.</p></div>
+        <div><h3>Pembayaran resmi</h3><p>QRIS diproses DOKU. Kami tidak pernah meminta transfer ke rekening pribadi lewat chat.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ IDE TEMA ═════ -->
+  <section data-hal="beranda template" style="padding-top:0">
+    <div class="wrap">
+      <div class="ide">
+        <div><h3 style="font-size:24px">Momenmu belum ada temanya?</h3>
+          <p>Tiap tema baru berawal dari permintaan pembeli. Ceritakan momennya — yang paling sering diminta kami kerjakan duluan.</p></div>
+        <a id="waIde" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Ceritakan idemu</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ═════ FAQ ═════ -->
   <section id="faq" data-hal="beranda faq" class="hal-atas" style="background:var(--cream-lift);border-top:1px solid var(--stone)">
     <div class="wrap">
@@ -593,50 +683,72 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <h2>Pertanyaan yang sering masuk.</h2>
       </div>
       <div class="faq">
-        <details open>
-          <summary>Berapa lama link-nya sampai?</summary>
+        <h3 class="faq-kat">Sebelum memesan</h3>
+        <details class="utama">
+          <summary>Dia perlu install aplikasi?</summary>
+          <p>Tidak. Tautannya dibuka langsung di browser HP, Android maupun iPhone, atau di laptop.</p>
+        </details>
+        <details class="utama">
+          <summary>Bisa lihat contohnya dulu?</summary>
+          <p>Bisa. Setiap tema punya contoh lengkap yang bisa dimainkan gratis di halaman <a href="/template" data-rute>Template</a>. Saat mengisi formulir pun ada pratinjau yang berubah langsung.</p>
+        </details>
+        <details>
+          <summary>Bedanya tiap tema apa?</summary>
+          <p>Tiap tema adalah dunia kecil dengan permainannya sendiri — ada yang digulir, ada yang dijelajah pakai joystick, ada tur ruangan. Tulisanmu dibawa masuk ke dalam permainannya.</p>
+        </details>
+        <details>
+          <summary>Momen saya belum ada temanya.</summary>
+          <p>Tema baru terus ditambahkan. Kabari kami lewat WhatsApp momen apa yang kamu butuhkan — yang paling banyak diminta kami kerjakan duluan.</p>
+        </details>
+        <h3 class="faq-kat">Harga & pembayaran</h3>
+        <details class="utama">
+          <summary>Berapa harganya?</summary>
+          <p><span data-v="harga">Rp15.000</span> untuk tema apa pun, ditambah biaya transaksi QRIS <span data-v="biaya">Rp560</span>. Rinciannya ditampilkan sebelum kamu bayar.</p>
+        </details>
+        <details>
+          <summary>Bayarnya lewat apa?</summary>
+          <p>QRIS, diproses DOKU — bisa dibayar dari DANA, OVO, ShopeePay, GoPay, atau m-banking mana pun. Kami tidak pernah meminta transfer ke rekening pribadi lewat chat. Kalau ada yang mengaku Foreverse dan minta itu, abaikan dan kabari kami.</p>
+        </details>
+        <details>
+          <summary>Bisa dibatalkan atau refund?</summary>
+          <p>Setelah pembayaran berhasil, pesanan tidak bisa dibatalkan karena suratnya langsung dibuat dari isimu. Kalau kesalahannya di pihak kami — tautan tidak sampai dalam 1×24 jam, atau surat rusak dan tidak bisa kami perbaiki — dana dikembalikan penuh.</p>
+        </details>
+        <h3 class="faq-kat">Setelah bayar</h3>
+        <details class="utama">
+          <summary>Berapa lama tautannya jadi?</summary>
           <p>Begitu pembayaranmu berhasil, tautannya langsung muncul di layar dan dikirim ke email yang kamu tulis di formulir. Tidak perlu menunggu admin.</p>
+        </details>
+        <details class="utama">
+          <summary>Kalau ada yang mau diubah setelah jadi?</summary>
+          <p>Kamu dapat tautan edit pribadi yang berlaku <span data-v="masaEdit">3 hari</span> sejak dibayar. Typo, foto yang ketukar, atau kalimat yang mau diganti bisa kamu ubah sendiri, berkali-kali.</p>
         </details>
         <details>
           <summary>Pesanku bakal diubah?</summary>
-          <p>Tidak. Pesanmu dipasang persis seperti yang kamu tulis, termasuk ejaan dan tanda bacanya. Jadi baca ulang sekali lagi sebelum mengirim formulir. Tiap kolom punya batas karakter supaya tampilannya tetap rapi di layar HP.</p>
+          <p>Tidak. Pesanmu dipasang persis seperti yang kamu tulis, termasuk ejaan dan tanda bacanya. Tiap kolom punya batas karakter supaya tampilannya tetap rapi di layar HP.</p>
         </details>
         <details>
           <summary>Bisa dikirim pas jam 12 malam?</summary>
           <p>Bisa. Tautannya diberikan ke kamu dulu, jadi kamu bebas meneruskannya ke dia kapan saja, termasuk tepat tengah malam.</p>
         </details>
         <details>
-          <summary>Kalau ada yang mau diubah setelah jadi?</summary>
-          <p>Kamu dapat tautan edit pribadi yang berlaku <span data-v="masaEdit">3 hari</span> sejak dibayar. Typo, foto yang ketukar, atau kalimat yang mau diganti bisa kamu ubah sendiri, berkali-kali. Perubahannya langsung berlaku di tautan yang sama.</p>
-        </details>
-        <details>
-          <summary>Bayarnya lewat apa?</summary>
-          <p>QRIS, di halaman pembayaran yang muncul setelah kamu mengisi formulir. Harga suratnya <span data-v="harga">Rp15.000</span>, ditambah biaya transaksi QRIS sekitar Rp560 — rinciannya ditampilkan sebelum kamu bayar. Kami tidak pernah minta transfer ke rekening pribadi lewat chat. Kalau ada yang mengaku Foreverse dan minta itu, abaikan dan kabari kami.</p>
-        </details>
-        <details>
-          <summary>Foto dan pesan saya dipakai untuk apa?</summary>
-          <p>Hanya untuk membuat suratmu. Isinya tidak kami pakai sebagai contoh dan tidak kami bagikan ke siapa pun. Link-nya memakai kode acak dan hanya dikirim ke kamu. Detailnya ada di <a href="/kebijakan-privasi.html">Kebijakan Privasi</a>.</p>
-        </details>
-        <details>
-          <summary>Link-nya bisa dibuka sampai kapan?</summary>
-          <p>Selama <span data-v="masaSimpan">6 bulan</span> sejak dibayar. 14 hari sebelum masanya habis kami kirim email pengingat, supaya kamu sempat menyimpan foto atau kalimat yang ingin dikenang. Setelah itu isi dan fotonya dihapus untuk menjaga privasi kalian. Mau dihapus lebih cepat? Bilang saja lewat WhatsApp.</p>
+          <summary>Bisa dikirim dalam bentuk kode QR?</summary>
+          <p>Bisa. Setelah bayar, kamu bisa membuat kode QR berbentuk hati, amplop, atau sederhana — untuk dikirim lewat chat atau dicetak dan diselipkan di kado.</p>
         </details>
         <details>
           <summary>Aku bisa tahu kalau suratnya sudah dibuka?</summary>
           <p>Bisa. Saat suratnya pertama kali dibuka, kami kirim satu email ke kamu. Bukaan dari HP yang kamu pakai memesan tidak dihitung.</p>
         </details>
-        <details>
-          <summary>Bisa dikirim dalam bentuk kode QR?</summary>
-          <p>Bisa. Setelah bayar, kamu bisa membuat kode QR berbentuk hati, amplop, atau sederhana. Gambarnya bisa dikirim lewat chat atau dicetak dan diselipkan di kado.</p>
+        <h3 class="faq-kat">Privasi & masa simpan</h3>
+        <details class="utama">
+          <summary>Tautannya bisa dibuka sampai kapan?</summary>
+          <p>Selama <span data-v="masaSimpan">6 bulan</span> sejak dibayar. 14 hari sebelum masanya habis kami kirim email pengingat, supaya kamu sempat menyimpan foto atau kalimat yang ingin dikenang. Setelah itu isi dan fotonya dihapus.</p>
         </details>
         <details>
-          <summary>Dia perlu install aplikasi?</summary>
-          <p>Tidak. Link-nya dibuka langsung di browser HP, Android maupun iPhone.</p>
+          <summary>Foto dan pesan saya dipakai untuk apa?</summary>
+          <p>Hanya untuk membuat suratmu. Tidak kami pakai sebagai contoh dan tidak kami bagikan ke siapa pun. Detailnya ada di <a href="/kebijakan-privasi.html">Kebijakan Privasi</a>.</p>
         </details>
-        <details>
-          <summary>Momen saya belum ada temanya.</summary>
-          <p>Tema baru terus ditambahkan. Kalau kamu butuh salah satu momen yang masih "segera hadir", kabari kami lewat WhatsApp. Momen yang paling banyak diminta kami kerjakan duluan.</p>
-        </details>
+      </div>
+      <a class="btn btn-ghost faq-semua" href="/faq" data-rute>Lihat semua pertanyaan</a>
       </div>
     </div>
   </section>
@@ -688,7 +800,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   }
 
   document.querySelectorAll("[data-v]").forEach(function(el){ var v=C[el.getAttribute("data-v")]; if(v) el.textContent=v; });
-  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("fWa",wa(""));
+  href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("waIde",wa("Halo Foreverse, saya punya ide tema untuk momen: ")); href("fWa",wa(""));
   href("fIg",C.instagram); href("fTt",C.tiktok); href("fPrivasi",C.privasi); href("fSyarat",C.syarat);
 
   /* strip momen */
@@ -768,6 +880,15 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     tabs.appendChild(b);
   });
   if(M.length) pick(0);
+
+  /* sorotan beranda: tiga tema dengan bentuk dunia yang paling berbeda */
+  var SOROT=[["rumah-contoh","Tur rumah orang pertama"],["kasus-pengirim","Misteri yang dijelajah"],["pasar-malam","Pasar malam yang digulir"]];
+  $("sorot").innerHTML=SOROT.filter(function(x){ return T[x[0]]; }).map(function(x){
+    var t=T[x[0]];
+    return '<article style="background-image:url(\''+esc(t.cover)+'\')"><div class="isi"><span class="lbl">'+esc(x[1])+'</span>'+
+      '<h3>'+esc(t.nama)+'</h3><p>'+esc(t.ringkas)+'</p>'+
+      '<a class="btn" href="/template?tema='+encodeURIComponent(x[0])+'#contoh" data-rute>Mainkan contohnya</a></div></article>';
+  }).join("");
 
   /* ── halaman terpisah ──
      Satu berkas, enam alamat: /, /momen, /contoh, /cara-pesan, /harga, /faq
