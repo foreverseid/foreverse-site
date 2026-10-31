@@ -637,7 +637,7 @@ var MALAM = [
 /* ══════════════ suara (infrastruktur bersama) ══════════════ */
 var AC = null, bisu = false;
 function ac(){
-  if(!AC){ var C = window.AudioContext || window.webkitAudioContext; if(C) AC = new C(); }
+  if(!AC){ var C = window.AudioContext || window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } }
   if(AC && AC.state === 'suspended') AC.resume();
   return AC;
 }
@@ -650,15 +650,15 @@ function tone(f, dur, o){
   g.gain.setValueAtTime(.0001, t);
   g.gain.exponentialRampToValueAtTime(vol, t + .02);
   g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + dur + .05);
+  osc.connect(g); g.connect(a.__out||a.destination); osc.start(t); osc.stop(t + dur + .05);
 }
 function noise(dur, freq, vol){
   var a = ac(); if(!a || bisu) return;
   var n = a.createBufferSource(), b = a.createBuffer(1, Math.max(1, a.sampleRate*dur), a.sampleRate), d = b.getChannelData(0);
-  for(var i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/d.length, 2.5);
+  for(var i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/d.length, 2.5)*Math.min(1,i/(a.sampleRate*.006));
   var f = a.createBiquadFilter(); f.type='lowpass'; f.frequency.value = freq;
   var g = a.createGain(); g.gain.value = vol;
-  n.buffer=b; n.connect(f); f.connect(g); g.connect(a.destination); n.start();
+  n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 var SFX = {
   klik:  function(){ tone(760,.05,{type:'sine',vol:.1}); },
@@ -683,14 +683,14 @@ function musicBox(){
     g.gain.setValueAtTime(.0001, t);
     g.gain.exponentialRampToValueAtTime(bisu ? .0001 : .055, t + .01);
     g.gain.exponentialRampToValueAtTime(.0001, t + .9);
-    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 1);
+    o.connect(g); g.connect(a.__out||a.destination); o.start(t); o.stop(t + 1);
   }
+  var tNext = a.currentTime + .05;
   (function loop(){
     if(stop) return;
-    var t = a.currentTime + .05;
-    for(var k=0;k<4;k++) ping(60 + pola[(i+k) % pola.length], t + k*.42);
-    i += 4;
-    setTimeout(loop, 1680);
+    if(tNext < a.currentTime) tNext = a.currentTime + .05;
+    while(tNext < a.currentTime + 2){ ping(60 + pola[i % pola.length], tNext); tNext += .42; i++; }
+    setTimeout(loop, 250);
   })();
   return function(){ stop = true; };
 }

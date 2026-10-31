@@ -331,7 +331,7 @@ var SELISIH = TGL ? Math.max(0, Math.round((HARI_INI - TGL) / 86400000)) : 0;
 /* ══════════════ suara (infrastruktur bersama) ══════════════ */
 var AC = null, bisu = false;
 function ac(){
-  if(!AC){ var C = window.AudioContext || window.webkitAudioContext; if(C) AC = new C(); }
+  if(!AC){ var C = window.AudioContext || window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } }
   if(AC && AC.state === 'suspended') AC.resume();
   return AC;
 }
@@ -343,7 +343,7 @@ function tone(f, dur, o){
   g.gain.setValueAtTime(.0001, t);
   g.gain.exponentialRampToValueAtTime(vol, t + .01);
   g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + dur + .05);
+  osc.connect(g); g.connect(a.__out||a.destination); osc.start(t); osc.stop(t + dur + .05);
 }
 var SFX = {
   langkah: function(){ tone(150, .03, { vol:.022 }); },
@@ -363,13 +363,14 @@ function musicBox(){
     g.gain.setValueAtTime(.0001, t);
     g.gain.exponentialRampToValueAtTime(bisu ? .0001 : .045, t + .01);
     g.gain.exponentialRampToValueAtTime(.0001, t + .85);
-    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .95);
+    o.connect(g); g.connect(a.__out||a.destination); o.start(t); o.stop(t + .95);
   }
+  var tNext = a.currentTime + .05;
   (function loop(){
     if(stop) return;
-    var t = a.currentTime + .05;
-    for(var k=0;k<4;k++) ping(60 + pola[(i+k) % pola.length], t + k*.46);
-    i += 4; setTimeout(loop, 1840);
+    if(tNext < a.currentTime) tNext = a.currentTime + .05;
+    while(tNext < a.currentTime + 2){ ping(60 + pola[i % pola.length], tNext); tNext += .46; i++; }
+    setTimeout(loop, 250);
   })();
   return function(){ stop = true; };
 }

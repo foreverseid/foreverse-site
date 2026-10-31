@@ -206,18 +206,18 @@ document.querySelectorAll('[data-f]').forEach(function(n){ n.textContent=D[n.dat
 
 /* ── suara dibuat browser ── */
 var AC=null, bisu=false;
-function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C) AC=new C(); } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
 function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||bisu) return;
   var t=a.currentTime+(o.when||0), v=o.vol||.12, osc=a.createOscillator(), g=a.createGain();
   osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
   if(o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide,t+dur);
   g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t+dur+.05); }
+  osc.connect(g); g.connect(a.__out||a.destination); osc.start(t); osc.stop(t+dur+.05); }
 function noise(dur,freq,vol){ var a=ac(); if(!a||bisu) return;
   var n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*dur,a.sampleRate), d=b.getChannelData(0);
-  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5);
+  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5)*Math.min(1,i/(a.sampleRate*.006));
   var f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=freq;
-  var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.destination); n.start(); }
+  var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start(); }
 var SFX={
   sobek:function(){ noise(.16,3000,.12); },
   pop:function(){ tone(620,.08,{type:'sine',vol:.18}); tone(940,.1,{type:'sine',vol:.09,when:.05}); },
@@ -227,13 +227,13 @@ var SFX={
   chime:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.5,{when:i*.09,vol:.1}); }); }
 };
 function kotakMusik(){ var a=ac(); if(!a) return null;
-  var gain=a.createGain(); gain.gain.value=.1; gain.connect(a.destination);
+  var gain=a.createGain(); gain.gain.value=.1; gain.connect(a.__out||a.destination);
   var not=[64,67,71,74,71,67, 62,66,69,74,69,66, 60,64,67,72,67,64, 59,62,67,71,74,71];
   var step=.4, t0=a.currentTime+.1, n=0, henti=false, tm=null;
   function ping(m,t){ var o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.value=440*Math.pow(2,(m-69)/12);
     g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.9,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+1.5);
     o.connect(g); g.connect(gain); o.start(t); o.stop(t+1.6); }
-  (function loop(){ if(henti) return; while(t0<a.currentTime+1.2){ ping(not[n%not.length],t0); t0+=step; n++; } tm=setTimeout(loop,300); })();
+  (function loop(){ if(henti) return; if(t0<a.currentTime) t0=a.currentTime+.05; while(t0 < a.currentTime + 2){ ping(not[n%not.length],t0); t0+=step; n++; } tm=setTimeout(loop,300); })();
   return { gain:gain }; }
 var MU=(function(){
   var L=D.lagu||{}, ada=!!(L.src&&String(L.src).trim()), au=ada?new Audio():null, st=+L.mulai||0, en=+L.selesai||0, synth=null, main=false;
