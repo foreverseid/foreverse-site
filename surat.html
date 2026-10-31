@@ -1253,6 +1253,10 @@ function markDone(k){
     });
     $('#waBtn').href='https://wa.me/'+wa;
   }
+  if(window.fvBalas){ $('#replyBox').hidden=false;
+    $('#replyLbl').textContent='Mau balas ke '+(D.pengirim||'dia')+'?';
+    if(!$('#replyTxt').value) $('#replyTxt').value='Udah aku buka semua. Makasih ya 🤍';
+    $('#waBtn').parentNode.insertBefore(fvBalas.tombol($('#replyTxt'),$('#waBtn'),'Kirim balasan ke '+(D.pengirim||'dia')),$('#waBtn')); }
   $('#again').onclick=function(){ location.reload(); };
   var fu='https://foreverse.id';
   $('#made').href=fu+'?ref=surat';

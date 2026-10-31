@@ -563,11 +563,16 @@ function bukaPenutup(){
   panel(function(k){
     k.appendChild(el('h3',null,'Jadi, gimana?'));
     if(D.rahasia) k.appendChild(el('div','rahasia','“'+D.rahasia+'”'));
-    if(nomor.length>=10){
-      [['Aku juga',"Aku udah buka toplesnya. Aku juga."],['Boleh aku jawab langsung?',"Aku udah buka toplesnya. Boleh aku jawab langsung pas ketemu?"]].forEach(function(j,i){
+    [['Aku juga',"Aku udah buka toplesnya. Aku juga."],['Boleh aku jawab langsung?',"Aku udah buka toplesnya. Boleh aku jawab langsung pas ketemu?"]].forEach(function(j,i){
+      if(nomor.length>=10){
         var a=el('a','tbl'+(i?' putih':''),j[0]); a.target='_blank'; a.rel='noopener';
-        a.href='https://wa.me/'+nomor+'?text='+encodeURIComponent(j[1]); k.appendChild(a); });
-    }
+        a.href='https://wa.me/'+nomor+'?text='+encodeURIComponent(j[1]);
+        if(window.fvBalas) a.addEventListener('click',function(){ fvBalas.kirim(j[1]).catch(function(){}); });
+        k.appendChild(a);
+      } else if(window.fvBalas){
+        k.appendChild(fvBalas.tombol(j[1],{tagName:'A',className:'tbl'+(i?' putih':'')},j[0]));
+      }
+    });
     k.appendChild(tombol('Lihat langitnya lagi',function(){ tutupPanel(); },'putih'));
     var m=el('a','dibuat','dibuat di foreverse.id'); m.href=D.foreverseUrl||'https://foreverse.id'; m.target='_blank'; m.rel='noopener'; k.appendChild(m);
   });

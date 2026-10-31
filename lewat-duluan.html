@@ -751,13 +751,17 @@ function bukaAkhir(){
   var isi = [ h3('Jalannya terang sekarang'), p(PENUTUP, 'kutip'), p('— ' + PENGIRIM, 'ttd') ];
   var wa = String(D.waPengirim || '').replace(/\D/g, '');
   var nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
-  if(nomor.length >= 10){
+  if(nomor.length >= 10 || window.fvBalas){
     var ta = el('textarea', 'balas'); ta.value = 'Aku udah sampai pintu. Makasih udah lewat duluan, ' + PENGIRIM + '.';
-    var kirim = el('a', 'tbl', 'Balas lewat WhatsApp');
-    kirim.target = '_blank'; kirim.rel = 'noopener';
-    kirim.href = 'https://wa.me/' + nomor;
-    kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
-    isi.push(p('Mau bilang sesuatu ke ' + PENGIRIM + '?'), ta, kirim);
+    var tombolBalas = [];
+    if(window.fvBalas) tombolBalas.push(fvBalas.tombol(ta, { tagName:'A', className:'tbl' }, 'Kirim balasan ke ' + PENGIRIM));
+    if(nomor.length >= 10){
+      var kirim = el('a', 'tbl' + (window.fvBalas ? ' putih' : ''), 'Balas lewat WhatsApp');
+      kirim.target = '_blank'; kirim.rel = 'noopener'; kirim.href = 'https://wa.me/' + nomor;
+      kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
+      tombolBalas.push(kirim);
+    }
+    isi.push.apply(isi, [p('Mau bilang sesuatu ke ' + PENGIRIM + '?'), ta].concat(tombolBalas));
   }
   var bar = el('div', 'baris-tbl');
   bar.appendChild(tombol('Lihat jalannya', function(){ tutup(); }, 'putih'));

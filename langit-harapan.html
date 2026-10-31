@@ -1359,6 +1359,13 @@ if(wa.length >= 10){
   $('#replyTxt').value = `Hai ${D.pengirim}, aku sudah buka kejutannya. Makasih ya 🥹`;
   $('#replyBtn').onclick = () => { window.open(`https://wa.me/${wa}?text=${encodeURIComponent($('#replyTxt').value)}`, '_blank', 'noopener'); };
 }
+if(window.fvBalas){
+  $('#reply').hidden = false;
+  $('#replyLbl').textContent = `Mau balas ke ${D.pengirim || 'dia'}?`;
+  if(!$('#replyTxt').value) $('#replyTxt').value = `Hai ${D.pengirim || ''}, aku sudah buka kejutannya. Makasih ya 🥹`;
+  $('#replyBtn').parentNode.insertBefore(fvBalas.tombol($('#replyTxt'), $('#replyBtn'), `💌 Kirim balasan ke ${D.pengirim || 'dia'}`), $('#replyBtn'));
+  if(wa.length < 10) $('#replyBtn').hidden = true;
+}
 $('#toEnd').onclick = () => { $('#letter').classList.remove('show'); $('#ending').classList.add('show'); F.fx.shower(100); F.sfx.win(); };
 $('#endRead').onclick = () => { $('#ending').classList.remove('show'); $('#letter').classList.add('show'); };
 $('#endAgain').onclick = () => location.reload();

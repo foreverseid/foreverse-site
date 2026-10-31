@@ -1985,6 +1985,40 @@ await uji("staging: email ke pemilik bertanda [STAGING], DOKU dipaksa sandbox", 
   harus((await h.text()).includes("STAGING"), "pita staging");
 });
 
+await uji("balasan penerima: dikirim ke email pembeli, tidak disimpan, maks. 3, surat terkunci ditolak", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const kirim = (teks, kode = p.kode, cookie) => L.panggil("/api/balas", { method: "POST",
+    headers: Object.assign({ "content-type": "application/json" }, cookie ? { cookie } : {}), body: JSON.stringify({ kode, teks }) });
+  const n0 = L.catatan.email.length;
+  sama((await kirim("Makasih ya, aku suka banget.")).status, 200, "terkirim");
+  const e = L.catatan.email[n0];
+  harus(e && e.subject.includes("membalas suratmu") && e.html.includes("aku suka banget"), "email balasan");
+  const row = await L.env.DB.prepare("SELECT * FROM pesanan WHERE kode=?").bind(p.kode).first();
+  harus(!JSON.stringify(row).includes("aku suka banget"), "isi balasan tidak disimpan");
+  sama(row.n_balas, 1, "dihitung");
+  await kirim("dua"); await kirim("tiga");
+  sama((await kirim("empat")).status, 429, "maks 3");
+  sama((await kirim("")).status, 400, "kosong ditolak");
+  sama((await kirim("hai", "tidakada12")).status, 404, "kode asing");
+  const L2 = await buatLingkungan();
+  const k = await lunasBerkunci(L2, { jenis: "pin", pin: "1234" });
+  sama((await L2.panggil("/api/balas", { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kode: k, teks: "hai" }) })).status, 403, "terkunci ditolak");
+  const h = await (await L.panggil("/s/" + p.kode)).text();
+  harus(h.includes("window.fvBalas"), "pembantu disisipkan di surat");
+});
+
+await uji("program kreator: kode promo mencatat @kreator, jumlah laku, dan pendapatannya", async () => {
+  const L = await buatLingkungan();
+  await admin(L, { aksi: "promo_simpan", kode: "AMIRA10", jenis: "persen", nilai: 10, kreator: "amira.kreator" });
+  const d = await buatDrafDengan(L, { promo: "AMIRA10" });
+  const b = await bayarDraf(L, d.kode);
+  await L.notifikasi(notifSukses(b.order_id, 13500 + 560)); await L.tunggu();
+  const p = (await admin(L, { aksi: "promo_daftar" })).promo[0];
+  harus(p.kreator === "@amira.kreator" && p.laku === 1 && p.pendapatan === 13500, JSON.stringify(p));
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

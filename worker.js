@@ -82,8 +82,30 @@ function sisipDibuka(html, kode) {
   const skrip = "<script>(function(){if(/[?&]pratinjau=1/.test(location.search))return;try{if(localStorage.getItem(\"fv-edit-" + kode +
     "\"))return}catch(_){}fetch(\"/api/dibuka\",{method:\"POST\",headers:{\"content-type\":\"application/json\"}," +
     "body:JSON.stringify({kode:\"" + kode + "\"}),keepalive:true}).catch(function(){})})()</script>";
+  /* pembantu balasan harus ada SEBELUM skrip tema berjalan → taruh di <head> */
+  const h = html.search(/<head[^>]*>/i);
+  if (h > -1) { const akhirHead = html.indexOf(">", h) + 1; html = html.slice(0, akhirHead) + balasanPenerima(kode) + html.slice(akhirHead); }
+  else html = balasanPenerima(kode) + html;
   const i = html.lastIndexOf("</body>");
   return i < 0 ? html + skrip : html.slice(0, i) + skrip + html.slice(i);
+}
+
+/* window.fvBalas — dipakai penutup tiap tema untuk tombol "Kirim balasan".
+   Hanya ada di surat sungguhan (/s/<kode>), tidak di demo atau pratinjau,
+   jadi tema yang dibuka tanpa skrip ini tetap memakai jalur WhatsApp saja.
+   tombol(sumber, contoh, label): membuat tombol sejenis elemen "contoh"
+   (tag & kelas sama); sumber = textarea, atau teks jadi. */
+function balasanPenerima(kode) {
+  return "<script>(function(){if(/[?&]pratinjau=1/.test(location.search))return;" +
+    "function kirim(t){return fetch('/api/balas',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kode:" + JSON.stringify(kode) + ",teks:t})})" +
+    ".then(function(r){return r.json()}).then(function(j){if(!j.ok)throw new Error(j.pesan||'Belum terkirim.');return j})}" +
+    "window.fvBalas={kirim:kirim,tombol:function(sumber,contoh,label){" +
+    "var b=document.createElement(contoh&&contoh.tagName==='BUTTON'?'button':'a');b.className=(contoh&&contoh.className)||'';" +
+    "if(b.tagName==='A'){b.href='#';b.setAttribute('role','button')}else b.type='button';b.textContent=label;" +
+    "b.addEventListener('click',function(e){e.preventDefault();if(b.dataset.s)return;" +
+    "var t=typeof sumber==='string'?sumber:String(sumber.value||'').trim();if(!t){sumber.focus&&sumber.focus();return}" +
+    "b.dataset.s='1';b.textContent='Mengirim…';kirim(t).then(function(){b.textContent='Terkirim \u2713';if(sumber.readOnly!==undefined)sumber.readOnly=true})" +
+    ".catch(function(x){b.textContent=x.message;setTimeout(function(){b.textContent=label;delete b.dataset.s},2600)})});return b}}})()</script>";
 }
 
 export default {

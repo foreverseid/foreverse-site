@@ -30,7 +30,7 @@ const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6
    Alamat IP tidak disimpan mentah — hanya sidik SHA-256 pendeknya. */
 const LAJU = {
   draf: [12, 600], simpan: [30, 600], bayar: [20, 600], catat: [80, 600],
-  status: [150, 600], surat: [150, 600], dibuka: [40, 600], developer: [25, 600],
+  status: [150, 600], surat: [150, 600], dibuka: [40, 600], balas: [6, 600], developer: [25, 600],
   buka: [12, 600], ingat: [10, 600], promo: [20, 600], perpanjang: [20, 600]
 };                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
@@ -288,7 +288,7 @@ async function siapkan(db) {
       dibuat INTEGER, dibayar INTEGER, batas_edit INTEGER,
       aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0,
       dibuka INTEGER, n_buka INTEGER DEFAULT 0, simpan_sampai INTEGER, pengingat INTEGER,
-      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0)`),
+      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0, n_balas INTEGER DEFAULT 0)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
     /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
@@ -309,7 +309,7 @@ async function siapkan(db) {
     db.prepare(`CREATE TABLE IF NOT EXISTS pengaturan(kunci TEXT PRIMARY KEY, nilai TEXT)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS promo(
       kode TEXT PRIMARY KEY, jenis TEXT, nilai INTEGER, kuota INTEGER, terpakai INTEGER DEFAULT 0,
-      sampai INTEGER, aktif INTEGER DEFAULT 1, dibuat INTEGER)`),
+      sampai INTEGER, aktif INTEGER DEFAULT 1, dibuat INTEGER, kreator TEXT)`),
     /* pembayaran perpanjangan masa simpan (faktur berawalan FP-) */
     db.prepare(`CREATE TABLE IF NOT EXISTS perpanjangan(
       order_id TEXT PRIMARY KEY, kode TEXT, jumlah INTEGER, status TEXT, dibuat INTEGER, dibayar INTEGER)`),
@@ -321,9 +321,10 @@ async function siapkan(db) {
   ]);
   /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
   for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER",
-                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0"]) {
+                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0", "n_balas INTEGER DEFAULT 0"]) {
     try { await db.prepare("ALTER TABLE pesanan ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
   }
+  try { await db.prepare("ALTER TABLE promo ADD COLUMN kreator TEXT").run(); } catch (_) { /* sudah ada */ }
   tabelSiap = true;
 }
 
@@ -838,7 +839,7 @@ function badanEmail(o) {
     </p>
     <a href="${esc(tautan)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
     <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(tautan)}</p>
-    <p style="margin:12px 0 0;font-size:14px;line-height:1.6"><a href="${esc(o.asal + "/selesai?kode=" + o.kode + "#qr")}" style="color:#3B3168">Buat kode QR berbentuk hati atau amplop</a> untuk dikirim bersama tautannya.</p>
+    <p style="margin:12px 0 0;font-size:14px;line-height:1.6"><a href="${esc(o.asal + "/selesai?kode=" + o.kode + "#qr")}" style="color:#3B3168">Buat kode QR berbentuk hati atau amplop</a> untuk dikirim bersama tautannya — gambarnya juga bisa kamu cetak dan selipkan di kado.</p>
   </div>
 
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:22px 24px;margin-top:14px">
@@ -911,6 +912,36 @@ async function kirimEmailDibuka(env, b, asal) {
 </div></body></html>`
     })
   }).catch(() => {});
+}
+
+/* ══════════════════ balasan dari penerima ══════════════════
+   Penerima menulis balasan di penutup surat; isinya TIDAK disimpan di
+   database — langsung dikirim ke email pembeli. Yang dicatat hanya
+   jumlahnya (n_balas), supaya batasnya bisa dijaga. */
+const MAKS_BALAS = 3, PANJANG_BALAS = 600;
+async function kirimEmailBalasan(env, b, isiBalas) {
+  if (!env.RESEND_API_KEY || !b.email) return { ok: false };
+  const isi = JSON.parse(b.isi || "{}");
+  const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+  const r = await kirimResend(env, {
+    method: "POST",
+    headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      from: "Foreverse <" + dari + ">", to: [b.email], reply_to: dari,
+      subject: (isi.penerima || "Dia") + " membalas suratmu",
+      html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
+<div style="max-width:520px;margin:0 auto;padding:32px 20px">
+  <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
+  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
+    <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E"><strong>${esc(isi.penerima || "Dia")}</strong> menulis balasan untukmu:</p>
+    <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:19px;line-height:1.6;white-space:pre-wrap">${esc(isiBalas)}</p>
+  </div>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Balasan ini hanya dikirim ke emailmu dan tidak kami simpan. Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
+</div></body></html>`
+    })
+  }).catch(() => null);
+  return { ok: !!(r && r.ok) };
 }
 
 /* ══════════════════ pelunasan ══════════════════ */
@@ -1419,6 +1450,22 @@ export async function onRequest(ctx) {
       return jwb({ ok: true });
     }
 
+    /* ── balasan penerima → email pembeli ─────────────────────── */
+    if (jalur === "balas" && request.method === "POST") {
+      const kode = teks(badan.kode, 16), isiBalas = teks(badan.teks, PANJANG_BALAS);
+      if (!isiBalas) return salah("Tulis balasannya dulu, ya.");
+      const b = await db.prepare(`SELECT kode,email,isi,status,aktif,n_balas FROM pesanan WHERE kode=?`).bind(kode).first();
+      if (!b || b.status !== "lunas" || !b.aktif) return salah("Surat ini tidak ditemukan.", 404);
+      let isiPenuh = {}; try { isiPenuh = JSON.parse(b.isi || "{}"); } catch (_) {}
+      if (infoGerbang(isiPenuh, request.headers.get("cookie"), kode)) return salah("Suratnya belum terbuka.", 403);
+      if ((b.n_balas || 0) >= MAKS_BALAS) return salah("Balasannya sudah terkirim. Lanjutkan langsung ke dia, ya.", 429);
+      if (!b.email) return salah("Balasan belum bisa dikirim untuk surat ini.", 409);
+      const r = await kirimEmailBalasan(env, b, isiBalas);
+      if (!r.ok) { await catatKejadian(env, db, "email balasan gagal", "Balasan penerima gagal dikirim ke pembeli.", kode); return salah("Belum terkirim. Coba lagi sebentar, ya.", 502); }
+      await db.prepare(`UPDATE pesanan SET n_balas=COALESCE(n_balas,0)+1 WHERE kode=?`).bind(kode).run();
+      return jwb({ ok: true });
+    }
+
     /* ── catat kunjungan tema (tanpa data pribadi apa pun) ───── */
     if (jalur === "catat" && request.method === "POST") {
       const tema = teks(badan.tema, 40), jenis = teks(badan.jenis, 10);
@@ -1690,7 +1737,7 @@ export async function onRequest(ctx) {
         const dari = Number(badan.dari) > 0 ? Number(badan.dari) : 0;
         const panjang = sampai - dari;
         const cari = teks(badan.cari, 60).toLowerCase();
-        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,isi FROM pesanan`;
+        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,n_balas,isi FROM pesanan`;
         const pola = "%" + cari.replace(/[%_\\]/g, "\\$&") + "%";
         const syaratCari = cari
           ? ` AND (lower(kode) LIKE ?3 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?3 ESCAPE '\\'
@@ -1783,7 +1830,11 @@ export async function onRequest(ctx) {
 
       /* ── kode promo ── */
       if (aksi === "promo_daftar") {
-        const r = await db.prepare(`SELECT * FROM promo ORDER BY dibuat DESC`).all();
+        /* pendapatan per kode = jumlah yang benar-benar dibayar pembeli (tanpa biaya QRIS) —
+           dipakai untuk menghitung hasil tiap kreator */
+        const r = await db.prepare(`SELECT p.*, (SELECT COUNT(*) FROM pesanan WHERE promo=p.kode AND status='lunas') AS laku,
+          (SELECT COALESCE(SUM(jumlah),0) FROM pesanan WHERE promo=p.kode AND status='lunas') AS pendapatan
+          FROM promo p ORDER BY p.dibuat DESC`).all();
         return jwb({ ok: true, promo: r.results || [] });
       }
       if (aksi === "promo_simpan") {
@@ -1793,9 +1844,10 @@ export async function onRequest(ctx) {
         const nilai = Math.round(Number(badan.nilai));
         if (!(nilai > 0) || (jenis === "persen" && nilai > 100)) return salah("Besar potongan belum benar.");
         const lama = await db.prepare(`SELECT terpakai,dibuat FROM promo WHERE kode=?`).bind(kode).first();
-        await db.prepare(`INSERT OR REPLACE INTO promo(kode,jenis,nilai,kuota,terpakai,sampai,aktif,dibuat) VALUES(?,?,?,?,?,?,?,?)`)
+        await db.prepare(`INSERT OR REPLACE INTO promo(kode,jenis,nilai,kuota,terpakai,sampai,aktif,dibuat,kreator) VALUES(?,?,?,?,?,?,?,?,?)`)
           .bind(kode, jenis, nilai, Math.max(0, Math.round(Number(badan.kuota) || 0)), lama ? lama.terpakai : 0,
-            Number(badan.sampai) || null, badan.aktif === false ? 0 : 1, lama ? lama.dibuat : Date.now()).run();
+            Number(badan.sampai) || null, badan.aktif === false ? 0 : 1, lama ? lama.dibuat : Date.now(),
+            teks(badan.kreator, 40).replace(/^@?/, badan.kreator ? "@" : "") || null).run();
         return jwb({ ok: true, kode });
       }
       if (aksi === "promo_aktif") {

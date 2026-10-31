@@ -438,9 +438,15 @@ function lamaran(){
   panel(function(k){
     var t=el('div','tanya'); t.innerHTML='<em></em>, mau tinggal di rumah ini sama aku?'; t.querySelector('em').textContent=D.penerima||''; k.appendChild(t);
     if(D.penutup) k.appendChild(el('p','ket',D.penutup));
-    if(nomor.length>=10){
-      [['Iya','Aku udah keliling rumahnya. Iya.'],['Aku mau jawab langsung','Aku udah keliling rumahnya. Aku mau jawab langsung, di depanmu.']].forEach(function(j,i){
-        var a=el('a','tbl'+(i?' putih':''),j[0]); a.target='_blank'; a.rel='noopener'; a.href='https://wa.me/'+nomor+'?text='+encodeURIComponent(j[1]); k.appendChild(a); }); }
+    [['Iya','Aku udah keliling rumahnya. Iya.'],['Aku mau jawab langsung','Aku udah keliling rumahnya. Aku mau jawab langsung, di depanmu.']].forEach(function(j,i){
+      if(nomor.length>=10){
+        var a=el('a','tbl'+(i?' putih':''),j[0]); a.target='_blank'; a.rel='noopener'; a.href='https://wa.me/'+nomor+'?text='+encodeURIComponent(j[1]);
+        if(window.fvBalas) a.addEventListener('click',function(){ fvBalas.kirim(j[1]).catch(function(){}); });
+        k.appendChild(a);
+      } else if(window.fvBalas){
+        k.appendChild(fvBalas.tombol(j[1],{tagName:'A',className:'tbl'+(i?' putih':'')},j[0]));
+      }
+    });
     k.appendChild(tombol('Lihat kamarnya lagi',function(){ tutupPanel(); },'putih'));
     var m=el('a','dibuat','dibuat di foreverse.id'); m.href=D.foreverseUrl||'https://foreverse.id'; m.target='_blank'; m.rel='noopener'; k.appendChild(m);
   }); tugas=3; perbarui(); }

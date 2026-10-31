@@ -1271,6 +1271,12 @@ function bukaLembar(){
         if(t) wa.href='https://wa.me/'+no+'?text='+encodeURIComponent(t);
       });
     } else { wa.hidden=true; }
+    if(window.fvBalas){
+      $('#balasBox').hidden=false;
+      $('#balasLbl').textContent='Balasan singkat untuk '+(D.pengirim||'dia');
+      if(!$('#balasTxt').value) $('#balasTxt').value='Udah 36,5 nih. Makasih ya 🤍';
+      wa.parentNode.insertBefore(fvBalas.tombol($('#balasTxt'),wa,'Kirim balasan ke '+(D.pengirim||'dia')),wa);
+    }
     $('#ulang').addEventListener('click',function(){ location.reload(); });
   }
 })();

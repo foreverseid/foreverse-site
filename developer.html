@@ -526,13 +526,14 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="kartu" style="margin-bottom:12px">
         <h3>Kode promo</h3>
-        <p class="ket">Potongan dihitung dari harga surat (bukan biaya QRIS). Harga setelah promo minimal Rp1.000. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
+        <p class="ket">Isi <b>Kreator</b> kalau kodenya untuk program kreator — penjualan dan pendapatannya tercatat per kode. Potongan dihitung dari harga surat (bukan biaya QRIS). Harga setelah promo minimal Rp1.000. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
         <div class="form-atur">
           <div><label for="pKode">Kode</label><input id="pKode" type="text" maxlength="20" placeholder="LAUNCH20"></div>
           <div><label for="pJenis">Jenis</label><select id="pJenis"><option value="persen">Persen (%)</option><option value="rupiah">Rupiah</option></select></div>
           <div><label for="pNilai">Besar potongan</label><input id="pNilai" type="number" min="1" placeholder="20"></div>
           <div><label for="pKuota">Kuota (0 = tanpa batas)</label><input id="pKuota" type="number" min="0" value="0"></div>
           <div><label for="pSampai">Berlaku sampai (opsional)</label><input id="pSampai" type="date"></div>
+          <div><label for="pKreator">Kreator (opsional)</label><input id="pKreator" type="text" maxlength="40" placeholder="@akunkreator"></div>
           <div><button class="tbl utamawarna" id="pSimpan" type="button" style="width:100%">Simpan promo</button></div>
         </div>
         <p class="kabar-atur" id="pKabar"></p>
@@ -1088,23 +1089,24 @@ a.tautan:hover{text-decoration:underline}
   async function muatPromo(){
     var d = await panggil({ aksi:"promo_daftar" });
     var rows = d.promo || [];
-    $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Potongan</th><th>Terpakai</th><th>Sampai</th><th></th></tr>' +
+    $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Kreator</th><th>Potongan</th><th>Terpakai</th><th>Pendapatan</th><th>Sampai</th><th></th></tr>' +
       (rows.length ? rows.map(function(p){
         var habis = (p.sampai && p.sampai < Date.now()) || (p.kuota && p.terpakai >= p.kuota);
-        return '<tr style="' + (p.aktif && !habis ? "" : "opacity:.5") + '"><td class="kode">' + esc(p.kode) + '</td><td>' +
+        return '<tr style="' + (p.aktif && !habis ? "" : "opacity:.5") + '"><td class="kode">' + esc(p.kode) + '</td><td>' + esc(p.kreator || "—") + '</td><td>' +
           (p.jenis === "persen" ? p.nilai + "%" : rp(p.nilai)) + '</td><td>' + p.terpakai + (p.kuota ? " / " + p.kuota : "") +
+          '</td><td>' + rp(p.pendapatan || 0) +
           '</td><td>' + (p.sampai ? esc(new Date(p.sampai).toLocaleDateString("id-ID")) : "—") + '</td><td style="white-space:nowrap">' +
           '<button class="tbl kecil" data-p="aktif" data-k="' + esc(p.kode) + '" data-n="' + (p.aktif ? 0 : 1) + '">' + (p.aktif ? "Matikan" : "Nyalakan") + '</button> ' +
           '<button class="tbl kecil bahaya" data-p="hapus" data-k="' + esc(p.kode) + '">Hapus</button></td></tr>';
-      }).join("") : '<tr><td colspan="5" class="redup">Belum ada kode promo.</td></tr>');
+      }).join("") : '<tr><td colspan="7" class="redup">Belum ada kode promo.</td></tr>');
   }
   $("pSimpan").addEventListener("click", async function(){
     var sampai = $("pSampai").value ? new Date($("pSampai").value + "T23:59:59+07:00").getTime() : 0;
     try{
       var r = await panggil({ aksi:"promo_simpan", kode:$("pKode").value, jenis:$("pJenis").value, nilai:Number($("pNilai").value),
-                              kuota:Number($("pKuota").value), sampai:sampai });
+                              kuota:Number($("pKuota").value), sampai:sampai, kreator:$("pKreator").value.trim() });
       $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Promo " + r.kode + " tersimpan.";
-      $("pKode").value = ""; $("pNilai").value = ""; await muatPromo();
+      $("pKode").value = ""; $("pNilai").value = ""; $("pKreator").value = ""; await muatPromo();
     }catch(e){ $("pKabar").className = "kabar-atur salah"; $("pKabar").textContent = e.message; }
   });
   $("pDaftar").addEventListener("click", async function(e){

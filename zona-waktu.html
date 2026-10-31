@@ -696,11 +696,17 @@ function bukaAkhir(){
   }
   if(PENUTUP) isi.push(p(PENUTUP + ' — ' + PENGIRIM));
   var wa = String(D.waPengirim || '').replace(/\D/g, ''), nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
-  if(nomor.length >= 10){
+  if(nomor.length >= 10 || window.fvBalas){
     var ta = el('textarea', 'balas'); ta.value = 'Udah aku buka. Di sini jam ' + tulis(waktuDi(KB.tz)) + ', kangen kamu yang di jam ' + tulis(waktuDi(KA.tz)) + '.';
-    var kirim = el('a', 'tbl', 'Balas lewat WhatsApp'); kirim.target = '_blank'; kirim.rel = 'noopener'; kirim.href = 'https://wa.me/' + nomor;
-    kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
-    isi.push(ta, kirim);
+    var tombolBalas = [];
+    if(window.fvBalas) tombolBalas.push(fvBalas.tombol(ta, { tagName:'A', className:'tbl' }, 'Kirim balasan ke ' + PENGIRIM));
+    if(nomor.length >= 10){
+      var kirim = el('a', 'tbl' + (window.fvBalas ? ' putih' : ''), 'Balas lewat WhatsApp');
+      kirim.target = '_blank'; kirim.rel = 'noopener'; kirim.href = 'https://wa.me/' + nomor;
+      kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
+      tombolBalas.push(kirim);
+    }
+    isi.push.apply(isi, [ta].concat(tombolBalas));
   }
   var bar = el('div', 'baris-tbl');
   bar.appendChild(tombol('Baca pesannya lagi', function(){ tutup(); bukaSurat(); }, 'putih'));

@@ -780,12 +780,17 @@ function isiAkhir(wadah, s){
   if(PENUTUP) wadah.appendChild(p(PENUTUP + ' — ' + PENGIRIM));
   var wa = String(D.waPengirim || '').replace(/\D/g, '');
   var nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
-  if(nomor.length >= 10){
+  if(nomor.length >= 10 || window.fvBalas){
     var ta = el('textarea', 'balas'); ta.value = s.balas;
-    var kirim = el('a', 'tbl', 'Kirim lewat WhatsApp');
-    kirim.target = '_blank'; kirim.rel = 'noopener'; kirim.href = 'https://wa.me/' + nomor;
-    kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
-    wadah.appendChild(ta); wadah.appendChild(kirim);
+    var tombolBalas = [];
+    if(window.fvBalas) tombolBalas.push(fvBalas.tombol(ta, { tagName:'A', className:'tbl' }, 'Kirim balasan ke ' + PENGIRIM));
+    if(nomor.length >= 10){
+      var kirim = el('a', 'tbl' + (window.fvBalas ? ' putih' : ''), 'Balas lewat WhatsApp');
+      kirim.target = '_blank'; kirim.rel = 'noopener'; kirim.href = 'https://wa.me/' + nomor;
+      kirim.addEventListener('click', function(){ kirim.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent(ta.value); });
+      tombolBalas.push(kirim);
+    }
+    wadah.appendChild(ta); tombolBalas.forEach(function(t){ wadah.appendChild(t); });
   }
   wadah.appendChild(tombol('Jalan-jalan di kafe', function(){ tutup(); }, 'putih'));
   var jejak = el('div', 'jejak');

@@ -1443,6 +1443,10 @@ if(waNomor.length >= 10){
   });
   $('#waBtn').href = `https://wa.me/${waNomor}`;
 }
+if(window.fvBalas){ $('#replyBox').hidden=false;
+    $('#replyLbl').textContent='Mau balas ke '+(D.pengirim||'dia')+'?';
+    if(!$('#replyTxt').value) $('#replyTxt').value=`Makasih kadonya, ${D.pengirim || ''} 🤍`;
+    $('#waBtn').parentNode.insertBefore(fvBalas.tombol($('#replyTxt'),$('#waBtn'),'Kirim balasan ke '+(D.pengirim||'dia')),$('#waBtn')); }
 
 F.reveal();
 })();

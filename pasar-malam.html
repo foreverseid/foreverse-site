@@ -1746,6 +1746,10 @@ var bukaPapan = function(){};
         this.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent($('#balasTxt').value);
       });
     }
+    if(window.fvBalas && !$('#fvKirim')){
+      var fb = fvBalas.tombol($('#balasTxt'), $('#waBtn'), 'Kirim jawabanku ke ' + (D.pengirim || 'dia'));
+      fb.id = 'fvKirim'; $('#waBtn').parentNode.insertBefore(fb, $('#waBtn'));
+    }
     $('#hasil').scrollIntoView({ behavior:'smooth', block:'center' });
   }
 
