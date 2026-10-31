@@ -156,6 +156,18 @@ async function tangani(request, env, ctx) {
       if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "index", request);
 
+      if (p === "/kreator" || p === "/kreator/") return await ambilHalaman(env, url.origin, "kreator", request);
+
+      /* ── tautan kreator: /r/KODE → beranda, kodenya diingat 30 hari ── */
+      const rujuk = p.match(/^\/r\/([A-Za-z0-9]{3,20})\/?$/);
+      if (rujuk) {
+        const kodeRef = rujuk[1].toUpperCase();
+        return new Response(null, { status: 302, headers: {
+          location: "/?kreator=" + kodeRef,
+          "set-cookie": "fv_ref=" + kodeRef + "; Path=/; Max-Age=" + 30 * 86400 + "; SameSite=Lax; Secure",
+          "cache-control": "no-store" } });
+      }
+
       /* ── perpanjangan masa simpan: /perpanjang/<token> ── */
       if (/^\/perpanjang\/[A-Za-z0-9]{8,40}\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "perpanjang", request);

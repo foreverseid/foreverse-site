@@ -525,8 +525,16 @@ a.tautan:hover{text-decoration:underline}
       </div>
 
       <div class="kartu" style="margin-bottom:12px">
+        <h3>Metode pembayaran</h3>
+        <p class="ket">Centang metode yang <b>sudah disetujui DOKU</b> dan isi biayanya sesuai tarif DOKU (Rp tetap dan/atau % dari harga). Biaya ditagihkan ke pembeli dan tampil sebelum bayar. Pembeli memilih metodenya di formulir — kalau satu metode sedang gangguan, mereka bisa memilih yang lain. Uji satu transaksi sungguhan setiap kali membuka metode baru.</p>
+        <div class="gulung"><table class="tbl-mini" id="mDaftar"></table></div>
+        <div style="margin-top:10px"><button class="tbl utamawarna" id="mSimpan" type="button">Simpan metode</button></div>
+        <p class="kabar-atur" id="mKabar"></p>
+      </div>
+
+      <div class="kartu" style="margin-bottom:12px">
         <h3>Kode promo</h3>
-        <p class="ket">Isi <b>Kreator</b> kalau kodenya untuk program kreator — penjualan dan pendapatannya tercatat per kode. Potongan dihitung dari harga surat (bukan biaya QRIS). Harga setelah promo minimal Rp1.000. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
+        <p class="ket"><b>Kode kreator:</b> isi akun kreator dan komisinya. Potongan boleh 0 (kode referral murni — pembeli bayar harga biasa, kreator tetap dapat komisi). Tautan untuk kreator: <code>foreverse.id/r/KODE</code> (kodenya diingat 30 hari dan terisi otomatis di formulir). Komisi = persen × harga yang dibayar pembeli (tanpa biaya transaksi); setelah kamu transfer, catat lewat tombol <b>Catat bayar</b>. Potongan dihitung dari harga surat (bukan biaya QRIS). Harga setelah promo minimal Rp1.000. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
         <div class="form-atur">
           <div><label for="pKode">Kode</label><input id="pKode" type="text" maxlength="20" placeholder="LAUNCH20"></div>
           <div><label for="pJenis">Jenis</label><select id="pJenis"><option value="persen">Persen (%)</option><option value="rupiah">Rupiah</option></select></div>
@@ -534,6 +542,7 @@ a.tautan:hover{text-decoration:underline}
           <div><label for="pKuota">Kuota (0 = tanpa batas)</label><input id="pKuota" type="number" min="0" value="0"></div>
           <div><label for="pSampai">Berlaku sampai (opsional)</label><input id="pSampai" type="date"></div>
           <div><label for="pKreator">Kreator (opsional)</label><input id="pKreator" type="text" maxlength="40" placeholder="@akunkreator"></div>
+          <div><label for="pKomisi">Komisi kreator (%)</label><input id="pKomisi" type="number" min="0" max="90" value="0"></div>
           <div><button class="tbl utamawarna" id="pSimpan" type="button" style="width:100%">Simpan promo</button></div>
         </div>
         <p class="kabar-atur" id="pKabar"></p>
@@ -1071,12 +1080,28 @@ a.tautan:hover{text-decoration:underline}
     try{
       var a = await panggil({ aksi:"atur" });
       $("aHarga").value = a.harga; $("aHargaPanjang").value = a.harga_perpanjang;
+      $("mDaftar").innerHTML = '<tr><th>Buka</th><th>Metode</th><th>Biaya tetap (Rp)</th><th>Biaya %</th><th>Contoh biaya</th></tr>' +
+        (a.metode || []).map(function(m){
+          return '<tr data-m="' + esc(m.kode) + '"><td><input type="checkbox" class="mAktif"' + (m.aktif ? " checked" : "") + '></td><td><b>' + esc(m.nama) + '</b><br><span class="redup">' + esc(m.kode) + '</span></td>' +
+            '<td><input type="number" class="mTetap" min="0" step="10" value="' + m.tetap + '" style="width:90px"></td>' +
+            '<td><input type="number" class="mPersen" min="0" max="10" step="0.1" value="' + m.persen + '" style="width:70px"></td>' +
+            '<td class="redup">' + rp(m.tetap + Math.ceil(a.harga * m.persen / 100)) + '</td></tr>';
+        }).join("");
       $("aTema").innerHTML = a.semua_tema.map(function(t){
         return '<label><input type="checkbox" data-tema="' + esc(t) + '"' + (a.tema_mati.indexOf(t) < 0 ? " checked" : "") + '>' +
                esc((typeof NAMA_TEMA !== "undefined" && NAMA_TEMA[t]) || t) + '</label>';
       }).join("");
     }catch(e){ $("aKabar").className = "kabar-atur salah"; $("aKabar").textContent = e.message; }
   }
+  $("mSimpan").addEventListener("click", async function(){
+    var metode = {};
+    document.querySelectorAll("#mDaftar tr[data-m]").forEach(function(r){
+      metode[r.dataset.m] = { aktif: r.querySelector(".mAktif").checked, tetap: Number(r.querySelector(".mTetap").value), persen: Number(r.querySelector(".mPersen").value) };
+    });
+    try{ await panggil({ aksi:"atur", metode: metode }); await muatAtur();
+         $("mKabar").className = "kabar-atur"; $("mKabar").textContent = "Tersimpan. Formulir memakai metode ini dalam ±1 menit."; }
+    catch(e){ $("mKabar").className = "kabar-atur salah"; $("mKabar").textContent = e.message; }
+  });
   $("aSimpan").addEventListener("click", async function(){
     var mati = []; document.querySelectorAll("[data-tema]").forEach(function(c){ if(!c.checked) mati.push(c.dataset.tema); });
     try{
@@ -1089,29 +1114,37 @@ a.tautan:hover{text-decoration:underline}
   async function muatPromo(){
     var d = await panggil({ aksi:"promo_daftar" });
     var rows = d.promo || [];
-    $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Kreator</th><th>Potongan</th><th>Terpakai</th><th>Pendapatan</th><th>Sampai</th><th></th></tr>' +
+    $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Kreator</th><th>Potongan</th><th>Terpakai</th><th>Pendapatan</th><th>Komisi (belum dibayar)</th><th>Sampai</th><th></th></tr>' +
       (rows.length ? rows.map(function(p){
         var habis = (p.sampai && p.sampai < Date.now()) || (p.kuota && p.terpakai >= p.kuota);
         return '<tr style="' + (p.aktif && !habis ? "" : "opacity:.5") + '"><td class="kode">' + esc(p.kode) + '</td><td>' + esc(p.kreator || "—") + '</td><td>' +
           (p.jenis === "persen" ? p.nilai + "%" : rp(p.nilai)) + '</td><td>' + p.terpakai + (p.kuota ? " / " + p.kuota : "") +
           '</td><td>' + rp(p.pendapatan || 0) +
+          '</td><td>' + (p.komisi ? p.komisi + "% · " + rp(p.komisi_total || 0) + (p.komisi_sisa ? ' <b>(' + rp(p.komisi_sisa) + ')</b>' : "") : "—") +
           '</td><td>' + (p.sampai ? esc(new Date(p.sampai).toLocaleDateString("id-ID")) : "—") + '</td><td style="white-space:nowrap">' +
+          (p.komisi_sisa > 0 ? '<button class="tbl kecil" data-p="bayar" data-k="' + esc(p.kode) + '" data-n="' + p.komisi_sisa + '">Catat bayar</button> ' : "") +
           '<button class="tbl kecil" data-p="aktif" data-k="' + esc(p.kode) + '" data-n="' + (p.aktif ? 0 : 1) + '">' + (p.aktif ? "Matikan" : "Nyalakan") + '</button> ' +
           '<button class="tbl kecil bahaya" data-p="hapus" data-k="' + esc(p.kode) + '">Hapus</button></td></tr>';
-      }).join("") : '<tr><td colspan="7" class="redup">Belum ada kode promo.</td></tr>');
+      }).join("") : '<tr><td colspan="8" class="redup">Belum ada kode promo.</td></tr>');
   }
   $("pSimpan").addEventListener("click", async function(){
     var sampai = $("pSampai").value ? new Date($("pSampai").value + "T23:59:59+07:00").getTime() : 0;
     try{
       var r = await panggil({ aksi:"promo_simpan", kode:$("pKode").value, jenis:$("pJenis").value, nilai:Number($("pNilai").value),
-                              kuota:Number($("pKuota").value), sampai:sampai, kreator:$("pKreator").value.trim() });
+                              kuota:Number($("pKuota").value), sampai:sampai, kreator:$("pKreator").value.trim(), komisi:Number($("pKomisi").value) });
       $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Promo " + r.kode + " tersimpan.";
-      $("pKode").value = ""; $("pNilai").value = ""; $("pKreator").value = ""; await muatPromo();
+      $("pKode").value = ""; $("pNilai").value = ""; $("pKreator").value = ""; $("pKomisi").value = "0"; await muatPromo();
     }catch(e){ $("pKabar").className = "kabar-atur salah"; $("pKabar").textContent = e.message; }
   });
   $("pDaftar").addEventListener("click", async function(e){
     var t = e.target.closest("[data-p]"); if(!t) return;
     if(t.dataset.p === "hapus" && !confirm("Hapus promo " + t.dataset.k + "?")) return;
+    if(t.dataset.p === "bayar"){
+      var jml = prompt("Berapa yang sudah kamu transfer ke kreator kode " + t.dataset.k + "? (sisa " + rp(Number(t.dataset.n)) + ")", t.dataset.n);
+      if(!jml) return;
+      try{ await panggil({ aksi:"komisi_bayar", kode: t.dataset.k, jumlah: Number(String(jml).replace(/\D/g,"")) }); }catch(err){ alert(err.message); }
+      await muatPromo(); return;
+    }
     await panggil({ aksi: t.dataset.p === "hapus" ? "promo_hapus" : "promo_aktif", kode: t.dataset.k, nilai: t.dataset.n === "1" });
     await muatPromo();
   });

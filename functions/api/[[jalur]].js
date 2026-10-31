@@ -144,17 +144,21 @@ function jamSah(v) {
    Jangan menyebar nilai-nilai ini ke bawah.                        */
 
 const DOKU = {
-  /* Metode pembayaran yang boleh muncul di halaman DOKU.
-     Dikunci ke QRIS saja. QRIS sudah bisa dibayar dari DANA, OVO,
-     ShopeePay, GoPay, dan semua m-banking, jadi menambah e-wallet
-     terpisah tidak menambah satu pembeli pun — hanya menambah biaya. */
-  metode: ["QRIS"],
-
-  /* Cadangan, belum dipakai. Catatan: identifier ShopeePay berbeda di
-     dua halaman dokumentasi DOKU (EMONEY_SHOPEEPAY di contoh request,
-     EMONEY_SHOPEE_PAY di daftar metode). Kalau nanti diaktifkan, uji
-     satu per satu di Sandbox dulu sebelum dipakai sungguhan.         */
-  ewallet: ["EMONEY_DANA", "EMONEY_OVO"],
+  /* Metode pembayaran yang BISA dipakai. Mana yang dibuka dan berapa
+     biayanya diatur dari /developer → Produk (tanpa deploy), karena
+     persetujuan DOKU datang satu per satu dan QRIS pernah maintenance.
+     Pembeli memilih metode di /pesan; halaman DOKU hanya menampilkan
+     metode itu, jadi biaya yang tampil selalu sama dengan yang ditagih.
+     Kode e-wallet BELUM diuji ke DOKU sungguhan — ShopeePay ditulis
+     berbeda di dua halaman dokumentasi DOKU (EMONEY_SHOPEE_PAY /
+     EMONEY_SHOPEEPAY). Uji satu transaksi tiap metode setelah aktif. */
+  metodeTersedia: [
+    { kode: "QRIS", nama: "QRIS", ket: "GoPay, OVO, DANA, ShopeePay, m-banking", tetap: 560, persen: 0, aktif: true },
+    { kode: "EMONEY_DANA", nama: "DANA", ket: "aplikasi DANA", tetap: 0, persen: 0, aktif: false },
+    { kode: "EMONEY_OVO", nama: "OVO", ket: "aplikasi OVO", tetap: 0, persen: 0, aktif: false },
+    { kode: "EMONEY_SHOPEE_PAY", nama: "ShopeePay", ket: "aplikasi Shopee", tetap: 0, persen: 0, aktif: false },
+    { kode: "EMONEY_LINKAJA", nama: "LinkAja", ket: "aplikasi LinkAja", tetap: 0, persen: 0, aktif: false }
+  ],
 
   jatuhTempoMenit: 60,                    // umur halaman pembayaran
   jalurCheckout: "/checkout/v1/payment",
@@ -288,7 +292,7 @@ async function siapkan(db) {
       dibuat INTEGER, dibayar INTEGER, batas_edit INTEGER,
       aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0,
       dibuka INTEGER, n_buka INTEGER DEFAULT 0, simpan_sampai INTEGER, pengingat INTEGER,
-      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0, n_balas INTEGER DEFAULT 0)`),
+      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0, n_balas INTEGER DEFAULT 0, metode TEXT, total INTEGER)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
     /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
@@ -309,10 +313,13 @@ async function siapkan(db) {
     db.prepare(`CREATE TABLE IF NOT EXISTS pengaturan(kunci TEXT PRIMARY KEY, nilai TEXT)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS promo(
       kode TEXT PRIMARY KEY, jenis TEXT, nilai INTEGER, kuota INTEGER, terpakai INTEGER DEFAULT 0,
-      sampai INTEGER, aktif INTEGER DEFAULT 1, dibuat INTEGER, kreator TEXT)`),
+      sampai INTEGER, aktif INTEGER DEFAULT 1, dibuat INTEGER, kreator TEXT, komisi INTEGER DEFAULT 0)`),
     /* pembayaran perpanjangan masa simpan (faktur berawalan FP-) */
     db.prepare(`CREATE TABLE IF NOT EXISTS perpanjangan(
-      order_id TEXT PRIMARY KEY, kode TEXT, jumlah INTEGER, status TEXT, dibuat INTEGER, dibayar INTEGER)`),
+      order_id TEXT PRIMARY KEY, kode TEXT, jumlah INTEGER, status TEXT, dibuat INTEGER, dibayar INTEGER, metode TEXT, total INTEGER)`),
+    /* pembayaran komisi ke kreator (catatan manual dari /developer) */
+    db.prepare(`CREATE TABLE IF NOT EXISTS komisi_bayar(
+      id INTEGER PRIMARY KEY AUTOINCREMENT, promo TEXT, jumlah INTEGER, waktu INTEGER, catatan TEXT)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS pakai(hari TEXT, jenis TEXT, n INTEGER DEFAULT 0, PRIMARY KEY(hari,jenis))`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_status_dibuat ON pesanan(status,dibuat)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_dibayar ON pesanan(dibayar)`),
@@ -321,10 +328,13 @@ async function siapkan(db) {
   ]);
   /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
   for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER",
-                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0", "n_balas INTEGER DEFAULT 0"]) {
+                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0", "n_balas INTEGER DEFAULT 0", "metode TEXT", "total INTEGER"]) {
     try { await db.prepare("ALTER TABLE pesanan ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
   }
-  try { await db.prepare("ALTER TABLE promo ADD COLUMN kreator TEXT").run(); } catch (_) { /* sudah ada */ }
+  for (const [t, kolom] of [["promo", "kreator TEXT"], ["promo", "komisi INTEGER DEFAULT 0"],
+                            ["perpanjangan", "metode TEXT"], ["perpanjangan", "total INTEGER"]]) {
+    try { await db.prepare("ALTER TABLE " + t + " ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
+  }
   tabelSiap = true;
 }
 
@@ -1128,9 +1138,32 @@ async function bacaPengaturan(db) {
     harga: Number(m.harga) > 0 ? Number(m.harga) : HARGA,
     hargaPerpanjang: Number(m.harga_perpanjang) > 0 ? Number(m.harga_perpanjang) : HARGA_PERPANJANG,
     temaMati: mati,
-    tutup: m.tutup || ""                 // kosong = buka; berisi pesan = pesanan baru ditutup sementara
+    tutup: m.tutup || "",                // kosong = buka; berisi pesan = pesanan baru ditutup sementara
+    metode: gabungMetode(m.metode)
   };
 }
+/* metode yang dibuka + biayanya: bawaan di kode, ditimpa pengaturan "metode" */
+function gabungMetode(json) {
+  let atur = {}; try { atur = JSON.parse(json || "{}"); } catch (_) {}
+  return DOKU.metodeTersedia.map(m => {
+    const a = atur[m.kode] || {};
+    return Object.assign({}, m, {
+      aktif: a.aktif === undefined ? m.aktif : !!a.aktif,
+      tetap: a.tetap === undefined ? m.tetap : Math.max(0, Math.round(Number(a.tetap) || 0)),
+      persen: a.persen === undefined ? m.persen : Math.max(0, Math.min(10, Number(a.persen) || 0))
+    });
+  });
+}
+function biayaMetode(m, harga) { return m.tetap + Math.ceil(harga * m.persen / 100); }
+function pilihMetode(daftar, kode) {
+  const aktif = daftar.filter(m => m.aktif);
+  return (kode ? aktif.find(m => m.kode === kode) : aktif[0]) || null;
+}
+/* total yang harus dibayar; pesanan lama (sebelum ada kolom total) memakai biaya QRIS lama */
+function totalPesanan(b) { return Number(b.total) || (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI; }
+function totalPerpanjangan(row) { return Number(row.total) || row.jumlah + BIAYA_TRANSAKSI; }
+function untukPublik(m, harga) { return { kode: m.kode, nama: m.nama, ket: m.ket, tetap: m.tetap, persen: m.persen, biaya: biayaMetode(m, harga) }; }
+
 async function simpanPengaturan(db, kunci, nilai) {
   await db.prepare(`INSERT OR REPLACE INTO pengaturan(kunci,nilai) VALUES(?,?)`).bind(kunci, String(nilai)).run();
 }
@@ -1167,6 +1200,7 @@ async function buatCadangan(db) {
     promo: await ambil(`SELECT * FROM promo`),
     pengaturan: await ambil(`SELECT * FROM pengaturan`),
     perpanjangan: await ambil(`SELECT * FROM perpanjangan`),
+    komisi_bayar: await ambil(`SELECT * FROM komisi_bayar`),
     kunjungan: await ambil(`SELECT * FROM kunjungan WHERE hari >= ?`,
       new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10))
   };
@@ -1231,20 +1265,20 @@ export async function rawatSering(env) {
   const skr = Date.now();
   const hasil = { lunas: 0, perpanjang: 0, email: 0 };
   if (env.DOKU_CLIENT_ID && env.DOKU_SECRET_KEY) {
-    const tunggu = await db.prepare(`SELECT kode,order_id,jumlah FROM pesanan
+    const tunggu = await db.prepare(`SELECT kode,order_id,jumlah,total FROM pesanan
       WHERE status='draf' AND order_id IS NOT NULL AND dibuat > ? ORDER BY dibuat DESC LIMIT 20`).bind(skr - 24 * 3600000).all();
     for (const b of (tunggu.results || [])) {
       const r = await panggilDoku(env, { metode: "GET", sasaran: DOKU.jalurStatus + encodeURIComponent(b.order_id) });
       const t = (r.isi && r.isi.transaction) || {}, o = (r.isi && r.isi.order) || {};
-      if (t.status === "SUCCESS" && Number(o.amount) === (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI) {
+      if (t.status === "SUCCESS" && Number(o.amount) === totalPesanan(b)) {
         await lunasi(env, db, b.kode, asal); hasil.lunas++;
       }
     }
-    const pj = await db.prepare(`SELECT order_id,jumlah FROM perpanjangan WHERE status='menunggu' AND dibuat > ? LIMIT 20`).bind(skr - 24 * 3600000).all();
+    const pj = await db.prepare(`SELECT order_id,jumlah,total FROM perpanjangan WHERE status='menunggu' AND dibuat > ? LIMIT 20`).bind(skr - 24 * 3600000).all();
     for (const row of (pj.results || [])) {
       const r = await panggilDoku(env, { metode: "GET", sasaran: DOKU.jalurStatus + encodeURIComponent(row.order_id) });
       const t = (r.isi && r.isi.transaction) || {}, o = (r.isi && r.isi.order) || {};
-      if (t.status === "SUCCESS" && Number(o.amount) === row.jumlah + BIAYA_TRANSAKSI) { await lunasiPerpanjangan(env, db, row.order_id); hasil.perpanjang++; }
+      if (t.status === "SUCCESS" && Number(o.amount) === totalPerpanjangan(row)) { await lunasiPerpanjangan(env, db, row.order_id); hasil.perpanjang++; }
     }
   }
   const gagal = await db.prepare(`SELECT kode FROM pesanan WHERE status='lunas' AND email_terkirim=0 AND COALESCE(email,'')!=''
@@ -1260,7 +1294,7 @@ export async function rawatSering(env) {
    sekarang dicadangkan dulu ke R2 (cadangan/…-sebelum-pulih.json). */
 const KUNCI_TABEL = {
   pesanan: ["kode"], pengingat: ["id"], promo: ["kode"], pengaturan: ["kunci"],
-  perpanjangan: ["order_id"], kunjungan: ["hari", "tema", "jenis"]
+  perpanjangan: ["order_id"], komisi_bayar: ["id"], kunjungan: ["hari", "tema", "jenis"]
 };
 async function pulihkan(env, db, data, mode) {
   if (!data || typeof data !== "object" || !Array.isArray(data.pesanan)) throw new Error("Berkas ini bukan cadangan Foreverse.");
@@ -1325,7 +1359,10 @@ export async function onRequest(ctx) {
     /* ── info publik: harga & tema yang sedang dibuka ───────────── */
     if (jalur === "info") {
       const a = await bacaPengaturan(db);
-      return new Response(JSON.stringify({ ok: true, harga: a.harga, biaya: BIAYA_TRANSAKSI, tema_mati: a.temaMati,
+      const metodeBuka = a.metode.filter(m => m.aktif);
+      return new Response(JSON.stringify({ ok: true, harga: a.harga,
+        biaya: metodeBuka.length ? biayaMetode(metodeBuka[0], a.harga) : BIAYA_TRANSAKSI,
+        metode: metodeBuka.map(m => untukPublik(m, a.harga)), tema_mati: a.temaMati,
         harga_perpanjang: a.hargaPerpanjang, bulan_perpanjang: BULAN_PERPANJANG, tutup: a.tutup, staging: !!env.STAGING }),
         { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60" } });
     }
@@ -1335,7 +1372,9 @@ export async function onRequest(ctx) {
       const a = await bacaPengaturan(db);
       const pr = await hitungPromo(db, badan.kode, a.harga);
       if (!pr.ok) return salah(pr.pesan, 400);
-      return jwb({ ok: true, kode: pr.kode, potongan: pr.potongan, harga: pr.harga, biaya: BIAYA_TRANSAKSI, total: pr.harga + BIAYA_TRANSAKSI });
+      const m0 = pilihMetode(a.metode, teks(badan.metode, 30)) || pilihMetode(a.metode);
+      const bi = m0 ? biayaMetode(m0, pr.harga) : BIAYA_TRANSAKSI;
+      return jwb({ ok: true, kode: pr.kode, potongan: pr.potongan, harga: pr.harga, biaya: bi, total: pr.harga + bi });
     }
 
     /* ── perpanjangan masa simpan (pemilik, lewat token edit) ──── */
@@ -1349,15 +1388,17 @@ export async function onRequest(ctx) {
       if (jalur === "perpanjang/status" && menunggu && env.DOKU_CLIENT_ID && env.DOKU_SECRET_KEY) {
         const r = await panggilDoku(env, { metode: "GET", sasaran: DOKU.jalurStatus + encodeURIComponent(menunggu.order_id) });
         const t = (r.isi && r.isi.transaction) || {}, o = (r.isi && r.isi.order) || {};
-        const row = await db.prepare(`SELECT jumlah FROM perpanjangan WHERE order_id=?`).bind(menunggu.order_id).first();
-        if (t.status === "SUCCESS" && row && Number(o.amount) === row.jumlah + BIAYA_TRANSAKSI) {
+        const row = await db.prepare(`SELECT jumlah,total FROM perpanjangan WHERE order_id=?`).bind(menunggu.order_id).first();
+        if (t.status === "SUCCESS" && row && Number(o.amount) === totalPerpanjangan(row)) {
           await lunasiPerpanjangan(env, db, menunggu.order_id);
           menunggu = null;
         }
       }
       const kini = await db.prepare(`SELECT simpan_sampai FROM pesanan WHERE kode=?`).bind(b.kode).first();
       return jwb({ ok: true, kode: b.kode, penerima: JSON.parse(b.isi || "{}").penerima || "",
-        simpan_sampai: kini.simpan_sampai, harga: a.hargaPerpanjang, biaya: BIAYA_TRANSAKSI, bulan: BULAN_PERPANJANG,
+        simpan_sampai: kini.simpan_sampai, harga: a.hargaPerpanjang, bulan: BULAN_PERPANJANG,
+        biaya: (pilihMetode(a.metode) ? biayaMetode(pilihMetode(a.metode), a.hargaPerpanjang) : BIAYA_TRANSAKSI),
+        metode: a.metode.filter(m => m.aktif).map(m => untukPublik(m, a.hargaPerpanjang)),
         menunggu: !!menunggu });
     }
     if (jalur === "perpanjang" && request.method === "POST") {
@@ -1366,20 +1407,23 @@ export async function onRequest(ctx) {
       const b = token && await db.prepare(`SELECT kode,email,whatsapp,isi,status FROM pesanan WHERE token=?`).bind(token).first();
       if (!b || b.status !== "lunas") return salah("Tautan perpanjangan tidak dikenal atau suratnya sudah dihapus.", 404);
       const a = await bacaPengaturan(db);
+      const mP = pilihMetode(a.metode, teks(badan.metode, 30));
+      if (!mP) return salah("Metode pembayaran itu sedang tidak tersedia. Pilih yang lain, ya.", 503);
+      const biayaP = biayaMetode(mP, a.hargaPerpanjang);
       const orderId = "FP-" + b.kode + "-" + Date.now().toString(36);
       const isiP = JSON.parse(b.isi || "{}");
       const r = await panggilDoku(env, {
         metode: "POST", sasaran: DOKU.jalurCheckout,
         badan: {
           order: {
-            amount: a.hargaPerpanjang + BIAYA_TRANSAKSI, invoice_number: orderId, currency: "IDR",
+            amount: a.hargaPerpanjang + biayaP, invoice_number: orderId, currency: "IDR",
             callback_url: asal + "/perpanjang/" + token + "?bayar=1", auto_redirect: true,
             line_items: [
               { name: "Perpanjang masa simpan " + BULAN_PERPANJANG + " bulan", quantity: 1, price: a.hargaPerpanjang },
-              { name: "Biaya transaksi", quantity: 1, price: BIAYA_TRANSAKSI }
+              { name: "Biaya transaksi " + mP.nama, quantity: 1, price: biayaP }
             ]
           },
-          payment: { payment_due_date: DOKU.jatuhTempoMenit, payment_method_types: DOKU.metode },
+          payment: { payment_due_date: DOKU.jatuhTempoMenit, payment_method_types: [mP.kode] },
           customer: { name: (isiP.pengirim || "Pembeli").slice(0, 50), email: b.email || undefined, phone: b.whatsapp || undefined }
         }
       });
@@ -1389,8 +1433,8 @@ export async function onRequest(ctx) {
         await catatKejadian(env, db, "DOKU menolak pembayaran", "perpanjangan: " + JSON.stringify(kabar).slice(0, 250), b.kode);
         return salah("Pembayaran belum bisa dibuat. Coba lagi sebentar lagi, ya.", 502);
       }
-      await db.prepare(`INSERT INTO perpanjangan(order_id,kode,jumlah,status,dibuat) VALUES(?,?,?,'menunggu',?)`)
-        .bind(orderId, b.kode, a.hargaPerpanjang, Date.now()).run();
+      await db.prepare(`INSERT INTO perpanjangan(order_id,kode,jumlah,status,dibuat,metode,total) VALUES(?,?,?,'menunggu',?,?,?)`)
+        .bind(orderId, b.kode, a.hargaPerpanjang, Date.now(), mP.kode, a.hargaPerpanjang + biayaP).run();
       return jwb({ ok: true, url: urlBayar, order_id: orderId });
     }
 
@@ -1517,6 +1561,9 @@ export async function onRequest(ctx) {
           return salah("Kode promo yang dipakai sudah tidak berlaku. Isi ulang formulirnya tanpa kode itu, ya.", 409);
       }
       const hargaB = Number(b.jumlah) || HARGA;
+      const mB = pilihMetode(aturB.metode, teks(badan.metode, 30));
+      if (!mB) return salah("Metode pembayaran itu sedang tidak tersedia. Pilih yang lain, ya.", 503);
+      const biayaB = biayaMetode(mB, hargaB);
 
       const isi = JSON.parse(b.isi || "{}");
       const orderId = "FV-" + kode + "-" + Date.now().toString(36);
@@ -1526,7 +1573,7 @@ export async function onRequest(ctx) {
         sasaran: DOKU.jalurCheckout,
         badan: {
           order: {
-            amount: hargaB + BIAYA_TRANSAKSI,
+            amount: hargaB + biayaB,
             invoice_number: orderId,
             currency: "IDR",
             /* tempat pembeli mendarat setelah membayar */
@@ -1534,13 +1581,13 @@ export async function onRequest(ctx) {
             auto_redirect: true,
             line_items: [
               { name: "Surat digital Foreverse" + (b.promo ? " (promo " + b.promo + ")" : ""), quantity: 1, price: hargaB },
-              { name: "Biaya transaksi", quantity: 1, price: BIAYA_TRANSAKSI }
+              { name: "Biaya transaksi " + mB.nama, quantity: 1, price: biayaB }
             ]
           },
           payment: {
             payment_due_date: DOKU.jatuhTempoMenit,
-            /* lapis kedua pengunci metode, selain centang di Back Office */
-            payment_method_types: DOKU.metode
+            /* hanya metode yang dipilih pembeli → biaya yang tampil = yang ditagih */
+            payment_method_types: [mB.kode]
           },
           customer: {
             name: (isi.pengirim || "Pembeli").slice(0, 50),
@@ -1557,7 +1604,7 @@ export async function onRequest(ctx) {
         return salah("DOKU menolak: " + JSON.stringify(kabar).slice(0, 300), 502);
       }
 
-      await db.prepare(`UPDATE pesanan SET order_id=? WHERE kode=?`).bind(orderId, kode).run();
+      await db.prepare(`UPDATE pesanan SET order_id=?, metode=?, total=? WHERE kode=?`).bind(orderId, mB.kode, hargaB + biayaB, kode).run();
       return jwb({ ok: true, url: urlBayar, order_id: orderId });
     }
 
@@ -1610,7 +1657,7 @@ export async function onRequest(ctx) {
         const row = await db.prepare(`SELECT * FROM perpanjangan WHERE order_id=?`).bind(faktur).first();
         if (!row) return jwb({ ok: true, catatan: "Perpanjangan tidak dikenal." });
         if (transaksi.status !== "SUCCESS") return jwb({ ok: true, catatan: "Belum lunas." });
-        if (Number(pesananDoku.amount) !== row.jumlah + BIAYA_TRANSAKSI) {
+        if (Number(pesananDoku.amount) !== totalPerpanjangan(row)) {
           await catatKejadian(env, db, "notifikasi DOKU ditolak", "Jumlah perpanjangan " + pesananDoku.amount + " tidak sesuai.", row.kode);
           return salah("Jumlah pembayaran tidak sesuai harga.", 403);
         }
@@ -1618,10 +1665,10 @@ export async function onRequest(ctx) {
         return jwb({ ok: true });
       }
 
-      const b = await db.prepare(`SELECT kode,status,jumlah FROM pesanan WHERE order_id=?`)
+      const b = await db.prepare(`SELECT kode,status,jumlah,total FROM pesanan WHERE order_id=?`)
         .bind(faktur).first();
       if (!b) return jwb({ ok: true, catatan: "Pesanan tidak dikenal." });
-      const totalB = (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI;
+      const totalB = totalPesanan(b);
 
       /* Hanya SUCCESS yang diproses. FAILED diabaikan: di Checkout,
          pembeli masih boleh mencoba lagi di halaman yang sama, jadi
@@ -1645,7 +1692,7 @@ export async function onRequest(ctx) {
        Jadi jawaban di sini TIDAK BOLEH memuat token edit.        */
     if (jalur === "status") {
       const kode = teks(url.searchParams.get("kode"), 16);
-      const b = await db.prepare(`SELECT kode,status,order_id,isi,jumlah FROM pesanan WHERE kode=?`).bind(kode).first();
+      const b = await db.prepare(`SELECT kode,status,order_id,isi,jumlah,total FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Pesanan tidak ditemukan.", 404);
 
       const penerima = (JSON.parse(b.isi || "{}").penerima) || "";
@@ -1660,7 +1707,7 @@ export async function onRequest(ctx) {
         });
         const t = (r.isi && r.isi.transaction) || {};
         const o = (r.isi && r.isi.order) || {};
-        if (t.status === "SUCCESS" && Number(o.amount) === (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI) {
+        if (t.status === "SUCCESS" && Number(o.amount) === totalPesanan(b)) {
           await lunasi(env, db, b.kode, asal);
           const isiSt2 = JSON.parse(b.isi || "{}");
           return jwb({ ok: true, status: "lunas", kode: b.kode, penerima, bisa_ingat: !!tanggalIngat(isiSt2), dikunci: !!isiSt2.kunci });
@@ -1822,33 +1869,60 @@ export async function onRequest(ctx) {
           if (!(h >= 1000 && h <= 1000000)) return salah("Harga perpanjangan harus antara Rp1.000 dan Rp1.000.000.");
           await simpanPengaturan(db, "harga_perpanjang", h);
         }
+        if (badan.metode && typeof badan.metode === "object") {
+          const bersih = {};
+          for (const m of DOKU.metodeTersedia) {
+            const x = badan.metode[m.kode]; if (!x) continue;
+            bersih[m.kode] = { aktif: !!x.aktif, tetap: Math.max(0, Math.round(Number(x.tetap) || 0)), persen: Math.max(0, Math.min(10, Number(x.persen) || 0)) };
+          }
+          if (!Object.values(Object.assign({}, ...gabungMetode(JSON.stringify(bersih)).map(m => ({ [m.kode]: m.aktif })))).some(Boolean))
+            return salah("Minimal satu metode pembayaran harus dibuka.");
+          await simpanPengaturan(db, "metode", JSON.stringify(bersih));
+        }
         if (Array.isArray(badan.tema_mati))
           await simpanPengaturan(db, "tema_mati", JSON.stringify(badan.tema_mati.filter(t => TEMA_SKEMA[t])));
         const a = await bacaPengaturan(db);
-        return jwb({ ok: true, harga: a.harga, harga_perpanjang: a.hargaPerpanjang, tema_mati: a.temaMati, semua_tema: Object.keys(TEMA_SKEMA) });
+        return jwb({ ok: true, harga: a.harga, harga_perpanjang: a.hargaPerpanjang, tema_mati: a.temaMati, semua_tema: Object.keys(TEMA_SKEMA), metode: a.metode });
       }
 
       /* ── kode promo ── */
       if (aksi === "promo_daftar") {
         /* pendapatan per kode = jumlah yang benar-benar dibayar pembeli (tanpa biaya QRIS) —
            dipakai untuk menghitung hasil tiap kreator */
+        /* komisi = persen × pendapatan (harga setelah promo, tanpa biaya transaksi); refund tidak dihitung */
         const r = await db.prepare(`SELECT p.*, (SELECT COUNT(*) FROM pesanan WHERE promo=p.kode AND status='lunas') AS laku,
-          (SELECT COALESCE(SUM(jumlah),0) FROM pesanan WHERE promo=p.kode AND status='lunas') AS pendapatan
+          (SELECT COALESCE(SUM(jumlah),0) FROM pesanan WHERE promo=p.kode AND status='lunas') AS pendapatan,
+          (SELECT COALESCE(SUM(jumlah),0) FROM komisi_bayar WHERE promo=p.kode) AS komisi_dibayar
           FROM promo p ORDER BY p.dibuat DESC`).all();
+        for (const x of (r.results || [])) {
+          x.komisi_total = Math.floor((x.pendapatan || 0) * (x.komisi || 0) / 100);
+          x.komisi_sisa = x.komisi_total - (x.komisi_dibayar || 0);
+        }
         return jwb({ ok: true, promo: r.results || [] });
       }
       if (aksi === "promo_simpan") {
         const kode = normalKodePromo(badan.kode);
         if (kode.length < 3) return salah("Kode promo minimal 3 huruf/angka.");
         const jenis = badan.jenis === "persen" ? "persen" : "rupiah";
-        const nilai = Math.round(Number(badan.nilai));
-        if (!(nilai > 0) || (jenis === "persen" && nilai > 100)) return salah("Besar potongan belum benar.");
+        const nilai = Math.round(Number(badan.nilai) || 0);
+        const kreatorP = teks(badan.kreator, 40).replace(/^@+/, "");
+        /* kode referral kreator boleh tanpa potongan (0) — pembeli bayar harga biasa, kreator tetap dapat komisi */
+        if (nilai < 0 || (!(nilai > 0) && !kreatorP) || (jenis === "persen" && nilai > 100)) return salah("Besar potongan belum benar.");
+        const komisi = Math.max(0, Math.min(90, Math.round(Number(badan.komisi) || 0)));
+        if (komisi && !kreatorP) return salah("Komisi hanya untuk kode kreator — isi akun kreatornya.");
         const lama = await db.prepare(`SELECT terpakai,dibuat FROM promo WHERE kode=?`).bind(kode).first();
-        await db.prepare(`INSERT OR REPLACE INTO promo(kode,jenis,nilai,kuota,terpakai,sampai,aktif,dibuat,kreator) VALUES(?,?,?,?,?,?,?,?,?)`)
+        await db.prepare(`INSERT OR REPLACE INTO promo(kode,jenis,nilai,kuota,terpakai,sampai,aktif,dibuat,kreator,komisi) VALUES(?,?,?,?,?,?,?,?,?,?)`)
           .bind(kode, jenis, nilai, Math.max(0, Math.round(Number(badan.kuota) || 0)), lama ? lama.terpakai : 0,
             Number(badan.sampai) || null, badan.aktif === false ? 0 : 1, lama ? lama.dibuat : Date.now(),
-            teks(badan.kreator, 40).replace(/^@?/, badan.kreator ? "@" : "") || null).run();
+            kreatorP ? "@" + kreatorP : null, komisi).run();
         return jwb({ ok: true, kode });
+      }
+      if (aksi === "komisi_bayar") {
+        const kode = normalKodePromo(badan.kode), jml = Math.round(Number(badan.jumlah) || 0);
+        if (!(jml > 0)) return salah("Isi jumlah yang sudah ditransfer ke kreator.");
+        if (!(await db.prepare(`SELECT 1 FROM promo WHERE kode=?`).bind(kode).first())) return salah("Kode tidak dikenal.", 404);
+        await db.prepare(`INSERT INTO komisi_bayar(promo,jumlah,waktu,catatan) VALUES(?,?,?,?)`).bind(kode, jml, Date.now(), teks(badan.catatan, 120)).run();
+        return jwb({ ok: true });
       }
       if (aksi === "promo_aktif") {
         await db.prepare(`UPDATE promo SET aktif=? WHERE kode=?`).bind(badan.nilai ? 1 : 0, normalKodePromo(badan.kode)).run();
@@ -1938,7 +2012,7 @@ export async function onRequest(ctx) {
           r2: !!env.FOTO,
           resend: !!env.RESEND_API_KEY,
           doku: !!env.DOKU_CLIENT_ID && !!env.DOKU_SECRET_KEY,
-          metode: DOKU.metode.join(", "),
+          metode: (await bacaPengaturan(db)).metode.filter(m => m.aktif).map(m => m.nama).join(", ") || "tidak ada yang dibuka",
           mode: (modeSandbox(env) ? "Sandbox (uji coba)" : "Production (sungguhan)")
                 + (modeDitegaskan(env) ? "" : " — DOKU_MODE belum diisi, dianggap Sandbox"),
           sandbox: modeSandbox(env),

@@ -2019,6 +2019,39 @@ await uji("program kreator: kode promo mencatat @kreator, jumlah laku, dan penda
   harus(p.kreator === "@amira.kreator" && p.laku === 1 && p.pendapatan === 13500, JSON.stringify(p));
 });
 
+await uji("metode bayar diatur dari /developer: DANA dibuka dgn biaya 1,5%, ditagih tepat, metode tertutup ditolak", async () => {
+  const L = await buatLingkungan();
+  harus(!(await admin(L, { aksi: "atur", metode: { QRIS: { aktif: false } } })).ok, "tidak boleh semua tertutup");
+  await admin(L, { aksi: "atur", metode: { EMONEY_DANA: { aktif: true, tetap: 0, persen: 1.5 } } });
+  const info = await (await L.panggil("/api/info")).json();
+  sama(info.metode.map(m => m.kode).join(), "QRIS,EMONEY_DANA", "info publik");
+  sama(info.metode[1].biaya, 225, "1,5% dari 15.000 = 225");
+  const d = await buatDrafDengan(L);
+  const tolak = await L.panggil("/api/bayar", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode: d.kode, metode: "EMONEY_OVO" }) });
+  sama(tolak.status, 503, "OVO belum dibuka");
+  const b = await (await L.panggil("/api/bayar", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode: d.kode, metode: "EMONEY_DANA" }) })).json();
+  const pg = L.catatan.panggilan.filter(x => x.jalur === "/checkout/v1/payment").pop();
+  sama(pg.badan.order.amount, 15225, "jumlah ke DOKU");
+  sama(pg.badan.payment.payment_method_types.join(), "EMONEY_DANA", "hanya DANA");
+  sama((await L.notifikasi(notifSukses(b.order_id, 15560))).status, 403, "jumlah QRIS ditolak untuk pesanan DANA");
+  sama((await L.notifikasi(notifSukses(b.order_id, 15225))).status, 200, "jumlah DANA diterima");
+});
+
+await uji("kreator: kode referral tanpa potongan + komisi 20%, saldo berkurang setelah dicatat dibayar", async () => {
+  const L = await buatLingkungan();
+  harus(!(await admin(L, { aksi: "promo_simpan", kode: "TANPA", jenis: "rupiah", nilai: 0 })).ok, "nilai 0 tanpa kreator ditolak");
+  harus((await admin(L, { aksi: "promo_simpan", kode: "ADRIEL", jenis: "rupiah", nilai: 0, kreator: "@adriel.kreator", komisi: 20 })).ok, "referral");
+  const d = await buatDrafDengan(L, { promo: "ADRIEL" });
+  sama(d.jumlah, 15000, "harga biasa");
+  const b = await bayarDraf(L, d.kode);
+  await L.notifikasi(notifSukses(b.order_id, 15560)); await L.tunggu();
+  let p = (await admin(L, { aksi: "promo_daftar" })).promo[0];
+  harus(p.komisi_total === 3000 && p.komisi_sisa === 3000, JSON.stringify(p));
+  await admin(L, { aksi: "komisi_bayar", kode: "ADRIEL", jumlah: 3000 });
+  p = (await admin(L, { aksi: "promo_daftar" })).promo[0];
+  sama(p.komisi_sisa, 0, "lunas");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

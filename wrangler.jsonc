@@ -8,7 +8,7 @@
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none",
-    "run_worker_first": ["/", "/s/*", "/edit/*", "/perpanjang/*", "/api/*", "/f/*", "/template", "/momen", "/contoh", "/cara-pesan", "/harga", "/faq", "/developer", "/developer.html"]
+    "run_worker_first": ["/", "/s/*", "/edit/*", "/perpanjang/*", "/r/*", "/kreator", "/api/*", "/f/*", "/template", "/momen", "/contoh", "/cara-pesan", "/harga", "/faq", "/developer", "/developer.html"]
   },
   "d1_databases": [
     { "binding": "DB", "database_name": "foreverse-db", "database_id": "a2630269-5bd5-43a2-b032-ff57abdbd4d4" }

@@ -38,6 +38,10 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
 .oke{background:var(--violet-tint);color:var(--violet-deep);border-radius:14px;padding:14px 16px;margin-top:18px;font-size:.95rem}
 .putar{width:34px;height:34px;border:3px solid var(--stone);border-top-color:var(--violet);border-radius:50%;animation:putar .8s linear infinite;margin:30px auto 14px}
 @keyframes putar{to{transform:rotate(360deg)}}
+.metode{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 8px}
+.metode::before{content:"Bayar pakai";width:100%;font-size:.84rem;color:var(--ink-soft)}
+.metode button{font:inherit;font-size:.86rem;padding:9px 14px;min-height:42px;border-radius:999px;border:1.5px solid var(--stone);background:#fff;color:var(--ink);cursor:pointer}
+.metode button[aria-checked="true"]{border-color:var(--violet);background:var(--violet-tint);color:var(--violet-deep);font-weight:600}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -58,7 +62,8 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
 
     <div class="kartu" id="kartuBayar">
       <div class="baris"><span id="lblPerpanjang">Perpanjang 2 bulan</span><span id="harga"></span></div>
-      <div class="baris"><span>Biaya transaksi QRIS</span><span id="biaya"></span></div>
+      <div class="metode" id="pilihMetode" role="radiogroup" aria-label="Metode pembayaran" hidden></div>
+      <div class="baris"><span id="lblBiaya">Biaya transaksi QRIS</span><span id="biaya"></span></div>
       <div class="baris total"><span>Yang kamu bayar</span><span id="total"></span></div>
       <button class="tbl" id="tblBayar" type="button">Bayar &amp; perpanjang</button>
       <div class="galat" id="galat" role="alert"></div>
@@ -93,7 +98,22 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
     $("sampai").textContent = d.simpan_sampai ? tgl(d.simpan_sampai) : "—";
     $("baru").textContent = tgl(tambahBulan(dasar, d.bulan));
     $("lblPerpanjang").textContent = "Perpanjang " + d.bulan + " bulan";
-    $("harga").textContent = rp(d.harga); $("biaya").textContent = rp(d.biaya); $("total").textContent = rp(d.harga + d.biaya);
+    METODE = d.metode || []; if(!PILIH || !METODE.some(function(m){ return m.kode === PILIH.kode; })) PILIH = METODE[0] || null;
+    HARGA = d.harga; BIAYA_AWAL = d.biaya; gambarBiaya();
+    if(!METODE.length){ $("tblBayar").disabled = true; $("galat").textContent = "Pembayaran sedang tidak tersedia. Coba lagi sebentar lagi, ya."; }
+  }
+  var METODE = [], PILIH = null, HARGA = 0, BIAYA_AWAL = 0;
+  function gambarBiaya(){
+    var b = PILIH ? PILIH.biaya : BIAYA_AWAL;
+    $("lblBiaya").textContent = "Biaya transaksi " + (PILIH ? PILIH.nama : "QRIS");
+    $("harga").textContent = rp(HARGA); $("biaya").textContent = rp(b); $("total").textContent = rp(HARGA + b);
+    var w = $("pilihMetode"); w.hidden = METODE.length < 2; w.innerHTML = "";
+    METODE.forEach(function(m){
+      var t = document.createElement("button"); t.type = "button"; t.setAttribute("role","radio"); t.textContent = m.nama;
+      t.setAttribute("aria-checked", PILIH && PILIH.kode === m.kode ? "true" : "false");
+      t.addEventListener("click", function(){ PILIH = m; gambarBiaya(); });
+      w.appendChild(t);
+    });
   }
 
   function muat(jalur){
@@ -127,7 +147,7 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
 
   $("tblBayar").addEventListener("click", function(){
     var b = this; b.disabled = true; b.textContent = "Membuka pembayaran…"; $("galat").textContent = "";
-    fetch("/api/perpanjang", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ token: TOKEN }) })
+    fetch("/api/perpanjang", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ token: TOKEN, metode: PILIH ? PILIH.kode : "" }) })
       .then(function(r){ return r.json(); })
       .then(function(j){ if(!j.ok) throw new Error(j.pesan || "Belum bisa membuka pembayaran."); location.href = j.url; })
       .catch(function(e){ b.disabled = false; b.textContent = "Bayar & perpanjang"; $("galat").textContent = e.message; });

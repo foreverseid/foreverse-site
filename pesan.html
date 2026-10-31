@@ -154,6 +154,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .promo-kabar.ok{color:#1E6B42}.promo-kabar.salah{color:#B33A2B}
 .rincian.potong .rp{color:#1E6B42}
 .tema-tutup{background:#FDECEA;color:#8C2B20;border-radius:12px;padding:12px 14px;font-size:.9rem;margin-bottom:12px}
+.rincian[hidden],.metode[hidden]{display:none}
+.metode{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px}
+.metode::before{content:"Bayar pakai";width:100%;font-size:.84rem;color:var(--ink-soft)}
+.metode button{font:inherit;font-size:.86rem;padding:9px 14px;min-height:42px;border-radius:999px;border:1.5px solid var(--stone);background:#fff;color:var(--ink);cursor:pointer}
+.metode button[aria-checked="true"]{border-color:var(--violet);background:var(--violet-tint);color:var(--violet);font-weight:600}
 .rincian{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--cream-lift);font-size:.92rem}
 .rincian:last-of-type{border:0;padding-bottom:16px}
 .rincian .rp{font-weight:600;font-variant-numeric:tabular-nums}
@@ -378,7 +383,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           <p class="promo-kabar" id="promoKabar" role="status"></p>
           <div class="rincian"><span id="labelSurat">Surat digital</span><span class="rp" id="rpHarga">Rp15.000</span></div>
           <div class="rincian potong" id="barisPotong" hidden><span id="lblPotong">Promo</span><span class="rp" id="rpPotong"></span></div>
-          <div class="rincian"><span>Biaya transaksi QRIS</span><span class="rp" id="rpBiaya">Rp560</span></div>
+          <div class="metode" id="pilihMetode" role="radiogroup" aria-label="Metode pembayaran" hidden></div>
+          <div class="rincian"><span id="lblBiaya">Biaya transaksi QRIS</span><span class="rp" id="rpBiaya">Rp560</span></div>
           <div class="rincian total"><span>Yang kamu bayar</span><span class="rp" id="rpTotal">Rp15.560</span></div>
         </div>
 
@@ -1438,24 +1444,49 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   }
 
   /* ── harga, tema yang dibuka, dan kode promo (diatur dari /developer) ── */
-  var HARGA_KINI = 15000, BIAYA_KINI = 560, PROMO = { kode:"", potongan:0 };
+  var HARGA_KINI = 15000, BIAYA_KINI = 560, PROMO = { kode:"", potongan:0 }, METODE = [], METODE_PILIH = null;
+  function biayaKini(){
+    var m = METODE_PILIH; if(!m) return BIAYA_KINI;
+    return m.tetap + Math.ceil((HARGA_KINI - PROMO.potongan) * m.persen / 100);
+  }
+  function gambarMetode(){
+    var w = $("pilihMetode");
+    w.hidden = METODE.length < 2;
+    w.innerHTML = "";
+    METODE.forEach(function(m){
+      var b = document.createElement("button"); b.type = "button"; b.setAttribute("role","radio");
+      b.setAttribute("aria-checked", METODE_PILIH && METODE_PILIH.kode === m.kode ? "true" : "false");
+      b.textContent = m.nama;
+      b.addEventListener("click", function(){ METODE_PILIH = m; gambarMetode(); gambarHarga(); });
+      w.appendChild(b);
+    });
+    var m = METODE_PILIH;
+    if(m) $("catatanKirim").textContent = m.kode === "QRIS"
+      ? "Pembayaran lewat QRIS — bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa pun."
+      : "Pembayaran lewat " + m.nama + " — nanti diarahkan ke " + m.ket + "." + (METODE.length > 1 ? " Kalau gagal, pilih metode lain di atas." : "");
+  }
   function rpTeks(n){ return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
   function gambarHarga(){
     $("rpHarga").textContent = rpTeks(HARGA_KINI);
-    $("rpBiaya").textContent = rpTeks(BIAYA_KINI);
+    $("rpBiaya").textContent = rpTeks(biayaKini());
+    $("lblBiaya").textContent = "Biaya transaksi " + (METODE_PILIH ? METODE_PILIH.nama : "QRIS");
     $("barisPotong").hidden = !PROMO.potongan;
     $("lblPotong").textContent = "Promo " + PROMO.kode;
     $("rpPotong").textContent = "−" + rpTeks(PROMO.potongan);
-    $("rpTotal").textContent = rpTeks(HARGA_KINI - PROMO.potongan + BIAYA_KINI);
+    $("rpTotal").textContent = rpTeks(HARGA_KINI - PROMO.potongan + biayaKini());
     $("cipHarga").textContent = rpTeks(HARGA_KINI - PROMO.potongan);
   }
   fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
     if(!i || !i.ok) return;
-    HARGA_KINI = i.harga; BIAYA_KINI = i.biaya; gambarHarga();
+    HARGA_KINI = i.harga; BIAYA_KINI = i.biaya;
+    METODE = i.metode || []; METODE_PILIH = METODE[0] || null; gambarMetode(); gambarHarga();
+    if(!MODE_EDIT && !METODE.length){ $("temaTutup").textContent = "Pembayaran sedang tidak tersedia. Coba lagi sebentar lagi, ya."; $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
     if(!MODE_EDIT && (i.tema_mati || []).indexOf(TEMA) > -1){ $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
     if(!MODE_EDIT && i.tutup){ $("temaTutup").textContent = i.tutup; $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
   }).catch(function(){});
-  var promoAwal = new URLSearchParams(location.search).get("promo");
+  /* kode kreator dari tautan foreverse.id/r/KODE (cookie 30 hari) dipakai kalau alamat tidak membawa ?promo= */
+  var refKreator = (document.cookie.match(/(?:^|;\s*)fv_ref=([A-Z0-9]{3,20})/) || [])[1] || "";
+  var promoAwal = new URLSearchParams(location.search).get("promo") || (MODE_EDIT ? "" : refKreator);
   if(promoAwal) $("promo").value = promoAwal;
   function pakaiPromo(){
     var k = $("promo").value.trim();
@@ -1466,9 +1497,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       .then(function(j){
         $("tblPromo").disabled = false;
         var kabar = $("promoKabar");
-        if(!j.ok){ PROMO = { kode:"", potongan:0 }; kabar.className = "promo-kabar salah"; kabar.textContent = j.pesan || "Kode promo tidak berlaku."; }
+        if(!j.ok && refKreator && k.toUpperCase() === refKreator){ PROMO = { kode:"", potongan:0 }; $("promo").value = ""; kabar.textContent = ""; }
+        else if(!j.ok){ PROMO = { kode:"", potongan:0 }; kabar.className = "promo-kabar salah"; kabar.textContent = j.pesan || "Kode promo tidak berlaku."; }
         else { PROMO = { kode: j.kode, potongan: j.potongan }; HARGA_KINI = j.harga + j.potongan;
-               kabar.className = "promo-kabar ok"; kabar.textContent = "Kode " + j.kode + " dipakai — hemat " + rpTeks(j.potongan) + "."; }
+               kabar.className = "promo-kabar ok"; kabar.textContent = j.potongan ? "Kode " + j.kode + " dipakai — hemat " + rpTeks(j.potongan) + "." : "Kode " + j.kode + " tercatat."; }
         gambarHarga();
       }).catch(function(){ $("tblPromo").disabled = false; });
   }
@@ -1537,7 +1569,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       try{ localStorage.setItem("fv-edit-" + draf.kode, draf.token); }catch(_){}
 
       tirai(true, "Membuka pembayaran…");
-      var bayar = await kirimJson("/api/bayar", { kode: draf.kode });
+      var bayar = await kirimJson("/api/bayar", { kode: draf.kode, metode: METODE_PILIH ? METODE_PILIH.kode : "" });
 
       if(bayar.sudah){ location.href = "/selesai?kode=" + draf.kode; return; }
       if(!bayar.url) throw new Error("Halaman pembayaran tidak bisa dibuka. Pesananmu tersimpan — coba tekan tombolnya lagi.");
