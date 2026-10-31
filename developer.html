@@ -571,6 +571,28 @@ a.tautan:hover{text-decoration:underline}
         <p class="kabar-atur" id="cKabar"></p>
         <ul class="kejadian" id="cDaftar"></ul>
       </div>
+      <div class="kartu" style="margin-top:12px">
+        <h3>Pulihkan dari cadangan</h3>
+        <p class="ket">Pakai kalau data hilang atau rusak. Pilih berkas .json (hasil unduhan) atau salah satu cadangan R2 di atas, lalu <b>Cek dulu</b> — belum ada yang diubah. Sebelum memulihkan, keadaan sekarang otomatis dicadangkan dulu ke R2.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input type="file" id="pBerkas" accept="application/json,.json">
+          <select id="pR2"><option value="">…atau pilih cadangan R2</option></select>
+          <button class="tbl" id="pCek" type="button">Cek dulu</button>
+        </div>
+        <div id="pHasil" class="sistem" style="margin-top:10px"></div>
+        <div id="pTindak" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px" hidden>
+          <button class="tbl utamawarna" id="pIsi" type="button">Isi yang hilang saja</button>
+          <button class="tbl bahaya" id="pTimpa" type="button">Timpa dengan isi cadangan</button>
+        </div>
+        <p class="kabar-atur" id="pKabar"></p>
+      </div>
+      <div class="kartu" style="margin-top:12px">
+        <h3>Tutup pemesanan sementara</h3>
+        <p class="ket">Untuk gangguan pembayaran atau perawatan. Surat yang sudah dibayar tetap bisa dibuka; hanya pesanan baru yang ditahan, dengan pesan di bawah ini.</p>
+        <input type="text" id="tPesan" maxlength="200" style="width:100%" placeholder="Pemesanan sedang ditutup sebentar. Coba lagi nanti, ya.">
+        <div style="display:flex;gap:8px;margin-top:8px"><button class="tbl" id="tTombol" type="button">Tutup pemesanan</button></div>
+        <p class="kabar-atur" id="tKabar"></p>
+      </div>
     </section>
   </main>
 </div>
@@ -1007,7 +1029,12 @@ a.tautan:hover{text-decoration:underline}
       sbNetral("Masa berlaku tautan edit", (p.hari_edit || 3) + " hari") +
       sbNetral("Draf dihapus setelah", (p.jam_draf || 24) + " jam") +
       sbNetral("Surat disimpan", (p.bulan_simpan || 2) + " bulan sejak dibayar, bisa diperpanjang") +
-      sbNetral("Mode pembayaran", p.mode || "—");
+      sbNetral("Mode pembayaran", p.mode || "—") +
+      sbNetral("Email terkirim hari ini", (p.email_hari_ini || 0) + " dari " + (p.batas_email || 100) + " (kuota harian Resend)") +
+      sbNetral("Lingkungan", p.staging ? "STAGING (uji)" : "produksi");
+    TUTUP = p.tutup || "";
+    $("tPesan").value = TUTUP; $("tTombol").textContent = TUTUP ? "Buka lagi pemesanan" : "Tutup pemesanan";
+    $("tKabar").textContent = TUTUP ? "Pemesanan sedang DITUTUP." : "";
 
     var k = p.kejadian || [];
     $("kejadian").innerHTML = k.length
@@ -1087,9 +1114,57 @@ a.tautan:hover{text-decoration:underline}
     await muatPromo();
   });
 
+  /* ── tutup sementara ── */
+  var TUTUP = "";
+  $("tTombol").addEventListener("click", async function(){
+    var tutup = !TUTUP;
+    if(tutup && !confirm("Tutup pemesanan baru sekarang?")) return;
+    try{ var r = await panggil({ aksi:"tutup", nilai: tutup, pesan: $("tPesan").value.trim() });
+         TUTUP = r.tutup || ""; this.textContent = TUTUP ? "Buka lagi pemesanan" : "Tutup pemesanan";
+         $("tKabar").textContent = TUTUP ? "Pemesanan sedang DITUTUP." : "Pemesanan dibuka lagi."; }
+    catch(e){ $("tKabar").textContent = e.message; }
+  });
+
+  /* ── pulihkan ── */
+  var DATA_PULIH = null;
+  async function ambilDataPulih(){
+    if($("pR2").value) return (await panggil({ aksi:"cadangan_ambil", nama: $("pR2").value })).data;
+    var f = $("pBerkas").files[0]; if(!f) throw new Error("Pilih berkas atau cadangan R2 dulu.");
+    try{ return JSON.parse(await f.text()); }catch(_){ throw new Error("Berkasnya bukan JSON yang sah."); }
+  }
+  function tampilLaporan(l){
+    $("pHasil").innerHTML = Object.keys(l).filter(function(k){ return k[0] !== "_"; }).map(function(k){
+      var x = l[k];
+      return sbNetral(k, x.di_cadangan + " di cadangan · " + x.belum_ada + " belum ada · " + x.sudah_ada + " sudah ada" + (x.ditulis ? " · " + x.ditulis + " ditulis" : ""));
+    }).join("");
+  }
+  $("pCek").addEventListener("click", async function(){
+    $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Memeriksa…"; $("pTindak").hidden = true;
+    try{ DATA_PULIH = await ambilDataPulih();
+         var r = await panggil({ aksi:"pulihkan", mode:"cek", data: DATA_PULIH });
+         tampilLaporan(r.laporan); $("pTindak").hidden = false; $("pKabar").textContent = "Belum ada yang diubah. Pilih tindakan di bawah."; }
+    catch(e){ $("pKabar").className = "kabar-atur salah"; $("pKabar").textContent = e.message; }
+  });
+  async function jalankanPulih(mode){
+    if(!DATA_PULIH) return;
+    if(!confirm(mode === "timpa" ? "Timpa data yang sama kodenya dengan isi cadangan? Perubahan sesudah tanggal cadangan pada baris itu akan hilang." : "Tambahkan semua baris yang hilang?")) return;
+    $("pKabar").textContent = "Memulihkan…";
+    try{ var r = await panggil({ aksi:"pulihkan", mode: mode, data: DATA_PULIH });
+         tampilLaporan(r.laporan); $("pTindak").hidden = true;
+         $("pKabar").textContent = "Selesai. Keadaan sebelumnya tersimpan di " + (r.laporan._cadanganSebelum || "—") + ".";
+         await muatCadangan(); }
+    catch(e){ $("pKabar").className = "kabar-atur salah"; $("pKabar").textContent = e.message; }
+  }
+  $("pIsi").addEventListener("click", function(){ jalankanPulih("isi"); });
+  $("pTimpa").addEventListener("click", function(){ jalankanPulih("timpa"); });
+  $("pBerkas").addEventListener("change", function(){ $("pR2").value = ""; $("pTindak").hidden = true; });
+  $("pR2").addEventListener("change", function(){ $("pBerkas").value = ""; $("pTindak").hidden = true; });
+
   /* ── cadangan ── */
   async function muatCadangan(){
     var d = await panggil({ aksi:"cadangan_daftar" });
+    $("pR2").innerHTML = '<option value="">…atau pilih cadangan R2</option>' + (d.daftar || []).map(function(c){
+      return '<option value="' + esc(c.nama) + '">' + esc(c.nama.replace("cadangan/","").replace(".json","")) + '</option>'; }).join("");
     $("cDaftar").innerHTML = (d.daftar || []).slice(0, 10).map(function(c){
       return '<li>' + esc(c.nama.replace("cadangan/","").replace(".json","")) + ' <span class="redup">· ' + Math.ceil(c.ukuran/1024) + ' KB</span></li>';
     }).join("") || '<li class="redup">Belum ada cadangan otomatis. Yang pertama dibuat malam ini pukul 02.00 WIB.</li>';
@@ -1211,7 +1286,9 @@ a.tautan:hover{text-decoration:underline}
               '<button class="tbl kecil" data-a="aktif" data-k="' + esc(b.kode) + '" data-n="' + (b.aktif ? 0 : 1) + '">' +
                 (b.aktif ? "Nonaktifkan" : "Aktifkan") + '</button>' +
               '<button class="tbl kecil" data-a="perpanjang" data-k="' + esc(b.kode) + '">Perpanjang edit</button>' +
-              '<button class="tbl kecil" data-a="tambah_simpan" data-k="' + esc(b.kode) + '">+2 bln simpan</button>'
+              '<button class="tbl kecil" data-a="tambah_simpan" data-k="' + esc(b.kode) + '">+2 bln simpan</button>' +
+              '<button class="tbl kecil" data-a="refund" data-k="' + esc(b.kode) + '">Tandai refund</button>' +
+              '<button class="tbl kecil bahaya" data-a="anonimkan" data-k="' + esc(b.kode) + '">Hapus data pribadi</button>'
             : '') +
           '<button class="tbl kecil bahaya" data-a="hapus" data-k="' + esc(b.kode) + '">Hapus</button>' +
         '</div></td></tr>';
@@ -1225,6 +1302,8 @@ a.tautan:hover{text-decoration:underline}
     var aksi = t.dataset.a, kode = t.dataset.k;
 
     if(aksi === "hapus" && !confirm("Hapus pesanan " + kode + " beserta foto & lagunya? Tidak bisa dibatalkan.")) return;
+    if(aksi === "refund" && !confirm("Tandai " + kode + " sebagai refund? Suratnya dimatikan dan tidak dihitung pendapatan. Uangnya tetap kamu kembalikan sendiri.")) return;
+    if(aksi === "anonimkan" && !confirm("Hapus isi, foto, lagu, dan kontak pesanan " + kode + " (permintaan pemilik data)? Catatan transaksinya tetap. Tidak bisa dibatalkan.")) return;
     if(aksi === "tambah_simpan" && !confirm("Tambah masa simpan surat " + kode + " 2 bulan tanpa bayar?")) return;
     if(aksi === "aktif" && t.dataset.n === "0" && !confirm("Nonaktifkan surat " + kode + "? Tautannya jadi tidak bisa dibuka.")) return;
 

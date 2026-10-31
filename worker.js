@@ -13,7 +13,7 @@
      selain itu    → file biasa (index.html, gambar, dll)
    ══════════════════════════════════════════════════════════════════ */
 
-import { onRequest as tanganiApi, rawatHarian, infoGerbang, isiUntukPenerima } from "./functions/api/[[jalur]].js";
+import { onRequest as tanganiApi, rawatHarian, rawatSering, infoGerbang, isiUntukPenerima } from "./functions/api/[[jalur]].js";
 import { halamanGerbang } from "./functions/gerbang.js";
 import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
 
@@ -56,12 +56,21 @@ const KEAMANAN = {
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
   "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'"
 };
-function pasangKeamanan(r, jalur) {
+function pasangKeamanan(r, jalur, env) {
   const kepala = new Headers(r.headers);
   for (const [k, v] of Object.entries(KEAMANAN)) kepala.set(k, v);
   /* lapis kedua di samping robots.txt & meta noindex: halaman pribadi tidak diindeks */
   if (/^\/(s|edit|f|api|developer|perpanjang)(\/|$|\.)|^\/(pesan|selesai)/.test(jalur || ""))
     kepala.set("x-robots-tag", "noindex, nofollow, noarchive");
+  /* staging tidak boleh diindeks sama sekali, dan tiap halaman diberi pita penanda */
+  if (env && env.STAGING) {
+    kepala.set("x-robots-tag", "noindex, nofollow, noarchive");
+    if ((kepala.get("content-type") || "").includes("text/html")) {
+      const pita = '<div style="position:fixed;left:0;right:0;bottom:0;z-index:2147483647;background:#E8734A;color:#fff;font:600 12px/1.6 sans-serif;text-align:center;padding:3px;pointer-events:none">STAGING · bukan situs asli · pembayaran sandbox</div>';
+      kepala.delete("content-length");
+      return r.text().then(h => new Response(h.replace(/<\/body>/i, pita + "</body>"), { status: r.status, statusText: r.statusText, headers: kepala }));
+    }
+  }
   return new Response(r.body, { status: r.status, statusText: r.statusText, headers: kepala });
 }
 
@@ -79,12 +88,13 @@ function sisipDibuka(html, kode) {
 
 export default {
   async fetch(request, env, ctx) {
-    return pasangKeamanan(await tangani(request, env, ctx), new URL(request.url).pathname);
+    return pasangKeamanan(await tangani(request, env, ctx), new URL(request.url).pathname, env);
   },
   /* Cron Trigger harian (wrangler.jsonc → triggers.crons): pengingat masa
      simpan, penghapusan surat yang masanya habis, dan pembersihan draf. */
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(rawatHarian(env));
+    // cron harian 02.00 WIB → rawatHarian; cron tiap 15 menit → rawatSering
+    ctx.waitUntil(event.cron === "0 19 * * *" ? rawatHarian(env) : rawatSering(env));
   }
 };
 

@@ -999,6 +999,13 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 
   /* harga & tema yang dibuka — diatur dari /developer tanpa deploy ulang */
   fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
+    if(i.tutup){
+      var pita = document.createElement("div");
+      pita.setAttribute("role","status");
+      pita.style.cssText = "background:#3B3168;color:#fff;text-align:center;font-size:.9rem;padding:10px 16px";
+      pita.textContent = i.tutup;
+      document.body.insertBefore(pita, document.body.firstChild);
+    }
     if(!i || !i.ok) return;
     var h="Rp"+Number(i.harga).toLocaleString("id-ID"), b="Rp"+Number(i.biaya).toLocaleString("id-ID");
     document.querySelectorAll('[data-v="harga"]').forEach(function(el){ el.textContent=h; });

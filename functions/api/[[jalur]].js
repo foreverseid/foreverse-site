@@ -175,6 +175,7 @@ const DOKU = {
    Sandbox hanya membuat pembayaran gagal dan ketahuan langsung;
    salah ke Production membuat uji coba memotong uang sungguhan.     */
 function modeSandbox(env) {
+  if (env.STAGING) return true;          // staging tidak pernah menagih uang sungguhan
   const m = String(env.DOKU_MODE || "").trim().toLowerCase();
   if (["production", "produksi", "live", "sungguhan"].includes(m)) return false;
   return true;
@@ -312,6 +313,9 @@ async function siapkan(db) {
     /* pembayaran perpanjangan masa simpan (faktur berawalan FP-) */
     db.prepare(`CREATE TABLE IF NOT EXISTS perpanjangan(
       order_id TEXT PRIMARY KEY, kode TEXT, jumlah INTEGER, status TEXT, dibuat INTEGER, dibayar INTEGER)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS pakai(hari TEXT, jenis TEXT, n INTEGER DEFAULT 0, PRIMARY KEY(hari,jenis))`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS i_status_dibuat ON pesanan(status,dibuat)`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS i_dibayar ON pesanan(dibayar)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS kejadian(
       id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`)
   ]);
@@ -330,6 +334,35 @@ async function bersihkan(db, env) {
     `SELECT kode FROM pesanan WHERE status='draf' AND dibuat < ?`).bind(batas).all();
   for (const r of (lama.results || [])) await hapusFoto(env, db, r.kode);
   await db.prepare(`DELETE FROM pesanan WHERE status='draf' AND dibuat < ?`).bind(batas).run();
+}
+
+/* ══════════════════ pintu tunggal email ══════════════════
+   Semua email lewat sini: dihitung per hari (untuk memantau kuota Resend),
+   dan di staging dialihkan seluruhnya ke email pemilik supaya pembeli
+   sungguhan tidak pernah menerima email uji. */
+const BATAS_EMAIL_BAWAAN = 100;      // kuota harian Resend paket gratis (cek dashboard Resend)
+async function kirimResend(env, opsi) {
+  if (env.STAGING) {
+    try {
+      const d = JSON.parse(opsi.body);
+      d.to = [env.EMAIL_PEMILIK || env.EMAIL_PENGIRIM || "halo@foreverse.id"];
+      d.subject = "[STAGING] " + d.subject;
+      opsi = Object.assign({}, opsi, { body: JSON.stringify(d) });
+    } catch (_) {}
+  }
+  const r = await fetch("https://api.resend.com/emails", opsi);
+  try {
+    if (env.DB && r.ok) {
+      const hari = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);
+      await env.DB.prepare(`INSERT INTO pakai(hari,jenis,n) VALUES(?, 'email', 1)
+        ON CONFLICT(hari,jenis) DO UPDATE SET n=n+1`).bind(hari).run();
+      const batas = Number(env.BATAS_EMAIL_HARIAN) || BATAS_EMAIL_BAWAAN;
+      const b = await env.DB.prepare(`SELECT n FROM pakai WHERE hari=? AND jenis='email'`).bind(hari).first();
+      if (b && b.n === Math.ceil(batas * 0.8))
+        await catatKejadian(env, env.DB, "kuota email hampir habis", "Hari ini sudah " + b.n + " dari " + batas + " email. Pertimbangkan naik paket Resend.", "");
+    }
+  } catch (_) {}
+  return r;
 }
 
 /* ══════════════════ batas laju ══════════════════
@@ -372,7 +405,7 @@ async function catatKejadian(env, db, jenis, pesan, kode) {
     await db.prepare(`DELETE FROM kejadian WHERE waktu < ?`).bind(skr - 60 * 86400000).run();
     const tujuan = env.EMAIL_PEMILIK || env.EMAIL_PENGIRIM || "halo@foreverse.id";
     if (env.RESEND_API_KEY && (!terakhir || skr - terakhir.waktu > 3600000)) {
-      await fetch("https://api.resend.com/emails", {
+      await kirimResend(env, {
         method: "POST",
         headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
         body: JSON.stringify({
@@ -826,7 +859,7 @@ function badanEmail(o) {
 async function kirimEmail(env, o) {
   if (!env.RESEND_API_KEY || !o.email) return { ok: false, pesan: "Email tidak dikirim." };
   const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
-  const r = await fetch("https://api.resend.com/emails", {
+  const r = await kirimResend(env, {
     method: "POST",
     headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
     body: JSON.stringify({
@@ -858,7 +891,7 @@ async function kirimEmailDibuka(env, b, asal) {
   if (!env.RESEND_API_KEY || !b.email) return;
   const isi = JSON.parse(b.isi || "{}");
   const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
-  await fetch("https://api.resend.com/emails", {
+  await kirimResend(env, {
     method: "POST",
     headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
     body: JSON.stringify({
@@ -938,7 +971,7 @@ export async function rawatHarian(env) {
     if (env.RESEND_API_KEY && b.email) {
       const isi = JSON.parse(b.isi || "{}");
       const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
-      const r = await fetch("https://api.resend.com/emails", {
+      const r = await kirimResend(env, {
         method: "POST",
         headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
         body: JSON.stringify({
@@ -968,7 +1001,7 @@ export async function rawatHarian(env) {
     diingatkan++;
   }
 
-  const habis = await db.prepare(`SELECT kode FROM pesanan WHERE status='lunas'
+  const habis = await db.prepare(`SELECT kode FROM pesanan WHERE status IN ('lunas','refund')
     AND simpan_sampai IS NOT NULL AND simpan_sampai <= ? AND isi != '{}'`).bind(skr).all();
   for (const b of (habis.results || [])) {
     await hapusFoto(env, db, b.kode);
@@ -1016,7 +1049,7 @@ async function kirimEmailIngat(env, r, asal, konfirmasi) {
   const isi = konfirmasi
     ? `Kami akan mengirim satu email ${HARI_SEBELUM_INGAT} hari sebelum <strong>${esc(tgl)}</strong>, supaya kamu sempat menyiapkan sesuatu. Hanya itu — tidak ada promosi lain.`
     : `<strong>${esc(tgl)}</strong> sebentar lagi. Mau menyiapkan surat baru untuknya? Masih ada waktu untuk menulis pelan-pelan.`;
-  const r2 = await fetch("https://api.resend.com/emails", {
+  const r2 = await kirimResend(env, {
     method: "POST",
     headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
     body: JSON.stringify({
@@ -1063,7 +1096,8 @@ async function bacaPengaturan(db) {
   return {
     harga: Number(m.harga) > 0 ? Number(m.harga) : HARGA,
     hargaPerpanjang: Number(m.harga_perpanjang) > 0 ? Number(m.harga_perpanjang) : HARGA_PERPANJANG,
-    temaMati: mati
+    temaMati: mati,
+    tutup: m.tutup || ""                 // kosong = buka; berisi pesan = pesanan baru ditutup sementara
   };
 }
 async function simpanPengaturan(db, kunci, nilai) {
@@ -1132,7 +1166,7 @@ async function lunasiPerpanjangan(env, db, orderId) {
   if (env.RESEND_API_KEY && b.email) {
     const isi = JSON.parse(b.isi || "{}");
     const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
-    await fetch("https://api.resend.com/emails", {
+    await kirimResend(env, {
       method: "POST",
       headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
       body: JSON.stringify({
@@ -1151,6 +1185,77 @@ async function lunasiPerpanjangan(env, db, orderId) {
       })
     }).catch(() => {});
   }
+}
+
+/* ══════════════════ pekerjaan rutin tiap 15 menit ══════════════════
+   Jaring pengaman kalau ada yang luput:
+   1. pembayaran yang notifikasinya tidak sampai → tanya DOKU, lunasi;
+   2. perpanjangan yang notifikasinya tidak sampai → sama;
+   3. email tautan yang gagal terkirim → coba kirim ulang (maks. 3 hari). */
+export async function rawatSering(env) {
+  if (!env.DB) return { ok: false };
+  const db = env.DB;
+  await siapkan(db);
+  const asal = env.ASAL_SITUS || "https://foreverse.id";
+  const skr = Date.now();
+  const hasil = { lunas: 0, perpanjang: 0, email: 0 };
+  if (env.DOKU_CLIENT_ID && env.DOKU_SECRET_KEY) {
+    const tunggu = await db.prepare(`SELECT kode,order_id,jumlah FROM pesanan
+      WHERE status='draf' AND order_id IS NOT NULL AND dibuat > ? ORDER BY dibuat DESC LIMIT 20`).bind(skr - 24 * 3600000).all();
+    for (const b of (tunggu.results || [])) {
+      const r = await panggilDoku(env, { metode: "GET", sasaran: DOKU.jalurStatus + encodeURIComponent(b.order_id) });
+      const t = (r.isi && r.isi.transaction) || {}, o = (r.isi && r.isi.order) || {};
+      if (t.status === "SUCCESS" && Number(o.amount) === (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI) {
+        await lunasi(env, db, b.kode, asal); hasil.lunas++;
+      }
+    }
+    const pj = await db.prepare(`SELECT order_id,jumlah FROM perpanjangan WHERE status='menunggu' AND dibuat > ? LIMIT 20`).bind(skr - 24 * 3600000).all();
+    for (const row of (pj.results || [])) {
+      const r = await panggilDoku(env, { metode: "GET", sasaran: DOKU.jalurStatus + encodeURIComponent(row.order_id) });
+      const t = (r.isi && r.isi.transaction) || {}, o = (r.isi && r.isi.order) || {};
+      if (t.status === "SUCCESS" && Number(o.amount) === row.jumlah + BIAYA_TRANSAKSI) { await lunasiPerpanjangan(env, db, row.order_id); hasil.perpanjang++; }
+    }
+  }
+  const gagal = await db.prepare(`SELECT kode FROM pesanan WHERE status='lunas' AND email_terkirim=0 AND COALESCE(email,'')!=''
+    AND dibayar > ? LIMIT 10`).bind(skr - 3 * 86400000).all();
+  for (const b of (gagal.results || [])) { const r = await kirimEmailKode(env, db, b.kode, asal); if (r.ok) hasil.email++; }
+  return hasil;
+}
+
+/* ══════════════════ pulihkan dari cadangan ══════════════════
+   Mode "cek": hanya menghitung. Mode "isi": menambahkan baris yang HILANG
+   saja (yang sudah ada tidak disentuh). Mode "timpa": menimpa baris yang
+   sama kuncinya dengan isi cadangan. Sebelum menulis apa pun, keadaan
+   sekarang dicadangkan dulu ke R2 (cadangan/…-sebelum-pulih.json). */
+const KUNCI_TABEL = {
+  pesanan: ["kode"], pengingat: ["id"], promo: ["kode"], pengaturan: ["kunci"],
+  perpanjangan: ["order_id"], kunjungan: ["hari", "tema", "jenis"]
+};
+async function pulihkan(env, db, data, mode) {
+  if (!data || typeof data !== "object" || !Array.isArray(data.pesanan)) throw new Error("Berkas ini bukan cadangan Foreverse.");
+  const laporan = {};
+  if (mode !== "cek" && env.FOTO) {
+    const nama = "cadangan/" + new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 19).replace(/:/g, "") + "-sebelum-pulih.json";
+    await env.FOTO.put(nama, JSON.stringify(await buatCadangan(db)), { httpMetadata: { contentType: "application/json" } });
+    laporan._cadanganSebelum = nama;
+  }
+  for (const [tabel, kunci] of Object.entries(KUNCI_TABEL)) {
+    const baris = Array.isArray(data[tabel]) ? data[tabel] : [];
+    const kolomAda = ((await db.prepare(`PRAGMA table_info(${tabel})`).all()).results || []).map(c => c.name);
+    let baru = 0, sama = 0, ditulis = 0;
+    for (const r of baris) {
+      const where = kunci.map(k => k + "=?").join(" AND ");
+      const ada = await db.prepare(`SELECT 1 FROM ${tabel} WHERE ${where}`).bind(...kunci.map(k => r[k])).first();
+      if (ada) sama++; else baru++;
+      if (mode === "cek" || (ada && mode !== "timpa")) continue;
+      const kol = Object.keys(r).filter(k => kolomAda.includes(k));
+      await db.prepare(`INSERT OR REPLACE INTO ${tabel}(${kol.join(",")}) VALUES(${kol.map(() => "?").join(",")})`)
+        .bind(...kol.map(k => r[k] === undefined ? null : r[k])).run();
+      ditulis++;
+    }
+    laporan[tabel] = { di_cadangan: baris.length, belum_ada: baru, sudah_ada: sama, ditulis };
+  }
+  return laporan;
 }
 
 /* ══════════════════ router ══════════════════ */
@@ -1176,11 +1281,21 @@ export async function onRequest(ctx) {
     if (await lewatBatas(db, request, namaLaju))
       return salah("Terlalu banyak permintaan dalam waktu singkat. Coba lagi beberapa menit lagi, ya.", 429);
 
+    /* ── cek kesehatan untuk pemantau (UptimeRobot dll.) ───────── */
+    if (jalur === "sehat") {
+      const cek = { d1: false, r2: false, doku: !!(env.DOKU_CLIENT_ID && env.DOKU_SECRET_KEY), email: !!env.RESEND_API_KEY };
+      try { await db.prepare("SELECT 1").first(); cek.d1 = true; } catch (_) {}
+      try { if (env.FOTO) { await env.FOTO.list({ limit: 1 }); cek.r2 = true; } } catch (_) {}
+      const sehat = cek.d1 && cek.r2 && cek.doku && cek.email;
+      return new Response(JSON.stringify({ ok: sehat, cek, waktu: new Date().toISOString() }),
+        { status: sehat ? 200 : 503, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
+    }
+
     /* ── info publik: harga & tema yang sedang dibuka ───────────── */
     if (jalur === "info") {
       const a = await bacaPengaturan(db);
       return new Response(JSON.stringify({ ok: true, harga: a.harga, biaya: BIAYA_TRANSAKSI, tema_mati: a.temaMati,
-        harga_perpanjang: a.hargaPerpanjang, bulan_perpanjang: BULAN_PERPANJANG }),
+        harga_perpanjang: a.hargaPerpanjang, bulan_perpanjang: BULAN_PERPANJANG, tutup: a.tutup, staging: !!env.STAGING }),
         { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60" } });
     }
 
@@ -1320,6 +1435,7 @@ export async function onRequest(ctx) {
       const kode = acak(PANJANG_KODE), token = acak(22), skr = Date.now();
       const tema = temaSah(teks(badan.tema, 40));
       const atur = await bacaPengaturan(db);
+      if (atur.tutup) return salah(atur.tutup, 503);
       if (atur.temaMati.includes(tema)) return salah("Tema ini sedang tidak tersedia. Coba tema lain, ya.", 409);
       const pr = await hitungPromo(db, badan.promo, atur.harga);
       if (!pr.ok) return salah(pr.pesan, 400);
@@ -1346,6 +1462,8 @@ export async function onRequest(ctx) {
       const b = await db.prepare(`SELECT * FROM pesanan WHERE kode=?`).bind(kode).first();
       if (!b) return salah("Pesanan tidak ditemukan.", 404);
       if (b.status === "lunas") return jwb({ ok: true, sudah: true, kode });
+      const aturB = await bacaPengaturan(db);
+      if (aturB.tutup) return salah(aturB.tutup, 503);
       if (b.promo) {
         const p = await db.prepare(`SELECT kuota,terpakai,aktif,sampai FROM promo WHERE kode=?`).bind(b.promo).first();
         if (!p || !p.aktif || (p.sampai && Date.now() > p.sampai) || (p.kuota && p.terpakai >= p.kuota))
@@ -1689,6 +1807,42 @@ export async function onRequest(ctx) {
         return jwb({ ok: true });
       }
 
+      /* ── buka/tutup pesanan sementara ── */
+      if (aksi === "tutup") {
+        await simpanPengaturan(db, "tutup", badan.nilai ? teks(badan.pesan, 200) || "Pemesanan sedang ditutup sebentar. Coba lagi nanti, ya." : "");
+        return jwb({ ok: true, tutup: (await bacaPengaturan(db)).tutup });
+      }
+
+      /* ── pulihkan dari cadangan ── */
+      if (aksi === "pulihkan") {
+        const mode = ["cek", "isi", "timpa"].includes(badan.mode) ? badan.mode : "cek";
+        return jwb({ ok: true, mode, laporan: await pulihkan(env, db, badan.data, mode) });
+      }
+      if (aksi === "cadangan_ambil") {
+        const nama = teks(badan.nama, 80);
+        if (!/^cadangan\/[\w.-]+\.json$/.test(nama) || !env.FOTO) return salah("Nama cadangan tidak sah.");
+        const o = await env.FOTO.get(nama);
+        if (!o) return salah("Cadangan tidak ditemukan.", 404);
+        return jwb({ ok: true, data: JSON.parse(await o.text()) });
+      }
+
+      /* ── refund: tandai, matikan surat, keluarkan dari pendapatan ── */
+      if (aksi === "refund") {
+        const kode = teks(badan.kode, 16);
+        await db.prepare(`UPDATE pesanan SET status='refund', aktif=0 WHERE kode=? AND status='lunas'`).bind(kode).run();
+        await catatKejadian(env, db, "refund dicatat", "Pesanan ditandai refund dari /developer. Kembalikan dananya lewat DOKU/transfer.", kode);
+        return jwb({ ok: true });
+      }
+
+      /* ── permintaan hapus data (UU PDP): isi & kontak dihapus, catatan transaksi tetap ── */
+      if (aksi === "anonimkan") {
+        const kode = teks(badan.kode, 16);
+        await hapusFoto(env, db, kode);
+        await db.prepare(`UPDATE pesanan SET isi='{}', email='', whatsapp='', token=NULL, aktif=0 WHERE kode=?`).bind(kode).run();
+        await db.prepare(`DELETE FROM pengingat WHERE kode=?`).bind(kode).run();
+        return jwb({ ok: true });
+      }
+
       /* ── cadangan ── */
       if (aksi === "cadangan") return jwb({ ok: true, data: await buatCadangan(db) });
       if (aksi === "cadangan_daftar") {
@@ -1742,6 +1896,11 @@ export async function onRequest(ctx) {
           jam_draf: JAM_DRAF,
           hari_edit: HARI_EDIT,
           bulan_simpan: BULAN_SIMPAN,
+          email_hari_ini: ((await db.prepare(`SELECT n FROM pakai WHERE hari=? AND jenis='email'`)
+            .bind(new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10)).first()) || { n: 0 }).n,
+          batas_email: Number(env.BATAS_EMAIL_HARIAN) || BATAS_EMAIL_BAWAAN,
+          tutup: (await bacaPengaturan(db)).tutup,
+          staging: !!env.STAGING,
           kejadian: ((await db.prepare(
             `SELECT waktu,jenis,pesan,kode FROM kejadian ORDER BY waktu DESC LIMIT 20`).all()).results || [])
         });

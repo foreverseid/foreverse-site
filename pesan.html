@@ -1453,6 +1453,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     if(!i || !i.ok) return;
     HARGA_KINI = i.harga; BIAYA_KINI = i.biaya; gambarHarga();
     if(!MODE_EDIT && (i.tema_mati || []).indexOf(TEMA) > -1){ $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
+    if(!MODE_EDIT && i.tutup){ $("temaTutup").textContent = i.tutup; $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
   }).catch(function(){});
   var promoAwal = new URLSearchParams(location.search).get("promo");
   if(promoAwal) $("promo").value = promoAwal;

@@ -79,10 +79,11 @@ export function buatR2() {
     async put(k, bytes, opt) { isi.set(k, { bytes, opt }); },
     async get(k) {
       const o = isi.get(k);
-      return o ? { body: o.bytes, httpMetadata: o.opt?.httpMetadata || {} } : null;
+      return o ? { body: o.bytes, httpMetadata: o.opt?.httpMetadata || {},
+        text: async () => typeof o.bytes === "string" ? o.bytes : new TextDecoder().decode(o.bytes) } : null;
     },
     async delete(k) { isi.delete(k); },
-    async list({ prefix }) {
+    async list({ prefix = "" } = {}) {
       return { objects: [...isi.keys()].filter(k => k.startsWith(prefix)).map(key => ({ key })) };
     },
     _isi: isi

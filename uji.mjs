@@ -1911,6 +1911,80 @@ await uji("aturan 6→2 bulan: pesanan lama yang belum diperpanjang dipendekkan 
   harus(hb > 165, "yang sudah diperpanjang tidak disentuh: " + hb);
 });
 
+/* ═══════════ ketahanan: pulihkan, rawat 15 menit, tutup, sehat, staging ═══════════ */
+judul("Ketahanan & staging");
+const { rawatSering } = await import("./functions/api/[[jalur]].js");
+
+await uji("pulihkan: cek hanya menghitung, isi menambah yang hilang, cadangan pengaman dibuat dulu", async () => {
+  const L = await buatLingkungan();
+  const a = await lunaskan(L), b = await lunaskan(L);
+  const cad = (await admin(L, { aksi: "cadangan" })).data;
+  await L.env.DB.prepare("DELETE FROM pesanan WHERE kode=?").bind(a.kode).run();
+  await L.env.DB.prepare("UPDATE pesanan SET email='baru@contoh.id' WHERE kode=?").bind(b.kode).run();
+  const c = await admin(L, { aksi: "pulihkan", mode: "cek", data: cad });
+  sama(c.laporan.pesanan.belum_ada, 1, "terhitung hilang"); sama(c.laporan.pesanan.ditulis, 0, "cek tidak menulis");
+  harus(!(await L.env.DB.prepare("SELECT 1 FROM pesanan WHERE kode=?").bind(a.kode).first()), "masih hilang setelah cek");
+  const i = await admin(L, { aksi: "pulihkan", mode: "isi", data: cad });
+  harus(i.laporan._cadanganSebelum && i.laporan._cadanganSebelum.includes("sebelum-pulih"), "cadangan pengaman");
+  harus(await L.env.DB.prepare("SELECT 1 FROM pesanan WHERE kode=?").bind(a.kode).first(), "kembali");
+  sama((await L.env.DB.prepare("SELECT email FROM pesanan WHERE kode=?").bind(b.kode).first()).email, "baru@contoh.id", "isi tidak menimpa");
+  await admin(L, { aksi: "pulihkan", mode: "timpa", data: cad });
+  harus((await L.env.DB.prepare("SELECT email FROM pesanan WHERE kode=?").bind(b.kode).first()).email !== "baru@contoh.id", "timpa menimpa");
+  harus(!(await admin(L, { aksi: "pulihkan", mode: "cek", data: { asal: 1 } })).ok, "berkas asing ditolak");
+});
+
+await uji("rawat 15 menit: pembayaran yang notifikasinya hilang tetap dilunasi; email gagal dikirim ulang", async () => {
+  const L = await buatLingkungan();
+  const p = await buatPesanan(L);
+  L.catatan.status[p.faktur] = "SUCCESS";
+  sama((await rawatSering(L.env)).lunas, 1, "dilunasi tanpa notifikasi");
+  sama((await L.env.DB.prepare("SELECT status FROM pesanan WHERE kode=?").bind(p.kode).first()).status, "lunas", "lunas");
+  await L.env.DB.prepare("UPDATE pesanan SET email_terkirim=0 WHERE kode=?").bind(p.kode).run();
+  sama((await rawatSering(L.env)).email, 1, "email dikirim ulang");
+  sama((await rawatSering(L.env)).email, 0, "tidak dobel");
+});
+
+await uji("tutup sementara: pesanan baru ditolak dengan pesan, info publik memuatnya, buka lagi normal", async () => {
+  const L = await buatLingkungan();
+  await admin(L, { aksi: "tutup", nilai: true, pesan: "Lagi perawatan sebentar." });
+  sama((await (await L.panggil("/api/info")).json()).tutup, "Lagi perawatan sebentar.", "info");
+  const r = await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(isiDraf()) });
+  sama(r.status, 503, "draf ditolak");
+  await admin(L, { aksi: "tutup", nilai: false });
+  harus((await buatDrafDengan(L)).ok, "buka lagi");
+});
+
+await uji("refund & anonimkan: surat mati, isi/kontak hilang, catatan transaksi tetap", async () => {
+  const L = await buatLingkungan();
+  const a = await lunaskan(L), b = await lunaskan(L);
+  await admin(L, { aksi: "refund", kode: a.kode });
+  const ra = await L.env.DB.prepare("SELECT status,aktif FROM pesanan WHERE kode=?").bind(a.kode).first();
+  harus(ra.status === "refund" && ra.aktif === 0, "refund: " + JSON.stringify(ra));
+  await admin(L, { aksi: "anonimkan", kode: b.kode });
+  const rb = await L.env.DB.prepare("SELECT isi,email,status,jumlah FROM pesanan WHERE kode=?").bind(b.kode).first();
+  harus(rb.isi === "{}" && rb.email === "" && rb.status === "lunas", "anonim: " + JSON.stringify(rb));
+});
+
+await uji("/api/sehat 200 saat semua tersambung, 503 kalau kunci hilang; email dihitung per hari", async () => {
+  const L = await buatLingkungan();
+  sama((await L.panggil("/api/sehat")).status, 200, "sehat");
+  await lunaskan(L);
+  harus((await admin(L, { aksi: "periksa" })).email_hari_ini >= 1, "terhitung");
+  const L2 = await buatLingkungan({ RESEND_API_KEY: "" });
+  sama((await L2.panggil("/api/sehat")).status, 503, "tidak sehat");
+});
+
+await uji("staging: email ke pemilik bertanda [STAGING], DOKU dipaksa sandbox", async () => {
+  const L = await buatLingkungan({ STAGING: "1", EMAIL_PEMILIK: "pemilik@contoh.id", DOKU_MODE: "production" });
+  await lunaskan(L);
+  harus(L.catatan.email.length > 0, "ada email");
+  harus(L.catatan.email.every(e => e.to[0] === "pemilik@contoh.id" && e.subject.startsWith("[STAGING]")), "dialihkan");
+  sama(L.catatan.sandbox, true, "sandbox");
+  const h = await L.panggil("/");
+  harus(/noindex/.test(h.headers.get("x-robots-tag") || ""), "noindex");
+  harus((await h.text()).includes("STAGING"), "pita staging");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
