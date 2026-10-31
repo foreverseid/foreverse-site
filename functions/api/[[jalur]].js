@@ -23,7 +23,7 @@ const HARGA = 15000;                 // rupiah, bersih yang masuk ke Foreverse
 const BIAYA_TRANSAKSI = 560;
 const HARI_EDIT = 3;                 // masa berlaku tautan edit
 const JAM_DRAF = 24;
-const BULAN_SIMPAN = 6;               // surat & foto disimpan sekian bulan sejak dibayar
+const BULAN_SIMPAN = 2;               // surat & foto disimpan sekian bulan sejak dibayar
 const HARI_PENGINGAT = 14;            // email pengingat sekian hari sebelum masa simpan habis
 const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6 huruf tetap berlaku
 /* Batas laju per alamat IP: [maks permintaan, jendela detik].
@@ -801,7 +801,7 @@ function badanEmail(o) {
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah jadi.</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">
       Surat untuk <strong>${esc(o.penerima)}</strong> sudah aktif. Tinggal kirim tautan di bawah ini ke dia.
-      Suratnya bisa dibuka selama ${BULAN_SIMPAN} bulan; kami ingatkan lewat email ${HARI_PENGINGAT} hari sebelum masanya habis.
+      Suratnya bisa dibuka selama ${BULAN_SIMPAN} bulan; kami ingatkan lewat email ${HARI_PENGINGAT} hari sebelum masanya habis, dan kamu bisa <a href="${esc(o.asal + "/perpanjang/" + o.token)}" style="color:#3B3168">memperpanjangnya kapan saja</a>.
     </p>
     <a href="${esc(tautan)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
     <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(tautan)}</p>
@@ -904,7 +904,7 @@ function tglPanjang(ms) {
    2. surat yang masa simpannya habis: foto & lagu dihapus, isi dan kontak dikosongkan,
       tautan dinonaktifkan. Yang tersisa hanya catatan transaksi (kode, tema, jumlah, tanggal).
    Pesanan lunas sebelum aturan ini dibuat (simpan_sampai masih kosong) ikut
-   diberi masa simpan: 6 bulan sejak tanggal bayarnya, paling cepat 30 hari
+   diberi masa simpan: BULAN_SIMPAN bulan sejak tanggal bayarnya, paling cepat 30 hari
    dari sekarang supaya pembelinya tetap sempat menerima pengingat. */
 export async function rawatHarian(env) {
   if (!env.DB) return { ok: false };
@@ -914,6 +914,15 @@ export async function rawatHarian(env) {
   const skr = Date.now();
   let diingatkan = 0, dihapus = 0;
 
+  /* aturan masa simpan diperpendek (6 → 2 bulan, 31-10-2026): pesanan yang
+     belum pernah diperpanjang ikut aturan baru, tetap minimal 30 hari dari sekarang */
+  const kepanjangan = await db.prepare(`SELECT kode,dibayar,dibuat,simpan_sampai FROM pesanan
+    WHERE status='lunas' AND simpan_sampai IS NOT NULL AND COALESCE(n_panjang,0)=0`).all();
+  for (const b of (kepanjangan.results || [])) {
+    const seharusnya = Math.max(tambahBulan(b.dibayar || b.dibuat || skr, BULAN_SIMPAN), skr + 30 * 86400000);
+    if (b.simpan_sampai > seharusnya + 86400000)
+      await db.prepare(`UPDATE pesanan SET simpan_sampai=? WHERE kode=?`).bind(seharusnya, b.kode).run();
+  }
   const lama = await db.prepare(`SELECT kode,dibayar,dibuat FROM pesanan
     WHERE status='lunas' AND simpan_sampai IS NULL`).all();
   for (const b of (lama.results || [])) {
@@ -1043,8 +1052,8 @@ async function kirimPengingatJatuhTempo(env, db) {
 }
 
 /* ══════════════════ pengaturan dari /developer ══════════════════ */
-const HARGA_PERPANJANG = 10000;      // bawaan; bisa diubah di /developer
-const BULAN_PERPANJANG = 6;
+const HARGA_PERPANJANG = 5000;      // bawaan; bisa diubah di /developer
+const BULAN_PERPANJANG = 2;
 async function bacaPengaturan(db) {
   const r = await db.prepare(`SELECT kunci,nilai FROM pengaturan`).all();
   const m = {};
@@ -1522,7 +1531,7 @@ export async function onRequest(ctx) {
       return jwb({
         ok: true, kode: b.kode, tema: b.tema, momen: b.momen,
         email: b.email, whatsapp: b.whatsapp,
-        isi: JSON.parse(b.isi || "{}"), batas_edit: b.batas_edit
+        isi: JSON.parse(b.isi || "{}"), batas_edit: b.batas_edit, simpan_sampai: b.simpan_sampai
       });
     }
 

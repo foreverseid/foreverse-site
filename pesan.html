@@ -1583,6 +1583,15 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         $("surat2").value = (i.surat||[])[1] || "";
         $("surat3").value = (i.surat||[])[2] || "";
         isiKunciDari(i.kunci);
+        /* masa simpan + tautan perpanjangan */
+        if(h.j.simpan_sampai && !$("kotakSimpan")){
+          var ks = document.createElement("div");
+          ks.id = "kotakSimpan"; ks.className = "tema-tutup";
+          ks.style.cssText = "background:var(--violet-tint,#EEEBF7);color:var(--violet-deep,#2C2450);margin-top:14px";
+          ks.innerHTML = "Suratnya bisa dibuka sampai <b>" + new Date(h.j.simpan_sampai).toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Jakarta"}) +
+            "</b>. <a href=\"/perpanjang/" + encodeURIComponent(TOKEN) + "\" style=\"color:inherit;font-weight:600\">Perpanjang 2 bulan →</a>";
+          $("subjudul").insertAdjacentElement("afterend", ks);
+        }
         if(MOMEN_GRUP === "anniversary"){
           $("jenisHariJadi").value = i.jenisHariJadi || "pacaran";
           $("mulai").value = i.tanggalMulai || "";
@@ -1686,6 +1695,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tirai(false);
         pesanGalat(e.message || "Tautan edit tidak bisa dibuka.");
         $("tblKirim").disabled = true;
+        /* masa edit habis tidak berarti masa simpan habis — perpanjangan tetap bisa */
+        if(/Masa edit/.test(e.message || "")){
+          var g = $("kabarGalat");
+          g.innerHTML += ' Mau memperpanjang masa simpannya? <a href="/perpanjang/' + encodeURIComponent(TOKEN) + '" style="color:inherit;font-weight:600">Perpanjang 2 bulan →</a>';
+        }
       });
   }
 })();

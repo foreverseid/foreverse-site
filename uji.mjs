@@ -1593,16 +1593,16 @@ await uji("kegagalan tercatat di tab Sistem dan pemilik dikabari maks. sekali pe
   sama(L.catatan.email.filter(e => /kegagalan/.test(e.subject)).length, 1, "email pemilik");
 });
 
-/* ═══════════ masa simpan 6 bulan ═══════════ */
-judul("Masa simpan 6 bulan");
+/* ═══════════ masa simpan 2 bulan ═══════════ */
+judul("Masa simpan 2 bulan");
 const { rawatHarian } = await import("./functions/api/[[jalur]].js");
 
-await uji("lunas → simpan_sampai = 6 bulan setelah bayar", async () => {
+await uji("lunas → simpan_sampai = 2 bulan setelah bayar", async () => {
   const L = await buatLingkungan();
   const p = await lunaskan(L);
   const b = await L.env.DB.prepare("SELECT dibayar,simpan_sampai FROM pesanan WHERE kode=?").bind(p.kode).first();
   const hari = (b.simpan_sampai - b.dibayar) / 86400000;
-  harus(hari >= 181 && hari <= 184, "selisih hari: " + hari);
+  harus(hari >= 59 && hari <= 62, "selisih hari (2 bulan): " + hari);
 });
 
 await uji("pengingat dikirim sekali, 14 hari sebelum habis", async () => {
@@ -1854,7 +1854,7 @@ await uji("promo persen & rupiah: potongan benar, minimal Rp1.000, kuota & tangg
   harus(!(await buatDrafDengan(L, { promo: "ASAL" })).ok, "draf dengan promo asing ditolak");
 });
 
-await uji("perpanjangan: info, bayar ke DOKU, notifikasi FP- menambah 6 bulan & kirim email", async () => {
+await uji("perpanjangan: info, bayar ke DOKU, notifikasi FP- menambah 2 bulan & kirim email", async () => {
   const L = await buatLingkungan();
   const p = await lunaskan(L);
   await admin(L, { aksi: "atur", harga_perpanjang: 12000 });
@@ -1870,7 +1870,7 @@ await uji("perpanjangan: info, bayar ke DOKU, notifikasi FP- menambah 6 bulan & 
   await L.notifikasi(notifSukses(r.order_id, 12560));
   const b = await L.env.DB.prepare("SELECT simpan_sampai,n_panjang FROM pesanan WHERE kode=?").bind(p.kode).first();
   const hari = (b.simpan_sampai - awal) / 86400000;
-  harus(hari > 180 && hari < 185, "bertambah ±6 bulan: " + hari);
+  harus(hari > 58 && hari < 63, "bertambah ±2 bulan: " + hari);
   sama(b.n_panjang, 1, "dihitung sekali walau notifikasi dobel");
   sama(L.catatan.email.length - nEmail, 1, "satu email konfirmasi");
   harus((await (await L.panggil("/perpanjang/" + p.token)).text()).includes("perpanjang"), "halaman perpanjang tersaji");
@@ -1896,6 +1896,19 @@ await uji("cadangan: harian ke R2 (draf tidak ikut), daftar & unduh dari /develo
   sama(d.daftar.length, 1, "terdaftar");
   const u = await admin(L, { aksi: "cadangan" });
   harus(u.data.pesanan.some(x => x.kode === p.kode) && Array.isArray(u.data.promo), "isi unduhan");
+});
+
+await uji("aturan 6→2 bulan: pesanan lama yang belum diperpanjang dipendekkan (min. 30 hari), yang diperpanjang tidak", async () => {
+  const L = await buatLingkungan();
+  const a = await lunaskan(L), b = await lunaskan(L);
+  const enamBulan = Date.now() + 170 * 86400000;
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=?, dibayar=? WHERE kode IN (?,?)").bind(enamBulan, Date.now() - 10 * 86400000, a.kode, b.kode).run();
+  await L.env.DB.prepare("UPDATE pesanan SET n_panjang=1 WHERE kode=?").bind(b.kode).run();
+  await rawatHarian(L.env);
+  const ha = ((await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(a.kode).first()).simpan_sampai - Date.now()) / 86400000;
+  const hb = ((await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(b.kode).first()).simpan_sampai - Date.now()) / 86400000;
+  harus(ha > 45 && ha < 53, "dipendekkan ke 2 bulan sejak bayar: " + ha);
+  harus(hb > 165, "yang sudah diperpanjang tidak disentuh: " + hb);
 });
 
 /* ═══════════ hasil ═══════════ */

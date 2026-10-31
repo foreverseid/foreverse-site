@@ -120,6 +120,7 @@ nav a.kini .tanda{background:rgba(255,255,255,.22);color:#fff}
 /* ══ bagian & kartu ══ */
 section{scroll-margin-top:16px;margin-bottom:26px}
 /* ══ periode ══ */
+.periode[hidden]{display:none}
 .periode{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-6px 0 18px}
 .periode button{font:inherit;font-size:.78rem;padding:6px 11px;border-radius:999px;border:1px solid var(--cream-lift);
   background:var(--paper);color:var(--ink-soft);cursor:pointer;min-height:32px}
@@ -452,6 +453,23 @@ a.tautan:hover{text-decoration:underline}
       </div>
 
       <div class="judulbagian" style="margin-top:24px">
+        <h2>Pilihan pembeli</h2>
+        <span class="labelPeriode">—</span>
+      </div>
+      <div class="petak p2">
+        <div class="kartu">
+          <h3>Lagu yang dipakai</h3>
+          <p class="ket">Dari surat lunas dalam periode ini.</p>
+          <div class="rinci" id="rLagu"></div>
+        </div>
+        <div class="kartu">
+          <h3>Isi surat</h3>
+          <p class="ket">Seberapa penuh pembeli mengisi.</p>
+          <div class="rinci" id="rIsi"></div>
+        </div>
+      </div>
+
+      <div class="judulbagian" style="margin-top:24px">
         <h2>Perlu tindakan</h2>
         <span>dari semua pesanan, tidak ikut periode</span>
       </div>
@@ -495,10 +513,10 @@ a.tautan:hover{text-decoration:underline}
     <section id="produk" class="tab" hidden>
       <div class="kartu" style="margin-bottom:12px">
         <h3>Harga &amp; tema yang dibuka</h3>
-        <p class="ket">Berlaku langsung tanpa deploy ulang. Pesanan yang sudah dibuat tetap memakai harga saat dipesan.</p>
+        <p class="ket">Berlaku untuk pesanan baru dalam ±1 menit, tanpa deploy ulang. Pesanan yang sudah dibuat tetap memakai harga saat dipesan.</p>
         <div class="form-atur">
           <div><label for="aHarga">Harga satu surat (Rp)</label><input id="aHarga" type="number" min="1000" step="500"></div>
-          <div><label for="aHargaPanjang">Harga perpanjang 6 bulan (Rp)</label><input id="aHargaPanjang" type="number" min="1000" step="500"></div>
+          <div><label for="aHargaPanjang">Harga perpanjang 2 bulan (Rp)</label><input id="aHargaPanjang" type="number" min="1000" step="500"></div>
           <div><button class="tbl utamawarna" id="aSimpan" type="button" style="width:100%">Simpan</button></div>
         </div>
         <p class="ket" style="margin:14px 0 0">Centang tema yang <b>dibuka</b> untuk pesanan baru:</p>
@@ -522,18 +540,6 @@ a.tautan:hover{text-decoration:underline}
       </div>
 
 
-      <div class="petak p2">
-        <div class="kartu">
-          <h3>Lagu yang dipakai</h3>
-          <p class="ket">Dari surat yang sudah lunas.</p>
-          <div class="rinci" id="rLagu"></div>
-        </div>
-        <div class="kartu">
-          <h3>Isi surat</h3>
-          <p class="ket">Seberapa penuh pembeli mengisi.</p>
-          <div class="rinci" id="rIsi"></div>
-        </div>
-      </div>
     </section>
 
     <!-- ── tab 4 · sistem ── -->
@@ -1000,7 +1006,7 @@ a.tautan:hover{text-decoration:underline}
       sbNetral("Harga satu surat", rp(p.harga)) +
       sbNetral("Masa berlaku tautan edit", (p.hari_edit || 3) + " hari") +
       sbNetral("Draf dihapus setelah", (p.jam_draf || 24) + " jam") +
-      sbNetral("Surat disimpan", (p.bulan_simpan || 6) + " bulan sejak dibayar") +
+      sbNetral("Surat disimpan", (p.bulan_simpan || 2) + " bulan sejak dibayar, bisa diperpanjang") +
       sbNetral("Mode pembayaran", p.mode || "—");
 
     var k = p.kejadian || [];
@@ -1205,7 +1211,7 @@ a.tautan:hover{text-decoration:underline}
               '<button class="tbl kecil" data-a="aktif" data-k="' + esc(b.kode) + '" data-n="' + (b.aktif ? 0 : 1) + '">' +
                 (b.aktif ? "Nonaktifkan" : "Aktifkan") + '</button>' +
               '<button class="tbl kecil" data-a="perpanjang" data-k="' + esc(b.kode) + '">Perpanjang edit</button>' +
-              '<button class="tbl kecil" data-a="tambah_simpan" data-k="' + esc(b.kode) + '">+6 bln simpan</button>'
+              '<button class="tbl kecil" data-a="tambah_simpan" data-k="' + esc(b.kode) + '">+2 bln simpan</button>'
             : '') +
           '<button class="tbl kecil bahaya" data-a="hapus" data-k="' + esc(b.kode) + '">Hapus</button>' +
         '</div></td></tr>';
@@ -1219,7 +1225,7 @@ a.tautan:hover{text-decoration:underline}
     var aksi = t.dataset.a, kode = t.dataset.k;
 
     if(aksi === "hapus" && !confirm("Hapus pesanan " + kode + " beserta foto & lagunya? Tidak bisa dibatalkan.")) return;
-    if(aksi === "tambah_simpan" && !confirm("Tambah masa simpan surat " + kode + " 6 bulan tanpa bayar?")) return;
+    if(aksi === "tambah_simpan" && !confirm("Tambah masa simpan surat " + kode + " 2 bulan tanpa bayar?")) return;
     if(aksi === "aktif" && t.dataset.n === "0" && !confirm("Nonaktifkan surat " + kode + "? Tautannya jadi tidak bisa dibuka.")) return;
 
     var teksLama = t.textContent;
@@ -1240,8 +1246,8 @@ a.tautan:hover{text-decoration:underline}
   var TAB = {
     ringkasan: { judul:"Ringkasan", ket:"Angka pokok dan hal yang menunggu dikerjakan." },
     pesanan:   { judul:"Pesanan",   ket:"Arus pesanan masuk, perjalanan pembeli, dan daftar lengkapnya." },
-    produk:    { judul:"Produk",    ket:"Apa yang sebenarnya dipilih pembeli." },
-    sistem:    { judul:"Sistem",    ket:"Sambungan dan aturan yang sedang berlaku." }
+    produk:    { judul:"Produk",    ket:"Atur harga, tema yang dibuka, dan kode promo. Tidak bergantung pada periode." },
+    sistem:    { judul:"Sistem",    ket:"Sambungan, aturan yang berlaku, kegagalan, dan cadangan data." }
   };
   function bukaTab(nama, keAtas){
     if(!TAB[nama]) nama = "ringkasan";
@@ -1249,6 +1255,8 @@ a.tautan:hover{text-decoration:underline}
     document.querySelectorAll("#nav a").forEach(function(a){
       a.classList.toggle("kini", a.getAttribute("href") === "#" + nama);
     });
+    /* filter periode hanya untuk tab yang datanya memang mengikuti periode */
+    $("periode").hidden = !(nama === "ringkasan" || nama === "pesanan");
     $("judulTab").textContent = TAB[nama].judul;
     $("subKepala").textContent = TAB[nama].ket;
     document.title = TAB[nama].judul + " · Developer Control · Foreverse";
