@@ -980,8 +980,11 @@ async function lunasi(env, db, kode, asal) {
   const b = await db.prepare(`SELECT * FROM pesanan WHERE kode=?`).bind(kode).first();
   if (!b || b.status === "lunas") return;
   const skr = Date.now();
-  await db.prepare(`UPDATE pesanan SET status='lunas', dibayar=?, batas_edit=?, simpan_sampai=? WHERE kode=?`)
+  /* atomik: hanya satu dari beberapa notifikasi serentak yang lolos syarat
+     status!='lunas' — sisanya berhenti di sini (tanpa email & promo dobel) */
+  const u = await db.prepare(`UPDATE pesanan SET status='lunas', dibayar=?, batas_edit=?, simpan_sampai=? WHERE kode=? AND status!='lunas'`)
     .bind(skr, skr + HARI_EDIT * 86400000, tambahBulan(skr, BULAN_SIMPAN), kode).run();
+  if (!u || !u.meta || !u.meta.changes) return;
   if (b.promo) await db.prepare(`UPDATE promo SET terpakai=terpakai+1 WHERE kode=?`).bind(b.promo).run();
   await kirimEmailKode(env, db, kode, asal);
 }
@@ -1243,12 +1246,12 @@ async function lunasiPerpanjangan(env, db, orderId) {
   if (!row || row.status === "lunas") return;
   const b = await db.prepare(`SELECT kode,email,isi,simpan_sampai FROM pesanan WHERE kode=?`).bind(row.kode).first();
   if (!b) return;
+  /* atomik: satu pembayaran = satu kali tambah masa simpan, walau notifikasinya serentak */
+  const u = await db.prepare(`UPDATE perpanjangan SET status='lunas', dibayar=? WHERE order_id=? AND status!='lunas'`).bind(Date.now(), orderId).run();
+  if (!u || !u.meta || !u.meta.changes) return;
   const dasar = Math.max(Number(b.simpan_sampai) || 0, Date.now());
   const baru = tambahBulan(dasar, BULAN_PERPANJANG);
-  await db.batch([
-    db.prepare(`UPDATE perpanjangan SET status='lunas', dibayar=? WHERE order_id=?`).bind(Date.now(), orderId),
-    db.prepare(`UPDATE pesanan SET simpan_sampai=?, pengingat=NULL, n_panjang=COALESCE(n_panjang,0)+1, aktif=1 WHERE kode=?`).bind(baru, row.kode)
-  ]);
+  await db.prepare(`UPDATE pesanan SET simpan_sampai=?, pengingat=NULL, n_panjang=COALESCE(n_panjang,0)+1, aktif=1 WHERE kode=?`).bind(baru, row.kode).run();
   if (env.RESEND_API_KEY && b.email) {
     const isi = JSON.parse(b.isi || "{}");
     const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";

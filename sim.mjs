@@ -40,7 +40,7 @@ class Pernyataan {
   bind(...a) { return new Pernyataan(this.db, this.sql, a.map(rapi)); }
   async first() { return this.db.prepare(this.sql).get(...this.args) ?? null; }
   async all() { return { results: this.db.prepare(this.sql).all(...this.args) }; }
-  async run() { this.db.prepare(this.sql).run(...this.args); return { success: true }; }
+  async run() { const r = this.db.prepare(this.sql).run(...this.args); return { success: true, meta: { changes: Number(r.changes) } }; }
 }
 
 /* Skema diambil langsung dari siapkan() di functions/api/[[jalur]].js,

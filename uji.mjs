@@ -2127,6 +2127,28 @@ await uji("M2: menebak kode surat dihentikan setelah 20 kali meleset, penerima s
   for (let i = 0; i < 40; i++) sama((await L.panggil("/s/" + p.kode, lain)).status, 200, "buka ke-" + (i + 1));
 });
 
+await uji("L1: notifikasi DOKU serentak hanya melunasi sekali — satu email, promo terpakai sekali", async () => {
+  const L = await buatLingkungan();
+  await admin(L, { aksi: "promo_simpan", kode: "SERENTAK", jenis: "rupiah", nilai: 1000, kuota: 5 });
+  const d = await buatDrafDengan(L, { promo: "SERENTAK" });
+  const b = await bayarDraf(L, d.kode);
+  /* tiru balapan: permintaan kedua & ketiga membaca baris SEBELUM yang pertama
+     menulis "lunas" — pembacaan awal selalu melihat status draf */
+  const asli = L.env.DB.prepare.bind(L.env.DB);
+  L.env.DB.prepare = (sql) => {
+    const st = asli(sql);
+    if (sql === "SELECT * FROM pesanan WHERE kode=?") {
+      const bind = st.bind.bind(st);
+      st.bind = (...a) => { const x = bind(...a); const first = x.first.bind(x);
+        x.first = async () => { const r = await first(); return r && { ...r, status: "draf" }; }; return x; };
+    }
+    return st;
+  };
+  for (let i = 0; i < 3; i++) { await L.notifikasi(notifSukses(b.order_id, d.jumlah + 560)); await L.tunggu(); }
+  sama(L.catatan.email.filter(e => /sudah jadi/.test(e.subject)).length, 1, "email surat jadi");
+  sama((await admin(L, { aksi: "promo_daftar" })).promo.find(x => x.kode === "SERENTAK").terpakai, 1, "terpakai");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
