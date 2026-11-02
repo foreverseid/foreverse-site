@@ -2198,6 +2198,15 @@ await uji("L5: permintaan raksasa ditolak 413 sebelum diproses; draf ukuran waja
   harus((await buatDrafDengan(L, {})).ok, "draf biasa");
 });
 
+await uji("L6a: password /developer dibandingkan waktu-konstan (samaAman), salah tetap 401", async () => {
+  const src = await readFile(new URL("./functions/api/[[jalur]].js", import.meta.url), "utf8");
+  harus(/samaAman\(teks\(badan\.sandi, 200\), env\.ADMIN_PASSWORD\)/.test(src) && !/badan\.sandi, 200\) !==/.test(src), "masih memakai !==");
+  const L = await buatLingkungan();
+  const r = await L.panggil("/api/developer", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ sandi: KUNCI.ADMIN_PASSWORD + "x", aksi: "periksa" }) });
+  sama(r.status, 401, "salah");
+  harus((await admin(L, { aksi: "periksa" })).ok, "benar");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

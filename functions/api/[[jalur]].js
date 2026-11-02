@@ -1823,7 +1823,7 @@ export async function onRequest(ctx) {
     /* ── halaman pengawasan (/developer) ─────────────────────── */
     if ((jalur === "developer" || jalur === "admin") && request.method === "POST") {
       if (!env.ADMIN_PASSWORD) return salah("ADMIN_PASSWORD belum dipasang di Cloudflare.", 500);
-      if (teks(badan.sandi, 200) !== env.ADMIN_PASSWORD) {
+      if (!samaAman(teks(badan.sandi, 200), env.ADMIN_PASSWORD)) {   // waktu-konstan
         await new Promise(r => setTimeout(r, 1200));   // perlambat tebakan beruntun
         return salah("Password salah.", 401);
       }
