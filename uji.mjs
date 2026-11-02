@@ -2088,6 +2088,21 @@ await uji("halaman momen untuk Google: teks lengkap dari server, FAQ terstruktur
   harus(sm.includes("https://foreverse.id/lamaran"), "sitemap");
 });
 
+/* ═══════════ audit keamanan pra-Production (03-11-2026) ═══════════ */
+judul("Audit keamanan");
+
+await uji("C1: cadangan database di R2 tidak bisa dibuka lewat /f/, foto pesanan tetap bisa", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await admin(L, { aksi: "cadangan_sekarang" });
+  const daftar = (await admin(L, { aksi: "cadangan_daftar" })).daftar || [];
+  harus(daftar.length > 0, "cadangan tidak terbuat");
+  for (const c of daftar) sama((await L.panggil("/f/" + c.nama)).status, 404, c.nama);
+  sama((await L.panggil("/f/cadangan/../cadangan/x.json")).status, 404, "jalan memutar");
+  const isi = (await (await L.panggil("/api/surat?kode=" + p.kode)).json()).isi;
+  sama((await L.panggil(isi.foto[0].src)).status, 200, "foto pesanan");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

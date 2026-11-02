@@ -79,7 +79,8 @@ export function buatR2() {
     async put(k, bytes, opt) { isi.set(k, { bytes, opt }); },
     async get(k) {
       const o = isi.get(k);
-      return o ? { body: o.bytes, httpMetadata: o.opt?.httpMetadata || {},
+      return o ? { body: o.bytes, httpMetadata: o.opt?.httpMetadata || {}, httpEtag: '"' + k + '"',
+        writeHttpMetadata(h) { const t = o.opt?.httpMetadata?.contentType; if (t) h.set("content-type", t); },
         text: async () => typeof o.bytes === "string" ? o.bytes : new TextDecoder().decode(o.bytes) } : null;
     },
     async delete(k) { isi.delete(k); },
