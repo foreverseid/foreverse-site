@@ -2212,8 +2212,9 @@ await uji("L6b: CSP melarang skrip & koneksi ke situs luar", async () => {
   const p = await lunaskan(L);
   for (const a of ["/", "/s/" + p.kode, "/api/info"]) {
     const c = (await L.panggil(a)).headers.get("content-security-policy") || "";
-    harus(/script-src 'self' 'unsafe-inline'(;|$)/.test(c) && /connect-src 'self'(;|$)/.test(c), a + ": " + c);
-    harus(!/unsafe-eval|https?:|\*/.test(c), a + " terlalu longgar: " + c);
+    harus(/script-src 'self' 'unsafe-inline' https:\/\/static\.cloudflareinsights\.com(;|$)/.test(c), a + ": " + c);
+    harus(/connect-src 'self' https:\/\/cloudflareinsights\.com(;|$)/.test(c), a + ": " + c);
+    harus(!/unsafe-eval|\*|https?:(?!\/\/(static\.)?cloudflareinsights\.com)/.test(c), a + " terlalu longgar: " + c);
   }
 });
 

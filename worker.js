@@ -56,9 +56,10 @@ const KEAMANAN = {
   "referrer-policy": "strict-origin-when-cross-origin",
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
   /* script-src: hanya skrip dari situs sendiri (tema memakai skrip sebaris; tidak
-     ada skrip pihak ketiga) — kalaupun ada celah, skrip luar tidak bisa dimuat.
+     ada skrip pihak ketiga selain Cloudflare Web Analytics yang disisipkan Cloudflare)
+     — kalaupun ada celah, skrip luar tidak bisa dimuat.
      connect-src: fetch hanya ke /api sendiri — data tidak bisa dikirim keluar. */
-  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'"
+  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; connect-src 'self' https://cloudflareinsights.com"
 };
 function pasangKeamanan(r, jalur, env) {
   const kepala = new Headers(r.headers);
