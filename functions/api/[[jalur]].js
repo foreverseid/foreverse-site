@@ -35,6 +35,7 @@ const LAJU = {
 };                 // draf belum dibayar dihapus setelah ini
 const MAKS_FOTO = 3 * 1024 * 1024;   // batas satu foto setelah dikecilkan
 const MAKS_LAGU = 10 * 1024 * 1024;  // batas file lagu yang diunggah
+const MAKS_BADAN = 32 * 1024 * 1024; // batas satu permintaan POST ke /api
 
 /* ── batas karakter; dijaga di server juga, bukan cuma di formulir ──
    Isian dasar sama untuk semua tema Birthday (lihat claude/bait-
@@ -1362,7 +1363,13 @@ export async function onRequest(ctx) {
     const db = env.DB;
     /* Badan mentah disimpan karena Digest notifikasi DOKU dihitung
        dari teks aslinya, bukan dari hasil JSON.stringify ulang.    */
+    /* Badan terbesar yang sah: 4 foto × 3 MB + lagu 10 MB, dalam base64 (+⅓)
+       ≈ 30 MB. Lebih dari itu ditolak SEBELUM dibaca, supaya satu permintaan
+       raksasa tidak menghabiskan memori Worker atau menimbun R2. */
+    const ukuran = Number(request.headers.get("content-length") || 0);
+    if (ukuran > MAKS_BADAN) return salah("Kirimannya terlalu besar. Kecilkan foto atau lagunya, ya.", 413);
     const mentah = request.method === "POST" ? await request.text() : "";
+    if (mentah.length > MAKS_BADAN) return salah("Kirimannya terlalu besar. Kecilkan foto atau lagunya, ya.", 413);
     let badan = {};
     if (mentah) { try { badan = JSON.parse(mentah) || {}; } catch (_) { badan = {}; } }
 

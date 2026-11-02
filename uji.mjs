@@ -2187,6 +2187,17 @@ await uji("L2: galat internal & jawaban mentah DOKU tidak sampai ke klien, pesan
   } finally { globalThis.fetch = fAsli; }
 });
 
+await uji("L5: permintaan raksasa ditolak 413 sebelum diproses; draf ukuran wajar tetap diterima", async () => {
+  const L = await buatLingkungan();
+  const d = isiDraf();
+  d.foto = [{ data: "data:image/jpeg;base64," + "A".repeat(33 * 1024 * 1024), mime: "image/jpeg" }];
+  const r = await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) });
+  sama(r.status, 413, "badan 33 MB");
+  const n = (await L.env.DB.prepare("SELECT COUNT(*) n FROM pesanan").first()).n;
+  sama(n, 0, "tidak ada draf tersimpan");
+  harus((await buatDrafDengan(L, {})).ok, "draf biasa");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
