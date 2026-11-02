@@ -636,7 +636,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       <div class="steps">
         <div class="step"><span class="n">1</span><h3>Pilih momen dan tema</h3><p>Mainkan contohnya dulu sampai kamu yakin.</p></div>
         <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, foto, dan lagu, dengan pratinjau yang berubah langsung. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
-        <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya kelihatan sebelum kamu bayar.</p></div>
+        <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS atau e-wallet, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya kelihatan sebelum kamu bayar.</p></div>
         <div class="step"><span class="n">4</span><h3>Tautannya langsung jadi</h3><p>Muncul di layar dan masuk ke emailmu, lengkap dengan kode QR berbentuk hati. Kamu yang mengirimnya ke dia, kapan pun kamu mau.</p></div>
       </div>
     </div>
@@ -705,7 +705,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <div class="left">
           <span class="lbl">Per surat</span>
           <div class="amt" data-v="harga">Rp15.000</div>
-          <p class="per">Ditambah biaya transaksi QRIS <span data-v="biaya">Rp560</span> dari penyedia pembayaran — rinciannya tampil sebelum kamu bayar.</p>
+          <p class="per">Ditambah biaya transaksi <span data-v="biaya">Rp560</span> dari penyedia pembayaran — rinciannya tampil sebelum kamu bayar.</p>
           <a class="btn btn-main" href="/template" data-rute>Pilih momen</a>
         </div>
         <div class="right">
@@ -775,7 +775,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <h3 class="faq-kat">Harga & pembayaran</h3>
         <details class="utama">
           <summary>Berapa harganya?</summary>
-          <p><span data-v="harga">Rp15.000</span> untuk tema apa pun, ditambah biaya transaksi QRIS <span data-v="biaya">Rp560</span>. Rinciannya ditampilkan sebelum kamu bayar.</p>
+          <p><span data-v="harga">Rp15.000</span> untuk tema apa pun, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya ditampilkan sebelum kamu bayar.</p>
         </details>
         <details>
           <summary>Bayarnya lewat apa?</summary>
@@ -1008,7 +1008,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       document.body.insertBefore(pita, document.body.firstChild);
     }
     if(!i || !i.ok) return;
-    var h="Rp"+Number(i.harga).toLocaleString("id-ID"), b="Rp"+Number(i.biaya).toLocaleString("id-ID");
+    var h=i.harga>0?"Rp"+Number(i.harga).toLocaleString("id-ID"):"Rp0 (gratis)", b="Rp"+Number(i.biaya).toLocaleString("id-ID");
     document.querySelectorAll('[data-v="harga"]').forEach(function(el){ el.textContent=h; });
     document.querySelectorAll('[data-v="biaya"]').forEach(function(el){ el.textContent=b; });
     var mati=i.tema_mati||[];

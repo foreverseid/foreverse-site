@@ -1831,7 +1831,7 @@ await uji("tema dimatikan: tidak bisa dipesan, muncul di info publik", async () 
   harus((await buatDrafDengan(L)).ok, "bisa lagi");
 });
 
-await uji("promo persen & rupiah: potongan benar, minimal Rp1.000, kuota & tanggal berakhir dihormati", async () => {
+await uji("promo persen & rupiah: potongan benar, bisa sampai Rp0, kuota & tanggal berakhir dihormati", async () => {
   const L = await buatLingkungan();
   await admin(L, { aksi: "promo_simpan", kode: "launch20", jenis: "persen", nilai: 20, kuota: 1 });
   await admin(L, { aksi: "promo_simpan", kode: "GEDE", jenis: "rupiah", nilai: 50000 });
@@ -1840,7 +1840,7 @@ await uji("promo persen & rupiah: potongan benar, minimal Rp1.000, kuota & tangg
   const a = await cek("launch-20");
   harus(a.ok && a.potongan === 3000 && a.harga === 12000 && a.total === 12560, "persen: " + JSON.stringify(a));
   const g = await cek("gede");
-  sama(g.harga, 1000, "tidak bisa di bawah Rp1.000");
+  sama(g.harga, 0, "potongan sebesar harga → gratis");
   harus(!(await cek("LEWAT")).ok, "promo berakhir ditolak");
   harus(!(await cek("ASAL")).ok, "promo asing ditolak");
   const d = await buatDrafDengan(L, { promo: "LAUNCH20" });
@@ -2050,6 +2050,27 @@ await uji("kreator: kode referral tanpa potongan + komisi 20%, saldo berkurang s
   await admin(L, { aksi: "komisi_bayar", kode: "ADRIEL", jumlah: 3000 });
   p = (await admin(L, { aksi: "promo_daftar" })).promo[0];
   sama(p.komisi_sisa, 0, "lunas");
+});
+
+await uji("gratis: harga Rp0 / promo 100% langsung lunas tanpa DOKU; perpanjangan Rp0 langsung bertambah", async () => {
+  const L = await buatLingkungan();
+  await admin(L, { aksi: "promo_simpan", kode: "GRATIS100", jenis: "persen", nilai: 100, kreator: "@kreator.uji", komisi: 10 });
+  const d = await buatDrafDengan(L, { promo: "GRATIS100" });
+  sama(d.jumlah, 0, "harga jadi 0");
+  const nDoku = L.catatan.panggilan.length;
+  const b = await bayarDraf(L, d.kode);
+  harus(b.ok && b.sudah && b.gratis, JSON.stringify(b));
+  sama(L.catatan.panggilan.length, nDoku, "tidak memanggil DOKU");
+  const row = await L.env.DB.prepare("SELECT status,total,metode,token FROM pesanan WHERE kode=?").bind(d.kode).first();
+  harus(row.status === "lunas" && row.total === 0 && row.metode === "GRATIS", JSON.stringify(row));
+  sama((await admin(L, { aksi: "promo_daftar" })).promo[0].komisi_total, 0, "komisi 0 untuk surat gratis");
+  harus((await admin(L, { aksi: "atur", harga: 0, harga_perpanjang: 0 })).harga === 0, "harga 0 boleh");
+  harus(!(await admin(L, { aksi: "atur", harga: 500 })).ok, "Rp500 ditolak");
+  sama((await (await L.panggil("/api/info")).json()).biaya, 0, "biaya 0 saat gratis");
+  const s0 = row && (await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(d.kode).first()).simpan_sampai;
+  const pj = await (await L.panggil("/api/perpanjang", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: row.token }) })).json();
+  harus(pj.ok && pj.gratis, JSON.stringify(pj));
+  harus((await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(d.kode).first()).simpan_sampai > s0, "bertambah");
 });
 
 /* ═══════════ hasil ═══════════ */

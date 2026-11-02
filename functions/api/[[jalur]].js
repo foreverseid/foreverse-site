@@ -1135,8 +1135,8 @@ async function bacaPengaturan(db) {
   let mati = [];
   try { mati = JSON.parse(m.tema_mati || "[]").filter(t => TEMA_SKEMA[t]); } catch (_) {}
   return {
-    harga: Number(m.harga) > 0 ? Number(m.harga) : HARGA,
-    hargaPerpanjang: Number(m.harga_perpanjang) > 0 ? Number(m.harga_perpanjang) : HARGA_PERPANJANG,
+    harga: m.harga !== undefined && Number(m.harga) >= 0 ? Number(m.harga) : HARGA,
+    hargaPerpanjang: m.harga_perpanjang !== undefined && Number(m.harga_perpanjang) >= 0 ? Number(m.harga_perpanjang) : HARGA_PERPANJANG,
     temaMati: mati,
     tutup: m.tutup || "",                // kosong = buka; berisi pesan = pesanan baru ditutup sementara
     metode: gabungMetode(m.metode)
@@ -1154,14 +1154,14 @@ function gabungMetode(json) {
     });
   });
 }
-function biayaMetode(m, harga) { return m.tetap + Math.ceil(harga * m.persen / 100); }
+function biayaMetode(m, harga) { return harga > 0 ? m.tetap + Math.ceil(harga * m.persen / 100) : 0; }
 function pilihMetode(daftar, kode) {
   const aktif = daftar.filter(m => m.aktif);
   return (kode ? aktif.find(m => m.kode === kode) : aktif[0]) || null;
 }
 /* total yang harus dibayar; pesanan lama (sebelum ada kolom total) memakai biaya QRIS lama */
-function totalPesanan(b) { return Number(b.total) || (Number(b.jumlah) || HARGA) + BIAYA_TRANSAKSI; }
-function totalPerpanjangan(row) { return Number(row.total) || row.jumlah + BIAYA_TRANSAKSI; }
+function totalPesanan(b) { return b.total != null ? Number(b.total) : (b.jumlah == null ? HARGA : Number(b.jumlah)) + BIAYA_TRANSAKSI; }
+function totalPerpanjangan(row) { return row.total != null ? Number(row.total) : row.jumlah + BIAYA_TRANSAKSI; }
 function untukPublik(m, harga) { return { kode: m.kode, nama: m.nama, ket: m.ket, tetap: m.tetap, persen: m.persen, biaya: biayaMetode(m, harga) }; }
 
 async function simpanPengaturan(db, kunci, nilai) {
@@ -1169,7 +1169,8 @@ async function simpanPengaturan(db, kunci, nilai) {
 }
 
 /* ══════════════════ kode promo ══════════════════ */
-const MIN_SETELAH_PROMO = 1000;      // DOKU perlu nominal; promo tidak bisa menggratiskan
+/* Harga boleh 0 (gratis, mis. untuk kreator atau promo 100%). Pesanan Rp0 tidak lewat
+   DOKU sama sekali: langsung lunas di /api/bayar, tanpa biaya transaksi. */
 function normalKodePromo(k) { return String(k || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 20); }
 async function hitungPromo(db, kode, harga) {
   const k = normalKodePromo(kode);
@@ -1179,7 +1180,7 @@ async function hitungPromo(db, kode, harga) {
   if (p.sampai && Date.now() > p.sampai) return { ok: false, pesan: "Kode promo ini sudah berakhir." };
   if (p.kuota && p.terpakai >= p.kuota) return { ok: false, pesan: "Kuota kode promo ini sudah habis." };
   let pot = p.jenis === "persen" ? Math.round(harga * Math.min(100, p.nilai) / 100) : p.nilai;
-  pot = Math.max(0, Math.min(pot, harga - MIN_SETELAH_PROMO));
+  pot = Math.max(0, Math.min(pot, harga));
   return { ok: true, kode: k, potongan: pot, harga: harga - pot };
 }
 
@@ -1361,7 +1362,7 @@ export async function onRequest(ctx) {
       const a = await bacaPengaturan(db);
       const metodeBuka = a.metode.filter(m => m.aktif);
       return new Response(JSON.stringify({ ok: true, harga: a.harga,
-        biaya: metodeBuka.length ? biayaMetode(metodeBuka[0], a.harga) : BIAYA_TRANSAKSI,
+        biaya: a.harga <= 0 ? 0 : metodeBuka.length ? biayaMetode(metodeBuka[0], a.harga) : BIAYA_TRANSAKSI,
         metode: metodeBuka.map(m => untukPublik(m, a.harga)), tema_mati: a.temaMati,
         harga_perpanjang: a.hargaPerpanjang, bulan_perpanjang: BULAN_PERPANJANG, tutup: a.tutup, staging: !!env.STAGING }),
         { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60" } });
@@ -1373,7 +1374,7 @@ export async function onRequest(ctx) {
       const pr = await hitungPromo(db, badan.kode, a.harga);
       if (!pr.ok) return salah(pr.pesan, 400);
       const m0 = pilihMetode(a.metode, teks(badan.metode, 30)) || pilihMetode(a.metode);
-      const bi = m0 ? biayaMetode(m0, pr.harga) : BIAYA_TRANSAKSI;
+      const bi = pr.harga <= 0 ? 0 : m0 ? biayaMetode(m0, pr.harga) : BIAYA_TRANSAKSI;
       return jwb({ ok: true, kode: pr.kode, potongan: pr.potongan, harga: pr.harga, biaya: bi, total: pr.harga + bi });
     }
 
@@ -1407,6 +1408,12 @@ export async function onRequest(ctx) {
       const b = token && await db.prepare(`SELECT kode,email,whatsapp,isi,status FROM pesanan WHERE token=?`).bind(token).first();
       if (!b || b.status !== "lunas") return salah("Tautan perpanjangan tidak dikenal atau suratnya sudah dihapus.", 404);
       const a = await bacaPengaturan(db);
+      if (a.hargaPerpanjang === 0) {
+        const idG = "FP-" + b.kode + "-" + Date.now().toString(36);
+        await db.prepare(`INSERT INTO perpanjangan(order_id,kode,jumlah,status,dibuat,metode,total) VALUES(?,?,0,'menunggu',?,'GRATIS',0)`).bind(idG, b.kode, Date.now()).run();
+        await lunasiPerpanjangan(env, db, idG);
+        return jwb({ ok: true, gratis: true });
+      }
       const mP = pilihMetode(a.metode, teks(badan.metode, 30));
       if (!mP) return salah("Metode pembayaran itu sedang tidak tersedia. Pilih yang lain, ya.", 503);
       const biayaP = biayaMetode(mP, a.hargaPerpanjang);
@@ -1560,7 +1567,12 @@ export async function onRequest(ctx) {
         if (!p || !p.aktif || (p.sampai && Date.now() > p.sampai) || (p.kuota && p.terpakai >= p.kuota))
           return salah("Kode promo yang dipakai sudah tidak berlaku. Isi ulang formulirnya tanpa kode itu, ya.", 409);
       }
-      const hargaB = Number(b.jumlah) || HARGA;
+      const hargaB = b.jumlah == null ? HARGA : Number(b.jumlah);
+      if (hargaB === 0) {
+        await db.prepare(`UPDATE pesanan SET metode='GRATIS', total=0 WHERE kode=?`).bind(kode).run();
+        await lunasi(env, db, kode, asal);
+        return jwb({ ok: true, sudah: true, gratis: true, kode });
+      }
       const mB = pilihMetode(aturB.metode, teks(badan.metode, 30));
       if (!mB) return salah("Metode pembayaran itu sedang tidak tersedia. Pilih yang lain, ya.", 503);
       const biayaB = biayaMetode(mB, hargaB);
@@ -1861,12 +1873,12 @@ export async function onRequest(ctx) {
       if (aksi === "atur") {
         if (badan.harga !== undefined) {
           const h = Math.round(Number(badan.harga));
-          if (!(h >= 1000 && h <= 1000000)) return salah("Harga harus antara Rp1.000 dan Rp1.000.000.");
+          if (!(h === 0 || (h >= 1000 && h <= 1000000))) return salah("Harga harus Rp0 (gratis) atau antara Rp1.000 dan Rp1.000.000.");
           await simpanPengaturan(db, "harga", h);
         }
         if (badan.harga_perpanjang !== undefined) {
           const h = Math.round(Number(badan.harga_perpanjang));
-          if (!(h >= 1000 && h <= 1000000)) return salah("Harga perpanjangan harus antara Rp1.000 dan Rp1.000.000.");
+          if (!(h === 0 || (h >= 1000 && h <= 1000000))) return salah("Harga perpanjangan harus Rp0 (gratis) atau antara Rp1.000 dan Rp1.000.000.");
           await simpanPengaturan(db, "harga_perpanjang", h);
         }
         if (badan.metode && typeof badan.metode === "object") {

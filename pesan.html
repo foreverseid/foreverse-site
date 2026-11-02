@@ -1446,6 +1446,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   /* ── harga, tema yang dibuka, dan kode promo (diatur dari /developer) ── */
   var HARGA_KINI = 15000, BIAYA_KINI = 560, PROMO = { kode:"", potongan:0 }, METODE = [], METODE_PILIH = null;
   function biayaKini(){
+    if(HARGA_KINI - PROMO.potongan <= 0) return 0;
     var m = METODE_PILIH; if(!m) return BIAYA_KINI;
     return m.tetap + Math.ceil((HARGA_KINI - PROMO.potongan) * m.persen / 100);
   }
@@ -1460,6 +1461,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       b.addEventListener("click", function(){ METODE_PILIH = m; gambarMetode(); gambarHarga(); });
       w.appendChild(b);
     });
+    gambarCatatan();
+  }
+  function gambarCatatan(){
     var m = METODE_PILIH;
     if(m) $("catatanKirim").textContent = m.kode === "QRIS"
       ? "Pembayaran lewat QRIS — bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa pun."
@@ -1473,14 +1477,20 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     $("barisPotong").hidden = !PROMO.potongan;
     $("lblPotong").textContent = "Promo " + PROMO.kode;
     $("rpPotong").textContent = "−" + rpTeks(PROMO.potongan);
-    $("rpTotal").textContent = rpTeks(HARGA_KINI - PROMO.potongan + biayaKini());
+    var gratis = HARGA_KINI - PROMO.potongan <= 0;
+    $("rpTotal").textContent = gratis ? "Gratis" : rpTeks(HARGA_KINI - PROMO.potongan + biayaKini());
+    $("pilihMetode").hidden = gratis || METODE.length < 2;
+    $("rpBiaya").parentNode.hidden = gratis;
+    if(!MODE_EDIT) $("tblKirim").textContent = gratis ? "Buat suratku" : "Lanjut ke pembayaran";
+    if(gratis) $("catatanKirim").textContent = "Surat ini gratis — tidak ada pembayaran. Tautannya langsung jadi.";
+    else if(METODE_PILIH) gambarCatatan();
     $("cipHarga").textContent = rpTeks(HARGA_KINI - PROMO.potongan);
   }
   fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
     if(!i || !i.ok) return;
     HARGA_KINI = i.harga; BIAYA_KINI = i.biaya;
     METODE = i.metode || []; METODE_PILIH = METODE[0] || null; gambarMetode(); gambarHarga();
-    if(!MODE_EDIT && !METODE.length){ $("temaTutup").textContent = "Pembayaran sedang tidak tersedia. Coba lagi sebentar lagi, ya."; $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
+    if(!MODE_EDIT && !METODE.length && i.harga > 0){ $("temaTutup").textContent = "Pembayaran sedang tidak tersedia. Coba lagi sebentar lagi, ya."; $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
     if(!MODE_EDIT && (i.tema_mati || []).indexOf(TEMA) > -1){ $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
     if(!MODE_EDIT && i.tutup){ $("temaTutup").textContent = i.tutup; $("temaTutup").hidden = false; $("tblKirim").disabled = true; }
   }).catch(function(){});

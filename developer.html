@@ -515,8 +515,8 @@ a.tautan:hover{text-decoration:underline}
         <h3>Harga &amp; tema yang dibuka</h3>
         <p class="ket">Berlaku untuk pesanan baru dalam ±1 menit, tanpa deploy ulang. Pesanan yang sudah dibuat tetap memakai harga saat dipesan.</p>
         <div class="form-atur">
-          <div><label for="aHarga">Harga satu surat (Rp)</label><input id="aHarga" type="number" min="1000" step="500"></div>
-          <div><label for="aHargaPanjang">Harga perpanjang 2 bulan (Rp)</label><input id="aHargaPanjang" type="number" min="1000" step="500"></div>
+          <div><label for="aHarga">Harga satu surat (Rp)</label><input id="aHarga" type="number" min="0" step="500"></div>
+          <div><label for="aHargaPanjang">Harga perpanjang 2 bulan (Rp)</label><input id="aHargaPanjang" type="number" min="0" step="500"></div>
           <div><button class="tbl utamawarna" id="aSimpan" type="button" style="width:100%">Simpan</button></div>
         </div>
         <p class="ket" style="margin:14px 0 0">Centang tema yang <b>dibuka</b> untuk pesanan baru:</p>
@@ -534,7 +534,7 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="kartu" style="margin-bottom:12px">
         <h3>Kode promo</h3>
-        <p class="ket"><b>Kode kreator:</b> isi akun kreator dan komisinya. Potongan boleh 0 (kode referral murni — pembeli bayar harga biasa, kreator tetap dapat komisi). Tautan untuk kreator: <code>foreverse.id/r/KODE</code> (kodenya diingat 30 hari dan terisi otomatis di formulir). Komisi = persen × harga yang dibayar pembeli (tanpa biaya transaksi); setelah kamu transfer, catat lewat tombol <b>Catat bayar</b>. Potongan dihitung dari harga surat (bukan biaya QRIS). Harga setelah promo minimal Rp1.000. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
+        <p class="ket"><b>Kode kreator:</b> isi akun kreator dan komisinya. Potongan boleh 0 (kode referral murni — pembeli bayar harga biasa, kreator tetap dapat komisi). Tautan untuk kreator: <code>foreverse.id/r/KODE</code> (kodenya diingat 30 hari dan terisi otomatis di formulir). Komisi = persen × harga yang dibayar pembeli (tanpa biaya transaksi); setelah kamu transfer, catat lewat tombol <b>Catat bayar</b>. Potongan dihitung dari harga surat (bukan biaya QRIS). Potongan 100% (atau harga Rp0) membuat surat gratis — langsung jadi tanpa pembayaran. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
         <div class="form-atur">
           <div><label for="pKode">Kode</label><input id="pKode" type="text" maxlength="20" placeholder="LAUNCH20"></div>
           <div><label for="pJenis">Jenis</label><select id="pJenis"><option value="persen">Persen (%)</option><option value="rupiah">Rupiah</option></select></div>
@@ -1111,9 +1111,10 @@ a.tautan:hover{text-decoration:underline}
   });
 
   /* ── promo ── */
+  var DATA_PROMO = [];
   async function muatPromo(){
     var d = await panggil({ aksi:"promo_daftar" });
-    var rows = d.promo || [];
+    var rows = d.promo || []; DATA_PROMO = rows;
     $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Kreator</th><th>Potongan</th><th>Terpakai</th><th>Pendapatan</th><th>Komisi (belum dibayar)</th><th>Sampai</th><th></th></tr>' +
       (rows.length ? rows.map(function(p){
         var habis = (p.sampai && p.sampai < Date.now()) || (p.kuota && p.terpakai >= p.kuota);
@@ -1123,6 +1124,7 @@ a.tautan:hover{text-decoration:underline}
           '</td><td>' + (p.komisi ? p.komisi + "% · " + rp(p.komisi_total || 0) + (p.komisi_sisa ? ' <b>(' + rp(p.komisi_sisa) + ')</b>' : "") : "—") +
           '</td><td>' + (p.sampai ? esc(new Date(p.sampai).toLocaleDateString("id-ID")) : "—") + '</td><td style="white-space:nowrap">' +
           (p.komisi_sisa > 0 ? '<button class="tbl kecil" data-p="bayar" data-k="' + esc(p.kode) + '" data-n="' + p.komisi_sisa + '">Catat bayar</button> ' : "") +
+          '<button class="tbl kecil" data-p="ubah" data-k="' + esc(p.kode) + '">Ubah</button> ' +
           '<button class="tbl kecil" data-p="aktif" data-k="' + esc(p.kode) + '" data-n="' + (p.aktif ? 0 : 1) + '">' + (p.aktif ? "Matikan" : "Nyalakan") + '</button> ' +
           '<button class="tbl kecil bahaya" data-p="hapus" data-k="' + esc(p.kode) + '">Hapus</button></td></tr>';
       }).join("") : '<tr><td colspan="8" class="redup">Belum ada kode promo.</td></tr>');
@@ -1139,6 +1141,14 @@ a.tautan:hover{text-decoration:underline}
   $("pDaftar").addEventListener("click", async function(e){
     var t = e.target.closest("[data-p]"); if(!t) return;
     if(t.dataset.p === "hapus" && !confirm("Hapus promo " + t.dataset.k + "?")) return;
+    if(t.dataset.p === "ubah"){
+      var x = DATA_PROMO.filter(function(r){ return r.kode === t.dataset.k; })[0]; if(!x) return;
+      $("pKode").value = x.kode; $("pJenis").value = x.jenis; $("pNilai").value = x.nilai; $("pKuota").value = x.kuota || 0;
+      $("pSampai").value = x.sampai ? new Date(x.sampai + 7 * 3600000).toISOString().slice(0, 10) : "";
+      $("pKreator").value = x.kreator || ""; $("pKomisi").value = x.komisi || 0;
+      $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Mengubah " + x.kode + " — ganti isinya lalu tekan Simpan promo. Jumlah terpakai & riwayat komisi tetap.";
+      $("pKode").scrollIntoView({ behavior:"smooth", block:"center" }); return;
+    }
     if(t.dataset.p === "bayar"){
       var jml = prompt("Berapa yang sudah kamu transfer ke kreator kode " + t.dataset.k + "? (sisa " + rp(Number(t.dataset.n)) + ")", t.dataset.n);
       if(!jml) return;

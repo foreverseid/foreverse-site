@@ -100,14 +100,17 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
     $("lblPerpanjang").textContent = "Perpanjang " + d.bulan + " bulan";
     METODE = d.metode || []; if(!PILIH || !METODE.some(function(m){ return m.kode === PILIH.kode; })) PILIH = METODE[0] || null;
     HARGA = d.harga; BIAYA_AWAL = d.biaya; gambarBiaya();
-    if(!METODE.length){ $("tblBayar").disabled = true; $("galat").textContent = "Pembayaran sedang tidak tersedia. Coba lagi sebentar lagi, ya."; }
+    if(!METODE.length && HARGA > 0){ $("tblBayar").disabled = true; $("galat").textContent = "Pembayaran sedang tidak tersedia. Coba lagi sebentar lagi, ya."; }
   }
   var METODE = [], PILIH = null, HARGA = 0, BIAYA_AWAL = 0;
   function gambarBiaya(){
     var b = PILIH ? PILIH.biaya : BIAYA_AWAL;
     $("lblBiaya").textContent = "Biaya transaksi " + (PILIH ? PILIH.nama : "QRIS");
-    $("harga").textContent = rp(HARGA); $("biaya").textContent = rp(b); $("total").textContent = rp(HARGA + b);
-    var w = $("pilihMetode"); w.hidden = METODE.length < 2; w.innerHTML = "";
+    if(HARGA <= 0) b = 0;
+    $("harga").textContent = HARGA > 0 ? rp(HARGA) : "Gratis"; $("biaya").textContent = rp(b); $("total").textContent = HARGA > 0 ? rp(HARGA + b) : "Gratis";
+    $("biaya").parentNode.hidden = HARGA <= 0;
+    $("tblBayar").textContent = HARGA > 0 ? "Bayar & perpanjang" : "Perpanjang sekarang";
+    var w = $("pilihMetode"); w.hidden = METODE.length < 2 || HARGA <= 0; w.innerHTML = "";
     METODE.forEach(function(m){
       var t = document.createElement("button"); t.type = "button"; t.setAttribute("role","radio"); t.textContent = m.nama;
       t.setAttribute("aria-checked", PILIH && PILIH.kode === m.kode ? "true" : "false");
@@ -149,7 +152,11 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
     var b = this; b.disabled = true; b.textContent = "Membuka pembayaran…"; $("galat").textContent = "";
     fetch("/api/perpanjang", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ token: TOKEN, metode: PILIH ? PILIH.kode : "" }) })
       .then(function(r){ return r.json(); })
-      .then(function(j){ if(!j.ok) throw new Error(j.pesan || "Belum bisa membuka pembayaran."); location.href = j.url; })
+      .then(function(j){
+        if(!j.ok) throw new Error(j.pesan || "Belum bisa membuka pembayaran.");
+        if(j.gratis) return muat("info").then(function(d){ tampil(d); $("kartuBayar").hidden = true; $("oke").hidden = false;
+          $("oke").textContent = "Berhasil ✓ Suratnya sekarang bisa dibuka sampai " + tgl(d.simpan_sampai) + "."; });
+        location.href = j.url; })
       .catch(function(e){ b.disabled = false; b.textContent = "Bayar & perpanjang"; $("galat").textContent = e.message; });
   });
 })();

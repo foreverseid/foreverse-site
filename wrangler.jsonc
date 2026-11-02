@@ -17,5 +17,20 @@
     { "binding": "FOTO", "bucket_name": "foreverse-foto" }
   ],
   "triggers": { "crons": ["0 19 * * *", "*/15 * * * *"] },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  /* situs uji: `npx wrangler deploy --env staging` → worker "foreverse-site-staging" (…workers.dev).
+     Data & foto terpisah dari produksi; email dialihkan ke pemilik; DOKU selalu Sandbox. */
+  "env": {
+    "staging": {
+      "workers_dev": true,
+      "vars": { "STAGING": "1", "DOKU_MODE": "sandbox" },
+      "d1_databases": [
+        { "binding": "DB", "database_name": "foreverse-db-staging", "database_id": "bc467282-ab64-4b46-8c9d-66871157c8e7" }
+      ],
+      "r2_buckets": [
+        { "binding": "FOTO", "bucket_name": "foreverse-foto-staging" }
+      ],
+      "triggers": { "crons": ["0 19 * * *", "*/15 * * * *"] }
+    }
+  }
 }
