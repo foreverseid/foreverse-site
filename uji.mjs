@@ -2103,6 +2103,18 @@ await uji("C1: cadangan database di R2 tidak bisa dibuka lewat /f/, foto pesanan
   sama((await L.panggil(isi.foto[0].src)).status, 200, "foto pesanan");
 });
 
+await uji("M1: tebakan kunci dibatasi per surat walau IP berganti-ganti", async () => {
+  const L = await buatLingkungan();
+  const kode = await lunasBerkunci(L, { jenis: "pin", pin: "2410" });
+  const coba = (jawab, i) => L.panggil("/api/buka", { method: "POST",
+    headers: { "content-type": "application/json", "cf-connecting-ip": "10.0.0." + i },
+    body: JSON.stringify({ kode, jawab }) });
+  for (let i = 0; i < 10; i++) sama((await coba(String(1000 + i), i)).status, 401, "tebakan salah ke-" + (i + 1));
+  sama((await coba("2410", 99)).status, 429, "PIN benar pun ditahan setelah 10 salah, dari IP baru");
+  await L.env.DB.prepare("UPDATE laju SET sampai=0 WHERE kunci=?").bind("salahkunci:" + kode).run();
+  sama((await coba("2410", 100)).status, 200, "terbuka lagi setelah satu jam");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

@@ -529,6 +529,7 @@ async function rapikanLagu(env, kode, masuk, lama) {
    menyajikan halaman gerbang, dan isi surat baru dikirim setelah kuncinya
    benar (cookie berisi tiket acak per surat).                              */
 const JENIS_KUNCI = ["pin", "tanya", "tanggal"];
+const MAKS_SALAH_KUNCI = 10;           // tebakan salah per surat per jam
 function normalJawab(s) {
   return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, " ").trim();
@@ -1479,7 +1480,19 @@ export async function onRequest(ctx) {
       const k = JSON.parse(b.isi || "{}").kunci;
       if (!k) return jwb({ ok: true });
       if (k.buka && Date.now() < k.buka) return salah("Suratnya belum boleh dibuka. Sabar sebentar lagi, ya.", 403);
-      if (!cocokKunci(k, badan.jawab)) return salah("Belum tepat. Coba lagi, ya.", 401);
+      /* batas tebakan PER SURAT (bukan cuma per IP): 10 salah → terkunci 1 jam.
+         Tanpa ini, PIN 4 angka bisa ditebak habis dengan berganti-ganti IP. */
+      const kunciSalah = "salahkunci:" + kode, skr = Date.now();
+      const s = await db.prepare(`SELECT sampai,n FROM laju WHERE kunci=?`).bind(kunciSalah).first();
+      const aktifS = s && s.sampai > skr;
+      if (aktifS && s.n >= MAKS_SALAH_KUNCI)
+        return salah("Terlalu banyak percobaan untuk surat ini. Coba lagi sekitar satu jam lagi, ya.", 429);
+      if (!cocokKunci(k, badan.jawab)) {
+        if (aktifS) await db.prepare(`UPDATE laju SET n=n+1 WHERE kunci=?`).bind(kunciSalah).run();
+        else await db.prepare(`INSERT OR REPLACE INTO laju(kunci,sampai,n) VALUES(?,?,1)`).bind(kunciSalah, skr + 3600000).run();
+        return salah("Belum tepat. Coba lagi, ya.", 401);
+      }
+      if (s) await db.prepare(`DELETE FROM laju WHERE kunci=?`).bind(kunciSalah).run();
       return new Response(JSON.stringify({ ok: true }), { headers: {
         "content-type": "application/json; charset=utf-8",
         "set-cookie": "fvk_" + kode + "=" + k.tiket + "; Path=/; Max-Age=15552000; HttpOnly; Secure; SameSite=Lax"
