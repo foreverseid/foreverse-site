@@ -2073,6 +2073,21 @@ await uji("gratis: harga Rp0 / promo 100% langsung lunas tanpa DOKU; perpanjanga
   harus((await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(d.kode).first()).simpan_sampai > s0, "bertambah");
 });
 
+await uji("halaman momen untuk Google: teks lengkap dari server, FAQ terstruktur, tema mati disembunyikan, sitemap", async () => {
+  const L = await buatLingkungan();
+  const r = await L.panggil("/ulang-tahun");
+  sama(r.status, 200, "ada");
+  const h = await r.text();
+  harus(h.includes("Kado ulang tahun yang bisa dia mainkan") && h.includes('"@type":"FAQPage"') && h.includes('rel="canonical" href="https://foreverse.id/ulang-tahun"'), "isi");
+  harus(h.includes("Kado Riang") && !/noindex/.test(r.headers.get("x-robots-tag") || ""), "terindeks");
+  await admin(L, { aksi: "atur", tema_mati: ["kado-riang"] });
+  harus(!(await (await L.panggil("/ulang-tahun")).text()).includes("Kado Riang"), "tema mati hilang");
+  for (const s of ["anniversary", "ldr", "wisuda", "surat-cinta", "ajak-kencan", "nyatakan-perasaan", "cepat-sembuh", "lamaran"])
+    sama((await L.panggil("/" + s)).status, 200, s);
+  const sm = await readFile(new URL("./sitemap.xml", import.meta.url), "utf8");
+  harus(sm.includes("https://foreverse.id/lamaran"), "sitemap");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

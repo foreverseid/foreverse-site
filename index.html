@@ -866,7 +866,17 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       </div>
       <div>
         <h4>Untuk momen</h4>
-        <div id="kakiMomen"></div>
+        <div id="kakiMomen">
+          <a href="/ulang-tahun">Ulang tahun</a>
+          <a href="/anniversary">Anniversary</a>
+          <a href="/ldr">LDR</a>
+          <a href="/wisuda">Wisuda</a>
+          <a href="/surat-cinta">Surat cinta</a>
+          <a href="/ajak-kencan">Ajak kencan</a>
+          <a href="/nyatakan-perasaan">Nyatakan perasaan</a>
+          <a href="/cepat-sembuh">Cepat sembuh</a>
+          <a href="/lamaran">Lamaran</a>
+        </div>
       </div>
       <div>
         <h4>Kontak</h4>
@@ -994,9 +1004,6 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   var awalMomen=new URLSearchParams(location.search).get("momen"), iAwal=0;
   M.forEach(function(m,i){ if(awalMomen && m.nama.toLowerCase()===awalMomen.toLowerCase()) iAwal=i; });
   if(M.length) pick(iAwal);
-  $("kakiMomen").innerHTML=M.filter(function(m){ return m.tema.length; }).map(function(m){
-    return '<a href="/template?momen='+encodeURIComponent(m.nama)+'" data-rute>'+esc(m.nama)+'</a>';
-  }).join("");
 
   /* harga & tema yang dibuka — diatur dari /developer tanpa deploy ulang */
   fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){

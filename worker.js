@@ -15,6 +15,7 @@
 
 import { onRequest as tanganiApi, rawatHarian, rawatSering, infoGerbang, isiUntukPenerima } from "./functions/api/[[jalur]].js";
 import { halamanGerbang } from "./functions/gerbang.js";
+import { halamanMomen, MOMEN } from "./functions/momen.js";
 import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
 
 /* Ambil satu halaman statis TANPA membiarkan pengalihan sampai ke browser.
@@ -155,6 +156,15 @@ async function tangani(request, env, ctx) {
       /* ── halaman beranda yang terpisah: satu berkas index.html ── */
       if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "index", request);
+
+      /* ── halaman per momen untuk mesin pencari: /ulang-tahun, /anniversary, … ── */
+      const slugMomen = p.replace(/^\/|\/$/g, "");
+      if (MOMEN[slugMomen]) {
+        let mati = [];
+        try { const r = env.DB && await env.DB.prepare(`SELECT nilai FROM pengaturan WHERE kunci='tema_mati'`).first(); mati = JSON.parse((r && r.nilai) || "[]"); } catch (_) {}
+        return new Response(halamanMomen(slugMomen, mati), {
+          headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
+      }
 
       if (p === "/kreator" || p === "/kreator/") return await ambilHalaman(env, url.origin, "kreator", request);
 

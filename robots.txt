@@ -7,3 +7,5 @@ Disallow: /developer
 Disallow: /pesan
 Disallow: /selesai
 Disallow: /perpanjang/
+
+Sitemap: https://foreverse.id/sitemap.xml
