@@ -18,19 +18,18 @@
   ],
   "triggers": { "crons": ["0 19 * * *", "*/15 * * * *"] },
   "observability": { "enabled": true },
-  /* situs uji: `npx wrangler deploy --env staging` → worker "foreverse-site-staging" (…workers.dev).
-     Data & foto terpisah dari produksi; email dialihkan ke pemilik; DOKU selalu Sandbox. */
-  "env": {
-    "staging": {
-      "workers_dev": true,
-      "vars": { "STAGING": "1", "DOKU_MODE": "sandbox" },
-      "d1_databases": [
-        { "binding": "DB", "database_name": "foreverse-db-staging", "database_id": "bc467282-ab64-4b46-8c9d-66871157c8e7" }
-      ],
-      "r2_buckets": [
-        { "binding": "FOTO", "bucket_name": "foreverse-foto-staging" }
-      ],
-      "triggers": { "crons": ["0 19 * * *", "*/15 * * * *"] }
-    }
+  /* situs uji = Worker Previews: setiap push ke branch selain main membuat Preview
+     dengan URL sendiri. Preview TIDAK memakai pengaturan produksi — semuanya dari blok ini:
+     data & foto terpisah, email dialihkan ke pemilik, DOKU selalu Sandbox, tidak diindeks.
+     Rahasia (kunci DOKU sandbox, Resend, sandi admin) diisi di dashboard: Settings →
+     Variables and secrets → pilih "Previews Base". Cron tetap hanya jalan di produksi. */
+  "previews": {
+    "vars": { "STAGING": "1", "DOKU_MODE": "sandbox" },
+    "d1_databases": [
+      { "binding": "DB", "database_name": "foreverse-db-staging", "database_id": "bc467282-ab64-4b46-8c9d-66871157c8e7" }
+    ],
+    "r2_buckets": [
+      { "binding": "FOTO", "bucket_name": "foreverse-foto-staging" }
+    ]
   }
 }
