@@ -2218,6 +2218,22 @@ await uji("L6b: CSP melarang skrip & koneksi ke situs luar", async () => {
   }
 });
 
+await uji("L1 (pengaman): perpanjang berkali-kali tetap bisa — dua pembayaran terpisah = +4 bulan", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const awal = (await L.env.DB.prepare("SELECT simpan_sampai FROM pesanan WHERE kode=?").bind(p.kode).first()).simpan_sampai;
+  for (let i = 0; i < 2; i++) {
+    const r = await (await L.panggil("/api/perpanjang", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: p.token }) })).json();
+    harus(r.ok, "tagihan ke-" + (i + 1));
+    sama((await L.notifikasi(notifSukses(r.order_id, 5560))).status, 200, "bayar ke-" + (i + 1));
+    await L.notifikasi(notifSukses(r.order_id, 5560));   // notifikasi ulang tidak menambah apa-apa
+  }
+  const b = await L.env.DB.prepare("SELECT simpan_sampai,n_panjang FROM pesanan WHERE kode=?").bind(p.kode).first();
+  const hari = (b.simpan_sampai - awal) / 86400000;
+  harus(hari > 118 && hari < 125, "bertambah ±4 bulan: " + hari);
+  sama(b.n_panjang, 2, "dua kali perpanjang");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
