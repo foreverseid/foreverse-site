@@ -247,7 +247,9 @@ async function tangani(request, env, ctx) {
         if (nama === "surat")   // Bait: ambil datanya sendiri lewat /api/surat
           return new Response(sisipDibuka(html, kode), { status: r.status, headers: new Headers(r.headers) });
 
-        const aman = JSON.stringify(isiUntukPenerima(isiPenuh)).replace(/<\/script/gi, "<\\/script");
+        /* semua "<" jadi \u003c: JSON tetap sama artinya, tapi teks pembeli
+           ("</script>", "<!--<script>") tidak bisa memotong atau merusak tag skrip */
+        const aman = JSON.stringify(isiUntukPenerima(isiPenuh)).replace(/</g, "\\u003c");
         const ditulis = html.replace(
           /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/,
           "$1" + aman + "$2"

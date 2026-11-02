@@ -2149,6 +2149,22 @@ await uji("L1: notifikasi DOKU serentak hanya melunasi sekali — satu email, pr
   sama((await admin(L, { aksi: "promo_daftar" })).promo.find(x => x.kode === "SERENTAK").terpakai, 1, "terpakai");
 });
 
+await uji("L3: teks pembeli berisi tag skrip tidak bisa keluar dari blok data tema", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("kado-riang");
+  d.isi.surat[0] = "<!--<script>alert(1)</script>";
+  d.isi.pengirim = "Adriel</script><b>";
+  const r = await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) });
+  const j = await r.json(); harus(j.ok, JSON.stringify(j));
+  const b = await bayarDraf(L, j.kode);
+  await L.notifikasi(notifSukses(b.order_id)); await L.tunggu();
+  const h = await (await L.panggil("/s/" + j.kode)).text();
+  const blok = h.match(/<script id="foreverse-data" type="application\/json">\n([\s\S]*?)\n<\/script>/);
+  harus(blok, "blok data hilang");
+  harus(!blok[1].includes("<"), "ada '<' mentah di blok data");
+  sama(JSON.parse(blok[1]).surat[0], "<!--<script>alert(1)</script>", "teks tetap persis apa adanya");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
