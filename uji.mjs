@@ -2207,6 +2207,16 @@ await uji("L6a: password /developer dibandingkan waktu-konstan (samaAman), salah
   harus((await admin(L, { aksi: "periksa" })).ok, "benar");
 });
 
+await uji("L6b: CSP melarang skrip & koneksi ke situs luar", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  for (const a of ["/", "/s/" + p.kode, "/api/info"]) {
+    const c = (await L.panggil(a)).headers.get("content-security-policy") || "";
+    harus(/script-src 'self' 'unsafe-inline'(;|$)/.test(c) && /connect-src 'self'(;|$)/.test(c), a + ": " + c);
+    harus(!/unsafe-eval|https?:|\*/.test(c), a + " terlalu longgar: " + c);
+  }
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

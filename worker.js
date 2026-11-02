@@ -55,7 +55,10 @@ const KEAMANAN = {
   "x-frame-options": "SAMEORIGIN",
   "referrer-policy": "strict-origin-when-cross-origin",
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
-  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'"
+  /* script-src: hanya skrip dari situs sendiri (tema memakai skrip sebaris; tidak
+     ada skrip pihak ketiga) — kalaupun ada celah, skrip luar tidak bisa dimuat.
+     connect-src: fetch hanya ke /api sendiri — data tidak bisa dikirim keluar. */
+  "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'"
 };
 function pasangKeamanan(r, jalur, env) {
   const kepala = new Headers(r.headers);
