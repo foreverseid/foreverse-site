@@ -2115,6 +2115,18 @@ await uji("M1: tebakan kunci dibatasi per surat walau IP berganti-ganti", async 
   sama((await coba("2410", 100)).status, 200, "terbuka lagi setelah satu jam");
 });
 
+await uji("M2: menebak kode surat dihentikan setelah 20 kali meleset, penerima sungguhan tidak tertahan", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const ip = { headers: { "cf-connecting-ip": "10.9.9.9" } };
+  for (let i = 0; i < 20; i++) sama((await L.panggil("/s/zzzz" + (2000 + i), ip)).status, 404, "meleset ke-" + (i + 1));
+  sama((await L.panggil("/s/" + p.kode, ip)).status, 429, "/s/ ditahan");
+  sama((await L.panggil("/api/surat?kode=" + p.kode, ip)).status, 429, "/api/surat ditahan");
+  sama((await L.panggil("/api/status?kode=" + p.kode, ip)).status, 429, "/api/status ditahan");
+  const lain = { headers: { "cf-connecting-ip": "10.1.1.1" } };
+  for (let i = 0; i < 40; i++) sama((await L.panggil("/s/" + p.kode, lain)).status, 200, "buka ke-" + (i + 1));
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

@@ -403,6 +403,25 @@ async function lewatBatas(db, request, nama) {
   return false;
 }
 
+/* Tebakan kode surat (/s/<kode>): hanya kode yang TIDAK ditemukan yang
+   dihitung, jadi penerima sungguhan tidak pernah tertahan. 20 kode meleset
+   per IP per 10 menit → berhenti. Kode lama 6 huruf yang ruangnya kecil
+   jadi tidak bisa disapu bot. */
+const MAKS_KODE_MELESET = 20;
+export async function kodeDitahan(env, request, catatMeleset) {
+  if (!env.DB) return false;
+  const sidik = await sidikIp(request);
+  if (!sidik) return false;
+  await siapkan(env.DB);
+  const kunci = "meleset:" + sidik, skr = Date.now();
+  const b = await env.DB.prepare(`SELECT sampai,n FROM laju WHERE kunci=?`).bind(kunci).first();
+  const aktif = b && b.sampai > skr;
+  if (!catatMeleset) return !!(aktif && b.n >= MAKS_KODE_MELESET);
+  if (aktif) await env.DB.prepare(`UPDATE laju SET n=n+1 WHERE kunci=?`).bind(kunci).run();
+  else await env.DB.prepare(`INSERT OR REPLACE INTO laju(kunci,sampai,n) VALUES(?,?,1)`).bind(kunci, skr + 600000).run();
+  return false;
+}
+
 /* ══════════════════ catatan kegagalan ══════════════════
    Disimpan untuk tab Sistem, dan dikabarkan ke email pemilik — paling
    sering satu email per jenis kegagalan per jam, supaya tidak banjir. */
@@ -1717,8 +1736,9 @@ export async function onRequest(ctx) {
        Jadi jawaban di sini TIDAK BOLEH memuat token edit.        */
     if (jalur === "status") {
       const kode = teks(url.searchParams.get("kode"), 16);
+      if (await kodeDitahan(env, request, false)) return salah("Terlalu banyak kode yang salah. Coba lagi beberapa menit lagi, ya.", 429);
       const b = await db.prepare(`SELECT kode,status,order_id,isi,jumlah,total FROM pesanan WHERE kode=?`).bind(kode).first();
-      if (!b) return salah("Pesanan tidak ditemukan.", 404);
+      if (!b) { await kodeDitahan(env, request, true); return salah("Pesanan tidak ditemukan.", 404); }
 
       const penerima = (JSON.parse(b.isi || "{}").penerima) || "";
 
@@ -1746,8 +1766,9 @@ export async function onRequest(ctx) {
     /* ── isi surat untuk ditampilkan ke penerima ─────────────── */
     if (jalur === "surat") {
       const kode = teks(url.searchParams.get("kode"), 16);
+      if (await kodeDitahan(env, request, false)) return salah("Terlalu banyak kode yang salah. Coba lagi beberapa menit lagi, ya.", 429);
       const b = await db.prepare(`SELECT tema,isi,status,aktif FROM pesanan WHERE kode=?`).bind(kode).first();
-      if (!b) return salah("Surat tidak ditemukan.", 404);
+      if (!b) { await kodeDitahan(env, request, true); return salah("Surat tidak ditemukan.", 404); }
       if (b.status !== "lunas") return salah("Surat ini belum aktif.", 404);
       if (!b.aktif) return salah("Surat ini sudah dinonaktifkan.", 410);
       const isiS = JSON.parse(b.isi || "{}");

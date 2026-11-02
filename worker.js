@@ -13,7 +13,7 @@
      selain itu    → file biasa (index.html, gambar, dll)
    ══════════════════════════════════════════════════════════════════ */
 
-import { onRequest as tanganiApi, rawatHarian, rawatSering, infoGerbang, isiUntukPenerima } from "./functions/api/[[jalur]].js";
+import { onRequest as tanganiApi, rawatHarian, rawatSering, infoGerbang, isiUntukPenerima, kodeDitahan } from "./functions/api/[[jalur]].js";
 import { halamanGerbang } from "./functions/gerbang.js";
 import { halamanMomen, MOMEN } from "./functions/momen.js";
 import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
@@ -199,11 +199,15 @@ async function tangani(request, env, ctx) {
          data secara serentak (tanpa fetch) saat halamannya baru dibuka. */
       if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) {
         const kode = p.split("/")[2];
+        if (await kodeDitahan(env, request, false))
+          return new Response("Terlalu banyak alamat surat yang salah. Coba lagi beberapa menit lagi, ya.",
+            { status: 429, headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
         let baris = null;
         try { baris = env.DB && await env.DB.prepare("SELECT tema,isi,status,aktif,simpan_sampai FROM pesanan WHERE kode=?").bind(kode).first(); }
         catch (_) { baris = null; }
 
         if (!baris || baris.status !== "lunas" || !baris.aktif) {
+          if (!baris) await kodeDitahan(env, request, true);
           return new Response(
             "<!doctype html><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\">" +
             "<body style=\"font-family:system-ui;background:#FAF3E8;color:#1B1B2F;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;text-align:center\">" +
