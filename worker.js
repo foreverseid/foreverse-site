@@ -263,7 +263,7 @@ async function tangani(request, env, ctx) {
 
     } catch (e) {
       return new Response(
-        JSON.stringify({ ok: false, pesan: (e && e.message) || "Kesalahan tak terduga." }),
+        JSON.stringify({ ok: false, pesan: "Terjadi kesalahan di server. Coba lagi sebentar, ya." }),
         { status: 500, headers: { "content-type": "application/json; charset=utf-8" } }
       );
     }

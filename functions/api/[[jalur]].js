@@ -1648,7 +1648,7 @@ export async function onRequest(ctx) {
       if (!r.ok || !urlBayar) {
         const kabar = (r.asli && (r.asli.error_messages || r.asli.message)) || r.asli;
         await catatKejadian(env, db, "DOKU menolak pembayaran", JSON.stringify(kabar).slice(0, 300), kode);
-        return salah("DOKU menolak: " + JSON.stringify(kabar).slice(0, 300), 502);
+        return salah("Pembayaran belum bisa dibuat. Coba lagi sebentar lagi, ya.", 502);   // rincian DOKU hanya di tab Sistem
       }
 
       await db.prepare(`UPDATE pesanan SET order_id=?, metode=?, total=? WHERE kode=?`).bind(orderId, mB.kode, hargaB + biayaB, kode).run();
@@ -2087,6 +2087,12 @@ export async function onRequest(ctx) {
     return salah("Alamat tidak dikenal: /api/" + jalur, 404);
 
   } catch (e) {
-    return salah(e && e.message ? e.message : "Terjadi kesalahan di server.", 400);
+    /* Pesan validasi (throw new Error("Nama penerima belum diisi.")) memang
+       untuk pembeli. Galat internal (D1/SQL, TypeError, dll.) tidak boleh
+       sampai ke klien — dicatat di tab Sistem, klien dapat pesan umum. */
+    if (e && e.constructor === Error && !/D1_|SQLITE|SQL|no such|constraint/i.test(e.message || ""))
+      return salah(e.message, 400);
+    try { if (env.DB) await catatKejadian(env, env.DB, "galat server", (e && (e.name + ": " + e.message)) || "?", ""); } catch (_) {}
+    return salah("Terjadi kesalahan di server. Coba lagi sebentar, ya.", 500);
   }
 }

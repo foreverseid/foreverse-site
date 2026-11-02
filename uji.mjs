@@ -2165,6 +2165,28 @@ await uji("L3: teks pembeli berisi tag skrip tidak bisa keluar dari blok data te
   sama(JSON.parse(blok[1]).surat[0], "<!--<script>alert(1)</script>", "teks tetap persis apa adanya");
 });
 
+await uji("L2: galat internal & jawaban mentah DOKU tidak sampai ke klien, pesan validasi tetap", async () => {
+  const L = await buatLingkungan();
+  const d = isiDraf(); d.isi.penerima = "";
+  sama((await (await L.panggil("/api/draf", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) })).json()).pesan,
+    "Nama penerima belum diisi.", "pesan validasi");
+  const asli = L.env.DB.prepare.bind(L.env.DB);
+  L.env.DB.prepare = (sql) => { if (/FROM pesanan WHERE kode=\?/.test(sql) && /tema,isi,status,aktif FROM/.test(sql)) throw new Error("D1_ERROR: no such column: rahasia_internal"); return asli(sql); };
+  const r = await L.panggil("/api/surat?kode=abcdefghjk");
+  const t = await r.text();
+  sama(r.status, 500, "status");
+  harus(!/D1_ERROR|rahasia_internal/.test(t), "galat internal bocor: " + t);
+  L.env.DB.prepare = asli;
+  const fAsli = globalThis.fetch;
+  globalThis.fetch = async (u, o) => /checkout/.test(String(u))
+    ? new Response(JSON.stringify({ error_messages: ["INTERNAL-DETAIL-XYZ"] }), { status: 400 }) : fAsli(u, o);
+  try {
+    const dr = await buatDrafDengan(L, {});
+    const b = await bayarDraf(L, dr.kode);
+    harus(!b.ok && !JSON.stringify(b).includes("INTERNAL-DETAIL-XYZ"), "jawaban DOKU bocor: " + JSON.stringify(b));
+  } finally { globalThis.fetch = fAsli; }
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
