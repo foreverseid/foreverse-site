@@ -325,7 +325,10 @@ async function siapkan(db) {
     db.prepare(`CREATE INDEX IF NOT EXISTS i_status_dibuat ON pesanan(status,dibuat)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_dibayar ON pesanan(dibayar)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS kejadian(
-      id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`)
+      id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`),
+    /* kode pesanan yang datanya sudah dihapus (tanpa data pribadi apa pun) —
+       dipakai supaya pemulihan cadangan tidak pernah menghidupkannya lagi */
+    db.prepare(`CREATE TABLE IF NOT EXISTS terhapus(kode TEXT PRIMARY KEY, waktu INTEGER, alasan TEXT)`)
   ]);
   /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
   for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER",
@@ -1068,11 +1071,7 @@ export async function rawatHarian(env) {
 
   const habis = await db.prepare(`SELECT kode FROM pesanan WHERE status IN ('lunas','refund')
     AND simpan_sampai IS NOT NULL AND simpan_sampai <= ? AND isi != '{}'`).bind(skr).all();
-  for (const b of (habis.results || [])) {
-    await hapusFoto(env, db, b.kode);
-    await db.prepare(`UPDATE pesanan SET isi='{}', email='', whatsapp='', token=NULL, aktif=0 WHERE kode=?`).bind(b.kode).run();
-    dihapus++;
-  }
+  dihapus = await lupakanPesanan(env, db, (habis.results || []).map(b => b.kode), "masa simpan", false);
   const ingatMomen = await kirimPengingatJatuhTempo(env, db);
   let cadangan = null;
   try { cadangan = await cadangkanHarian(env, db); }
@@ -1241,6 +1240,89 @@ async function cadangkanHarian(env, db) {
   return { nama, pesanan: data.pesanan.length };
 }
 
+/* ══════════════════ penghapusan data pribadi (UU PDP) ══════════════════
+   Satu pintu untuk semua penghapusan: masa simpan habis, permintaan pemilik
+   data, dan hapus dari /developer. Urutannya:
+     1. email pemberitahuan ke pembeli (Pasal 45) — sebelum emailnya ikut dihapus;
+     2. foto & lagu di R2 dihapus, isi & kontak di D1 dikosongkan;
+     3. kodenya dicatat di tabel `terhapus` (tanpa data pribadi);
+     4. pesanan yang sama dibersihkan dari SEMUA berkas cadangan di R2
+        (Pasal 16 ayat 2 huruf g, Pasal 43–44: dihapus berarti benar-benar hilang).
+   `penuh` = baris pesanan dibuang seluruhnya (aksi "hapus"); selain itu catatan
+   transaksi (kode, tema, jumlah, tanggal) tetap untuk pembukuan. */
+const KOSONG_PRIBADI = { isi: "{}", email: "", whatsapp: "", token: null, aktif: 0 };
+async function lupakanPesanan(env, db, daftar, alasan, penuh) {
+  const kodeList = [...new Set((daftar || []).filter(Boolean))];
+  if (!kodeList.length) return 0;
+  for (const kode of kodeList) {
+    const b = await db.prepare(`SELECT kode,email,isi,status FROM pesanan WHERE kode=?`).bind(kode).first();
+    if (b && b.email && b.status !== "draf") await kirimEmailDihapus(env, b, alasan);
+    await hapusFoto(env, db, kode);
+    if (penuh) await db.prepare(`DELETE FROM pesanan WHERE kode=?`).bind(kode).run();
+    else await db.prepare(`UPDATE pesanan SET isi='{}', email='', whatsapp='', token=NULL, aktif=0 WHERE kode=?`).bind(kode).run();
+    await db.prepare(`DELETE FROM pengingat WHERE kode=?`).bind(kode).run();
+    await db.prepare(`INSERT OR REPLACE INTO terhapus(kode,waktu,alasan) VALUES(?,?,?)`).bind(kode, Date.now(), alasan + (penuh ? "/penuh" : "")).run();
+  }
+  try { await bersihkanCadangan(env, kodeList, penuh); }
+  catch (e) { await catatKejadian(env, db, "pembersihan cadangan gagal", e && e.message, kodeList.join(",").slice(0, 60)); }
+  return kodeList.length;
+}
+/* Tulis ulang tiap berkas cadangan/…json tanpa data pribadi pesanan-pesanan itu. */
+async function bersihkanCadangan(env, kodeList, penuh) {
+  if (!env.FOTO || !kodeList.length) return 0;
+  const set = new Set(kodeList);
+  const daftar = await env.FOTO.list({ prefix: "cadangan/" });
+  let diubah = 0;
+  for (const o of (daftar.objects || [])) {
+    const obj = await env.FOTO.get(o.key);
+    if (!obj) continue;
+    let data; try { data = JSON.parse(await obj.text()); } catch (_) { continue; }
+    if (!data || !Array.isArray(data.pesanan)) continue;
+    let kena = false;
+    data.pesanan = data.pesanan.flatMap(r => {
+      if (!set.has(r.kode)) return [r];
+      kena = true;
+      return penuh ? [] : [Object.assign({}, r, KOSONG_PRIBADI)];
+    });
+    if (Array.isArray(data.pengingat)) {
+      const n = data.pengingat.length;
+      data.pengingat = data.pengingat.filter(r => !set.has(r.kode));
+      if (data.pengingat.length !== n) kena = true;
+    }
+    if (!kena) continue;
+    await env.FOTO.put(o.key, JSON.stringify(data), { httpMetadata: { contentType: "application/json" } });
+    diubah++;
+  }
+  return diubah;
+}
+async function kirimEmailDihapus(env, b, alasan) {
+  if (!env.RESEND_API_KEY || !b.email) return;
+  let isi = {}; try { isi = JSON.parse(b.isi || "{}"); } catch (_) {}
+  const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+  const sebab = alasan === "masa simpan"
+    ? "Masa simpannya sudah berakhir, jadi sesuai janji kami,"
+    : "Sesuai permintaanmu,";
+  await kirimResend(env, {
+    method: "POST",
+    headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+    body: JSON.stringify({
+      from: "Foreverse <" + dari + ">", to: [b.email], reply_to: dari,
+      subject: "Data surat untuk " + (isi.penerima || "dia") + " sudah kami hapus",
+      html: `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
+<div style="max-width:520px;margin:0 auto;padding:32px 20px">
+  <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
+  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
+  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
+    <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Datanya sudah kami hapus.</h1>
+    <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">${sebab} isi surat untuk <strong>${esc(isi.penerima || "")}</strong>, foto, lagu, email, dan nomor WhatsApp-mu sudah kami hapus — termasuk dari salinan cadangan. Tautan suratnya tidak bisa dibuka lagi.</p>
+    <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4E4A5E">Yang kami simpan hanya catatan transaksi (kode pesanan, tema, jumlah, tanggal) untuk pembukuan. Ini email terakhir dari kami untuk surat ini.</p>
+  </div>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
+</div></body></html>`
+    })
+  }).catch(() => {});
+}
+
 /* ══════════════════ perpanjangan masa simpan ══════════════════ */
 async function lunasiPerpanjangan(env, db, orderId) {
   const row = await db.prepare(`SELECT * FROM perpanjangan WHERE order_id=?`).bind(orderId).first();
@@ -1329,8 +1411,17 @@ async function pulihkan(env, db, data, mode) {
     await env.FOTO.put(nama, JSON.stringify(await buatCadangan(db)), { httpMetadata: { contentType: "application/json" } });
     laporan._cadanganSebelum = nama;
   }
+  /* pesanan yang datanya sudah dihapus tidak boleh hidup lagi lewat berkas
+     cadangan lama (mis. yang pernah diunduh ke perangkat) */
+  const terhapus = new Map(((await db.prepare(`SELECT kode,alasan FROM terhapus`).all()).results || [])
+    .map(r => [r.kode, /\/penuh$/.test(r.alasan || "")]));
+  let dilewati = 0;
   for (const [tabel, kunci] of Object.entries(KUNCI_TABEL)) {
-    const baris = Array.isArray(data[tabel]) ? data[tabel] : [];
+    const baris = (Array.isArray(data[tabel]) ? data[tabel] : []).flatMap(r => {
+      if (!r || !terhapus.has(r.kode) || (tabel !== "pesanan" && tabel !== "pengingat")) return [r];
+      dilewati++;
+      return tabel === "pesanan" && !terhapus.get(r.kode) ? [Object.assign({}, r, KOSONG_PRIBADI)] : [];
+    });
     const kolomAda = ((await db.prepare(`PRAGMA table_info(${tabel})`).all()).results || []).map(c => c.name);
     let baru = 0, sama = 0, ditulis = 0;
     for (const r of baris) {
@@ -1345,6 +1436,7 @@ async function pulihkan(env, db, data, mode) {
     }
     laporan[tabel] = { di_cadangan: baris.length, belum_ada: baru, sudah_ada: sama, ditulis };
   }
+  laporan._terhapus_dilewati = dilewati;
   return laporan;
 }
 
@@ -2018,10 +2110,7 @@ export async function onRequest(ctx) {
 
       /* ── permintaan hapus data (UU PDP): isi & kontak dihapus, catatan transaksi tetap ── */
       if (aksi === "anonimkan") {
-        const kode = teks(badan.kode, 16);
-        await hapusFoto(env, db, kode);
-        await db.prepare(`UPDATE pesanan SET isi='{}', email='', whatsapp='', token=NULL, aktif=0 WHERE kode=?`).bind(kode).run();
-        await db.prepare(`DELETE FROM pengingat WHERE kode=?`).bind(kode).run();
+        await lupakanPesanan(env, db, [teks(badan.kode, 16)], "permintaan", false);
         return jwb({ ok: true });
       }
 
@@ -2055,9 +2144,7 @@ export async function onRequest(ctx) {
       }
 
       if (aksi === "hapus") {
-        const kode = teks(badan.kode, 16);
-        await hapusFoto(env, db, kode);
-        await db.prepare(`DELETE FROM pesanan WHERE kode=?`).bind(kode).run();
+        await lupakanPesanan(env, db, [teks(badan.kode, 16)], "permintaan", true);
         return jwb({ ok: true });
       }
 

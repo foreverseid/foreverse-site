@@ -2234,6 +2234,56 @@ await uji("L1 (pengaman): perpanjang berkali-kali tetap bisa — dua pembayaran 
   sama(b.n_panjang, 2, "dua kali perpanjang");
 });
 
+async function cadanganBerisi(L, kode) {
+  const keluar = [];
+  for (const k of L.env.FOTO._isi.keys()) if (k.startsWith("cadangan/")) {
+    const d = JSON.parse(await (await L.env.FOTO.get(k)).text());
+    const r = (d.pesanan || []).find(x => x.kode === kode);
+    keluar.push({ nama: k, ada: !!r, pribadi: !!(r && (r.isi !== "{}" || r.email || r.whatsapp || r.token)),
+      pengingat: (d.pengingat || []).some(x => x.kode === kode) });
+  }
+  return keluar;
+}
+
+await uji("M3: masa simpan habis → data hilang juga dari SEMUA cadangan R2, email Pasal 45 terkirim", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  await L.panggil("/api/ingat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode: p.kode, token: p.token }) });
+  await admin(L, { aksi: "cadangan_sekarang" });
+  await L.env.FOTO.put("cadangan/" + new Date(Date.now() - 86400000).toISOString().slice(0, 10) + ".json", JSON.stringify({ pesanan: [await L.env.DB.prepare("SELECT * FROM pesanan WHERE kode=?").bind(p.kode).first()], pengingat: [] }));
+  harus((await cadanganBerisi(L, p.kode)).every(c => c.pribadi), "sebelum: cadangan memuat data pribadi");
+  await L.env.DB.prepare("UPDATE pesanan SET simpan_sampai=? WHERE kode=?").bind(Date.now() - 1000, p.kode).run();
+  const awal = L.catatan.email.length;
+  await rawatHarian(L.env);
+  const c = await cadanganBerisi(L, p.kode);
+  harus(c.length >= 2, "jumlah cadangan " + c.length);
+  for (const x of c) { harus(!x.pribadi, x.nama + " masih memuat data pribadi"); harus(!x.pengingat, x.nama + " masih memuat pengingat"); }
+  harus(c.every(x => x.ada), "catatan transaksi tetap ada");
+  const e = L.catatan.email.slice(awal).filter(x => /sudah kami hapus/.test(x.subject));
+  sama(e.length, 1, "email pemberitahuan penghapusan");
+  sama(e[0].to[0], "pembeli@contoh.id", "ke pembeli");
+  harus(/Amira/.test(e[0].subject), "subjek menyebut penerima");
+});
+
+await uji("M3: permintaan hapus (anonimkan) & hapus penuh membersihkan cadangan; pemulihan tidak menghidupkannya lagi", async () => {
+  const L = await buatLingkungan();
+  const a = await lunaskan(L), b = await lunaskan(L);
+  const lama = (await admin(L, { aksi: "cadangan" })).data;   // berkas yang pernah diunduh ke perangkat
+  await admin(L, { aksi: "cadangan_sekarang" });
+  const nEmail = L.catatan.email.length;
+  harus((await admin(L, { aksi: "anonimkan", kode: a.kode })).ok, "anonimkan");
+  harus((await admin(L, { aksi: "hapus", kode: b.kode })).ok, "hapus");
+  sama(L.catatan.email.slice(nEmail).filter(x => /sudah kami hapus/.test(x.subject)).length, 2, "dua email Pasal 45");
+  for (const x of await cadanganBerisi(L, a.kode)) { harus(x.ada && !x.pribadi, "anonimkan: " + x.nama); }
+  for (const x of await cadanganBerisi(L, b.kode)) harus(!x.ada, "hapus penuh: " + x.nama);
+  const lap = (await admin(L, { aksi: "pulihkan", mode: "timpa", data: lama })).laporan;
+  harus(lap._terhapus_dilewati >= 2, "dilewati: " + JSON.stringify(lap));
+  const ra = await L.env.DB.prepare("SELECT isi,email,token,aktif FROM pesanan WHERE kode=?").bind(a.kode).first();
+  harus(ra && ra.isi === "{}" && !ra.email && !ra.token && !ra.aktif, "anonimkan tetap kosong setelah pulih: " + JSON.stringify(ra));
+  sama(await L.env.DB.prepare("SELECT kode FROM pesanan WHERE kode=?").bind(b.kode).first(), null, "hapus penuh tidak kembali");
+  sama((await L.panggil("/s/" + a.kode)).status, 404, "tautan tetap mati");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0
