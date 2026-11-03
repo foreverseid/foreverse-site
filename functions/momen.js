@@ -12,7 +12,7 @@
    ══════════════════════════════════════════════════════════════════ */
 
 const TEMA = {
-  "bait": { nama: "Bait", demo: "/bait-demo.html", ringkas: "Amplop bersegel bertema pos: segelnya ditarik, lilinnya ditiup, umurnya distempel, dan tinta rahasianya digosok." },
+  "bait": { nama: "Bait", demo: "/bait-demo.html", ringkas: "Satu hari menerima pos: kotak pos dibuka, amplop dirobek pisau surat, perangko umur baru ditempel, kertas tipis diterawang, dan paket balasan ditimbang pas umurnya." },
   "kado-riang": { nama: "Kado Riang", demo: "/kado-riang-demo.html", ringkas: "Riang dan ramai: tiket disobek, lilin umur baru dinyalakan, dan kupon ulang tahun bisa ditukar langsung." },
   "langit-harapan": { nama: "Langit Harapan", demo: "/langit-harapan-demo.html", ringkas: "Hangat dan lembut: galeri kenangan, kuis seberapa kenal, bintang harapan, lalu ditutup surat senja." },
   "peta-perjalanan": { nama: "Peta Perjalanan", demo: "/peta-perjalanan-demo.html", ringkas: "Peta yang digulung dibuka, rute kalian disusun, dan foto disingkap lewat teropong — rutenya memanjang tiap tahun." },
