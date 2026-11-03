@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Program Kreator · Foreverse</title>
-<meta name="description" content="Bikin konten tentang Foreverse, dapat kode dan tautan sendiri, dan dapat komisi dari setiap surat yang dipesan lewat kodemu.">
+<meta name="description" content="Media kit kreator Foreverse: tentang produk, ide konten, panduan merek, dan cara bergabung. Kode dan tautan sendiri, komisi dari setiap surat yang dipesan lewat kodemu.">
 <meta property="og:title" content="Program Kreator Foreverse">
 <meta property="og:description" content="Kode sendiri, tautan sendiri, komisi dari setiap surat yang dipesan lewat kodemu.">
 <meta property="og:image" content="https://foreverse.id/og-bait.png">
@@ -24,72 +24,167 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6}
-.wrap{max-width:40rem;margin:0 auto;padding:clamp(28px,7vw,56px) 18px 80px}
-.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;margin-bottom:36px}
+a{color:inherit}
+.wrap{max-width:46rem;margin:0 auto;padding:clamp(24px,6vw,48px) 18px 80px}
+.atas{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:36px}
+.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600}
 .merk img{width:24px;height:24px}
+.daftar{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 0}
+.daftar a{font-size:.82rem;text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--stone);background:var(--paper);color:var(--ink-soft)}
 .label{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);font-weight:600}
-h1{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,7vw,2.5rem);line-height:1.15;margin:8px 0 14px}
-h2{font-family:var(--serif);font-weight:400;font-size:1.35rem;margin:40px 0 12px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(1.9rem,7vw,2.7rem);line-height:1.12;margin:8px 0 14px;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.35rem,4.5vw,1.7rem);margin:52px 0 6px;scroll-margin-top:20px}
+h2+.sub{margin-bottom:16px}
 p{margin:0 0 12px;color:var(--ink-soft)}
-.langkah{list-style:none;padding:0;margin:0;display:grid;gap:10px}
-.langkah li{background:var(--paper);border:1px solid var(--stone);border-radius:16px;padding:16px 18px 16px 58px;position:relative}
-.langkah li::before{counter-increment:n;content:counter(n);position:absolute;left:16px;top:15px;width:28px;height:28px;border-radius:50%;
-  background:var(--violet-tint);color:var(--violet);font-weight:600;display:flex;align-items:center;justify-content:center;font-size:.9rem}
-.langkah{counter-reset:n}
-.langkah b{display:block;color:var(--ink);margin-bottom:2px}
-.dapat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-.dapat div{background:var(--paper);border:1px solid var(--stone);border-radius:16px;padding:16px}
-.dapat b{display:block;font-family:var(--serif);font-weight:500;font-size:1.05rem;margin-bottom:4px}
-.dapat span{font-size:.9rem;color:var(--ink-soft)}
+.sub{color:var(--ink-faint);font-size:.92rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-weight:600;padding:13px 20px;border-radius:999px;text-decoration:none;background:var(--violet);color:#fff;margin:6px 8px 0 0}
+.btn.garis{background:var(--paper);color:var(--ink);border:1px solid var(--stone)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.kotak{background:var(--paper);border:1px solid var(--stone);border-radius:16px;padding:16px}
+.kotak b{display:block;font-family:var(--serif);font-weight:500;font-size:1.05rem;margin-bottom:4px;color:var(--ink)}
+.kotak span,.kotak p{font-size:.9rem;color:var(--ink-soft);margin:0}
+.angka{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.angka div{background:var(--violet-tint);border-radius:16px;padding:14px 16px}
+.angka b{display:block;font-family:var(--serif);font-weight:500;font-size:1.6rem;color:var(--violet);line-height:1.1}
+.angka span{font-size:.85rem;color:var(--ink-soft)}
+.ide .no{display:inline-block;font-size:.75rem;font-weight:600;color:var(--coral);letter-spacing:.08em;margin-bottom:4px}
+.momen{display:flex;flex-wrap:wrap;gap:8px}
+.momen a{text-decoration:none;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1px solid var(--stone);background:var(--paper)}
+.warna{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px}
+.warna div{border-radius:14px;overflow:hidden;border:1px solid var(--stone);background:var(--paper);font-size:.8rem}
+.warna i{display:block;height:54px}
+.warna span{display:block;padding:8px 10px;color:var(--ink-soft)}
+.logo{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--stone);border-radius:16px;padding:16px}
+.logo img{width:160px;height:auto}
+.duadua{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.duadua ul{margin:6px 0 0;padding-left:18px;color:var(--ink-soft);font-size:.92rem}
+.duadua li{margin-bottom:5px}
+.ya b{color:#1E6B42}.tidak b{color:#B33A2B}
+ol.langkah{list-style:none;padding:0;margin:0;display:grid;gap:10px;counter-reset:n}
+ol.langkah li{background:var(--paper);border:1px solid var(--stone);border-radius:16px;padding:16px 18px 16px 58px;position:relative;color:var(--ink-soft);font-size:.95rem}
+ol.langkah li::before{counter-increment:n;content:counter(n);position:absolute;left:16px;top:15px;width:28px;height:28px;border-radius:50%;background:var(--violet-tint);color:var(--violet);font-weight:600;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+ol.langkah b{display:block;color:var(--ink);margin-bottom:2px}
 ul.aturan{padding-left:20px;margin:0;color:var(--ink-soft)}
 ul.aturan li{margin-bottom:6px}
-.ajak{margin-top:40px;background:var(--violet);color:#fff;border-radius:20px;padding:24px}
-.ajak h2{color:#fff;margin-top:0}
+details{background:var(--paper);border:1px solid var(--stone);border-radius:14px;padding:14px 18px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600}
+details p{margin:8px 0 0}
+code{background:var(--violet-tint);color:var(--violet);padding:1px 6px;border-radius:6px;font-size:.88em}
+.ajak{margin-top:52px;background:var(--violet);color:#fff;border-radius:20px;padding:24px}
+.ajak h2{color:#fff;margin:0 0 6px}
 .ajak p{color:rgba(255,255,255,.85)}
-.tbl{display:inline-block;margin:6px 8px 0 0;font-weight:600;padding:13px 20px;border-radius:999px;text-decoration:none;background:#fff;color:var(--violet)}
-.tbl.garis{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.6)}
+.ajak .btn{background:#fff;color:var(--violet)}
+.ajak .btn.garis{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
 .kecil{font-size:.85rem;color:var(--ink-faint);margin-top:28px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="merk" href="/"><img src="/favicon.svg" alt="">Foreverse</a>
+  <div class="atas"><a class="merk" href="/"><img src="/favicon.svg" alt="">Foreverse</a><a class="btn garis" style="margin:0;padding:9px 16px;font-size:.9rem" href="#gabung">Gabung</a></div>
 
-  <div class="label">Program Kreator</div>
+  <div class="label">Media kit · Program Kreator</div>
   <h1>Ceritakan Foreverse, dapat komisi dari setiap surat.</h1>
-  <p>Kamu bikin konten — reaksi pasangan yang membuka suratnya, cara bikinnya, atau ide kejutan. Kami kasih kamu kode dan tautan sendiri. Setiap surat yang dipesan lewat kodemu, kamu dapat komisi.</p>
+  <p>Kamu bikin konten — reaksi orang yang membuka suratnya, cara bikinnya, atau ide kejutan. Kami kasih kamu kode dan tautan sendiri. Setiap surat yang dipesan lewat kodemu, kamu dapat komisi.</p>
+  <a class="btn" href="#gabung">Mau ikut</a><a class="btn garis" href="/bait-demo.html">Coba contoh suratnya</a>
+  <nav class="daftar" aria-label="Isi halaman"><a href="#tentang">Tentang</a><a href="#dapat">Yang kamu dapat</a><a href="#ide">Ide konten</a><a href="#merek">Panduan merek</a><a href="#cara">Cara ikut</a><a href="#tanya">Tanya jawab</a></nav>
 
-  <h2>Yang kamu dapat</h2>
-  <div class="dapat">
-    <div><b>Kode &amp; tautan sendiri</b><span>Contoh: <code>foreverse.id/r/NAMAMU</code>. Kodenya diingat 30 hari, jadi tetap tercatat walau pembeli baru pesan beberapa hari kemudian.</span></div>
-    <div><b>Komisi per penjualan</b><span>Dihitung dari harga surat yang dibayar pembeli lewat kodemu. Besarnya kami sepakati saat kamu bergabung.</span></div>
-    <div><b>Hadiah untuk followers</b><span>Kodemu bisa sekalian jadi potongan harga untuk followers-mu, kalau kita sepakati.</span></div>
+  <h2 id="tentang">Foreverse itu apa</h2>
+  <p class="sub">Yang perlu kamu tahu sebelum bikin konten.</p>
+  <p><b style="color:var(--ink)">Surat digital yang bisa dimainkan.</b> Pembeli mengisi nama, pesan, foto, dan lagu, lalu dapat satu tautan untuk dikirim ke orang tersayang. Yang menerima tidak cuma membaca — dia meniup lilin, membuka amplop, menjelajah peta, atau memainkan game kecil sebelum sampai di surat yang ditulis untuknya.</p>
+  <div class="angka">
+    <div><b>13</b><span>tema siap pakai</span></div>
+    <div><b>9</b><span>momen: ulang tahun, LDR, confess, lamaran, dll.</span></div>
+    <div><b data-v="harga">Rp15.000</b><span>per surat</span></div>
+    <div><b>5 menit</b><span>dari isi formulir sampai tautan jadi</span></div>
+  </div>
+  <div class="grid" style="margin-top:10px">
+    <div class="kotak"><b>Tanpa aplikasi</b><span>Dibuka langsung di browser HP. Tidak perlu daftar akun.</span></div>
+    <div class="kotak"><b>Privat</b><span>Tautan berkode acak, tidak muncul di Google, bisa dikunci PIN atau dibuka di jam tertentu.</span></div>
+    <div class="kotak"><b>Bisa dibalas</b><span>Penerima bisa menulis balasan yang langsung masuk ke email pengirim.</span></div>
   </div>
 
-  <h2>Cara ikut</h2>
+  <h2 id="dapat">Yang kamu dapat</h2>
+  <p class="sub">Rinciannya kami sepakati bersama saat kamu bergabung.</p>
+  <div class="grid">
+    <div class="kotak"><b>Kode &amp; tautan sendiri</b><span>Contoh <code>foreverse.id/r/NAMAMU</code>. Kodenya diingat 30 hari dan terisi otomatis di formulir, jadi tetap tercatat walau pembeli baru pesan beberapa hari kemudian.</span></div>
+    <div class="kotak"><b>Komisi per penjualan</b><span>Persentase dari harga surat yang dibayar pembeli lewat kodemu. Besarnya disepakati per kreator.</span></div>
+    <div class="kotak"><b>Surat untuk bahan konten</b><span>Kamu bisa membuat surat sendiri tanpa bayar untuk direkam jadi konten.</span></div>
+    <div class="kotak"><b>Hadiah untuk followers</b><span>Kalau disepakati, kodemu sekalian jadi potongan harga untuk followers-mu.</span></div>
+    <div class="kotak"><b>Rekap yang jelas</b><span>Jumlah surat lewat kodemu dan komisinya bisa kamu tanyakan kapan saja.</span></div>
+  </div>
+
+  <h2 id="ide">Ide konten</h2>
+  <p class="sub">Yang paling kuat biasanya momen orang membuka suratnya.</p>
+  <div class="grid ide">
+    <div class="kotak"><span class="no">01 · REAKSI</span><b>Dia membuka suratnya</b><p>Rekam reaksi pasangan, sahabat, atau orang tua saat memainkan surat sampai bagian akhir. Minta izin dulu sebelum diunggah.</p></div>
+    <div class="kotak"><span class="no">02 · POV</span><b>Bikin kejutan 5 menit</b><p>POV kamu menyiapkan surat: pilih tema, isi pesan, unggah foto, tautan jadi.</p></div>
+    <div class="kotak"><span class="no">03 · TENGAH MALAM</span><b>Terbuka tepat jam 12</b><p>Pakai kunci waktu — suratnya baru terbuka di jam ulang tahun, lengkap dengan hitung mundur.</p></div>
+    <div class="kotak"><span class="no">04 · SERI</span><b>Satu tema, satu momen</b><p>Seri singkat: tema untuk LDR, untuk confess, untuk minta jalan, untuk lamaran.</p></div>
+    <div class="kotak"><span class="no">05 · HARI BESAR</span><b>Ikuti kalender</b><p>Hari Ibu, akhir tahun, Valentine, musim wisuda — momen orang mencari kado yang beda.</p></div>
+    <div class="kotak"><span class="no">06 · TIPS</span><b>Kata-kata yang pas</b><p>Ide kalimat untuk surat ulang tahun atau minta maaf, ditutup dengan cara mengirimnya.</p></div>
+  </div>
+  <p style="margin-top:14px">Halaman yang bisa kamu tautkan sesuai topik kontenmu:</p>
+  <div class="momen"><a href="/ulang-tahun">Ulang tahun</a><a href="/anniversary">Anniversary</a><a href="/ldr">LDR</a><a href="/wisuda">Wisuda</a><a href="/surat-cinta">Surat cinta</a><a href="/ajak-kencan">Ajak kencan</a><a href="/nyatakan-perasaan">Nyatakan perasaan</a><a href="/cepat-sembuh">Cepat sembuh</a><a href="/lamaran">Lamaran</a></div>
+
+  <h2 id="merek">Panduan merek</h2>
+  <p class="sub">Supaya konten kamu tetap terasa Foreverse.</p>
+  <div class="logo"><img src="/foreverse-logo.png" alt="Logo Foreverse"><div><p style="margin:0 0 8px">Logo Foreverse, latar transparan.</p><a class="btn garis" style="margin:0" href="/foreverse-logo.png" download>Unduh logo (PNG)</a></div></div>
+  <div class="warna" style="margin-top:10px">
+    <div><i style="background:#3B3168"></i><span>Violet<br>#3B3168</span></div>
+    <div><i style="background:#E8734A"></i><span>Coral<br>#E8734A</span></div>
+    <div><i style="background:#E8A5B0"></i><span>Blush<br>#E8A5B0</span></div>
+    <div><i style="background:#FBFAF7"></i><span>Cream<br>#FBFAF7</span></div>
+    <div><i style="background:#16161A"></i><span>Ink<br>#16161A</span></div>
+  </div>
+  <div class="grid" style="margin-top:10px">
+    <div class="kotak"><b>Penulisan nama</b><span><b style="display:inline;font-family:inherit;font-size:inherit">Foreverse</b> — satu kata, F kapital. Bukan "Forever Verse" atau "ForeVerse".</span></div>
+    <div class="kotak"><b>Kalimat inti</b><span>"Surat digital yang bisa dimainkan."</span></div>
+    <div class="kotak"><b>Tandai kami</b><span>@foreverse.id di Instagram &amp; TikTok, plus tautan kodemu di bio atau keterangan.</span></div>
+  </div>
+  <div class="duadua" style="margin-top:10px">
+    <div class="kotak ya"><b>Silakan</b><ul><li>Bahasa santai, hangat, apa adanya.</li><li>Tunjukkan surat dimainkan dari awal sampai akhir.</li><li>Sebut harga dan bahwa tautannya langsung jadi.</li></ul></div>
+    <div class="kotak tidak"><b>Hindari</b><ul><li>Menjanjikan fitur yang tidak ada.</li><li>Menampilkan wajah atau nama orang lain tanpa izin.</li><li>Mengubah logo atau warnanya.</li></ul></div>
+  </div>
+
+  <h2 id="cara">Cara ikut</h2>
   <ol class="langkah">
-    <li><b>Kirim pesan ke kami</b>Lewat email atau DM Instagram: nama, akun media sosialmu, dan jenis konten yang biasa kamu buat.</li>
-    <li><b>Dapat kode &amp; tautan</b>Kalau cocok, kami buatkan kode khusus untukmu beserta besaran komisinya.</li>
-    <li><b>Bikin kontennya</b>Coba buat suratmu sendiri, rekam momennya, dan taruh tautanmu di bio atau keterangan video.</li>
-    <li><b>Terima komisi</b>Kami rekap penjualan lewat kodemu dan mentransfer komisinya secara berkala. Rinciannya selalu bisa kamu tanyakan.</li>
+    <li><b>Kirim pesan ke kami</b>Lewat email atau DM Instagram: nama, akun media sosialmu, dan contoh konten yang biasa kamu buat.</li>
+    <li><b>Kenalan &amp; sepakat</b>Kami ngobrol soal jenis konten, besaran komisi, dan apakah followers-mu dapat potongan.</li>
+    <li><b>Dapat kode &amp; tautan</b>Kami buatkan kode khusus untukmu, plus kode surat untuk bahan konten.</li>
+    <li><b>Bikin &amp; unggah</b>Taruh tautanmu di bio atau keterangan video.</li>
+    <li><b>Terima komisi</b>Kami rekap penjualan lewat kodemu dan mentransfer komisinya secara berkala.</li>
   </ol>
 
   <h2>Supaya adil untuk semua</h2>
   <ul class="aturan">
     <li>Tulis jujur bahwa kamu bekerja sama dengan Foreverse (misalnya #kerjasama atau #ad).</li>
-    <li>Jangan menjanjikan hal yang tidak ada di Foreverse, dan jangan pakai foto atau nama orang lain tanpa izin.</li>
     <li>Tidak boleh spam komentar atau membeli lewat kodemu sendiri untuk mengejar komisi.</li>
     <li>Pesanan yang dibatalkan atau dikembalikan dananya tidak dihitung.</li>
+    <li>Kerja sama bisa diakhiri kapan saja oleh kedua pihak; komisi yang sudah tercatat tetap dibayarkan.</li>
   </ul>
 
-  <div class="ajak">
+  <h2 id="tanya">Tanya jawab</h2>
+  <details><summary>Berapa komisinya?</summary><p>Disepakati per kreator saat bergabung, dalam bentuk persentase dari harga surat yang dibayar pembeli lewat kodemu.</p></details>
+  <details><summary>Kapan komisinya dibayar?</summary><p>Secara berkala setelah kami rekap. Jadwal pastinya kami sepakati bersama.</p></details>
+  <details><summary>Apa aku harus beli surat dulu untuk bikin konten?</summary><p>Tidak. Kami berikan kode untuk membuat surat sebagai bahan konten.</p></details>
+  <details><summary>Bagaimana penjualan lewat kodeku dihitung?</summary><p>Setiap pesanan yang memakai kodemu — diketik langsung atau lewat tautan <code>foreverse.id/r/KODE</code> dalam 30 hari terakhir — tercatat otomatis di sistem kami.</p></details>
+  <details><summary>Aku belum punya banyak followers. Boleh ikut?</summary><p>Boleh kirim pesan. Yang kami lihat terutama kecocokan konten dan cara kamu bercerita.</p></details>
+
+  <div class="ajak" id="gabung">
     <h2>Mau ikut?</h2>
-    <p>Kirim nama dan akunmu. Kami balas secepatnya.</p>
-    <a class="tbl" href="mailto:halo@foreverse.id?subject=Program%20Kreator%20Foreverse">Email kami</a>
-    <a class="tbl garis" href="https://instagram.com/foreverse.id" target="_blank" rel="noopener">DM Instagram</a>
+    <p>Kirim nama, akun media sosialmu, dan satu contoh konten. Kami balas secepatnya.</p>
+    <a class="btn" href="mailto:halo@foreverse.id?subject=Program%20Kreator%20Foreverse">Email kami</a>
+    <a class="btn garis" href="https://instagram.com/foreverse.id" target="_blank" rel="noopener">DM Instagram</a>
   </div>
 
   <p class="kecil">Dengan ikut program ini, kamu tetap tunduk pada <a href="/syarat-ketentuan">Syarat &amp; Ketentuan</a> dan <a href="/kebijakan-privasi">Kebijakan Privasi</a> Foreverse.</p>
 </div>
+<script>
+fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
+  if(!i || !i.ok) return;
+  var h = i.harga > 0 ? "Rp" + Number(i.harga).toLocaleString("id-ID") : "Gratis";
+  document.querySelectorAll('[data-v="harga"]').forEach(function(el){ el.textContent = h; });
+}).catch(function(){});
+</script>
 </body>
 </html>
