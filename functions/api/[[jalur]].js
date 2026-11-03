@@ -2061,7 +2061,8 @@ export async function onRequest(ctx) {
         if (Array.isArray(badan.tema_mati))
           await simpanPengaturan(db, "tema_mati", JSON.stringify(badan.tema_mati.filter(t => TEMA_SKEMA[t])));
         const a = await bacaPengaturan(db);
-        return jwb({ ok: true, harga: a.harga, harga_perpanjang: a.hargaPerpanjang, tema_mati: a.temaMati, semua_tema: Object.keys(TEMA_SKEMA), metode: a.metode });
+        return jwb({ ok: true, harga: a.harga, harga_perpanjang: a.hargaPerpanjang, tema_mati: a.temaMati, semua_tema: Object.keys(TEMA_SKEMA),
+          tema_momen: Object.fromEntries(Object.entries(TEMA_SKEMA).map(([t, x]) => [t, x.momen])), metode: a.metode });
       }
 
       /* ── kode promo ── */

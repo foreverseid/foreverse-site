@@ -246,7 +246,10 @@ section{scroll-margin-top:16px;margin-bottom:26px}
 .form-atur{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:end}
 .form-atur label{display:block;font-size:.74rem;color:var(--ink-faint);margin-bottom:4px}
 .form-atur input,.form-atur select{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--cream-lift);border-radius:9px;background:var(--paper);color:inherit;font:inherit;font-size:.86rem}
-.tema-sakelar{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));margin-top:12px}
+.tema-sakelar{display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.tema-grup h4{margin:0 0 6px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);display:flex;gap:8px;align-items:baseline}
+.tema-grup h4 span{font-weight:400;text-transform:none;letter-spacing:0}
+.tema-grup .isi{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
 .tema-sakelar label{display:flex;gap:8px;align-items:center;font-size:.84rem;padding:7px 10px;border:1px solid var(--cream-lift);border-radius:9px;cursor:pointer}
 .tema-sakelar input{width:16px;height:16px}
 .tbl-mini{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:12px;min-width:0!important}
@@ -1088,9 +1091,18 @@ a.tautan:hover{text-decoration:underline}
             '<td><input type="number" class="mPersen" min="0" max="10" step="0.1" value="' + m.persen + '" style="width:70px"></td>' +
             '<td class="redup">' + rp(m.tetap + Math.ceil(a.harga * m.persen / 100)) + '</td></tr>';
         }).join("");
-      $("aTema").innerHTML = a.semua_tema.map(function(t){
-        return '<label><input type="checkbox" data-tema="' + esc(t) + '"' + (a.tema_mati.indexOf(t) < 0 ? " checked" : "") + '>' +
-               esc((typeof NAMA_TEMA !== "undefined" && NAMA_TEMA[t]) || t) + '</label>';
+      /* dikelompokkan per momen rumahnya, urut seperti katalog */
+      var URUT_MOMEN = ["birthday","anniversary","ldr","graduation","apology","lovenote","congrats","askout","confess","getwell","parting","proposal","spesial"];
+      var grup = {}, tm = a.tema_momen || {};
+      a.semua_tema.forEach(function(t){ var m = tm[t] || "lain"; (grup[m] = grup[m] || []).push(t); });
+      var kunci = URUT_MOMEN.filter(function(m){ return grup[m]; }).concat(Object.keys(grup).filter(function(m){ return URUT_MOMEN.indexOf(m) < 0; }));
+      $("aTema").innerHTML = kunci.map(function(m){
+        var hidup = grup[m].filter(function(t){ return a.tema_mati.indexOf(t) < 0; }).length;
+        return '<div class="tema-grup"><h4>' + esc(NAMA_MOMEN[m] || m) + ' <span>' + hidup + ' dari ' + grup[m].length + ' dibuka' + (hidup ? '' : ' · tampil "Segera hadir"') + '</span></h4><div class="isi">' +
+          grup[m].map(function(t){
+            return '<label><input type="checkbox" data-tema="' + esc(t) + '"' + (a.tema_mati.indexOf(t) < 0 ? " checked" : "") + '>' +
+                   esc((typeof NAMA_TEMA !== "undefined" && NAMA_TEMA[t]) || t) + '</label>';
+          }).join("") + '</div></div>';
       }).join("");
     }catch(e){ $("aKabar").className = "kabar-atur salah"; $("aKabar").textContent = e.message; }
   }
