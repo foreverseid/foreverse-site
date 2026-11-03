@@ -712,7 +712,7 @@ await uji("pesan.html · mode edit mengisi ulang isian dasar SETIAP momen yang p
   const t = await readFile("./pesan.html", "utf8");
   const edit = t.slice(t.indexOf("siapkanTema(h.j.tema"), t.indexOf("var lagu = i.lagu"));
   const momen = [...new Set([...t.matchAll(/momen:"([a-z]+)"/g)].map(m => m[1]))];
-  const tanpaIsianDasar = ["birthday", "confess", "lovenote", "proposal", "apology", "congrats", "parting"];   // birthday = cabang bawaan
+  const tanpaIsianDasar = ["birthday", "confess", "lovenote", "proposal", "apology", "congrats", "parting", "spesial"];   // birthday = cabang bawaan
   for (const m of momen) {
     if (tanpaIsianDasar.includes(m)) continue;
     harus(edit.includes('MOMEN_GRUP === "' + m + '"'), "momen " + m + " tidak punya cabang isi-ulang di mode edit");
@@ -2318,6 +2318,16 @@ for (const [tema, momen, kosongkan, pesan] of [
     harus(!j.ok && new RegExp(pesan, "i").test(j.pesan || ""), "harus ditolak: " + JSON.stringify(j));
   });
 }
+
+/* ═══════════ momen Hari Spesial: rangka tanpa isian dasar ═══════════ */
+await uji("momen spesial terpasang di katalog, formulir, API, dan dasbor", async () => {
+  const idx = await readFile("./index.html", "utf8"), ps = await readFile("./pesan.html", "utf8");
+  const api = await readFile("./functions/api/[[jalur]].js", "utf8"), dev = await readFile("./developer.html", "utf8");
+  harus(/nama:"Hari Spesial"/.test(idx), "katalog");
+  harus(/momen === "spesial"/.test(ps) && /MOMEN_GRUP === "spesial" \? "Hari spesial"/.test(ps), "formulir");
+  harus(/skema\.momen === "spesial"/.test(api), "API");
+  harus(/spesial:"Hari Spesial"/.test(dev), "dasbor");
+});
 
 /* ═══════════ halaman momen: semua tema dimatikan → "Segera hadir" ═══════════ */
 await uji("halaman momen tanpa tema aktif menampilkan Segera hadir", async () => {

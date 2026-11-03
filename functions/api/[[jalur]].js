@@ -672,7 +672,8 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.tanggalAjak) throw new Error("Tanggal ajakannya belum diisi.");
     if (!isi.jamAjak) throw new Error("Jam ajakannya belum diisi.");
   } else if (skema.momen === "lovenote" || skema.momen === "proposal" ||
-             skema.momen === "apology" || skema.momen === "congrats" || skema.momen === "parting") {
+             skema.momen === "apology" || skema.momen === "congrats" || skema.momen === "parting" ||
+             skema.momen === "spesial") {
     /* Love Note: tidak butuh tanggal atau angka apa pun — surat sayang
        yang bisa dikirim hari apa saja. Hanya nama, foto, surat, dan isian
        khas temanya. */

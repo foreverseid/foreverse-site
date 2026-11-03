@@ -645,7 +645,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<input id="sembunyikanHari" type="checkbox">' +
         '<label for="sembunyikanHari">Sembunyikan hitungan harinya — tampilkan suratnya saja.</label>' +
         '</div></div></div>';
-    } else if(momen === "apology" || momen === "congrats" || momen === "parting"){
+    } else if(momen === "apology" || momen === "congrats" || momen === "parting" || momen === "spesial"){
       html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
         '<p class="jelas">Momen ini tidak butuh tanggal atau angka apa pun. Lanjut ke foto dan isinya.</p>';
     } else if(momen === "proposal"){
@@ -1199,7 +1199,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         sembunyikanHari: $("sembunyikanHari").checked
       };
     }
-    if(MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal" || MOMEN_GRUP === "apology" || MOMEN_GRUP === "congrats" || MOMEN_GRUP === "parting"){
+    if(MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal" || MOMEN_GRUP === "apology" || MOMEN_GRUP === "congrats" || MOMEN_GRUP === "parting" || MOMEN_GRUP === "spesial"){
       return {};
     }
     if(MOMEN_GRUP === "askout"){
@@ -1324,7 +1324,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["wisuda","wisuda"]]
       : MOMEN_GRUP === "getwell"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["sakit","sakit"]]
-      : MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal" || MOMEN_GRUP === "apology" || MOMEN_GRUP === "congrats" || MOMEN_GRUP === "parting"
+      : MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal" || MOMEN_GRUP === "apology" || MOMEN_GRUP === "congrats" || MOMEN_GRUP === "parting" || MOMEN_GRUP === "spesial"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"]]
       : MOMEN_GRUP === "askout"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["tglAjak","tglAjak"],["jamAjak","jamAjak"]]
@@ -1582,7 +1582,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : MOMEN_GRUP === "proposal" ? "Lamaran" : MOMEN_GRUP === "apology" ? "Minta maaf" : MOMEN_GRUP === "congrats" ? "Selamat" : MOMEN_GRUP === "parting" ? "Selesai baik-baik" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : MOMEN_GRUP === "proposal" ? "Lamaran" : MOMEN_GRUP === "apology" ? "Minta maaf" : MOMEN_GRUP === "congrats" ? "Selamat" : MOMEN_GRUP === "parting" ? "Selesai baik-baik" : MOMEN_GRUP === "spesial" ? "Hari spesial" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       promo: PROMO.kode,
