@@ -434,7 +434,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
                 catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50, janji:90,
-                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , sadar:90, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
+                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , harapanNatal:70, sadar:90, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -461,7 +461,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "rekonstruksi":      { nama:"Rekonstruksi Hari Pertama", nfoto:3, mesin:"/rekonstruksi.html",   momen:"anniversary" },
     "kotak-musik":       { nama:"Kotak Musik Diservis", nfoto:3, mesin:"/kotak-musik.html", momen:"apology" },
     "garis-finis":       { nama:"Garis Finis", nfoto:3, mesin:"/garis-finis.html", momen:"congrats" },
-    "stasiun-terakhir":  { nama:"Stasiun Terakhir", nfoto:3, mesin:"/stasiun-terakhir.html", momen:"parting" }
+    "stasiun-terakhir":  { nama:"Stasiun Terakhir", nfoto:3, mesin:"/stasiun-terakhir.html", momen:"parting" },
+    "rumah-menyala":     { nama:"Rumah yang Menyala", nfoto:3, mesin:"/rumah-menyala.html", momen:"spesial" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -1004,6 +1005,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         [0,1,2].map(function(i){ return '<div class="baris" data-f="sorakan'+i+'"><label for="sorakan'+i+'">Spanduk '+(i+1)+'</label>' +
           '<input id="sorakan'+i+'" type="text" maxlength="60" placeholder="'+contohSr[i]+'">' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Sorakan ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "rumah-menyala"){
+      var contohHn = ["Semoga kamu selalu sehat dan kuat tahun depan.", "Semoga kita lebih sering ketemu daripada video call.", "Semoga semua doamu dijawab pelan-pelan."];
+      html = '<h2><span class="n">5</span> Ucapan pembuka</h2>' +
+        '<p class="jelas">Muncul saat pintu rumahnya terbuka, dan jadi judul kartu suratnya.</p>' +
+        '<div class="baris" data-f="ucapanNatal"><label for="ucapanNatal">Ucapan</label>' +
+        '<select id="ucapanNatal"><option value="selamat">Selamat Natal</option><option value="merry">Merry Christmas</option></select></div>' +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Tiga harapan di pohon</h2>' +
+        '<p class="jelas">Setelah dia merangkai kabel lampunya, pohon menyala dan tiga ornamen bersinar. Tiap ornamen yang diketuk membuka satu harapanmu.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="harapanN'+i+'"><label for="harapanN'+i+'">Ornamen '+(i+1)+'</label>' +
+          '<textarea id="harapanN'+i+'" maxlength="70" style="min-height:62px" placeholder="'+contohHn[i]+'"></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Harapan ini belum diisi.</p></div>'; }).join("");
     } else if(tema === "stasiun-terakhir"){
       var contohSt = [["Kafe Pojok","Tempat kamu pertama kali ketawa sampai kopinya tumpah."],["Pantai Selatan","Kita nunggu matahari terbenam yang ketutup awan, dan tetap seneng."],["Stasiun Kota","Peron tempat kita janjian, dan hari ini tempat kita pamit."]];
       html = '<h2><span class="n">5</span> Tiga stasiun kenangan</h2>' +
@@ -1075,6 +1087,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     } else if(tema === "garis-finis"){
       pasangHitung("pencapaian", BATAS.pencapaian);
       for(var sr=0;sr<3;sr++) pasangHitung("sorakan"+sr, BATAS.sorakan);
+    } else if(tema === "rumah-menyala"){
+      for(var hn=0;hn<3;hn++) pasangHitung("harapanN"+hn, BATAS.harapanNatal);
     } else if(tema === "stasiun-terakhir"){
       for(var sn=0;sn<3;sn++){ pasangHitung("stNama"+sn, BATAS.namaStasiun); pasangHitung("stKenang"+sn, BATAS.kenangan); }
       pasangHitung("penutup", BATAS.penutup);
@@ -1178,6 +1192,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     }
     if(TEMA === "kotak-musik") return { sadar: [0,1,2].map(function(i){ return $("sadar"+i).value; }) };
     if(TEMA === "garis-finis") return { pencapaian: $("pencapaian").value, sorakan: [0,1,2].map(function(i){ return $("sorakan"+i).value; }) };
+    if(TEMA === "rumah-menyala") return { ucapan: $("ucapanNatal").value, harapan: [0,1,2].map(function(i){ return $("harapanN"+i).value; }) };
     if(TEMA === "stasiun-terakhir") return {
       stasiun: [0,1,2].map(function(i){ return { nama: $("stNama"+i).value, kenangan: $("stKenang"+i).value }; }),
       penutup: $("penutup").value };
@@ -1419,9 +1434,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tandai("alasan"+i, kosongA);
         if(kosongA) kurang.push("alasan"+i);
       });
-    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir"){
+    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir" || TEMA === "rumah-menyala"){
       (TEMA === "kotak-musik" ? ["sadar0","sadar1","sadar2"]
         : TEMA === "garis-finis" ? ["pencapaian","sorakan0","sorakan1","sorakan2"]
+        : TEMA === "rumah-menyala" ? ["harapanN0","harapanN1","harapanN2"]
         : ["stNama0","stKenang0","stNama1","stKenang1","stNama2","stKenang2"]).forEach(function(nm){
         var kosongX = !$(nm).value.trim(); tandai(nm, kosongX); if(kosongX) kurang.push(nm);
       });
@@ -1776,6 +1792,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         } else if(TEMA === "garis-finis"){
           if($("pencapaian")) $("pencapaian").value = i.pencapaian || "";
           (i.sorakan||[]).forEach(function(v,n){ if($("sorakan"+n)) $("sorakan"+n).value = v || ""; });
+        } else if(TEMA === "rumah-menyala"){
+          if($("ucapanNatal")) $("ucapanNatal").value = i.ucapan === "merry" ? "merry" : "selamat";
+          (i.harapan||[]).forEach(function(v,n){ if($("harapanN"+n)) $("harapanN"+n).value = v || ""; });
         } else if(TEMA === "stasiun-terakhir"){
           (i.stasiun||[]).forEach(function(x,n){ if(!$("stNama"+n)) return; $("stNama"+n).value = (x && x.nama) || ""; $("stKenang"+n).value = (x && x.kenangan) || ""; });
           if($("penutup")) $("penutup").value = i.penutup || "";

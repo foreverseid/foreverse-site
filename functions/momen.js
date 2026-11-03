@@ -27,7 +27,8 @@ const TEMA = {
   "rumah-contoh": { nama: "Rumah Contoh", demo: "/rumah-contoh-demo.html", ringkas: "Tur rumah dari sudut pandang orang pertama. Tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin." },
   "kotak-musik": { nama: "Kotak Musik Diservis", demo: "/kotak-musik-demo.html", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya: tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu lagunya bunyi lagi." },
   "garis-finis": { nama: "Garis Finis", demo: "/garis-finis-demo.html", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
-  "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." }
+  "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
+  "rumah-menyala": { nama: "Rumah yang Menyala", demo: "/rumah-menyala-demo.html", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." }
 };
 
 export const MOMEN = {
@@ -232,6 +233,23 @@ export const MOMEN = {
     faq: [
       ["Apakah ini untuk putus saja?", "Untuk semua pamit yang ingin dijaga baik: putus, pindah kota, atau berpisah dengan sahabat."],
       ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "natal": {
+    judul: "Ucapan Natal untuk Pacar — Kartu Natal Digital",
+    deskripsi: "Ucapan Natal untuk pacar yang bisa dimainkan: dia menarik lonceng pintu, merangkai lampu sampai pohon menyala, dan membaca harapan-harapanmu di ornamennya.",
+    h1: "Ucapan Natal yang bikin rumahnya menyala.",
+    lede: "Satu malam Natal di rumahnya. Bagian demi bagian menyala — lampu pohon, perapian, sampai bintang di puncak — dan di tiap bagian ada sesuatu darimu.",
+    tema: ["rumah-menyala"],
+    ide: [
+      "Selamat Natal. Semoga damainya tinggal lama di hatimu.",
+      "Makasih udah jadi orang yang bikin tahun ini terasa hangat.",
+      "Natal kali ini aku pengin kamu ngerasa rumah itu dekat."
+    ],
+    faq: [
+      ["Ucapannya bisa diganti?", "Bisa. Pilih \"Selamat Natal\" atau \"Merry Christmas\" di formulir."],
+      ["Kapan sebaiknya dikirim?", "Kapan saja menjelang Natal. Kalau mau tepat di malam Natal, pakai kunci waktu supaya suratnya baru terbuka di jam yang kamu pilih."],
       ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
     ]
   }

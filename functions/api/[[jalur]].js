@@ -52,7 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
-  sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
+  harapanNatal: 70, sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -96,7 +96,8 @@ const TEMA_SKEMA = {
   "rumah-contoh":      { nfoto: 3, momen: "proposal" },
   "kotak-musik":       { nfoto: 3, momen: "apology" },
   "garis-finis":       { nfoto: 3, momen: "congrats" },
-  "stasiun-terakhir":  { nfoto: 3, momen: "parting" }
+  "stasiun-terakhir":  { nfoto: 3, momen: "parting" },
+  "rumah-menyala":     { nfoto: 3, momen: "spesial" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -801,6 +802,14 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.pencapaian) throw new Error("Pencapaiannya belum diisi.");
     isi.sorakan = [0, 1, 2].map(i => teks((p.sorakan || [])[i], BATAS.sorakan));
     if (isi.sorakan.some(x => !x)) throw new Error("Ketiga sorakan penonton belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "rumah-menyala") {
+    /* "Rumah yang Menyala" (Hari Spesial · Natal): `ucapan` = ucapan
+       pembuka pilihan pembeli; `harapan` = tiga ornamen di pohon yang
+       menyala setelah kabel lampunya dirangkai. */
+    isi.ucapan = ["selamat", "merry"].includes(p.ucapan) ? p.ucapan : "selamat";
+    isi.harapan = [0, 1, 2].map(i => teks((p.harapan || [])[i], BATAS.harapanNatal));
+    if (isi.harapan.some(x => !x)) throw new Error("Ketiga harapan untuk ornamen pohonnya belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "stasiun-terakhir") {
     /* "Stasiun Terakhir" (Parting Ways): `stasiun` = tiga tempat kenangan
