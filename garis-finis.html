@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Kamu masuk final hari ini</title>
+<meta property="og:title" content="Kamu masuk final hari ini">
+<meta property="og:description" content="Nomor dadamu sudah siap. Ayo ke garis start.">
+<meta property="og:image" content="https://foreverse.id/og-garis-finis.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#13213F">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Fraunces:opsz,wght@9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- =====================================================================
+     FOREVERSE · Congrats · Tema "Garis Finis" (id: garis-finis)
+     Isi pesanan disisipkan server ke blok DATA di bawah.
+     ===================================================================== -->
+<script id="foreverse-data" type="application/json">
+{
+  "tema": "garis-finis",
+  "penerima": "",
+  "pengirim": "",
+  "foto": [],
+  "surat": [
+    "",
+    "",
+    ""
+  ],
+  "pencapaian": "",
+  "sorakan": [
+    "",
+    "",
+    ""
+  ],
+  "waPengirim": "",
+  "lagu": {
+    "src": "",
+    "judul": "",
+    "artis": "",
+    "mulai": 0,
+    "selesai": 0
+  },
+  "foreverseUrl": "https://foreverse.id"
+}
+</script>
+<script>
+(function(){ try{ if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
+  var mentah = sessionStorage.getItem("fv-pratinjau"); if(mentah) document.getElementById("foreverse-data").textContent = mentah; } }catch(e){} })();
+</script>
+<style>
+/* Palet: lintasan biru, garis putih, hijau limau, biru malam stadion,
+   jingga papan skor. Hari perlombaan — tidak dipakai tema lain. */
+:root{
+  --lintas:#2D5DA8; --lintas2:#234C8C; --malam:#13213F; --limau:#C6E35B; --jingga:#FF9B3D; --putih:#F7FAFF; --ink:#101A30; --muted:#5D6B85;
+  --cond:'Barlow Condensed','Arial Narrow',sans-serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --serif:'Fraunces',Georgia,serif;
+  --u:min(1vw,.5vh);
+}
+@media (min-aspect-ratio:1/1){ :root{ --u:min(.62vw,.92vh); } }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--malam);font-family:var(--sans);color:var(--ink)}
+body{position:fixed;inset:0;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+img{-webkit-user-drag:none;pointer-events:none}
+
+/* stadion: langit sore, tribun penuh titik penonton, lintasan */
+.stadion{position:fixed;inset:0;background:linear-gradient(180deg,#6FA3E0 0%,#A9C9EE 30%,#F3D9B5 46%,transparent 46.2%)}
+.tribun{position:absolute;left:0;right:0;top:34%;height:22%;background:
+  radial-gradient(circle,rgba(255,255,255,.55) 0 1.4px,transparent 1.8px) 0 0/9px 8px,
+  radial-gradient(circle,rgba(255,155,61,.6) 0 1.4px,transparent 1.8px) 4px 4px/13px 10px,
+  linear-gradient(180deg,#3a4d78,#24355c);background-position-x:var(--px,0px),var(--px,0px),0}
+.tribun::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;background:#16233f}
+.lintasan{position:absolute;left:0;right:0;top:56%;bottom:0;background:
+  repeating-linear-gradient(180deg,transparent 0 calc(var(--u)*9),rgba(255,255,255,.75) calc(var(--u)*9) calc(var(--u)*9.6)),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 2px,transparent 2px 14px),var(--lintas);background-position-x:0,var(--px,0px),0}
+.rumput{position:absolute;left:0;right:0;bottom:0;height:6%;background:linear-gradient(180deg,#6aa84f,#4d8a39)}
+
+/* papan skor di atas (kepala) */
+.skor{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 8px);transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:12px;
+  background:#0b1222;border:3px solid #2a3756;border-radius:10px;padding:5px 14px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.skor .led{font:800 18px/1 var(--cond);letter-spacing:.08em;color:var(--jingga);text-shadow:0 0 8px rgba(255,155,61,.7)}
+.skor .lbl{font:700 11px/1 var(--cond);letter-spacing:.2em;color:#8aa0c8}
+#music{position:fixed;right:12px;top:calc(env(safe-area-inset-top) + 10px);z-index:41;border:0;width:36px;height:36px;border-radius:50%;background:rgba(11,18,34,.85);color:#fff;font-size:15px;cursor:pointer}
+
+/* pengumuman stadion (petunjuk) di bawah */
+.petunjuk{position:fixed;left:0;right:0;bottom:0;z-index:39;padding:12px 18px calc(env(safe-area-inset-bottom) + 12px);background:var(--limau);color:var(--malam);
+  font:700 15px/1.35 var(--sans);text-align:center;box-shadow:0 -4px 14px rgba(0,0,0,.2);transition:opacity .2s}
+.petunjuk::before{content:"📣 ";}
+.petunjuk b{background:var(--malam);color:var(--limau);padding:0 6px;border-radius:4px}
+.petunjuk.ganti{opacity:0}
+.petunjuk.kedip{animation:kedip .4s 2}
+@keyframes kedip{50%{background:#fff}}
+.petunjuk[hidden]{display:none}
+#lanjut{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 16px);z-index:45;transform:translate(-50%,14px) skewX(-8deg);opacity:0;pointer-events:none;transition:.35s;
+  border:0;padding:14px 30px;font:800 20px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--malam);background:var(--limau);box-shadow:6px 6px 0 var(--malam);cursor:pointer}
+#lanjut.tampil{opacity:1;transform:translate(-50%,0) skewX(-8deg);pointer-events:auto}
+
+/* pergantian adegan: pita miring menyapu layar */
+.sapu{position:fixed;top:-20%;bottom:-20%;left:-120%;width:50%;z-index:60;background:repeating-linear-gradient(90deg,var(--limau) 0 40px,var(--malam) 40px 52px);transform:skewX(-18deg) translateX(-40%);pointer-events:none}
+.sapu.jalan{animation:sapu .9s cubic-bezier(.6,0,.4,1)}
+@keyframes sapu{0%{transform:skewX(-18deg) translateX(-40%)}100%{transform:skewX(-18deg) translateX(560%)}}
+.sc{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 58px);bottom:calc(env(safe-area-inset-bottom) + 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*5);visibility:hidden;pointer-events:none}
+.sc.aktif{visibility:visible;pointer-events:auto}
+.sc>*{flex-shrink:0}
+@media (min-aspect-ratio:1/1){ .sc{flex-direction:row;gap:calc(var(--u)*10)} .sc.tegak{flex-direction:column;gap:calc(var(--u)*4)} }
+.kartu-putih{background:var(--putih);border-radius:calc(var(--u)*2);box-shadow:0 calc(var(--u)*1.5) calc(var(--u)*4) rgba(0,0,0,.3)}
+
+/* ═ 1 · nomor dada ═ */
+.dada{position:relative;width:calc(var(--u)*70);height:calc(var(--u)*56);padding:0;overflow:visible}
+.dada .pita{height:calc(var(--u)*11);border-radius:calc(var(--u)*2) calc(var(--u)*2) 0 0;background:var(--lintas);color:#fff;display:flex;align-items:center;justify-content:center;font:800 calc(var(--u)*4.4) var(--cond);letter-spacing:.24em}
+.dada .nomor{text-align:center;font:800 calc(var(--u)*26)/1 var(--cond);color:var(--malam);letter-spacing:-.02em;margin-top:calc(var(--u)*2)}
+.dada .nama{text-align:center;font:700 calc(var(--u)*5) var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--lintas)}
+.lubang{position:absolute;top:calc(var(--u)*3);width:calc(var(--u)*9);height:calc(var(--u)*9);margin-left:calc(var(--u)*-4.5);border-radius:50%;border:2px dashed rgba(255,255,255,.9);animation:denyut 1.2s infinite}
+.lubang.k{left:calc(var(--u)*8)} .lubang.n{left:calc(var(--u)*62)}
+.lubang.penuh{border-color:transparent;animation:none}
+@keyframes denyut{50%{transform:scale(1.2)}}
+.peniti-wadah{display:flex;gap:calc(var(--u)*6);padding:calc(var(--u)*3) calc(var(--u)*6);border-radius:calc(var(--u)*3);background:rgba(11,18,34,.45)}
+.peniti{width:calc(var(--u)*14);height:calc(var(--u)*6);touch-action:none;cursor:grab}
+.peniti svg{width:100%;height:100%;display:block}
+.peniti.terpasang{position:absolute;transform:rotate(-35deg);pointer-events:none}
+
+/* ═ 2 · lari ═ */
+.lari{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:calc(var(--u)*4)}
+.pelari{position:absolute;left:22%;bottom:calc(30% + var(--u)*2);width:calc(var(--u)*26);height:calc(var(--u)*40);transition:left .3s}
+.pelari svg{width:100%;height:100%;overflow:visible}
+.kaki-a,.kaki-b,.tangan-a,.tangan-b{transform-box:fill-box;transform-origin:50% 0;animation:ayun var(--lang,.6s) ease-in-out infinite alternate;animation-play-state:var(--main,paused)}
+.kaki-b,.tangan-a{animation-direction:alternate-reverse}
+@keyframes ayun{from{transform:rotate(-32deg)}to{transform:rotate(32deg)}}
+.pelari.jatuh{animation:jatuh .45s}
+@keyframes jatuh{40%{transform:rotate(14deg) translateY(6px)}}
+.pita-finis{position:absolute;right:12%;bottom:calc(30% - var(--u)*2);width:calc(var(--u)*2);height:calc(var(--u)*30);opacity:0;transition:opacity .3s}
+.pita-finis::before,.pita-finis::after{content:"";position:absolute;left:0;width:calc(var(--u)*1.4);height:100%;background:repeating-linear-gradient(180deg,#fff 0 8px,#111 8px 16px)}
+.pita-finis i{position:absolute;left:0;top:30%;width:calc(var(--u)*40);height:calc(var(--u)*1.6);margin-left:calc(var(--u)*-40);background:var(--jingga);transform-origin:100% 50%;transition:transform .4s}
+.pita-finis.putus i{transform:rotate(70deg)}
+.spanduk{position:absolute;top:calc(var(--u)*2);left:50%;transform:translate(-50%,-20px) rotate(-2deg);max-width:min(88vw,calc(var(--u)*90));background:#fff;color:var(--malam);border:3px solid var(--malam);padding:10px 16px;font:800 calc(var(--u)*5.6)/1.15 var(--cond);text-align:center;text-transform:uppercase;letter-spacing:.02em;box-shadow:6px 6px 0 var(--jingga);opacity:0;transition:.35s cubic-bezier(.3,1.5,.5,1)}
+.spanduk.tampil{opacity:1;transform:translate(-50%,0) rotate(-2deg)}
+.meter{width:min(90vw,calc(var(--u)*92));display:flex;align-items:center;gap:10px;font:800 16px var(--cond);color:#fff;letter-spacing:.06em}
+.meter .bar{flex:1;height:12px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden}
+.meter .bar i{display:block;height:100%;width:0;background:var(--limau)}
+.tombol-kaki{display:flex;gap:calc(var(--u)*6)}
+.tombol-kaki button{width:calc(var(--u)*34);height:calc(var(--u)*24);border:0;border-radius:calc(var(--u)*4);background:var(--putih);box-shadow:0 calc(var(--u)*1.6) 0 #9fb2d6;font:800 calc(var(--u)*5) var(--cond);letter-spacing:.1em;color:var(--malam);cursor:pointer;touch-action:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tombol-kaki button span{font-size:calc(var(--u)*7)}
+.tombol-kaki button.tekan{transform:translateY(calc(var(--u)*1.4));box-shadow:0 calc(var(--u)*.2) 0 #9fb2d6;background:var(--limau)}
+.tombol-kaki button.harap{outline:3px solid var(--limau);outline-offset:3px}
+@media (min-aspect-ratio:1/1){ .tombol-kaki button{width:calc(var(--u)*24);height:calc(var(--u)*16)} }
+
+/* ═ 3 · foto finis ═ */
+.finis{position:relative;width:calc(var(--u)*72);padding:calc(var(--u)*3);background:#0b1222;border-radius:calc(var(--u)*2);box-shadow:0 calc(var(--u)*2) calc(var(--u)*4) rgba(0,0,0,.4)}
+.finis-judul{display:flex;justify-content:space-between;font:700 calc(var(--u)*3.2) var(--cond);letter-spacing:.14em;color:#8aa0c8;margin-bottom:calc(var(--u)*2)}
+.finis-judul b{color:var(--jingga)}
+.bingkai{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(90deg,#1b2744 0 2px,#111a30 2px 4px)}
+@media (min-aspect-ratio:1/1){ .finis{width:auto;height:calc(var(--u)*92)} .bingkai{height:calc(var(--u)*70);width:auto} }
+.bingkai img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 calc(100% - var(--s,0%)) 0 0)}
+.pindai{position:absolute;top:0;bottom:0;left:var(--s,0%);width:calc(var(--u)*10);margin-left:calc(var(--u)*-5);touch-action:none;cursor:ew-resize;z-index:3}
+.pindai::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:#ff3b30;box-shadow:0 0 12px #ff3b30}
+.pindai::after{content:"⇆";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:calc(var(--u)*9);height:calc(var(--u)*9);border-radius:50%;background:#ff3b30;color:#fff;display:grid;place-items:center;font-size:calc(var(--u)*4.4);font-weight:800}
+.penggaris{display:flex;justify-content:space-between;margin-top:calc(var(--u)*1.4);font:600 calc(var(--u)*2.6) var(--cond);color:#6f80a6}
+.finis-ket{margin-top:calc(var(--u)*2);min-height:calc(var(--u)*9);font:700 calc(var(--u)*4.2)/1.2 var(--cond);color:#fff;letter-spacing:.02em;opacity:0;transition:opacity .4s}
+.finis-ket.tampil{opacity:1}
+.finis-ket small{display:block;color:var(--limau);font-size:.7em;letter-spacing:.16em}
+
+/* ═ 4 · podium & medali ═ */
+.podium-wrap{position:relative;width:calc(var(--u)*84);height:calc(var(--u)*92)}
+.blok{position:absolute;bottom:0;width:calc(var(--u)*26);display:grid;place-items:start center;padding-top:calc(var(--u)*2);font:800 calc(var(--u)*10)/1 var(--cond);color:var(--malam);border-radius:calc(var(--u)*1) calc(var(--u)*1) 0 0}
+.blok.b1{left:calc(var(--u)*29);height:calc(var(--u)*30);background:linear-gradient(180deg,#fff,#d9e3f5)}
+.blok.b2{left:calc(var(--u)*2);height:calc(var(--u)*20);background:linear-gradient(180deg,#e9eef7,#c3cfe6)}
+.blok.b3{left:calc(var(--u)*56);height:calc(var(--u)*14);background:linear-gradient(180deg,#e9eef7,#c3cfe6)}
+.di-podium{position:absolute;left:calc(var(--u)*29);bottom:calc(var(--u)*30);width:calc(var(--u)*26);height:calc(var(--u)*40)}
+.leher{position:absolute;left:calc(var(--u)*36);bottom:calc(var(--u)*55);width:calc(var(--u)*12);height:calc(var(--u)*12);border-radius:50%;border:2px dashed rgba(255,255,255,.9);animation:denyut 1.2s infinite}
+.medali{position:absolute;right:calc(var(--u)*-2);top:calc(var(--u)*4);width:calc(var(--u)*18);height:calc(var(--u)*30);touch-action:none;cursor:grab;z-index:5}
+.medali svg{width:100%;height:100%;overflow:visible}
+.medali.dipakai{transition:left .3s,top .3s}
+.ukiran{width:min(88vw,calc(var(--u)*80));padding:calc(var(--u)*4);text-align:center;display:none}
+.ukiran.tampil{display:block;animation:naik .6s cubic-bezier(.3,1.4,.5,1)}
+@keyframes naik{from{opacity:0;transform:translateY(20px) scale(.9)}}
+.ukiran .koin{width:calc(var(--u)*34);height:calc(var(--u)*34);margin:0 auto calc(var(--u)*3);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#e5b84a 55%,#a9791f);box-shadow:inset 0 0 0 calc(var(--u)*1.6) rgba(255,255,255,.35),0 6px 18px rgba(0,0,0,.35);display:grid;place-items:center;color:#5a3c06;font:800 calc(var(--u)*9) var(--cond)}
+.ukiran h2{margin:0;font:800 calc(var(--u)*7.4)/1.05 var(--cond);text-transform:uppercase;color:var(--malam);letter-spacing:.01em}
+.ukiran p{margin:calc(var(--u)*2) 0 0;font:600 calc(var(--u)*3.6) var(--sans);color:var(--muted)}
+
+/* ═ 5 · papan skor (surat) ═ */
+.papan{width:min(92vw,calc(var(--u)*94));min-height:calc(var(--u)*90);background:#0b1222;border:calc(var(--u)*1.4) solid #2a3756;border-radius:calc(var(--u)*2);padding:calc(var(--u)*6);display:flex;flex-direction:column;gap:calc(var(--u)*3);cursor:pointer;
+  background-image:radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1.5px);background-size:6px 6px;box-shadow:0 calc(var(--u)*2) calc(var(--u)*5) rgba(0,0,0,.45)}
+@media (min-aspect-ratio:1/1){ .papan{width:calc(var(--u)*130);min-height:calc(var(--u)*70)} }
+.papan .atas{display:flex;justify-content:space-between;font:800 calc(var(--u)*4) var(--cond);letter-spacing:.16em;color:var(--jingga);text-shadow:0 0 10px rgba(255,155,61,.6)}
+.papan .isi{flex:1;font:500 calc(var(--u)*5.2)/1.45 var(--serif);color:#FFE2B8;text-shadow:0 0 8px rgba(255,155,61,.35);white-space:pre-wrap;word-break:break-word}
+.papan .ttd{font:800 calc(var(--u)*5) var(--cond);letter-spacing:.1em;color:var(--limau);text-align:right;opacity:0;transition:opacity .5s}
+.papan .ttd.tampil{opacity:1}
+.papan .bawah{font:700 calc(var(--u)*3) var(--cond);letter-spacing:.16em;color:#6f80a6;text-align:center}
+
+/* ═ 6 · penutup ═ */
+.akhir{display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*3)}
+.balas{width:min(92vw,calc(var(--u)*80));padding:16px;display:flex;flex-direction:column;gap:10px}
+.balas h3{margin:0;font:800 24px/1.1 var(--cond);letter-spacing:.04em;text-transform:uppercase;color:var(--malam)}
+.balas textarea{width:100%;min-height:80px;border:2px solid #cdd8ee;border-radius:10px;padding:10px 12px;font:16px var(--sans);resize:none;background:#fff;user-select:text;-webkit-user-select:text}
+.balas .aksi{display:flex;flex-direction:column;gap:8px}
+.balas .aksi a,.balas .aksi button,.balas .ulang{border:0;border-radius:10px;padding:13px;font:800 15px var(--sans);text-align:center;text-decoration:none;cursor:pointer}
+.t-utama{background:var(--lintas);color:#fff}.t-wa{background:#25D366;color:#073b1c}.ulang{background:transparent;color:var(--lintas);box-shadow:inset 0 0 0 2px var(--lintas)}
+.dibuat{font-size:12px;color:var(--muted);text-align:center;text-decoration:none}
+.juara{font:800 calc(var(--u)*9)/1 var(--cond);color:#fff;text-transform:uppercase;text-align:center;text-shadow:4px 4px 0 var(--malam);letter-spacing:.02em}
+.juara small{display:block;font-size:.45em;color:var(--limau);letter-spacing:.2em;text-shadow:none}
+@media (prefers-reduced-motion:reduce){ *{animation-duration:.01s!important} }
+
+.dibawa{position:fixed!important;z-index:80!important;margin:0!important;transition:none!important}
+.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:#13213F;transition:opacity .4s}
+.memuat.pergi{opacity:0;pointer-events:none}
+.memuat p{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#F7FAFF;font-size:15px;text-align:center;padding:24px;max-width:22rem;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="memuat" class="memuat"><p id="memuatPesan">Membuka suratnya…</p></div>
+<div class="stadion" id="stadion"><div class="tribun"></div><div class="lintasan"></div><div class="rumput"></div></div>
+<div class="skor"><span class="lbl">ETAPE</span><span class="led" id="etape">1/6</span><span class="lbl" id="skorLbl">PERSIAPAN</span></div>
+<button id="music" type="button" aria-label="Suara">🔊</button>
+<div class="petunjuk" id="petunjuk"></div>
+<button id="lanjut" type="button">Lanjut</button>
+<div class="sapu" id="sapu"></div>
+
+<!-- 1 · nomor dada -->
+<section class="sc tegak" id="s0" data-lbl="PERSIAPAN">
+  <div class="dada kartu-putih" id="dada">
+    <div class="pita">LARI TERAKHIR</div>
+    <div class="nomor">01</div>
+    <div class="nama" data-f="penerima"></div>
+    <div class="lubang k" id="lubangK"></div><div class="lubang n" id="lubangN"></div>
+  </div>
+  <div class="peniti-wadah" id="penitiWadah"></div>
+</section>
+
+<!-- 2 · 100 meter terakhir -->
+<section class="sc" id="s1" data-lbl="100 METER">
+  <div class="lari">
+    <div class="spanduk" id="spanduk"></div>
+    <div class="pelari" id="pelari"></div>
+    <div class="pita-finis" id="pitaFinis"><i></i></div>
+    <div class="meter"><span id="jarak">0 m</span><div class="bar"><i id="barJarak"></i></div><span id="waktu">00.0 s</span></div>
+    <div class="tombol-kaki"><button type="button" id="kiri"><span>👟</span>KIRI</button><button type="button" id="kanan"><span>👟</span>KANAN</button></div>
+  </div>
+</section>
+
+<!-- 3 · foto finis -->
+<section class="sc" id="s2" data-lbl="FOTO FINIS">
+  <div class="finis">
+    <div class="finis-judul"><span>KAMERA FOTO FINIS</span><b id="finisNo">1/3</b></div>
+    <div class="bingkai" id="bingkai"><img id="finisImg" alt=""><div class="pindai" id="pindai"></div></div>
+    <div class="penggaris"><span>00.0</span><span>03.0</span><span>06.0</span><span>09.0</span><span>12.0</span></div>
+    <div class="finis-ket" id="finisKet"></div>
+  </div>
+</section>
+
+<!-- 4 · podium -->
+<section class="sc" id="s3" data-lbl="PENGALUNGAN">
+  <div class="podium-wrap" id="podium">
+    <div class="blok b2">2</div><div class="blok b1">1</div><div class="blok b3">3</div>
+    <div class="di-podium" id="diPodium"></div>
+    <div class="leher" id="leher"></div>
+    <div class="medali" id="medali"><svg viewBox="0 0 60 100" aria-hidden="true"><path d="M14 0 L30 46 L46 0" fill="none" stroke="#2D5DA8" stroke-width="9"/><path d="M14 0 L30 46" fill="none" stroke="#C6E35B" stroke-width="3"/><circle cx="30" cy="68" r="22" fill="#e5b84a" stroke="#a9791f" stroke-width="3"/><circle cx="30" cy="68" r="15" fill="none" stroke="#fff3c4" stroke-width="2"/><text x="30" y="75" text-anchor="middle" font-size="20" font-weight="800" fill="#5a3c06" font-family="sans-serif">1</text></svg></div>
+  </div>
+  <div class="ukiran kartu-putih" id="ukiran"><div class="koin">1</div><h2 id="ukiranTeks"></h2><p>atas nama <b data-f="penerima"></b></p></div>
+</section>
+
+<!-- 5 · papan skor -->
+<section class="sc" id="s4" data-lbl="PESAN">
+  <div class="papan" id="papan">
+    <div class="atas"><span id="papanJudul"></span><span id="papanNo"></span></div>
+    <div class="isi" id="papanIsi"></div>
+    <div class="ttd" id="papanTtd"></div>
+    <div class="bawah" id="papanBawah">ketuk papannya untuk pesan berikutnya ›</div>
+  </div>
+</section>
+
+<!-- 6 · penutup -->
+<section class="sc tegak" id="s5" data-lbl="JUARA">
+  <div class="akhir">
+    <div class="juara"><small>JUARA HARI INI</small><span data-f="penerima"></span></div>
+    <div class="balas kartu-putih">
+      <h3 id="balasJudul"></h3>
+      <textarea id="balasTeks" maxlength="500"></textarea>
+      <div class="aksi" id="balasAksi"></div>
+      <button class="ulang" id="ulang" type="button">Lari lagi dari awal</button>
+      <a class="dibuat" href="https://foreverse.id/?ref=surat" target="_blank" rel="noopener">dibuat dengan Foreverse</a>
+    </div>
+  </div>
+</section>
+
+<script>
+function FV_MULAI(){
+"use strict";
+var D = KADO || {};
+D.lagu = D.lagu || {}; D.lagu.src = D.lagu.src || D.lagu.file || "";
+D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "" }; });
+var $=function(s,r){ return (r||document).querySelector(s); };
+var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
+var rand=function(a,b){ return a+Math.random()*(b-a); };
+var klem=function(v,a,b){ return Math.max(a,Math.min(b,v)); };
+var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
+var pusat=function(n){ var r=n.getBoundingClientRect(); return { x:r.left+r.width/2, y:r.top+r.height/2, r:r }; };
+var U=(function(){ var p=el('div'); p.style.cssText='position:fixed;visibility:hidden;pointer-events:none;width:calc(var(--u)*100)'; document.body.appendChild(p); return function(){ return p.getBoundingClientRect().width/100; }; })();
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,3);
+var SURAT=(D.surat||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
+var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
+$$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
+
+var AC=null, muted=false;
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||muted) return;
+  var t=a.currentTime+(o.when||0), v=o.vol||.14, osc=a.createOscillator(), g=a.createGain();
+  osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
+  if(o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide,t+dur);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  osc.connect(g); g.connect(a.__out||a.destination); osc.start(t); osc.stop(t+dur+.05);
+}
+function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
+  var n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*dur,a.sampleRate), d=b.getChannelData(0);
+  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.5)*Math.min(1,i/(a.sampleRate*.006));
+  var f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.value=freq;
+  var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
+}
+/* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   produk (Project Instructions, Bagian 5), bukan selera tampilan. */
+function musicBox(){
+  var a=ac(); if(!a) return null;
+  var gain=a.createGain(); gain.gain.value=.11; gain.connect(a.__out||a.destination);
+  var notes=[72,76,79,84,79,76, 74,77,81,86,81,77, 72,76,79,83,79,76, 71,74,79,83,86,83];
+  var step=.34, t0=a.currentTime+.1, n=0, timer=null, berhenti=false;
+  function ping(midi,t){
+    var o=a.createOscillator(), g=a.createGain();
+    o.type='sine'; o.frequency.value=440*Math.pow(2,(midi-69)/12);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.9,t+.01); g.gain.exponentialRampToValueAtTime(.001,t+1.4);
+    o.connect(g); g.connect(gain); o.start(t); o.stop(t+1.5);
+  }
+  (function loop(){
+    if(berhenti) return;
+    if(t0<a.currentTime) t0=a.currentTime+.05; while(t0 < a.currentTime + 2){ ping(notes[n%notes.length],t0); t0+=step; n++; }
+    timer=setTimeout(loop,300);
+  })();
+  return { gain:gain, stop:function(){ berhenti=true; clearTimeout(timer); } };
+}
+var MU=(function(){
+  var L=D.lagu||{}, has=!!(L.src&&String(L.src).trim()), audio=has?new Audio():null;
+  var st=+L.mulai||0, en=+L.selesai||0, vol=.72, playing=false, synth=null;
+  if(audio){ audio.src=L.src; audio.preload='auto'; audio.loop=!en;
+    audio.addEventListener('timeupdate',function(){ if(en>st&&audio.currentTime>=en) audio.currentTime=st; });
+    audio.addEventListener('ended',function(){ audio.currentTime=st; audio.play().catch(function(){}); }); }
+  return { has:has, audio:audio,
+    play:function(){
+      if(audio){
+        try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+        if(!playing){ try{ audio.currentTime=st; }catch(e){} }
+        audio.volume=0; audio.muted=muted;
+        audio.play().then(function(){ playing=true; var v=0, t=setInterval(function(){ v+=.05; if(v>=vol){v=vol;clearInterval(t);} audio.volume=v; },90); }).catch(function(){});
+        return;
+      }
+      if(!synth) synth=musicBox();
+    },
+    duck:function(on){ if(audio) audio.volume=on?.12:vol; else if(synth) synth.gain.gain.setTargetAtTime(on?.03:.11,AC.currentTime,.08); } };
+})();
+function duck(on){ MU.duck(on); }
+$('#music').onclick=function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; if(MU.audio) MU.audio.muted=muted; try{ if(AC) muted?AC.suspend():AC.resume(); }catch(e){} };
+if(MU.has) $('#music').classList.add('on');
+
+
+var SFX={
+  klik:function(){ tone(1400,.05,{type:'square',vol:.06}); },
+  kertas:function(){ noise(.22,4200,.14); },
+  tutup:function(){ tone(110,.16,{type:'square',vol:.14}); noise(.18,700,.28); },
+  pop:function(){ tone(620,.08,{type:'sine',vol:.2}); tone(940,.1,{type:'sine',vol:.1,when:.05}); },
+  benar:function(){ tone(660,.13); tone(880,.18,{when:.09}); },
+  salah:function(){ tone(185,.2,{type:'sawtooth',vol:.06}); },
+  dentang:function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.45,{when:i*.08,vol:.11}); }); },
+  menang:function(){ [523,659,784,659,784,1046].forEach(function(f,i){ tone(f,.26,{when:i*.11}); }); }
+};
+
+function noMenu(n){ n.addEventListener('contextmenu',function(e){ e.preventDefault(); }); }
+document.addEventListener('contextmenu',function(e){ if(!e.target.closest('textarea')) e.preventDefault(); });
+/* satu gestur seret: down / move(dx,dy) / up(dx,dy); boleh() mengunci */
+function seret(node,o){
+  var pid=null,sx=0,sy=0; noMenu(node);
+  node.addEventListener('pointerdown',function(e){
+    if(pid!==null || (o.boleh && !o.boleh())) return;
+    pid=e.pointerId; sx=e.clientX; sy=e.clientY;
+    try{ node.setPointerCapture(pid); }catch(_){}
+    e.preventDefault(); ac(); if(o.down) o.down(e);
+  });
+  node.addEventListener('pointermove',function(e){ if(e.pointerId===pid && o.move) o.move(e,e.clientX-sx,e.clientY-sy); });
+  function lepas(e){ if(e.pointerId!==pid) return; pid=null; if(o.up) o.up(e,e.clientX-sx,e.clientY-sy); }
+  node.addEventListener('pointerup',lepas); node.addEventListener('pointercancel',lepas);
+}
+/* benda dibawa jari ke mana saja (pindah ke lapisan atas selama diseret) */
+function bawa(node,o){
+  var ox=0,oy=0,ruang=null,lw='',lh='';
+  seret(node,{ boleh:o.boleh,
+    down:function(e){ var r=node.getBoundingClientRect(); ox=e.clientX-r.left; oy=e.clientY-r.top; lw=node.style.width; lh=node.style.height;
+      ruang=el('div'); ruang.style.cssText='visibility:hidden;flex:none;width:'+r.width+'px;height:'+r.height+'px;margin:'+getComputedStyle(node).margin;
+      node.parentNode.insertBefore(ruang,node); node.style.width=r.width+'px'; node.style.height=r.height+'px';
+      node.classList.add('dibawa'); document.body.appendChild(node); try{ node.setPointerCapture(e.pointerId); }catch(_){} node.style.left=r.left+'px'; node.style.top=r.top+'px'; if(o.down) o.down(e); },
+    move:function(e){ node.style.left=(e.clientX-ox)+'px'; node.style.top=(e.clientY-oy)+'px'; if(o.move) o.move(e); },
+    up:function(e){ var hasil=o.up?o.up(e):false;
+      if(!hasil){ node.classList.remove('dibawa'); node.style.left=node.style.top=''; node.style.width=lw; node.style.height=lh; ruang.parentNode.insertBefore(node,ruang); }
+      ruang.remove(); }
+  });
+}
+function dekat(a,b,jarak){ var p=pusat(a),q=pusat(b); return Math.hypot(p.x-q.x,p.y-q.y)<jarak; }
+
+var konfeti=(function(){
+  var cv=el('canvas'); cv.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:90'; document.body.appendChild(cv);
+  var ctx=cv.getContext('2d'), P=[], jalan=false, W=0, H=0;
+  function ukur(){ var d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; cv.width=W*d; cv.height=H*d; ctx.setTransform(d,0,0,d,0,0); }
+  function langkah(){ ctx.clearRect(0,0,W,H);
+    P=P.filter(function(p){ p.vy+=.12; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; return p.y<H+20; });
+    P.forEach(function(p){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); ctx.restore(); });
+    if(P.length) requestAnimationFrame(langkah); else jalan=false; }
+  return function(x,y,n,warna){ ukur(); var C=warna||['#E8734A','#E8A5B0','#F5C85B','#3B3168','#FBFAF7'];
+    for(var i=0;i<(n||90);i++) P.push({x:x,y:y,vx:rand(-6,6),vy:rand(-11,-3),r:rand(0,6),vr:rand(-.3,.3),s:rand(6,11),c:C[i%C.length]});
+    if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
+})();
+
+/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
+var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
+function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
+function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
+tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+
+/* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
+function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
+  var wa=String(D.waPengirim||'').replace(/\D/g,''); if(wa.charAt(0)==='0') wa='62'+wa.slice(1);
+  var ada=false;
+  if(window.fvBalas){ wadah.appendChild(fvBalas.tombol(teks,el('button',kelasUtama),'Kirim balasan ke '+PENGIRIM)); ada=true; }
+  if(wa.length>=10){ var a=el('a',kelasWa,ada?'atau lewat WhatsApp':'Balas lewat WhatsApp'); a.href='https://wa.me/'+wa; a.target='_blank'; a.rel='noopener';
+    a.addEventListener('click',function(){ a.href='https://wa.me/'+wa+'?text='+encodeURIComponent(teks.value); }); wadah.appendChild(a); ada=true; }
+  return ada;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Garis Finis (Congrats). Hari perlombaan untuk pencapaiannya:
+   nomor dada dipasang peniti, 100 meter terakhir dilari dengan
+   langkah kiri-kanan bergantian (spanduk penonton = isian `sorakan`),
+   foto finis dipindai, medali dikalungkan dengan ukiran `pencapaian`,
+   papan skor menampilkan suratnya.
+   ═══════════════════════════════════════════════════════════════ */
+var SORAK=(D.sorakan||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
+var CAPAI=String(D.pencapaian||'').trim()||'Hari ini kamu berhasil';
+SFX.sorak=function(){ noise(1.1,1600,.12); noise(.8,3200,.06); };
+SFX.langkah=function(){ tone(160,.05,{type:'square',vol:.07}); };
+SFX.peluit=function(){ tone(2600,.32,{type:'sine',vol:.12,slide:2400}); };
+
+function orang(medali){
+  return '<svg viewBox="0 0 60 100" aria-hidden="true">'+
+    '<g class="tangan-b"><path d="M30 26 L30 48" stroke="#7a4b2e" stroke-width="6" stroke-linecap="round"/></g>'+
+    '<g class="kaki-b"><path d="M30 54 L30 94" stroke="#13213F" stroke-width="8" stroke-linecap="round"/></g>'+
+    '<rect x="21" y="20" width="18" height="36" rx="6" fill="#C6E35B"/><rect x="24" y="30" width="12" height="10" rx="1.5" fill="#fff"/><text x="30" y="38" text-anchor="middle" font-size="7" font-weight="800" fill="#13213F" font-family="sans-serif">01</text>'+
+    '<g class="kaki-a"><path d="M30 54 L30 94" stroke="#1d2f57" stroke-width="8" stroke-linecap="round"/></g>'+
+    '<g class="tangan-a"><path d="M30 26 L30 48" stroke="#8a5735" stroke-width="6" stroke-linecap="round"/></g>'+
+    '<circle cx="30" cy="11" r="9" fill="#8a5735"/><path d="M21 9 Q30 -1 39 9" fill="#13213F"/>'+
+    (medali?'<path d="M24 20 L30 32 L36 20" fill="none" stroke="#2D5DA8" stroke-width="2.6"/><circle cx="30" cy="36" r="5" fill="#e5b84a" stroke="#a9791f" stroke-width="1.2"/>':'')+
+    '</svg>';
+}
+
+var URUT=[0,1]; if(FOTO.length) URUT.push(2); URUT.push(3,4,5);
+var MASUK={}, kini=-1, sapu=$('#sapu');
+function ke(no){
+  sapu.classList.remove('jalan'); void sapu.offsetWidth; sapu.classList.add('jalan'); SFX.peluit&&kini>=0&&noise(.3,2400,.08);
+  setTimeout(function(){
+    if(kini>=0) $('#s'+kini).classList.remove('aktif');
+    kini=no; var s=$('#s'+no); s.classList.add('aktif');
+    $('#etape').textContent=(URUT.indexOf(no)+1)+'/'+URUT.length; $('#skorLbl').textContent=s.dataset.lbl;
+    if(MASUK[no]) MASUK[no]();
+  }, kini<0?0:420);
+}
+function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
+var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px',px+'px'); }
+
+/* ═ 1 · nomor dada ═ */
+(function(){
+  var wadah=$('#penitiWadah'), lubang=[$('#lubangK'),$('#lubangN')], terpasang=0;
+  var PEN='<svg viewBox="0 0 70 30" aria-hidden="true"><path d="M8 15 Q8 5 18 5 L62 5 Q66 5 66 9" fill="none" stroke="#c9ced8" stroke-width="3"/><path d="M8 15 Q8 25 18 25 L60 25" fill="none" stroke="#e7eaf0" stroke-width="3"/><circle cx="8" cy="15" r="5" fill="none" stroke="#c9ced8" stroke-width="3"/><path d="M60 22 L68 8 L70 14 L62 26Z" fill="#9aa3b5"/></svg>';
+  for(var i=0;i<2;i++){ var p=el('div','peniti'); p.innerHTML=PEN; wadah.appendChild(p);
+    (function(p){ bawa(p,{ up:function(){
+      var cocok=lubang.filter(function(l){ return !l.classList.contains('penuh') && dekat(p,l,U()*11); })[0];
+      if(!cocok){ kedip(); return false; }
+      cocok.classList.add('penuh'); p.classList.remove('dibawa'); p.classList.add('terpasang');
+      var d=$('#dada'), r=d.getBoundingClientRect(), c=pusat(cocok);
+      p.style.left=(c.x-r.left-p.offsetWidth/2)+'px'; p.style.top=(c.y-r.top-p.offsetHeight/2)+'px'; d.appendChild(p);
+      SFX.klik(); buzz(15); terpasang++;
+      if(terpasang===2){ petunjuk('Nomor dadamu terpasang. Ke garis start.'); setTimeout(function(){ lanjut(berikut,'Ke garis start'); },800); }
+      else petunjuk('Satu lagi di <b>sudut satunya</b>.');
+      return true; } }); })(p);
+  }
+  MASUK[0]=function(){ petunjuk('Kamu peserta nomor 01 hari ini. <b>Pasang dua peniti</b> di sudut atas nomor dadamu.'); };
+})();
+
+/* ═ 2 · lari 100 m ═ */
+(function(){
+  var pel=$('#pelari'); pel.innerHTML=orang(false);
+  var jarak=0, v=0, akhir=null, mulai=0, lalu=0, jalan=false, selesai=false, spIdx=0, spT=null;
+  var batasSorak=SORAK.map(function(s,i){ return Math.round((i+1)*100/(SORAK.length+1)); });
+  var tk=$('#kiri'), tn=$('#kanan');
+  function tampilSorak(t){ var s=$('#spanduk'); s.textContent=t; s.classList.add('tampil'); SFX.sorak(); clearTimeout(spT); spT=setTimeout(function(){ s.classList.remove('tampil'); },2600); }
+  function langkah(sisi,btn){
+    if(selesai) return; ac();
+    btn.classList.add('tekan'); setTimeout(function(){ btn.classList.remove('tekan'); },90);
+    if(!jalan){ jalan=true; mulai=performance.now(); lalu=mulai; requestAnimationFrame(loop); petunjuk('Gantian <b>kiri</b>, <b>kanan</b>, <b>kiri</b>… jangan sama dua kali.'); }
+    if(akhir===sisi){ v*=.45; pel.classList.remove('jatuh'); void pel.offsetWidth; pel.classList.add('jatuh'); SFX.salah(); buzz(40); petunjuk('Kesandung! Kaki yang sama dua kali. <b>Gantian</b>, ya.'); }
+    else { v=Math.min(v+1.5,12); SFX.langkah(); }
+    akhir=sisi; tk.classList.toggle('harap',sisi==='kanan'); tn.classList.toggle('harap',sisi==='kiri');
+  }
+  [[tk,'kiri'],[tn,'kanan']].forEach(function(p){ noMenu(p[0]); p[0].addEventListener('pointerdown',function(e){ e.preventDefault(); langkah(p[1],p[0]); }); });
+  function loop(t){
+    var dt=Math.min(.05,(t-lalu)/1000); lalu=t;
+    if(!selesai){ v=Math.max(0,v-2.4*dt); jarak=Math.min(100,jarak+v*dt); }
+    geserStadion(v*dt*46);
+    pel.style.setProperty('--lang',Math.max(.14,.8-v*.055)+'s'); pel.style.setProperty('--main',v>.3?'running':'paused');
+    $('#jarak').textContent=Math.floor(jarak)+' m'; $('#barJarak').style.width=jarak+'%';
+    if(!selesai) $('#waktu').textContent=((t-mulai)/1000).toFixed(1)+' s';
+    if(spIdx<batasSorak.length && jarak>=batasSorak[spIdx]){ tampilSorak(SORAK[spIdx]); spIdx++; }
+    if(jarak>=82) $('#pitaFinis').style.opacity=1;
+    if(jarak>=100 && !selesai){ selesai=true; finis(); }
+    if(!selesai || v>.2){ if(selesai) v=Math.max(0,v-6*dt); requestAnimationFrame(loop); }
+    else { pel.style.setProperty('--main','paused'); }
+  }
+  function finis(){
+    $('#pitaFinis').classList.add('putus'); pel.style.left='64%'; SFX.menang(); SFX.sorak(); buzz([30,40,30]);
+    var c=pusat($('#pitaFinis')); konfeti(c.x,c.y,120,['#C6E35B','#FF9B3D','#F7FAFF','#2D5DA8']);
+    petunjuk('FINIS! Waktumu <b>'+$('#waktu').textContent+'</b>.');
+    setTimeout(function(){ lanjut(berikut,FOTO.length?'Lihat foto finisnya':'Ke podium'); },1600);
+  }
+  MASUK[1]=function(){ petunjuk('100 meter terakhir. <b>Ketuk KIRI dan KANAN bergantian</b> untuk berlari.'); tk.classList.add('harap'); tn.classList.add('harap'); };
+})();
+
+/* ═ 3 · foto finis ═ */
+(function(){
+  if(!FOTO.length) return;
+  var b=$('#bingkai'), pd=$('#pindai'), idx=0, s=0, kunci=false;
+  function muat(){ $('#finisImg').src=FOTO[idx].src; s=0; b.style.setProperty('--s','0%'); $('#finisNo').textContent=(idx+1)+'/'+FOTO.length; $('#finisKet').classList.remove('tampil'); kunci=false; }
+  MASUK[2]=function(){ muat(); petunjuk('Kamera foto finis merekam garisnya. <b>Geser garis merah ke kanan</b> untuk memindai fotonya.'); };
+  seret(pd,{
+    boleh:function(){ return !kunci; },
+    move:function(e){ var r=b.getBoundingClientRect(); var n=klem((e.clientX-r.left)/r.width*100,0,100); if(n>s){ s=n; b.style.setProperty('--s',s+'%'); if(Math.random()<.3) tone(1800+s*8,.02,{type:'square',vol:.02}); }
+      if(s>=96) selesai(); },
+    up:function(){ if(!kunci && s<5) kedip(); }
+  });
+  function selesai(){
+    kunci=true; s=100; b.style.setProperty('--s','100%'); SFX.klik(); buzz(15);
+    var k=$('#finisKet'); k.innerHTML=''; k.appendChild(el('small',null,'FRAME '+(idx+1)+' · '+(2.4+idx*3.1).toFixed(1)+' s')); k.appendChild(document.createTextNode(FOTO[idx].caption||' ')); k.classList.add('tampil');
+    if(idx<FOTO.length-1){ setTimeout(function(){ idx++; muat(); petunjuk('Frame berikutnya. <b>Geser lagi</b> garis merahnya.'); },2200); }
+    else setTimeout(function(){ lanjut(berikut,'Ke podium'); },1600);
+  }
+})();
+
+/* ═ 4 · podium & medali ═ */
+(function(){
+  var dp=$('#diPodium'); dp.innerHTML=orang(false);
+  var med=$('#medali'), leher=$('#leher'), beres=false;
+  $('#ukiranTeks').textContent=CAPAI;
+  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b> — seret ke lehernya.'); };
+  bawa(med,{
+    boleh:function(){ return !beres; },
+    up:function(){
+      if(!dekat(med,leher,U()*14)){ kedip(); return false; }
+      beres=true; med.remove(); leher.remove(); dp.innerHTML=orang(true);
+      SFX.menang(); SFX.sorak(); buzz([30,40,30]); var c=pusat(dp); konfeti(c.x,c.y-40,140,['#e5b84a','#C6E35B','#F7FAFF','#FF9B3D']);
+      setTimeout(function(){ $('#ukiran').classList.add('tampil'); petunjuk('Ukiran di medalinya.'); },700);
+      setTimeout(function(){ lanjut(berikut,'Lihat papan skor'); },2600);
+      return true;
+    }
+  });
+})();
+
+/* ═ 5 · papan skor (surat) ═ */
+(function(){
+  var pap=$('#papan'), isi=$('#papanIsi'), daftar=SURAT.length?SURAT:[''], i=-1, ketik=null, penuh=true;
+  $('#papanJudul').textContent='PESAN DARI '+PENGIRIM.toUpperCase();
+  function tampil(n){ i=n; $('#papanNo').textContent=(n+1)+'/'+daftar.length; var t=daftar[n], k=0; penuh=false; isi.textContent='';
+    clearInterval(ketik); ketik=setInterval(function(){ k+=2; isi.textContent=t.slice(0,k); if(k>=t.length){ clearInterval(ketik); penuh=true; if(n===daftar.length-1) habis(); } },28); }
+  function habis(){ var t=$('#papanTtd'); t.textContent='— '+PENGIRIM; t.classList.add('tampil'); $('#papanBawah').textContent=' '; setTimeout(function(){ lanjut(berikut,'Penutup'); },1800); }
+  MASUK[4]=function(){ tampil(0); petunjuk('Papan skor stadion sedang menampilkan pesan untukmu. <b>Ketuk papannya</b> untuk pesan berikutnya.'); };
+  pap.addEventListener('click',function(){ if(!penuh || i>=daftar.length-1) return; SFX.klik(); tampil(i+1); });
+  noMenu(pap);
+})();
+
+/* ═ 6 · penutup ═ */
+(function(){
+  MASUK[5]=function(){
+    ptj.hidden=true; konfeti(innerWidth/2,innerHeight*.3,80,['#C6E35B','#FF9B3D','#F7FAFF']);
+    $('#balasJudul').textContent='Mau balas ke '+PENGIRIM+'?';
+    var t=$('#balasTeks'); t.value='Makasih udah jadi penonton paling berisik buat aku 🏅';
+    if(!$('#balasAksi').children.length && !pasangBalasan($('#balasAksi'),t,'t-utama','t-wa')){ t.style.display='none'; $('#balasJudul').textContent='Selamat sekali lagi, '+PENERIMA+'.'; }
+  };
+  $('#ulang').onclick=function(){ location.reload(); };
+})();
+
+ke(0);
+
+}
+window.FV_MULAI=FV_MULAI;
+</script>
+<script>
+(function(){
+  "use strict";
+  var tirai=document.getElementById("memuat");
+  var data=null; try{ data=JSON.parse(document.getElementById("foreverse-data").textContent||"{}"); }catch(e){ data={}; }
+  if(!data||!data.penerima){ document.getElementById("memuatPesan").textContent="Suratnya tidak bisa dibuka sekarang. Minta tautan yang benar ke pengirimnya, ya."; return; }
+  window.KADO=data;
+  var tugas=(data.foto||[]).filter(function(f){ return f&&f.src; }).map(function(f){ return new Promise(function(b){ var im=new Image(); im.onload=im.onerror=b; im.src=f.src; }); });
+  Promise.race([Promise.all(tugas),new Promise(function(r){ setTimeout(r,12000); })]).then(function(){ FV_MULAI(); tirai.classList.add("pergi"); setTimeout(function(){ tirai.remove(); },420); });
+})();
+</script>
+</body>
+</html>

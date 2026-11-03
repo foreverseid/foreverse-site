@@ -24,7 +24,10 @@ const TEMA = {
   "confess-kunang": { nama: "Toples Kunang-Kunang", demo: "/confess-kunang-demo.html", ringkas: "Kunang-kunang di toples membawa hal-hal kecil yang kamu simpan tentang dia, sampai pengakuannya terbang jadi hati." },
   "kasus-pengirim": { nama: "Kasus Pengirim Tanpa Nama", demo: "/kasus-pengirim-demo.html", ringkas: "Dia jadi detektif di kafe langganannya, mengumpulkan bukti sampai ketahuan siapa pengirim kertas tanpa nama itu." },
   "getwell-365": { nama: "36,5", demo: "/getwell-365-demo.html", ringkas: "Satu kamar yang panas dan buram. Tiap hal kecil yang kamu lakukan menurunkan suhunya sampai 36,5." },
-  "rumah-contoh": { nama: "Rumah Contoh", demo: "/rumah-contoh-demo.html", ringkas: "Tur rumah dari sudut pandang orang pertama. Tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin." }
+  "rumah-contoh": { nama: "Rumah Contoh", demo: "/rumah-contoh-demo.html", ringkas: "Tur rumah dari sudut pandang orang pertama. Tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin." },
+  "kotak-musik": { nama: "Kotak Musik Diservis", demo: "/kotak-musik-demo.html", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya: tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu lagunya bunyi lagi." },
+  "garis-finis": { nama: "Garis Finis", demo: "/garis-finis-demo.html", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
+  "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." }
 };
 
 export const MOMEN = {
@@ -179,6 +182,57 @@ export const MOMEN = {
       ["Bisa dipakai sebelum lamaran langsung?", "Bisa — sebagai pembuka, atau sebagai kenang-kenangan setelahnya."],
       ["Jawabannya sampai ke aku?", "Ya, lewat email, atau WhatsApp kalau kamu mengisi nomornya."],
       ["Bisa dikunci tanggal?", "Bisa, pakai kunci waktu atau kunci tanggal."]
+    ]
+  },
+  "minta-maaf": {
+    judul: "Cara Minta Maaf ke Pacar — Surat Maaf Digital",
+    deskripsi: "Surat maaf digital yang bisa dimainkan: dia ikut memperbaiki kotak musik yang rusak, membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya.",
+    h1: "Minta maaf yang bukan cuma kata-kata.",
+    lede: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya, dan tiap bagian yang beres memperlihatkan satu hal yang kamu sadari.",
+    tema: ["kotak-musik"],
+    ide: [
+      "Aku nggak mau cuma bilang maaf. Aku mau benerin.",
+      "Kamu nggak harus maafin sekarang. Aku cuma pengin kamu tahu aku dengar.",
+      "Yang salah aku. Yang aku pelajari, aku tulis di sini."
+    ],
+    faq: [
+      ["Kalau dia belum mau memaafkan?", "Di akhir surat dia bisa memilih \"Sudah dimaafkan\" atau \"Butuh waktu\". Dua-duanya sama-sama jawaban yang dihormati."],
+      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "selamat": {
+    judul: "Ucapan Selamat atas Pencapaian — Kado Digital",
+    deskripsi: "Ucapan selamat digital yang bisa dimainkan: dia lari 100 meter terakhir diiringi sorakanmu, lalu mengalungkan medali berukir pencapaiannya.",
+    h1: "Rayakan pencapaiannya seperti juara.",
+    lede: "Hari perlombaan untuknya. Dia berlari ke garis finis diiringi spanduk sorakanmu, lalu naik podium dan membaca pesanmu di papan skor stadion.",
+    tema: ["garis-finis"],
+    ide: [
+      "Kamu nggak pernah berhenti, dan hari ini kebayar.",
+      "Aku penonton paling berisik buat kamu.",
+      "Selamat. Rayain yang besar, istirahat yang cukup."
+    ],
+    faq: [
+      ["Pencapaian apa saja yang cocok?", "Apa saja: lulus, diterima kerja, naik jabatan, menang lomba, atau selesai sesuatu yang berat."],
+      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "selesai-baik-baik": {
+    judul: "Pamit dengan Baik — Surat Perpisahan Digital",
+    deskripsi: "Surat perpisahan digital yang hangat: satu perjalanan kereta terakhir, singgah di tempat-tempat kenangan, lalu berangkat ke arah masing-masing.",
+    h1: "Selesai, tapi dengan baik.",
+    lede: "Satu perjalanan kereta terakhir bersama. Kereta singgah di tempat-tempat kenangan kalian, lalu dua kereta berangkat ke arah yang berbeda.",
+    tema: ["stasiun-terakhir"],
+    ide: [
+      "Makasih buat semua perjalanan yang pernah kita naiki bareng.",
+      "Kita berhenti bukan karena nggak sayang, tapi karena arah kita beda.",
+      "Semoga perjalananmu ke depan selalu ketemu orang baik."
+    ],
+    faq: [
+      ["Apakah ini untuk putus saja?", "Untuk semua pamit yang ingin dijaga baik: putus, pindah kota, atau berpisah dengan sahabat."],
+      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
     ]
   }
 };

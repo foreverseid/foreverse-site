@@ -52,6 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
+  sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -92,7 +93,10 @@ const TEMA_SKEMA = {
   "lewat-duluan":      { nfoto: 3, momen: "lovenote" },
   "kasus-pengirim":    { nfoto: 3, momen: "confess" },
   "rekonstruksi":      { nfoto: 3, momen: "anniversary" },
-  "rumah-contoh":      { nfoto: 3, momen: "proposal" }
+  "rumah-contoh":      { nfoto: 3, momen: "proposal" },
+  "kotak-musik":       { nfoto: 3, momen: "apology" },
+  "garis-finis":       { nfoto: 3, momen: "congrats" },
+  "stasiun-terakhir":  { nfoto: 3, momen: "parting" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -667,7 +671,8 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.titikTemu = teks(p.titikTemu, BATAS.titikTemu);
     if (!isi.tanggalAjak) throw new Error("Tanggal ajakannya belum diisi.");
     if (!isi.jamAjak) throw new Error("Jam ajakannya belum diisi.");
-  } else if (skema.momen === "lovenote" || skema.momen === "proposal") {
+  } else if (skema.momen === "lovenote" || skema.momen === "proposal" ||
+             skema.momen === "apology" || skema.momen === "congrats" || skema.momen === "parting") {
     /* Love Note: tidak butuh tanggal atau angka apa pun — surat sayang
        yang bisa dikirim hari apa saja. Hanya nama, foto, surat, dan isian
        khas temanya. */
@@ -780,6 +785,31 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
        `penutup` = kalimat di bawah pertanyaan lamaran, opsional. */
     isi.janji = [0, 1, 2, 3].map(i => teks((p.janji || [])[i], BATAS.janji));
     if (isi.janji.some(j => !j)) throw new Error("Keempat janji untuk tiap ruangan belum diisi.");
+    isi.penutup = teks(p.penutup, BATAS.penutup);
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "kotak-musik") {
+    /* "Kotak Musik Diservis" (Apology): `sadar` = tiga hal yang pengirim
+       sadari, satu per roda gigi yang dipasang penerima. */
+    isi.sadar = [0, 1, 2].map(i => teks((p.sadar || [])[i], BATAS.sadar));
+    if (isi.sadar.some(x => !x)) throw new Error("Ketiga hal yang kamu sadari belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "garis-finis") {
+    /* "Garis Finis" (Congrats): `pencapaian` = ukiran di medali;
+       `sorakan` = tiga spanduk penonton selama 100 meter terakhir. */
+    isi.pencapaian = teks(p.pencapaian, BATAS.pencapaian);
+    if (!isi.pencapaian) throw new Error("Pencapaiannya belum diisi.");
+    isi.sorakan = [0, 1, 2].map(i => teks((p.sorakan || [])[i], BATAS.sorakan));
+    if (isi.sorakan.some(x => !x)) throw new Error("Ketiga sorakan penonton belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "stasiun-terakhir") {
+    /* "Stasiun Terakhir" (Parting Ways): `stasiun` = tiga tempat kenangan
+       (nama + satu kalimat) yang disinggahi kereta lewat permainan wesel;
+       `penutup` = kalimat perpisahan, opsional. */
+    isi.stasiun = [0, 1, 2].map(i => {
+      const x = (p.stasiun || [])[i] || {};
+      return { nama: teks(x.nama, BATAS.namaStasiun), kenangan: teks(x.kenangan, BATAS.kenangan) };
+    });
+    if (isi.stasiun.some(x => !x.nama || !x.kenangan)) throw new Error("Ketiga stasiun kenangan (nama dan ceritanya) belum diisi.");
     isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "confess-kunang") {

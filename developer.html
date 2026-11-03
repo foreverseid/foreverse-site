@@ -796,7 +796,7 @@ a.tautan:hover{text-decoration:underline}
   }
   var NAMA_MOMEN = { birthday:"Birthday", anniversary:"Anniversary", ldr:"LDR", graduation:"Graduation", confess:"Confess",
     getwell:"Get Well Soon", "get-well":"Get Well Soon", askout:"Ask Out", "ask-out":"Ask Out", lovenote:"Love Note",
-    "love-note":"Love Note", proposal:"Proposal" };
+    "love-note":"Love Note", proposal:"Proposal", apology:"Apology", congrats:"Congrats", parting:"Parting Ways" };
   function gambarJual(d){
     function tabel(id, rows, nama, kunci){
       var tot = rows.reduce(function(a,x){ return a + x.n; }, 0);
@@ -813,7 +813,8 @@ a.tautan:hover{text-decoration:underline}
   var NAMA_TEMA = { "bait":"Bait", "kado-riang":"Kado Riang", "langit-harapan":"Langit Harapan",
     "peta-perjalanan":"Peta Perjalanan", "rekonstruksi":"Rekonstruksi Hari Pertama", "zona-waktu":"Dua Jendela",
     "graduation-benih":"Benih & Pohon", "confess-kunang":"Toples Kunang-Kunang", "kasus-pengirim":"Kasus Pengirim",
-    "getwell-365":"36,5", "pasar-malam":"Pasar Malam", "lewat-duluan":"Dia Lewat Sini Duluan", "rumah-contoh":"Rumah Contoh" };
+    "getwell-365":"36,5", "pasar-malam":"Pasar Malam", "lewat-duluan":"Dia Lewat Sini Duluan", "rumah-contoh":"Rumah Contoh",
+    "kotak-musik":"Kotak Musik Diservis", "garis-finis":"Garis Finis", "stasiun-terakhir":"Stasiun Terakhir" };
   function gambarMinat(m){
     var k = Object.keys(m).sort(function(a,b){ return (m[b].demo+m[b].form*3+m[b].lunas*10) - (m[a].demo+m[a].form*3+m[a].lunas*10); });
     function pr(a,b){ return b ? '<em>' + Math.round(a/b*100) + '%</em>' : ''; }

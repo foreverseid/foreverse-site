@@ -434,7 +434,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
                 catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50, janji:90,
-                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 };
+                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , sadar:90, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -458,7 +458,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:3, mesin:"/lewat-duluan.html",    momen:"lovenote" },
     "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:3, mesin:"/kasus-pengirim.html", momen:"confess" },
     "rumah-contoh":      { nama:"Rumah Contoh", nfoto:3, mesin:"/rumah-contoh.html", momen:"proposal" },
-    "rekonstruksi":      { nama:"Rekonstruksi Hari Pertama", nfoto:3, mesin:"/rekonstruksi.html",   momen:"anniversary" }
+    "rekonstruksi":      { nama:"Rekonstruksi Hari Pertama", nfoto:3, mesin:"/rekonstruksi.html",   momen:"anniversary" },
+    "kotak-musik":       { nama:"Kotak Musik Diservis", nfoto:3, mesin:"/kotak-musik.html", momen:"apology" },
+    "garis-finis":       { nama:"Garis Finis", nfoto:3, mesin:"/garis-finis.html", momen:"congrats" },
+    "stasiun-terakhir":  { nama:"Stasiun Terakhir", nfoto:3, mesin:"/stasiun-terakhir.html", momen:"parting" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -642,6 +645,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<input id="sembunyikanHari" type="checkbox">' +
         '<label for="sembunyikanHari">Sembunyikan hitungan harinya — tampilkan suratnya saja.</label>' +
         '</div></div></div>';
+    } else if(momen === "apology" || momen === "congrats" || momen === "parting"){
+      html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
+        '<p class="jelas">Momen ini tidak butuh tanggal atau angka apa pun. Lanjut ke foto dan isinya.</p>';
     } else if(momen === "proposal"){
       html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
         '<p class="jelas">Lamaran ini tidak butuh tanggal atau angka apa pun. Lanjut ke foto dan janji di tiap ruangannya.</p>';
@@ -979,6 +985,41 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="rahasia"><label for="rahasia">Kalimatnya (opsional)</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Aku nggak butuh jawaban sekarang."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
+    } else if(tema === "kotak-musik"){
+      var contohSd = ["Aku terlalu cepat membela diri waktu kamu cuma pengin didengar.", "Diamku kemarin bikin kamu nebak-nebak sendiri.", "Kamu bukan lawan yang harus dimenangkan."];
+      html = '<h2><span class="n">5</span> Tiga hal yang kamu sadari</h2>' +
+        '<p class="jelas">Dia memperbaiki kotak musiknya sendiri. Tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu ketiganya tercetak lagi di catatan servis.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="sadar'+i+'"><label for="sadar'+i+'">Roda gigi '+(i+1)+'</label>' +
+          '<textarea id="sadar'+i+'" maxlength="90" style="min-height:62px" placeholder="'+contohSd[i]+'"></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Bagian ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "garis-finis"){
+      var contohSr = ["Revisi segitu banyak, kamu tetap jalan!", "Belajar sambil kerja, tetap nyampe!", "Aku bangga banget sama kamu!"];
+      html = '<h2><span class="n">5</span> Pencapaiannya</h2>' +
+        '<p class="jelas">Terukir di medali yang dia kalungkan sendiri di podium.</p>' +
+        '<div class="baris" data-f="pencapaian"><label for="pencapaian">Pencapaian</label>' +
+        '<input id="pencapaian" type="text" maxlength="60" placeholder="Lulus sidang skripsi">' +
+        '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Pencapaiannya belum diisi.</p></div>' +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Tiga sorakan penonton</h2>' +
+        '<p class="jelas">Muncul sebagai spanduk di tribun selama dia berlari 100 meter terakhir.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="sorakan'+i+'"><label for="sorakan'+i+'">Spanduk '+(i+1)+'</label>' +
+          '<input id="sorakan'+i+'" type="text" maxlength="60" placeholder="'+contohSr[i]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Sorakan ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "stasiun-terakhir"){
+      var contohSt = [["Kafe Pojok","Tempat kamu pertama kali ketawa sampai kopinya tumpah."],["Pantai Selatan","Kita nunggu matahari terbenam yang ketutup awan, dan tetap seneng."],["Stasiun Kota","Peron tempat kita janjian, dan hari ini tempat kita pamit."]];
+      html = '<h2><span class="n">5</span> Tiga stasiun kenangan</h2>' +
+        '<p class="jelas">Kereta terakhir kalian singgah di tiga tempat ini, berurutan. Dia memindahkan wesel supaya keretanya sampai ke tiap stasiun.</p>' +
+        [0,1,2].map(function(i){ return '<div class="dua" style="margin-top:'+(i?'14':'4')+'px">' +
+          '<div class="baris" data-f="stNama'+i+'"><label for="stNama'+i+'">Stasiun '+(i+1)+'</label>' +
+          '<input id="stNama'+i+'" type="text" maxlength="24" placeholder="'+contohSt[i][0]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Nama tempatnya belum diisi.</p></div>' +
+          '<div class="baris" data-f="stKenang'+i+'"><label for="stKenang'+i+'">Kenangannya</label>' +
+          '<textarea id="stKenang'+i+'" maxlength="90" style="min-height:62px" placeholder="'+contohSt[i][1]+'"></textarea>' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Ceritanya belum diisi.</p></div></div>'; }).join("") +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Kalimat perpisahan</h2>' +
+        '<p class="jelas">Muncul setelah dua kereta berangkat. Boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
+        '<div class="baris" data-f="penutup"><label for="penutup">Kalimatnya (opsional)</label>' +
+        '<textarea id="penutup" maxlength="120" style="min-height:62px" placeholder="Semoga perjalananmu ke depan selalu ketemu orang baik."></textarea>' +
+        '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
         '<p class="jelas">Ditulis di selembar kertas tipis yang kelihatan kosong — baru terbaca saat dia menerawangnya ke lampu. Boleh dikosongkan.</p>' +
@@ -1029,6 +1070,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       for(var kk=0;kk<4;kk++) pasangHitung("kegiatan"+kk, BATAS.kegiatan);
       for(var ka=0;ka<3;ka++) pasangHitung("alasan"+ka, BATAS.alasan);
       pasangHitung("catatanTunda", BATAS.catatanTunda);
+    } else if(tema === "kotak-musik"){
+      for(var sd=0;sd<3;sd++) pasangHitung("sadar"+sd, BATAS.sadar);
+    } else if(tema === "garis-finis"){
+      pasangHitung("pencapaian", BATAS.pencapaian);
+      for(var sr=0;sr<3;sr++) pasangHitung("sorakan"+sr, BATAS.sorakan);
+    } else if(tema === "stasiun-terakhir"){
+      for(var sn=0;sn<3;sn++){ pasangHitung("stNama"+sn, BATAS.namaStasiun); pasangHitung("stKenang"+sn, BATAS.kenangan); }
+      pasangHitung("penutup", BATAS.penutup);
     } else {
       pasangHitung("rahasia", BATAS.rahasia);
     }
@@ -1127,6 +1176,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         rahasia: $("rahasia").value
       };
     }
+    if(TEMA === "kotak-musik") return { sadar: [0,1,2].map(function(i){ return $("sadar"+i).value; }) };
+    if(TEMA === "garis-finis") return { pencapaian: $("pencapaian").value, sorakan: [0,1,2].map(function(i){ return $("sorakan"+i).value; }) };
+    if(TEMA === "stasiun-terakhir") return {
+      stasiun: [0,1,2].map(function(i){ return { nama: $("stNama"+i).value, kenangan: $("stKenang"+i).value }; }),
+      penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
@@ -1145,7 +1199,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         sembunyikanHari: $("sembunyikanHari").checked
       };
     }
-    if(MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal"){
+    if(MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal" || MOMEN_GRUP === "apology" || MOMEN_GRUP === "congrats" || MOMEN_GRUP === "parting"){
       return {};
     }
     if(MOMEN_GRUP === "askout"){
@@ -1270,7 +1324,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["wisuda","wisuda"]]
       : MOMEN_GRUP === "getwell"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["sakit","sakit"]]
-      : MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal"
+      : MOMEN_GRUP === "lovenote" || MOMEN_GRUP === "proposal" || MOMEN_GRUP === "apology" || MOMEN_GRUP === "congrats" || MOMEN_GRUP === "parting"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"]]
       : MOMEN_GRUP === "askout"
       ? [["penerima","penerima"],["pengirim","pengirim"],["surat1","surat1"],["tglAjak","tglAjak"],["jamAjak","jamAjak"]]
@@ -1364,6 +1418,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         var kosongA = !$("alasan"+i).value.trim();
         tandai("alasan"+i, kosongA);
         if(kosongA) kurang.push("alasan"+i);
+      });
+    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir"){
+      (TEMA === "kotak-musik" ? ["sadar0","sadar1","sadar2"]
+        : TEMA === "garis-finis" ? ["pencapaian","sorakan0","sorakan1","sorakan2"]
+        : ["stNama0","stKenang0","stNama1","stKenang1","stNama2","stKenang2"]).forEach(function(nm){
+        var kosongX = !$(nm).value.trim(); tandai(nm, kosongX); if(kosongX) kurang.push(nm);
       });
     } else if(TEMA === "getwell-365"){
       [0,1,2].forEach(function(i){
@@ -1522,7 +1582,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var q = new URLSearchParams(location.search);
     return {
       tema: TEMA || q.get("tema") || "bait",
-      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : MOMEN_GRUP === "proposal" ? "Lamaran" : "Ulang tahun"),
+      momen: q.get("momen") || (MOMEN_GRUP === "anniversary" ? "Hari jadi" : MOMEN_GRUP === "ldr" ? "LDR" : MOMEN_GRUP === "graduation" ? "Wisuda" : MOMEN_GRUP === "confess" ? "Pengakuan" : MOMEN_GRUP === "getwell" ? "Lekas sembuh" : MOMEN_GRUP === "askout" ? "Ngajak jalan" : MOMEN_GRUP === "lovenote" ? "Love note" : MOMEN_GRUP === "proposal" ? "Lamaran" : MOMEN_GRUP === "apology" ? "Minta maaf" : MOMEN_GRUP === "congrats" ? "Selamat" : MOMEN_GRUP === "parting" ? "Selesai baik-baik" : "Ulang tahun"),
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       promo: PROMO.kode,
@@ -1711,6 +1771,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           (i.kegiatan||[]).forEach(function(v,n){ if($("kegiatan"+n)) $("kegiatan"+n).value = v || ""; });
           (i.alasan||[]).forEach(function(v,n){ if($("alasan"+n)) $("alasan"+n).value = v || ""; });
           if($("catatanTunda")) $("catatanTunda").value = i.catatanTunda || "";
+        } else if(TEMA === "kotak-musik"){
+          (i.sadar||[]).forEach(function(v,n){ if($("sadar"+n)) $("sadar"+n).value = v || ""; });
+        } else if(TEMA === "garis-finis"){
+          if($("pencapaian")) $("pencapaian").value = i.pencapaian || "";
+          (i.sorakan||[]).forEach(function(v,n){ if($("sorakan"+n)) $("sorakan"+n).value = v || ""; });
+        } else if(TEMA === "stasiun-terakhir"){
+          (i.stasiun||[]).forEach(function(x,n){ if(!$("stNama"+n)) return; $("stNama"+n).value = (x && x.nama) || ""; $("stKenang"+n).value = (x && x.kenangan) || ""; });
+          if($("penutup")) $("penutup").value = i.penutup || "";
         } else if($("rahasia")){
           $("rahasia").value = i.rahasia || "";
         }
