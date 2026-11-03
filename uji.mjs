@@ -2284,6 +2284,19 @@ await uji("M3: permintaan hapus (anonimkan) & hapus penuh membersihkan cadangan;
   sama((await L.panggil("/s/" + a.kode)).status, 404, "tautan tetap mati");
 });
 
+/* ═══════════ halaman momen: semua tema dimatikan → "Segera hadir" ═══════════ */
+await uji("halaman momen tanpa tema aktif menampilkan Segera hadir", async () => {
+  const { halamanMomen } = await import("./functions/momen.js");
+  const hidup = halamanMomen("ldr", []);
+  harus(!hidup.includes("Segera hadir") && hidup.includes("/pesan?tema=zona-waktu"), "tema hidup tampil biasa");
+  const kosong = halamanMomen("ldr", ["zona-waktu"]);
+  harus(kosong.includes("Segera hadir"), "label segera hadir");
+  harus(!kosong.includes("/pesan?tema="), "tidak ada tautan pesan ke tema mati");
+  harus(!kosong.includes("Dua jendela"), "teks tema yang mati tidak ikut tampil");
+  const sebagian = halamanMomen("anniversary", ["peta-perjalanan"]);
+  harus(!sebagian.includes("Segera hadir") && sebagian.includes("tema=rekonstruksi") && !sebagian.includes("tema=peta-perjalanan"), "sebagian mati");
+});
+
 /* ═══════════ hasil ═══════════ */
 console.log("\n" + "─".repeat(58));
 console.log(gagal === 0

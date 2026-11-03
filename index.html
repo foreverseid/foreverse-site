@@ -964,8 +964,9 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
       '<div class="acts"><button type="button" class="btn btn-ghost" data-try="'+k+'">Coba contoh</button>'+
       '<a class="btn btn-main" href="'+esc(orderLink(k,momen))+'">Pesan</a></div></div></article>';
   }
+  var dipilih=0;
   function pick(i,focus){
-    var m=M[i];
+    var m=M[i]; dipilih=i;
     tabs.querySelectorAll(".tab").forEach(function(b,j){ b.setAttribute("aria-selected",j===i?"true":"false"); b.tabIndex=j===i?0:-1; });
     if(focus) tabs.children[i].focus();
     var n=m.tema.length;
@@ -1025,7 +1026,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     $("pvPilih").querySelectorAll("[data-t]").forEach(function(btn){ if(mati.indexOf(btn.dataset.t)>-1) btn.remove(); });
     $("sorot").querySelectorAll("article").forEach(function(a){ var l=a.querySelector("a"); if(l && mati.some(function(t){ return l.href.indexOf("tema="+t)>-1; })) a.remove(); });
     tabs.innerHTML=""; M.forEach(buatTab);
-    var sel=0; pick(sel);
+    pick(dipilih);
     if(current && mati.indexOf(current)>-1 && semuaTema.length){ current=null; show(semuaTema[0],momenDari(semuaTema[0])); }
   }).catch(function(){});
 

@@ -237,6 +237,7 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,4vw,2.1rem);l
 .lede{color:var(--soft);font-size:1.06rem;max-width:56ch;margin:0 0 22px}
 .aksi{display:flex;gap:10px;flex-wrap:wrap}
 section{padding:clamp(32px,6vw,56px) 0}
+.segera{background:#fff;border:1.5px dashed #3B3168;border-radius:18px;padding:22px}.segera .lbl{display:inline-block;background:#3B3168;color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;margin-bottom:10px}.segera p{margin:.4em 0 1em}
 .tema{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .kartu{background:var(--paper);border:1px solid var(--stone);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px}
 .kartu h3{font-family:var(--serif);font-weight:500;font-size:1.25rem;margin:0}
@@ -267,7 +268,7 @@ footer a{text-decoration:none}
 <section class="hero">
   <div class="label">Surat digital yang bisa dimainkan</div>
   <h1>${esc(m.h1)}</h1>
-  <p class="lede">${esc(m.lede)}</p>
+  <p class="lede">${tema.length ? esc(m.lede) : "Temanya sedang disiapkan dan segera hadir."}</p>
   <div class="aksi">${tema[0] ? `<a class="btn" href="/pesan?tema=${esc(tema[0])}">Buat sekarang</a><a class="btn garis" href="${esc(TEMA[tema[0]].demo)}">Coba contohnya</a>` : `<a class="btn" href="/template">Lihat tema lain</a>`}</div>
 </section>
 
@@ -275,7 +276,12 @@ ${tema.length ? `<section>
   <h2>${tema.length > 1 ? "Pilihan tema" : "Temanya"}</h2>
   <div class="tema">${tema.map(t => `<article class="kartu"><h3>${esc(TEMA[t].nama)}</h3><p>${esc(TEMA[t].ringkas)}</p>
     <div class="aksi"><a class="btn kecil" href="/pesan?tema=${esc(t)}">Pakai tema ini</a><a class="btn kecil garis" href="${esc(TEMA[t].demo)}">Coba contoh</a></div></article>`).join("")}</div>
-</section>` : ""}
+</section>` : `<section>
+  <div class="segera" role="status"><span class="lbl">Segera hadir</span>
+  <h2>Tema untuk momen ini sedang kami siapkan</h2>
+  <p>Untuk sementara belum ada tema yang bisa dipesan di momen ini. Kalau kamu butuh, kabari kami lewat WhatsApp — momen yang paling banyak diminta kami kerjakan duluan.</p>
+  <div class="aksi"><a class="btn" target="_blank" rel="noopener" href="https://wa.me/6289512385393?text=${encodeURIComponent("Halo Foreverse, saya butuh tema untuk momen ini: foreverse.id/" + slug)}">Kabari saya</a><a class="btn garis" href="/template">Lihat momen lain</a></div></div>
+</section>`}
 
 <section>
   <h2>Cara membuatnya</h2>
@@ -300,8 +306,9 @@ ${tema.length ? `<section>
 </section>
 
 <section>
-  <div class="harga"><div><h2>Siap bikin punyamu?</h2><p>Dibuat sekitar 5 menit. Tautannya langsung jadi setelah bayar.</p></div>
-  <a class="btn" href="${tema[0] ? "/pesan?tema=" + esc(tema[0]) : "/template"}">Mulai sekarang</a></div>
+  ${tema[0] ? `<div class="harga"><div><h2>Siap bikin punyamu?</h2><p>Dibuat sekitar 5 menit. Tautannya langsung jadi setelah bayar.</p></div>
+  <a class="btn" href="/pesan?tema=${esc(tema[0])}">Mulai sekarang</a></div>` : `<div class="harga"><div><h2>Temanya segera hadir</h2><p>Sambil menunggu, lihat tema untuk momen lain.</p></div>
+  <a class="btn" href="/template">Lihat semua tema</a></div>`}
 </section>
 
 <section>
