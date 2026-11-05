@@ -691,7 +691,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   seret(ekor,{
     boleh:function(){ return !lepas; },
     down:function(){ ekor.style.transition='none'; },
-    move:function(e,dx,dy){ var d=Math.hypot(dx,dy), a=Math.atan2(dx,dy)*-180/Math.PI; ekor.style.setProperty('--e',klem(a,-80,80)+'deg'); ekor.style.setProperty('--s',1+klem(d/(U()*22),0,1)*.8);
+    move:function(e,dx,dy){ if(lepas) return; var d=Math.hypot(dx,dy), a=Math.atan2(dx,dy)*-180/Math.PI; ekor.style.setProperty('--e',klem(a,-80,80)+'deg'); ekor.style.setProperty('--s',1+klem(d/(U()*22),0,1)*.8);
       $('#simpul').style.transform='scale('+(1-klem(d/(U()*22),0,1)*.35)+')';
       if(d>U()*22) urai(); },
     up:function(){ if(lepas) return; ekor.style.transition='transform .4s cubic-bezier(.3,1.6,.5,1)'; ekor.style.setProperty('--e','-25deg'); ekor.style.setProperty('--s',1); $('#simpul').style.transform=''; kedip(); }

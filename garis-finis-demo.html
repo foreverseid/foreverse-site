@@ -553,7 +553,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   MASUK[2]=function(){ muat(); petunjuk('Kamera foto finis merekam garisnya. <b>Geser garis merah ke kanan</b> untuk memindai fotonya.'); };
   seret(pd,{
     boleh:function(){ return !kunci; },
-    move:function(e){ var r=b.getBoundingClientRect(); var n=klem((e.clientX-r.left)/r.width*100,0,100); if(n>s){ s=n; b.style.setProperty('--s',s+'%'); if(Math.random()<.3) tone(1800+s*8,.02,{type:'square',vol:.02}); }
+    move:function(e){ if(kunci) return; var r=b.getBoundingClientRect(); var n=klem((e.clientX-r.left)/r.width*100,0,100); if(n>s){ s=n; b.style.setProperty('--s',s+'%'); if(Math.random()<.3) tone(1800+s*8,.02,{type:'square',vol:.02}); }
       if(s>=96) selesai(); },
     up:function(){ if(!kunci && s<5) kedip(); }
   });

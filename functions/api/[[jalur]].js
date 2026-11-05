@@ -52,7 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
-  harapanNatal: 70, sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
+  harapanNatal: 70, janjiTahun: 60, sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -97,7 +97,8 @@ const TEMA_SKEMA = {
   "kotak-musik":       { nfoto: 3, momen: "apology" },
   "garis-finis":       { nfoto: 3, momen: "congrats" },
   "stasiun-terakhir":  { nfoto: 3, momen: "parting" },
-  "rumah-menyala":     { nfoto: 3, momen: "spesial" }
+  "rumah-menyala":     { nfoto: 3, momen: "spesial" },
+  "hitung-mundur":     { nfoto: 3, momen: "spesial" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -816,6 +817,12 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.pencapaian) throw new Error("Pencapaiannya belum diisi.");
     isi.sorakan = [0, 1, 2].map(i => teks((p.sorakan || [])[i], BATAS.sorakan));
     if (isi.sorakan.some(x => !x)) throw new Error("Ketiga sorakan penonton belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "hitung-mundur") {
+    /* "Hitung Mundur di Atap" (Hari Spesial · Tahun Baru): `janji` = tiga
+       rencana bersama untuk tahun depan, muncul saat tahunnya berganti. */
+    isi.janji = [0, 1, 2].map(i => teks((p.janji || [])[i], BATAS.janjiTahun));
+    if (isi.janji.some(x => !x)) throw new Error("Ketiga rencana tahun depan belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "rumah-menyala") {
     /* "Rumah yang Menyala" (Hari Spesial · Natal): `ucapan` = ucapan

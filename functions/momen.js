@@ -28,7 +28,8 @@ const TEMA = {
   "kotak-musik": { nama: "Kotak Musik Diservis", demo: "/kotak-musik-demo.html", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya: tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu lagunya bunyi lagi." },
   "garis-finis": { nama: "Garis Finis", demo: "/garis-finis-demo.html", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
   "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
-  "rumah-menyala": { nama: "Rumah yang Menyala", demo: "/rumah-menyala-demo.html", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." }
+  "rumah-menyala": { nama: "Rumah yang Menyala", demo: "/rumah-menyala-demo.html", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
+  "hitung-mundur": { nama: "Hitung Mundur di Atap", demo: "/hitung-mundur-demo.html", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." }
 };
 
 export const MOMEN = {
@@ -250,6 +251,23 @@ export const MOMEN = {
     faq: [
       ["Ucapannya bisa diganti?", "Bisa. Pilih \"Selamat Natal\" atau \"Merry Christmas\" di formulir."],
       ["Kapan sebaiknya dikirim?", "Kapan saja menjelang Natal. Kalau mau tepat di malam Natal, pakai kunci waktu supaya suratnya baru terbuka di jam yang kamu pilih."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "tahun-baru": {
+    judul: "Ucapan Tahun Baru untuk Pacar — Kartu Tahun Baru Digital",
+    deskripsi: "Ucapan tahun baru yang bisa dimainkan: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, tiga rencana tahun depan, dan bersulang di atap.",
+    h1: "Hitung mundur bareng, walau dari jauh.",
+    lede: "Malam pergantian tahun di atap gedung. Dia menghitung mundur, meluncurkan kembang api sampai tahunnya berganti, lalu membaca rencana kalian untuk tahun depan.",
+    tema: ["hitung-mundur"],
+    ide: [
+      "Makasih udah nemenin setahun ini, yang bagus maupun yang berantakan.",
+      "Tahun depan aku pengin lebih banyak hadir, bukan cuma di pesan.",
+      "Ayo jalanin rencana kita satu per satu."
+    ],
+    faq: [
+      ["Angka tahunnya ikut berganti otomatis?", "Ya. Surat menghitung tahun baru yang akan datang dari tanggal saat dibuka."],
+      ["Kapan sebaiknya dikirim?", "Menjelang malam pergantian tahun. Pakai kunci waktu kalau mau suratnya baru terbuka tepat tengah malam."],
       ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
     ]
   }
