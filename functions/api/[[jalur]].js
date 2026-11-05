@@ -155,15 +155,29 @@ const DOKU = {
      persetujuan DOKU datang satu per satu dan QRIS pernah maintenance.
      Pembeli memilih metode di /pesan; halaman DOKU hanya menampilkan
      metode itu, jadi biaya yang tampil selalu sama dengan yang ditagih.
-     Kode e-wallet BELUM diuji ke DOKU sungguhan — ShopeePay ditulis
-     berbeda di dua halaman dokumentasi DOKU (EMONEY_SHOPEE_PAY /
-     EMONEY_SHOPEEPAY). Uji satu transaksi tiap metode setelah aktif. */
+     Kode sesuai daftar resmi DOKU Checkout (developers.doku.com →
+     Supported Payment Methods, dicek 5 Nov 2026). Selain QRIS, belum ada
+     yang diuji ke DOKU sungguhan — uji satu transaksi tiap metode
+     setelah dibuka. */
   metodeTersedia: [
     { kode: "QRIS", nama: "QRIS", ket: "GoPay, OVO, DANA, ShopeePay, m-banking", tetap: 560, persen: 0, aktif: true },
     { kode: "EMONEY_DANA", nama: "DANA", ket: "aplikasi DANA", tetap: 0, persen: 0, aktif: false },
     { kode: "EMONEY_OVO", nama: "OVO", ket: "aplikasi OVO", tetap: 0, persen: 0, aktif: false },
     { kode: "EMONEY_SHOPEE_PAY", nama: "ShopeePay", ket: "aplikasi Shopee", tetap: 0, persen: 0, aktif: false },
-    { kode: "EMONEY_LINKAJA", nama: "LinkAja", ket: "aplikasi LinkAja", tetap: 0, persen: 0, aktif: false }
+    { kode: "EMONEY_LINKAJA", nama: "LinkAja", ket: "aplikasi LinkAja", tetap: 0, persen: 0, aktif: false },
+    { kode: "EMONEY_DOKU", nama: "DOKU e-Wallet", ket: "aplikasi DOKU", tetap: 0, persen: 0, aktif: false },
+    /* Virtual Account: cadangan saat QRIS/e-wallet gangguan. Biayanya biasanya
+       Rp tetap per transaksi — isi sesuai tarif DOKU di /developer. Kode dari
+       developers.doku.com → DOKU Checkout → Supported Payment Methods. */
+    { kode: "VIRTUAL_ACCOUNT_BCA", nama: "VA BCA", ket: "transfer ke Virtual Account BCA", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_BANK_MANDIRI", nama: "VA Mandiri", ket: "transfer ke Virtual Account Mandiri", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_BRI", nama: "VA BRI", ket: "transfer ke Virtual Account BRI", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_BNI", nama: "VA BNI", ket: "transfer ke Virtual Account BNI", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_BANK_SYARIAH_MANDIRI", nama: "VA BSI", ket: "transfer ke Virtual Account BSI", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_BANK_PERMATA", nama: "VA Permata", ket: "transfer ke Virtual Account Permata", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_BANK_CIMB", nama: "VA CIMB Niaga", ket: "transfer ke Virtual Account CIMB Niaga", tetap: 0, persen: 0, aktif: false },
+    { kode: "VIRTUAL_ACCOUNT_DOKU", nama: "VA bank lain", ket: "transfer dari bank mana pun ke Virtual Account DOKU", tetap: 0, persen: 0, aktif: false },
+    { kode: "ONLINE_TO_OFFLINE_ALFA", nama: "Alfamart", ket: "bayar tunai di kasir Alfamart/Alfamidi/Lawson", tetap: 0, persen: 0, aktif: false }
   ],
 
   jatuhTempoMenit: 60,                    // umur halaman pembayaran
