@@ -62,17 +62,17 @@
     }
   ],
   "surat": [
-    "Aku nggak bisa nungguin kamu di kamar itu, jadi aku kirim kamarnya sendiri. Maaf ya cuma segini yang bisa aku lakuin dari jauh.",
-    "Kamu selalu bilang nggak apa-apa padahal mukanya udah pucat. Jadi hari ini aku yang mutusin: kamu istirahat, titik.",
-    "Kalau nanti suhunya udah normal, kabarin. Aku mau denger suaramu yang nggak serak lagi."
+    "Aku tidak bisa nungguin kamu di kamar itu, jadi aku kirim kamarnya sendiri. Maaf ya cuma segini yang bisa aku lakuin dari jauh.",
+    "Kamu selalu bilang tidak apa-apa padahal mukanya udah pucat. Jadi hari ini aku yang mutusin: kamu istirahat, titik.",
+    "Kalau nanti suhunya udah normal, kabarin. Aku mau denger suaramu yang tidak serak lagi."
   ],
   "dosis": [
     {
-      "teks": "Inget, kamu nggak ngadepin ini sendirian.",
+      "teks": "Inget, kamu tidak ngadepin ini sendirian.",
       "aturan": "3x sehari, setelah makan"
     },
     {
-      "teks": "Nggak usah balas chat siapa-siapa dulu. Termasuk aku.",
+      "teks": "Tidak usah balas chat siapa-siapa dulu. Termasuk aku.",
       "aturan": "1x sehari, pas mau tidur"
     },
     {
@@ -81,12 +81,12 @@
     }
   ],
   "enakan": [
-    "Teh anget, nggak usah manis-manis",
+    "Teh anget, tidak usah manis-manis",
     "Lampu diredupin",
     "Suara hujan dari ponsel"
   ],
   "airPesan": "minum dulu, pelan-pelan.",
-  "rahasia": "Udah tidur? Aku di sini kalau butuh apa-apa. Nggak usah sungkan.",
+  "rahasia": "Udah tidur? Aku di sini kalau butuh apa-apa. Tidak usah sungkan.",
   "waPengirim": "6281234567890",
   "lagu": {
     "src": "",
@@ -556,7 +556,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function tampil(){ sibuk=true; SFX.klik(); var f=FOTO[i]; jd.classList.remove('buka');
     setTimeout(function(){ jd.classList.toggle('rebah',f.bentuk==='R'); pasFoto(im,f); im.classList.add('ada'); kt.textContent=f.caption||''; kt.className=f.caption?'isi':''; jd.classList.add('buka'); SFX.pop(); i++; sibuk=false;
       if(i>=FOTO.length){ beres=true; suhu(36.8); petunjuk('36,8. Cahaya masuk.'); setTimeout(function(){ lanjut(berikut,'Baca resepnya'); },2600); }
-      else petunjuk('<b>Tarik lagi</b> — masih ada '+(FOTO.length-i)+' pemandangan.'); },i?1000:200); }
+      else petunjuk('<b>Tarik lagi</b>, masih ada '+(FOTO.length-i)+' pemandangan.'); },i?1000:200); }
 })();
 
 /* 6 · blok resep: robek tiap lembar ke bawah */
@@ -564,7 +564,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var bl=$('#blokResep'), daftar=SURAT.length?SURAT:[''], sisa=daftar.length;
   daftar.slice().reverse().forEach(function(p,ri){ var k=daftar.length-1-ri, lb=el('div','lembar'); lb.appendChild(el('h4',null,'Resep untuk '+PENERIMA+' · '+(k+1)+'/'+daftar.length));
     lb.appendChild(el('div','rx','R/')); lb.appendChild(el('p',null,p));
-    if(k===daftar.length-1) lb.appendChild(el('div','ttd','— dr. '+PENGIRIM)); else lb.appendChild(el('div','robek','robek ke bawah ↓'));
+    if(k===daftar.length-1) lb.appendChild(el('div','ttd','dr. '+PENGIRIM)); else lb.appendChild(el('div','robek','robek ke bawah ↓'));
     bl.appendChild(lb);
     if(k<daftar.length-1) seret(lb,{ boleh:function(){ return !lb.classList.contains('lepas'); }, down:function(){ lb.classList.add('seret'); },
       move:function(e,dx,dy){ lb.style.transform='translateY('+Math.max(0,dy)+'px) rotate('+(Math.max(0,dy)/40)+'deg)'; },
@@ -579,7 +579,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var lp=$('#lampu'), beres=false;
   MASUK[6]=function(){ petunjuk('Sudah malam. <b>Ketuk lampunya</b> untuk tidur.'); };
   lp.addEventListener('click',function(){ if(beres) return; beres=true; ac(); lp.classList.add('mati'); document.body.classList.add('redup'); SFX.klik(); suhu(36.5); SFX.dentang();
-    var j=$('#judulAkhir'); j.textContent='36,5.'; j.appendChild(el('small',null,'Cepat pulih, '+PENERIMA+'. — '+PENGIRIM)); setTimeout(function(){ j.classList.add('tampil'); },300);
+    var j=$('#judulAkhir'); j.textContent='36,5.'; j.appendChild(el('small',null,'Cepat pulih, '+PENERIMA+'. Dari '+PENGIRIM)); setTimeout(function(){ j.classList.add('tampil'); },300);
     if(D.rahasia){ var r=$('#rahasia'); r.textContent=D.rahasia; setTimeout(function(){ r.classList.add('tampil'); },1200); }
     setTimeout(function(){ ptj.hidden=true; var t=$('#balasTeks'); t.value='Makasih ya, aku udah enakan. 🤍'; $('#akhirJudul').textContent='Mau kabari '+PENGIRIM+'?';
       if(!pasangBalasan($('#balasAksi'),t,'t-utama','t-wa')){ t.style.display='none'; $('#akhirJudul').textContent='Istirahat yang cukup, '+PENERIMA+'.'; }

@@ -292,7 +292,7 @@ var PENGIRIM = tk(D.pengirim) || 'aku';
 var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,3);
 var KEBIASAAN = tk(D.kebiasaan) || 'Tiap pagi aku masih nyiapin dua mug, padahal yang minum cuma aku.';
 var KANGEN = (D.kangen || []).map(tk).filter(Boolean);
-if(!KANGEN.length) KANGEN = ['Cara kamu ketawa duluan sebelum ceritanya selesai.', 'Kamu yang selalu tahu jalan pintas.', 'Diam-diam berdua tapi nggak canggung.'];
+if(!KANGEN.length) KANGEN = ['Cara kamu ketawa duluan sebelum ceritanya selesai.', 'Kamu yang selalu tahu jalan pintas.', 'Diam-diam berdua tapi tidak canggung.'];
 var BARANG = (D.barang || []).map(tk).filter(Boolean).slice(0,3);
 ['Susu stroberi','Roti sobek cokelat','Keripik kentang'].forEach(function(b){ if(BARANG.length < 3) BARANG.push(b); });
 var PENUTUP = tk(D.penutup) || 'Besok aku lewat sini duluan lagi, ya.';
@@ -638,7 +638,7 @@ function bukaLaci(){
   });
   buka([
     h3('Laci meja makan'),
-    p(FOTO.length ? 'Ada ' + FOTO.length + ' foto, ditaruh terbalik. Kamu nggak pernah naruh foto di sini.' : 'Lacinya kosong, cuma ada bekas selotip.'),
+    p(FOTO.length ? 'Ada ' + FOTO.length + ' foto, ditaruh terbalik. Kamu tidak pernah naruh foto di sini.' : 'Lacinya kosong, cuma ada bekas selotip.'),
     FOTO.length ? wadah : p(''),
     lanjut
   ]);
@@ -679,7 +679,7 @@ function bukaRak(i){
       if(performance.now() - panelSejak < 400 || b.ambil) return;
       if(!b.benar){
         t.classList.remove('salah'); void t.offsetWidth; t.classList.add('salah');
-        SFX.salah(); toast('Bukan yang ini. Kamu nggak pernah beli ini.');
+        SFX.salah(); toast('Bukan yang ini. Kamu tidak pernah beli ini.');
         return;
       }
       b.ambil = true; diambil.push(b.nama); segarBar();

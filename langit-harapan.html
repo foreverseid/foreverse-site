@@ -1280,7 +1280,7 @@ function mark(k){
 F.games.quiz($('#quizGame'), D.kuis || [], {
   right:['Benar! Kamu memang hafal 🥹','Tepat sekali ✨','Benar lagi. Curang ya? 😄'],
   wrong:['Hmm, bukan itu 🙈','Hampir! Nanti aku ingatkan lagi','Yah, meleset sedikit'],
-  result:(s,n) => s === n ? 'Semua benar. Kamu kenal aku lebih dari yang aku kira.' : s ? 'Lumayan! Sisanya kita bahas berdua nanti.' : 'Nggak apa-apa, berarti masih banyak yang bisa kita ceritakan.',
+  result:(s,n) => s === n ? 'Semua benar. Kamu kenal aku lebih dari yang aku kira.' : s ? 'Lumayan! Sisanya kita bahas berdua nanti.' : 'Tidak apa-apa, berarti masih banyak yang bisa kita ceritakan.',
   onDone: () => mark('quiz')
 });
 

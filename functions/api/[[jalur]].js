@@ -924,7 +924,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
       if (lama && lama.src) isi.foto.push({ src: lama.src, caption, bentuk: slot[i], fx: fokus(f.fx != null ? f.fx : lama.fx), fy: fokus(f.fy != null ? f.fy : lama.fy), slot: i });
     }
   }
-  if (isi.foto.length < 1) throw new Error("Minimal satu foto harus diunggah.");
+  if (isi.foto.length < nfoto) throw new Error(isi.foto.length ? "Masih ada " + (nfoto - isi.foto.length) + " foto yang belum diunggah. Semua " + nfoto + " foto wajib diisi." : "Semua " + nfoto + " foto wajib diunggah.");
   isi.lagu = await rapikanLagu(env, kode, p.lagu, lamaIsi && lamaIsi.lagu);
   const kunci = rapikanKunci(p.kunci, lamaIsi && lamaIsi.kunci);
   if (kunci) isi.kunci = kunci;

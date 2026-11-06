@@ -44,7 +44,7 @@ export const MOMEN = {
     ide: [
       "Selamat ulang tahun. Terima kasih sudah jadi bagian paling tenang dari hariku.",
       "Umurmu nambah satu, sabarku ke kamu juga. Semoga tahun ini lebih ramah sama kamu.",
-      "Aku nggak bisa kasih semua yang kamu mau, tapi aku bisa terus ada di tiap ulang tahunmu."
+      "Aku tidak bisa kasih semua yang kamu mau, tapi aku bisa terus ada di tiap ulang tahunmu."
     ],
     faq: [
       ["Bisa dikirim tepat jam 12 malam?", "Bisa. Pakai kunci waktu: suratnya baru terbuka di jam yang kamu pilih, dengan hitung mundur sebelum waktunya."],
@@ -60,7 +60,7 @@ export const MOMEN = {
     tema: ["peta-perjalanan", "rekonstruksi"],
     ide: [
       "Sudah sekian hari, dan aku masih memilih kamu setiap paginya.",
-      "Terima kasih sudah bertahan di hari-hari yang nggak gampang. Ayo lanjut jalan.",
+      "Terima kasih sudah bertahan di hari-hari yang tidak gampang. Ayo lanjut jalan.",
       "Hari pertama itu masih aku ingat sampai jam-jamnya."
     ],
     faq: [
@@ -95,7 +95,7 @@ export const MOMEN = {
     ide: [
       "Semua malam begadangmu akhirnya punya nama. Selamat, sarjana.",
       "Aku ikut bangga, dan aku tahu ini baru awal.",
-      "Terima kasih sudah nggak menyerah. Sekarang waktunya tumbuh."
+      "Terima kasih sudah tidak menyerah. Sekarang waktunya tumbuh."
     ],
     faq: [
       ["Bisa untuk teman atau saudara?", "Bisa. Isi nama dan pesannya sesuai hubungan kalian."],
@@ -110,7 +110,7 @@ export const MOMEN = {
     lede: "Satu hari biasa yang dia jalani sendiri, dan di tiap tempat ternyata kamu sudah lewat duluan, meninggalkan hal-hal kecil untuknya.",
     tema: ["lewat-duluan"],
     ide: [
-      "Nggak ada acara apa-apa hari ini. Aku cuma lagi kepikiran kamu.",
+      "Tidak ada acara apa-apa hari ini. Aku cuma lagi kepikiran kamu.",
       "Hal-hal kecil darimu itu yang bikin hariku enteng.",
       "Kalau kamu baca ini, berarti hari ini kamu sudah bikin aku senyum."
     ],
@@ -146,7 +146,7 @@ export const MOMEN = {
     ide: [
       "Aku sudah lama memperhatikan caramu tertawa. Mungkin sudah waktunya kamu tahu.",
       "Ini bukan kebetulan. Dari dulu memang aku.",
-      "Nggak perlu dijawab sekarang. Aku cuma nggak mau terus menyimpannya."
+      "Tidak perlu dijawab sekarang. Aku cuma tidak mau terus menyimpannya."
     ],
     faq: [
       ["Bisa anonim dulu?", "Bisa. Tema Kasus Pengirim Tanpa Nama membuat dia menebak siapa pengirimnya."],
@@ -195,8 +195,8 @@ export const MOMEN = {
     lede: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya, dan tiap bagian yang beres memperlihatkan satu hal yang kamu sadari.",
     tema: ["kotak-musik"],
     ide: [
-      "Aku nggak mau cuma bilang maaf. Aku mau benerin.",
-      "Kamu nggak harus maafin sekarang. Aku cuma pengin kamu tahu aku dengar.",
+      "Aku tidak mau cuma bilang maaf. Aku mau benerin.",
+      "Kamu tidak harus maafin sekarang. Aku cuma pengin kamu tahu aku dengar.",
       "Yang salah aku. Yang aku pelajari, aku tulis di sini."
     ],
     faq: [
@@ -212,7 +212,7 @@ export const MOMEN = {
     lede: "Hari perlombaan untuknya. Dia berlari ke garis finis diiringi spanduk sorakanmu, lalu naik podium dan membaca pesanmu di papan skor stadion.",
     tema: ["garis-finis"],
     ide: [
-      "Kamu nggak pernah berhenti, dan hari ini kebayar.",
+      "Kamu tidak pernah berhenti, dan hari ini kebayar.",
       "Aku penonton paling berisik buat kamu.",
       "Selamat. Rayain yang besar, istirahat yang cukup."
     ],
@@ -230,7 +230,7 @@ export const MOMEN = {
     tema: ["stasiun-terakhir"],
     ide: [
       "Makasih buat semua perjalanan yang pernah kita naiki bareng.",
-      "Kita berhenti bukan karena nggak sayang, tapi karena arah kita beda.",
+      "Kita berhenti bukan karena tidak sayang, tapi karena arah kita beda.",
       "Semoga perjalananmu ke depan selalu ketemu orang baik."
     ],
     faq: [

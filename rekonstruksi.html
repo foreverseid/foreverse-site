@@ -607,7 +607,7 @@ function bukaGaris(){
       if(!siap() || ps.classList.contains('isi')) return;
       if(dipilih === null){ toast('Pilih kartu buktinya dulu, baru jamnya.'); return; }
       var kb = KJ[dipilih];
-      if(menit(kb.jam) !== menit(k.jam)){ SFX.salah(); toast('Jamnya nggak cocok. Coba ingat-ingat lagi, atau cek buktinya.'); return; }
+      if(menit(kb.jam) !== menit(k.jam)){ SFX.salah(); toast('Jamnya tidak cocok. Coba ingat-ingat lagi, atau cek buktinya.'); return; }
       ps.classList.add('isi'); slot.textContent = kb.tempat;
       nodeK[dipilih].classList.add('pakai'); dipilih = null; terpasang++;
       SFX.pasang(); buzz(20);

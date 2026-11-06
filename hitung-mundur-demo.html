@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <!-- =====================================================================
-     FOREVERSE · Hari Spesial (Tahun Baru) · Tema "Hitung Mundur di Atap" (id: hitung-mundur) - BERKAS DEMO
+     FOREVERSE · Hari Spesial (Tahun Baru) · Tema "Hitung Mundur di Atap" (id: hitung-mundur) — BERKAS DEMO
      Data Amira & Adriel dipatok untuk demo publik. Pesanan sungguhan memakai hitung-mundur.html.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
@@ -40,7 +40,7 @@
     }
   ],
   "surat": [
-    "Amira, tahun ini nggak selalu gampang, tapi aku selalu bersyukur kamu ada di setiap bagiannya.",
+    "Amira, tahun ini tidak selalu gampang, tapi aku selalu bersyukur kamu ada di setiap bagiannya.",
     "Makasih udah sabar sama rencana-rencanaku yang kebanyakan, dan sama aku yang kadang lupa bilang makasih.",
     "Tahun depan aku pengin lebih banyak hadir. Bukan cuma di pesan, tapi beneran ada."
   ],
@@ -66,7 +66,7 @@
 </script>
 <style>
 /* Palet: biru tengah malam, emas sampanye, magenta, toska. Atap gedung
-   di malam pergantian tahun - beda dari Rumah yang Menyala (hijau-merah). */
+   di malam pergantian tahun — beda dari Rumah yang Menyala (hijau-merah). */
 :root{
   --malam:#141A3A; --malam2:#1F2758; --emas:#F2D49B; --emas2:#FFE9BD; --magenta:#E2457A; --toska:#3FC1C9; --putih:#F7F5FF; --ink:#15142A; --muted:#6C6A86;
   --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --angka:'Space Grotesk','Plus Jakarta Sans',sans-serif; --tangan:'Caveat',cursive;
@@ -102,7 +102,7 @@ img{-webkit-user-drag:none;pointer-events:none}
   border:0;border-radius:99px;padding:13px 28px;font:700 15px var(--sans);color:var(--ink);background:linear-gradient(180deg,var(--emas2),var(--emas));box-shadow:0 0 22px rgba(242,212,155,.55);cursor:pointer}
 #lanjut.tampil{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 
-/* adegan: kamera mendongak - adegan baru naik dari bawah */
+/* adegan: kamera mendongak — adegan baru naik dari bawah */
 .sc{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 50px);bottom:calc(env(safe-area-inset-bottom) + 82px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*5);
   opacity:0;pointer-events:none;transform:translateY(40%);transition:transform 1s cubic-bezier(.5,0,.2,1),opacity .6s;z-index:5}
 .sc.aktif{opacity:1;pointer-events:auto;transform:none}
@@ -287,7 +287,7 @@ function FV_MULAI(){
 "use strict";
 var D = KADO || {};
 D.lagu = D.lagu || {}; D.lagu.src = D.lagu.src || D.lagu.file || "";
-D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "" }; });
+D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "", bentuk: f && f.bentuk === "R" ? "R" : "T", fx: f && f.fx, fy: f && f.fy }; });
 var $=function(s,r){ return (r||document).querySelector(s); };
 var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
 var rand=function(a,b){ return a+Math.random()*(b-a); };
@@ -296,7 +296,10 @@ var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e
 var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
 var pusat=function(n){ var r=n.getBoundingClientRect(); return { x:r.left+r.width/2, y:r.top+r.height/2, r:r }; };
 var U=(function(){ var p=el('div'); p.style.cssText='position:fixed;visibility:hidden;pointer-events:none;width:calc(var(--u)*100)'; document.body.appendChild(p); return function(){ return p.getBoundingClientRect().width/100; }; })();
-var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,6);
+/* standar foto: T = tegak 3:4, R = mendatar 4:3, fx/fy = titik fokus (%) */
+var FOTO_T=FOTO.filter(function(f){ return f.bentuk!=='R'; }), FOTO_R=FOTO.filter(function(f){ return f.bentuk==='R'; });
+function pasFoto(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
 var SURAT=(D.surat||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
@@ -317,7 +320,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -416,7 +419,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
@@ -481,7 +484,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var meja=$('#mejaKorek'), kr=$('#korek'), gs=$('#geseran'), met=$('#meteranIsi'), pos={x:0,y:0}, ox=0, oy=0, lalu=null, gesek=0, nyala=false;
   function kepala(){ var r=kr.getBoundingClientRect(); return { x:r.left+U()*3, y:r.top+r.height/2 }; }
-  MASUK[0]=function(){ pos.x=kr.offsetLeft; pos.y=kr.offsetTop; petunjuk('Malam terakhir tahun ini. <b>Gesek kepala koreknya</b> di sisi kotak. Cepat, sekali tarik.'); };
+  MASUK[0]=function(){ pos.x=kr.offsetLeft; pos.y=kr.offsetTop; petunjuk('Malam terakhir tahun ini. <b>Gesek kepala koreknya</b> di sisi kotak — cepat, sekali tarik.'); };
   seret(kr,{
     boleh:function(){ return !nyala; },
     down:function(e){ ox=e.clientX-pos.x; oy=e.clientY-pos.y; lalu={x:e.clientX,t:performance.now()}; },
@@ -609,7 +612,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function taruh(x,y){ kt.style.left=x+'px'; kt.style.top=y+'px'; }
   $('#suratJudul').textContent='Untuk '+PENERIMA+', di '+TAHUN_BARU;
   (SURAT.length?SURAT:['']).forEach(function(t){ $('#suratIsi').appendChild(el('p',null,t)); });
-  $('#suratTtd').textContent=PENGIRIM;
+  $('#suratTtd').textContent=''+PENGIRIM;
   MASUK[4]=function(){ setTimeout(function(){ hitungTitik(); taruh(titik[0].x,titik[0].y); },1050);
     petunjuk('Kembang api tangan di ujung hati itu. <b>Seret mengikuti garisnya</b> sampai hatinya utuh.'); };
   addEventListener('resize',function(){ if(kini===4 && !beres){ hitungTitik(); taruh(titik[idx].x,titik[idx].y); } });

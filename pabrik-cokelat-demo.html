@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <!-- =====================================================================
-     FOREVERSE · Hari Spesial (Valentine) · Tema "Cokelat Buatan Sendiri" (id: pabrik-cokelat) - BERKAS DEMO
+     FOREVERSE · Hari Spesial (Valentine) · Tema "Cokelat Buatan Sendiri" (id: pabrik-cokelat) — BERKAS DEMO
      Data Amira & Adriel dipatok untuk demo publik. Pesanan sungguhan memakai pabrik-cokelat.html.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
@@ -40,8 +40,8 @@
     }
   ],
   "surat": [
-    "Amira, aku nggak pinter bikin cokelat. Tapi aku pengin kamu tahu, setiap hari sama kamu rasanya manis.",
-    "Makasih udah sabar sama aku yang kadang lupa tanggal, tapi nggak pernah lupa kenapa aku sayang kamu.",
+    "Amira, aku tidak pinter bikin cokelat. Tapi aku pengin kamu tahu, setiap hari sama kamu rasanya manis.",
+    "Makasih udah sabar sama aku yang kadang lupa tanggal, tapi tidak pernah lupa kenapa aku sayang kamu.",
     "Selamat Hari Valentine. Separuh cokelatnya buat kamu, separuh lagi kita makan bareng nanti."
   ],
   "alasan": [
@@ -66,7 +66,7 @@
 </script>
 <style>
 /* Palet: cokelat kakao, merah muda mawar, krem, hijau pistachio.
-   Dapur cokelat kecil di hari Valentine - beda dari tema Natal & Tahun Baru. */
+   Dapur cokelat kecil di hari Valentine — beda dari tema Natal & Tahun Baru. */
 :root{
   --kakao:#3B2420; --kakao2:#5A372F; --susu:#8A5A44; --mawar:#F2A7B8; --mawar2:#E07A93; --krem:#FFF4EC; --pista:#A8C69F; --ink:#2A1A16; --muted:#7A6560;
   --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --tangan:'Caveat',cursive;
@@ -263,7 +263,7 @@ function FV_MULAI(){
 "use strict";
 var D = KADO || {};
 D.lagu = D.lagu || {}; D.lagu.src = D.lagu.src || D.lagu.file || "";
-D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "" }; });
+D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "", bentuk: f && f.bentuk === "R" ? "R" : "T", fx: f && f.fx, fy: f && f.fy }; });
 var $=function(s,r){ return (r||document).querySelector(s); };
 var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
 var rand=function(a,b){ return a+Math.random()*(b-a); };
@@ -272,7 +272,10 @@ var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e
 var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
 var pusat=function(n){ var r=n.getBoundingClientRect(); return { x:r.left+r.width/2, y:r.top+r.height/2, r:r }; };
 var U=(function(){ var p=el('div'); p.style.cssText='position:fixed;visibility:hidden;pointer-events:none;width:calc(var(--u)*100)'; document.body.appendChild(p); return function(){ return p.getBoundingClientRect().width/100; }; })();
-var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,6);
+/* standar foto: T = tegak 3:4, R = mendatar 4:3, fx/fy = titik fokus (%) */
+var FOTO_T=FOTO.filter(function(f){ return f.bentuk!=='R'; }), FOTO_R=FOTO.filter(function(f){ return f.bentuk==='R'; });
+function pasFoto(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
 var SURAT=(D.surat||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
@@ -293,7 +296,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -392,7 +395,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
@@ -415,7 +418,7 @@ function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
    dituang ke tiga cetakan sampai pas di garis (tiap cetakan dihias
    satu `alasan` aku sayang kamu), bendera di kotak praline ditarik
    (foto), bungkus cokelat dibuka lipat demi lipat (surat), lalu
-   cokelatnya dipatahkan jadi dua - separuh untuk masing-masing.
+   cokelatnya dipatahkan jadi dua — separuh untuk masing-masing.
    ═══════════════════════════════════════════════════════════════ */
 var ALASAN=(D.alasan||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 SFX.kertas2=function(){ noise(.12,6000,.08); };
@@ -546,7 +549,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var lp=$('#lipatan'), panel=[];
   var s=el('div','panel sampul'); s.appendChild(el('h2',null,'Untuk '+PENERIMA)); s.appendChild(el('p',null,'bacanya pelan-pelan, ya')); s.appendChild(el('span','gagang')); panel.push(s);
   var daftar=SURAT.length?SURAT:[''];
-  daftar.forEach(function(t,i){ var p=el('div','panel'); p.appendChild(el('p','par',t)); if(i===daftar.length-1) p.appendChild(el('div','ttd',PENGIRIM)); else p.appendChild(el('span','gagang'));
+  daftar.forEach(function(t,i){ var p=el('div','panel'); p.appendChild(el('p','par',t)); if(i===daftar.length-1) p.appendChild(el('div','ttd',''+PENGIRIM)); else p.appendChild(el('span','gagang'));
     p.appendChild(el('div','no',(i+1)+' / '+daftar.length)); panel.push(p); });
   panel.forEach(function(p,i){ p.style.zIndex=panel.length-i; lp.appendChild(p); });
   var atas=0;
@@ -570,7 +573,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var sn=$('#separuhN'), bt=$('#batang'), beres=false;
   $('#labelKu').textContent='untukmu, '+PENERIMA; $('#labelDia').textContent='untuk '+PENGIRIM;
-  MASUK[4]=function(){ petunjuk('Cokelat terakhir untuk dibagi berdua. <b>Patahkan di tengah</b>, tarik separuh kanannya.'); };
+  MASUK[4]=function(){ petunjuk('Cokelat terakhir untuk dibagi berdua. <b>Patahkan di tengah</b> — tarik separuh kanannya.'); };
   seret(sn,{
     boleh:function(){ return !beres; },
     down:function(){ sn.classList.add('seret'); },

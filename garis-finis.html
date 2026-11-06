@@ -54,7 +54,7 @@
 </script>
 <style>
 /* Palet: lintasan biru, garis putih, hijau limau, biru malam stadion,
-   jingga papan skor. Hari perlombaan - tidak dipakai tema lain. */
+   jingga papan skor. Hari perlombaan — tidak dipakai tema lain. */
 :root{
   --lintas:#2D5DA8; --lintas2:#234C8C; --malam:#13213F; --limau:#C6E35B; --jingga:#FF9B3D; --putih:#F7FAFF; --ink:#101A30; --muted:#5D6B85;
   --cond:'Barlow Condensed','Arial Narrow',sans-serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --serif:'Fraunces',Georgia,serif;
@@ -290,7 +290,7 @@ function FV_MULAI(){
 "use strict";
 var D = KADO || {};
 D.lagu = D.lagu || {}; D.lagu.src = D.lagu.src || D.lagu.file || "";
-D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "" }; });
+D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "", bentuk: f && f.bentuk === "R" ? "R" : "T", fx: f && f.fx, fy: f && f.fy }; });
 var $=function(s,r){ return (r||document).querySelector(s); };
 var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
 var rand=function(a,b){ return a+Math.random()*(b-a); };
@@ -299,7 +299,10 @@ var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e
 var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
 var pusat=function(n){ var r=n.getBoundingClientRect(); return { x:r.left+r.width/2, y:r.top+r.height/2, r:r }; };
 var U=(function(){ var p=el('div'); p.style.cssText='position:fixed;visibility:hidden;pointer-events:none;width:calc(var(--u)*100)'; document.body.appendChild(p); return function(){ return p.getBoundingClientRect().width/100; }; })();
-var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,6);
+/* standar foto: T = tegak 3:4, R = mendatar 4:3, fx/fy = titik fokus (%) */
+var FOTO_T=FOTO.filter(function(f){ return f.bentuk!=='R'; }), FOTO_R=FOTO.filter(function(f){ return f.bentuk==='R'; });
+function pasFoto(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
 var SURAT=(D.surat||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
@@ -320,7 +323,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -419,7 +422,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
@@ -557,7 +560,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   var dp=$('#diPodium'); dp.innerHTML=orang(false);
   var med=$('#medali'), leher=$('#leher'), beres=false;
   $('#ukiranTeks').textContent=CAPAI;
-  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b>, seret ke lehernya.'); };
+  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b> — seret ke lehernya.'); };
   bawa(med,{
     boleh:function(){ return !beres; },
     up:function(){
@@ -577,7 +580,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   $('#papanJudul').textContent='PESAN DARI '+PENGIRIM.toUpperCase();
   function tampil(n){ i=n; $('#papanNo').textContent=(n+1)+'/'+daftar.length; var t=daftar[n], k=0; penuh=false; isi.textContent='';
     clearInterval(ketik); ketik=setInterval(function(){ k+=2; isi.textContent=t.slice(0,k); if(k>=t.length){ clearInterval(ketik); penuh=true; if(n===daftar.length-1) habis(); } },28); }
-  function habis(){ var t=$('#papanTtd'); t.textContent=PENGIRIM; t.classList.add('tampil'); $('#papanBawah').textContent=' '; setTimeout(function(){ lanjut(berikut,'Penutup'); },1800); }
+  function habis(){ var t=$('#papanTtd'); t.textContent=''+PENGIRIM; t.classList.add('tampil'); $('#papanBawah').textContent=' '; setTimeout(function(){ lanjut(berikut,'Penutup'); },1800); }
   MASUK[4]=function(){ tampil(0); petunjuk('Papan skor stadion sedang menampilkan pesan untukmu. <b>Ketuk papannya</b> untuk pesan berikutnya.'); };
   pap.addEventListener('click',function(){ if(!penuh || i>=daftar.length-1) return; SFX.klik(); tampil(i+1); });
   noMenu(pap);

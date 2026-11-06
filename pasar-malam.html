@@ -458,7 +458,7 @@ body.masuk #soundBtn{display:grid}
       <div class="isi">
         <div class="untai"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="papan-nama">Gula Kapas</div>
-        <p class="kata">Alasannya nggak diucapkan sekaligus. Digulung pelan-pelan, selapis demi selapis.</p>
+        <p class="kata">Alasannya tidak diucapkan sekaligus. Digulung pelan-pelan, selapis demi selapis.</p>
         <p class="ket" id="gulaKet">putar batangnya searah jarum jam ⟳</p>
       </div>
       <div class="panggung" id="stGula"></div>
@@ -611,12 +611,12 @@ var TGL2 = new Date(TGL1.getTime() + 7*86400000);
 var JAM  = tulisJam(D.jamAjak);
 var JAM_JAM = (function(){ var m = String(D.jamAjak||'').match(/^(\d{1,2}):(\d{2})$/); return m ? [+m[1], +m[2]] : [19,0]; })();
 var TITIK = String(D.titikTemu||'').trim();
-var TUNDA = String(D.catatanTunda||'').trim() || 'Nggak apa-apa. Pasar malamnya nunggu kamu siap.';
+var TUNDA = String(D.catatanTunda||'').trim() || 'Tidak apa-apa. Pasar malamnya nunggu kamu siap.';
 
 var MALAM = [
   { id:'utama',  judul: tulisTanggal(TGL1), sub: 'jam ' + JAM + (TITIK ? ' · ' + TITIK : ''), balas:'Ayo, yang ini aja.' },
   { id:'lusa',   judul: tulisTanggal(TGL2), sub: 'jam ' + JAM + ', minggu depannya', balas:'Yang ini lebih bisa buat aku.' },
-  { id:'nanti',  judul: 'Kapan pun kamu siap', sub: 'belum bisa sekarang, dan itu nggak apa-apa', balas:'Belum bisa sekarang, tapi aku mau.' }
+  { id:'nanti',  judul: 'Kapan pun kamu siap', sub: 'belum bisa sekarang, dan itu tidak apa-apa', balas:'Belum bisa sekarang, tapi aku mau.' }
 ];
 
 /* ══════════════ suara (infrastruktur bersama) ══════════════ */
@@ -1152,7 +1152,7 @@ var gelangSelesai = false;
     segarAcara();
     $('#gelangKet').textContent = HASIL_KENA.length
       ? 'gelangnya habis. ' + HASIL_KENA.length + ' rencana tersangkut.'
-      : 'semua meleset. nggak apa-apa, semuanya bisa diambil lagi di kios pancing.';
+      : 'semua meleset. tidak apa-apa, semuanya bisa diambil lagi di kios pancing.';
     siapkanPancing();
     toast('Gelangnya habis. Turun terus, ada bianglala.');
   }

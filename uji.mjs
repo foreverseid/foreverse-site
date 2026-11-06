@@ -31,13 +31,16 @@ function isiDraf() {
       tanggalLahir: "2001-05-14", sembunyikanUmur: false,
       rahasia: "Aku menunggu di halaman terakhir."
     },
-    foto: [{ data: FOTO, mime: "image/jpeg", caption: "foto pertama" }]
+    foto: fotoPenuh(3)
   };
 }
+
+function fotoPenuh(n) { return Array.from({ length: n }, (_, i) => ({ data: FOTO, mime: "image/jpeg", caption: i ? "" : "foto pertama" })); }
 
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
+  if (tema === "langit-harapan" || tema === "getwell-365") d.foto = fotoPenuh(4);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
     d.isi.kupon = ["Kupon satu", "Kupon dua", "Kupon tiga"];
@@ -1396,15 +1399,23 @@ await uji("lewat-duluan · momen lovenote tidak kena isian momen lain, dan isian
 await uji("standar foto · slot tegak/mendatar, titik fokus, dan nomor slot tersimpan", async () => {
   const L = await buatLingkungan();
   const d = isiDrafTema("getwell-365");
-  d.foto = [{ data: FOTO, mime: "image/jpeg", caption: "satu", fx: 20, fy: 140 }, { caption: "" },
-            { data: FOTO, mime: "image/jpeg", caption: "tiga", fx: "x" }, { caption: "" }];
+  d.foto = [{ data: FOTO, mime: "image/jpeg", caption: "satu", fx: 20, fy: 140 }, { data: FOTO, mime: "image/jpeg" },
+            { data: FOTO, mime: "image/jpeg", caption: "tiga", fx: "x" }, { data: FOTO, mime: "image/jpeg" }];
   const j = await draf(L, d);
   harus(j.ok, "draf gagal: " + JSON.stringify(j));
   const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
   const f = JSON.parse(b.isi).foto;
-  sama(f.length, 2, "dua foto tersimpan");
+  sama(f.length, 4, "empat foto tersimpan");
   harus(f[0].bentuk === "T" && f[0].slot === 0 && f[0].fx === 20 && f[0].fy === 100, "slot 0 tegak, fokus dijepit: " + JSON.stringify(f[0]));
-  harus(f[1].bentuk === "R" && f[1].slot === 2 && f[1].fx === 50, "slot 2 mendatar, fokus bawaan 50: " + JSON.stringify(f[1]));
+  harus(f[2].bentuk === "R" && f[2].slot === 2 && f[2].fx === 50, "slot 2 mendatar, fokus bawaan 50: " + JSON.stringify(f[2]));
+});
+
+await uji("standar foto · pesanan dengan foto belum lengkap ditolak", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("getwell-365");
+  d.foto = [d.foto[0], { caption: "" }, d.foto[2], d.foto[3]];
+  const j = await draf(L, d);
+  harus(!j.ok && /foto/i.test(j.pesan || ""), "harus ditolak: " + JSON.stringify(j));
 });
 
 await uji("kasus-pengirim · pesanan lengkap diterima, momen confess, isian khas tersimpan", async () => {

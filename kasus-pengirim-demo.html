@@ -30,7 +30,7 @@
   "karakter": "perempuan",
   "catatan": "Kamu selalu pilih kursi yang menghadap jendela. Aku selalu pilih kursi yang menghadap kamu.",
   "pesanan": "es kopi susu, gulanya sedikit",
-  "tahu": "Kamu selalu nyobek bungkus gula, tapi nggak pernah dituang.",
+  "tahu": "Kamu selalu nyobek bungkus gula, tapi tidak pernah dituang.",
   "penutup": "Apa pun stempel yang kamu pilih, makasih udah baca sampai sini.",
   "foto": [
     {
@@ -49,7 +49,7 @@
   "surat": [
     "Iya, itu aku. Seminggu ini aku yang ninggalin kertas-kertas itu, karena tiap mau ngomong langsung, kalimatnya selalu hilang di jalan.",
     "Aku udah lama suka cara kamu duduk diam di kafe ini. Kayak dunia boleh ramai, tapi kamu punya pojok sendiri. Aku cuma pengen ada di pojok itu juga.",
-    "Kamu nggak harus jawab sekarang. Aku cuma nggak mau kamu terus nebak-nebak siapa orangnya."
+    "Kamu tidak harus jawab sekarang. Aku cuma tidak mau kamu terus nebak-nebak siapa orangnya."
   ],
   "waPengirim": "081234567890",
   "lagu": {
@@ -324,7 +324,7 @@ var KARAKTER = D.karakter === 'laki' ? 'laki' : 'perempuan';
 var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,3);
 var CATATAN = tk(D.catatan) || 'Kamu selalu pilih kursi yang menghadap jendela. Aku selalu pilih kursi yang menghadap kamu.';
 var PESANAN = tk(D.pesanan) || 'es kopi susu, gulanya sedikit';
-var TAHU = tk(D.tahu) || 'Kamu selalu nyobek bungkus gula tapi nggak pernah dipakai.';
+var TAHU = tk(D.tahu) || 'Kamu selalu nyobek bungkus gula tapi tidak pernah dipakai.';
 var PENUTUP = tk(D.penutup);
 var SURAT = (D.surat || []).map(tk).filter(Boolean);
 if(!SURAT.length) SURAT = ['Ini pernyataanku.'];
@@ -457,7 +457,7 @@ var IA = [
   { id:'plg',     ox:8.5,  oy:4.5,  r:1.25, lx:8.5, ly:3.85, nama:'pelanggan', kata:'Sapa', aksi:function(){
       SFX.periksa(); toast('"Aku cuma numpang ngetik di sini, Kak. Itu stiker ' + INISIAL_LAIN + ' di laptopku, inisial namaku."', 3400); } },
   { id:'kurir',   ox:14.5, oy:13.5, r:1.25, lx:14.5, ly:12.85, nama:'kurir', kata:'Sapa', aksi:function(){
-      SFX.periksa(); toast('"Saya cuma antar paket tiap pagi, Kak. Nggak pernah pesan apa-apa di sini."', 3400); } }
+      SFX.periksa(); toast('"Saya cuma antar paket tiap pagi, Kak. Tidak pernah pesan apa-apa di sini."', 3400); } }
 ];
 function iaId(id){ for(var i=0;i<IA.length;i++) if(IA[i].id === id) return IA[i]; return null; }
 function selesaiIA(o){
@@ -608,7 +608,7 @@ function bukaBarista(){
   SFX.periksa();
   if(ST.barista){ buka([ h3('Konter barista'), p('"Udah saya ceritain semua, Kak. Orangnya selalu pesan ' + PESANAN + '."'), tombol('Tutup', tutup) ]); return; }
   var TANYA = [
-    { t:'Kakak lihat siapa yang naruh kertas di meja itu?', j:'"Nggak lihat, Kak. Kalau Jumat ramai banget."' },
+    { t:'Kakak lihat siapa yang naruh kertas di meja itu?', j:'"Tidak lihat, Kak. Kalau Jumat ramai banget."' },
     { t:'Ada CCTV di sini?', j:'"Ada, tapi rusak dari bulan lalu. Belum dibenerin."' },
     { t:'Tiap Jumat, ada yang pesan buat meja itu?', j:'"Oh, ada! Orangnya selalu pesan ' + PESANAN + '. Pesannya dua, yang satu dia taruh di meja itu, terus pergi."', kunci:true }
   ];
@@ -702,7 +702,7 @@ function bukaPojok(){
   var BANTAH = { inisial:'pelanggan', pesanan:'kurir' };
   var ALASAN = {
     pelanggan:'Inisial di kertas ' + INISIAL + ', stiker di laptopnya ' + INISIAL_LAIN + '. Bukan dia.',
-    kurir:'Kurirnya nggak pernah pesan apa-apa di sini. Bukan dia.'
+    kurir:'Kurirnya tidak pernah pesan apa-apa di sini. Bukan dia.'
   };
   var dipilih = null;
   var bar = el('div', 'bukti-baris'), grid = el('div', 'tersangka'), ket = p('Ketuk satu bukti, lalu ketuk tersangka yang dibantah bukti itu.');
@@ -727,7 +727,7 @@ function bukaPojok(){
       if(!siap() || ST.terungkap) return;
       if(!dipilih){ toast('Pilih buktinya dulu, baru tersangkanya.'); return; }
       if(t.id === 'x'){
-        if(dipilih !== 'tahu'){ SFX.salah(); toast('Bukti ini nggak menjelaskan siapa dia.'); return; }
+        if(dipilih !== 'tahu'){ SFX.salah(); toast('Bukti ini tidak menjelaskan siapa dia.'); return; }
         if(!CORET.pelanggan || !CORET.kurir){ SFX.salah(); toast('Coret dulu dua tersangka lainnya.'); return; }
         ST.terungkap = true; nodeB.tahu.classList.add('pakai'); nodeB.tahu.classList.remove('pilih');
         n.classList.remove('misteri'); n.classList.add('terungkap');
@@ -736,7 +736,7 @@ function bukaPojok(){
         SFX.ungkap(); buzz([30,40,60]); lanjut.hidden = false; segarBar();
         return;
       }
-      if(BANTAH[dipilih] !== t.id){ SFX.salah(); toast('Bukti ini nggak membantah dia.'); return; }
+      if(BANTAH[dipilih] !== t.id){ SFX.salah(); toast('Bukti ini tidak membantah dia.'); return; }
       CORET[t.id] = true; n.classList.add('coret'); s.textContent = ALASAN[t.id];
       nodeB[dipilih].classList.add('pakai'); nodeB[dipilih].classList.remove('pilih'); dipilih = null;
       SFX.coret(); buzz(30);

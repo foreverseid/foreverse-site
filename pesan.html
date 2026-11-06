@@ -109,6 +109,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media (max-width:520px){ .fotos{grid-template-columns:1fr} }
 .fotokartu{border:1.5px dashed var(--stone);border-radius:13px;padding:10px;background:var(--cream)}
+.fotokartu.kosong{border-color:var(--merah)}
 .fotokartu.isi{border-style:solid;border-color:var(--violet-soft);background:var(--paper)}
 .jendela{
   position:relative;aspect-ratio:3/4;border-radius:9px;overflow:hidden;background:var(--cream-lift);
@@ -283,7 +284,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <h2><span class="n">3</span> <span id="judulFoto">Foto</span></h2>
         <p class="jelas">Foto tegak paling bagus. Fotonya dikecilkan otomatis di HP-mu sebelum dikirim, jadi tidak boros kuota. Minimal satu foto.</p>
         <div class="fotos" id="fotos"></div>
-        <p class="galat" id="galatFoto" style="display:none">Paling tidak satu foto harus dipilih.</p>
+        <p class="galat" id="galatFoto" style="display:none">Semua foto harus dipilih dulu.</p>
       </section>
 
       <section class="blok" id="blokDasar"></section>
@@ -608,8 +609,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       FOTO[i] = { data: hasil, mime: "image/jpeg", caption: "", fx: 50, fy: 50 };
       FOTO_ADA[i] = null;
       isiJendela(i, hasil, FOTO[i]);
-      k.classList.add("isi");
-      $("galatFoto").style.display = "none";
+      k.classList.add("isi"); k.classList.remove("kosong");
     });
   }
 
@@ -858,7 +858,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<input id="dosisA'+g+'" type="text" maxlength="40" placeholder="3× sehari, setelah makan">' +
           '<div class="hitung"><span></span><span class="angka"></span></div></div>' +
           '<div class="baris" style="margin-top:6px" data-f="dosisT'+g+'"><label for="dosisT'+g+'">Isi dosis '+(g+1)+'</label>' +
-          '<textarea id="dosisT'+g+'" maxlength="90" placeholder="Inget, kamu nggak ngadepin ini sendirian."></textarea>' +
+          '<textarea id="dosisT'+g+'" maxlength="90" placeholder="Inget, kamu tidak ngadepin ini sendirian."></textarea>' +
           '<div class="hitung"><span></span><span class="angka"></span></div>' +
           '<p class="galat">Isi dosis '+(g+1)+' belum diisi.</p></div>';
       }
@@ -923,7 +923,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="hitung"><span></span><span class="angka"></span></div>' +
         '<p class="galat">Pesananmu belum diisi.</p></div>' +
         '<div class="baris" data-f="tahu"><label for="tahu">Bukti 3: satu hal kecil yang cuma kamu tahu tentang dia</label>' +
-        '<textarea id="tahu" maxlength="90" placeholder="Kamu selalu nyobek bungkus gula tapi nggak pernah dipakai."></textarea>' +
+        '<textarea id="tahu" maxlength="90" placeholder="Kamu selalu nyobek bungkus gula tapi tidak pernah dipakai."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div>' +
         '<p class="galat">Hal kecil ini belum diisi.</p></div>' +
         '<h2 style="margin-top:28px"><span class="n">5</span> Catatan penutup</h2>' +
@@ -940,7 +940,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<p class="galat">Kebiasaan kecilnya belum diisi.</p></div>' +
         '<h2 style="margin-top:28px"><span class="n">5</span> Tiga hal yang kamu kangenin</h2>' +
         '<p class="jelas">Ada di tas kecil yang menyisakan kursi halte untuk dia, muncul satu per satu sambil menunggu bus.</p>';
-      var contohKangen = ["Cara kamu ketawa duluan sebelum ceritanya selesai.", "Kamu yang selalu tahu jalan pintas.", "Diam-diam berdua tapi nggak canggung."];
+      var contohKangen = ["Cara kamu ketawa duluan sebelum ceritanya selesai.", "Kamu yang selalu tahu jalan pintas.", "Diam-diam berdua tapi tidak canggung."];
       for(var kn=0;kn<3;kn++){
         html += '<div class="baris" data-f="kangen'+kn+'"><label for="kangen'+kn+'">Hal '+(kn+1)+'</label>' +
           '<input id="kangen'+kn+'" type="text" maxlength="70" placeholder="'+contohKangen[kn]+'">' +
@@ -964,7 +964,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     } else if(tema === "pasar-malam"){
       html = '<h2><span class="n">5</span> Empat rencana di botol</h2>' +
         '<p class="jelas">Jadi label di leher botol lempar gelang. Yang tersangkut jadi acara malam itu; yang meleset berdiri lagi di kios pancing.</p>';
-      var contohRencana = ["mie malam-malam", "nonton yang jelek", "muter nggak jelas", "ngopi sampai tutup"];
+      var contohRencana = ["mie malam-malam", "nonton yang jelek", "muter tidak jelas", "ngopi sampai tutup"];
       for(var kg2=0;kg2<4;kg2++){
         html += '<div class="baris" data-f="kegiatan'+kg2+'"><label for="kegiatan'+kg2+'">Rencana '+(kg2+1)+'</label>' +
           '<input id="kegiatan'+kg2+'" type="text" maxlength="24" placeholder="'+contohRencana[kg2]+'">' +
@@ -975,14 +975,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<p class="jelas">Digulung jadi tiga lapis gula kapas, muncul satu per satu sambil batangnya diputar.</p>';
       for(var al=0;al<3;al++){
         html += '<div class="baris" data-f="alasan'+al+'"><label for="alasan'+al+'">Alasan '+(al+1)+'</label>' +
-          '<textarea id="alasan'+al+'" maxlength="90" placeholder="Soalnya ketemu kamu itu bagian paling nggak capek dari seminggu."></textarea>' +
+          '<textarea id="alasan'+al+'" maxlength="90" placeholder="Soalnya ketemu kamu itu bagian paling tidak capek dari seminggu."></textarea>' +
           '<div class="hitung"><span></span><span class="angka"></span></div>' +
           '<p class="galat">Alasan '+(al+1)+' belum diisi.</p></div>';
       }
       html += '<h2 style="margin-top:28px"><span class="n">5</span> Kalau dia belum bisa</h2>' +
         '<p class="jelas">Di papan lampu ada pilihan ketiga, "kapan pun kamu siap". Ini kalimat yang muncul kalau dia memilih itu. Boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
         '<div class="baris" data-f="catatanTunda"><label for="catatanTunda">Kalimatnya (opsional)</label>' +
-        '<textarea id="catatanTunda" maxlength="90" style="min-height:70px" placeholder="Nggak apa-apa. Aku nunggu sampai kamu siap."></textarea>' +
+        '<textarea id="catatanTunda" maxlength="90" style="min-height:70px" placeholder="Tidak apa-apa. Aku nunggu sampai kamu siap."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "rumah-contoh"){
       var ruangRc = ["Teras: diikat di kunci di bawah keset", "Ruang tamu: catatan di meja", "Dapur: tulisan di bawah cangkir teh", "Halaman belakang: diukir di sandaran bangku"];
@@ -995,7 +995,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<h2 style="margin-top:28px"><span class="n">5</span> Di bawah pertanyaannya</h2>' +
         '<p class="jelas">Muncul di bawah "mau tinggal di rumah ini sama aku?". Boleh dikosongkan.</p>' +
         '<div class="baris" data-f="penutup"><label for="penutup">Kalimatnya (opsional)</label>' +
-        '<textarea id="penutup" maxlength="120" style="min-height:70px" placeholder="Nggak usah buru-buru jawab. Aku tunggu di depan pintu."></textarea>' +
+        '<textarea id="penutup" maxlength="120" style="min-height:70px" placeholder="Tidak usah buru-buru jawab. Aku tunggu di depan pintu."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "confess-kunang"){
       var contohKn = ["Caramu bilang “bentar ya” padahal udah siap dari tadi", "Kamu selalu nyisain satu gorengan buat orang lain", "Ketawamu yang kedengeran sampai ujung lorong"];
@@ -1012,7 +1012,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<h2 style="margin-top:28px"><span class="n">5</span> Kalimat terakhir</h2>' +
         '<p class="jelas">Muncul di penutup, di atas tombol balasan WhatsApp. Boleh dikosongkan.</p>' +
         '<div class="baris" data-f="rahasia"><label for="rahasia">Kalimatnya (opsional)</label>' +
-        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Aku nggak butuh jawaban sekarang."></textarea>' +
+        '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Aku tidak butuh jawaban sekarang."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "kotak-musik"){
       var contohSd = ["Aku terlalu cepat membela diri waktu kamu cuma pengin didengar.", "Diamku kemarin bikin kamu nebak-nebak sendiri.", "Kamu bukan lawan yang harus dimenangkan."];
@@ -1041,7 +1041,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<input id="alasanS'+i+'" type="text" maxlength="60" placeholder="'+contohAs[i]+'">' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Alasan ini belum diisi.</p></div>'; }).join("");
     } else if(tema === "malam-takbiran"){
-      var contohMf = ["Maaf ya, sering telat balas chat.", "Maaf kalau aku suka ngambek nggak jelas.", "Maaf janji ke pantai belum juga ditepati."];
+      var contohMf = ["Maaf ya, sering telat balas chat.", "Maaf kalau aku suka ngambek tidak jelas.", "Maaf janji ke pantai belum juga ditepati."];
       html = '<h2><span class="n">5</span> Ucapan Lebaran</h2>' +
         '<p class="jelas">Jadi judul kartu suratnya dan muncul saat kalian bersalaman di akhir.</p>' +
         '<div class="baris" data-f="ucapanLebaran"><label for="ucapanLebaran">Ucapan</label>' +
@@ -1415,7 +1415,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       if(kosong) kurang.push(p[1]);
     });
 
-    var adaFoto = FOTO.some(Boolean) || FOTO_ADA.some(Boolean);
+    /* semua slot foto wajib terisi sebelum bayar (foto lama saat edit ikut dihitung) */
+    var fotoKosong = fotoRange().filter(function(i){ return !FOTO[i] && !FOTO_ADA[i]; });
+    document.querySelectorAll(".fotokartu").forEach(function(k){ k.classList.toggle("kosong", fotoKosong.indexOf(+k.dataset.i) > -1); });
+    var adaFoto = !fotoKosong.length;
+    $("galatFoto").textContent = fotoKosong.length === NFOTO ? "Semua foto harus dipilih dulu." : "Masih ada " + fotoKosong.length + " foto yang belum dipilih.";
     $("galatFoto").style.display = adaFoto ? "none" : "block";
     if(!adaFoto) kurang.push("foto");
 

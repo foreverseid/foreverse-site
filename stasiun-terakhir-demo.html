@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Oswald:wght@500;600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <!-- =====================================================================
-     FOREVERSE · Parting Ways · Tema "Stasiun Terakhir" (id: stasiun-terakhir) - BERKAS DEMO
+     FOREVERSE · Parting Ways · Tema "Stasiun Terakhir" (id: stasiun-terakhir) — BERKAS DEMO
      Data Amira & Adriel dipatok untuk demo publik. Pesanan sungguhan memakai stasiun-terakhir.html.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
@@ -40,8 +40,8 @@
     }
   ],
   "surat": [
-    "Amira, makasih buat semua perjalanan yang pernah kita naiki bareng. Aku nggak nyesel sedikit pun.",
-    "Kita sepakat berhenti bukan karena nggak sayang, tapi karena arah kita memang beda. Itu nggak apa-apa.",
+    "Amira, makasih buat semua perjalanan yang pernah kita naiki bareng. Aku tidak nyesel sedikit pun.",
+    "Kita sepakat berhenti bukan karena tidak sayang, tapi karena arah kita memang beda. Itu tidak apa-apa.",
     "Jaga dirimu, ya. Kalau suatu hari kita ketemu di peron yang sama, aku harap kita bisa saling senyum."
   ],
   "stasiun": [
@@ -77,7 +77,7 @@
 <style>
 /* Palet: senja jingga-ungu, beton peron, baja rel, kereta krem-marun,
    kuning sinyal. Format sinematik (pita hitam atas-bawah, petunjuk
-   sebagai subtitel) - tidak dipakai tema lain. */
+   sebagai subtitel) — tidak dipakai tema lain. */
 :root{
   --senja1:#F2B880; --senja2:#C98A9E; --senja3:#3E3F66; --beton:#C9C3BA; --baja:#7D8597; --krem:#EFE6D2; --marun:#7A2E3A; --sinyal:#F2C14E; --ink:#1C1B22; --muted:#6B6672;
   --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --papan:'Oswald','Arial Narrow',sans-serif;
@@ -109,7 +109,7 @@ img{-webkit-user-drag:none;pointer-events:none}
   border:1.5px solid var(--sinyal);background:transparent;color:var(--sinyal);border-radius:99px;padding:11px 26px;font:500 14px var(--papan);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
 #lanjut.tampil{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 
-/* adegan: kamera ikut kereta - bergeser ke kiri */
+/* adegan: kamera ikut kereta — bergeser ke kiri */
 .sc{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 56px);bottom:calc(env(safe-area-inset-bottom) + 88px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*5);
   opacity:0;pointer-events:none;transform:translateX(100%);transition:transform 1.2s cubic-bezier(.55,0,.25,1),opacity .4s}
 .sc.aktif{opacity:1;pointer-events:auto;transform:none}
@@ -282,7 +282,7 @@ function FV_MULAI(){
 "use strict";
 var D = KADO || {};
 D.lagu = D.lagu || {}; D.lagu.src = D.lagu.src || D.lagu.file || "";
-D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "" }; });
+D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "", bentuk: f && f.bentuk === "R" ? "R" : "T", fx: f && f.fx, fy: f && f.fy }; });
 var $=function(s,r){ return (r||document).querySelector(s); };
 var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
 var rand=function(a,b){ return a+Math.random()*(b-a); };
@@ -291,7 +291,10 @@ var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e
 var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
 var pusat=function(n){ var r=n.getBoundingClientRect(); return { x:r.left+r.width/2, y:r.top+r.height/2, r:r }; };
 var U=(function(){ var p=el('div'); p.style.cssText='position:fixed;visibility:hidden;pointer-events:none;width:calc(var(--u)*100)'; document.body.appendChild(p); return function(){ return p.getBoundingClientRect().width/100; }; })();
-var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,6);
+/* standar foto: T = tegak 3:4, R = mendatar 4:3, fx/fy = titik fokus (%) */
+var FOTO_T=FOTO.filter(function(f){ return f.bentuk!=='R'; }), FOTO_R=FOTO.filter(function(f){ return f.bentuk==='R'; });
+function pasFoto(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
 var SURAT=(D.surat||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
@@ -312,7 +315,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -411,7 +414,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
@@ -559,7 +562,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var judul=('UNTUK '+PENERIMA).toUpperCase().slice(0,22), HURUF='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   judul.split('').forEach(function(c){ var e=el('i',c===' '?'spasi':null,c===' '?'':' '); e.dataset.c=c; flap.appendChild(e); });
   daftar.forEach(function(t){ peng.appendChild(el('p',null,t)); });
-  var ttd=el('div','ttd',PENGIRIM+', dari peron sebelah'); peng.appendChild(ttd);
+  var ttd=el('div','ttd',''+PENGIRIM+', dari peron sebelah'); peng.appendChild(ttd);
   function balik(){ $$('i',flap).forEach(function(e,n){ if(e.dataset.c===' ') return; var putar=0; var t=setInterval(function(){ putar++; e.textContent=HURUF[Math.floor(Math.random()*26)]; if(putar>6+n){ clearInterval(t); e.textContent=e.dataset.c; tone(2400,.015,{type:'square',vol:.03}); } },55); }); }
   MASUK[3]=function(){ setTimeout(balik,500); petunjuk('Ada pengumuman untukmu. <b>Ketuk pengeras suaranya.</b>'); };
   sp.addEventListener('click',function(){
@@ -577,7 +580,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var area=$('#lambai'), tangan=$('#tangan'), hit=0, arah=0, ujung=0, beres=false;
   $('#penutupTeks').textContent=String(D.penutup||'').trim()||'Semoga perjalananmu baik, ke mana pun arahnya.';
   function tulis(){ $('#lambaiHitung').textContent=beres?'':'lambaian '+hit+' / 3'; }
-  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b>, geser ke kiri dan kanan.'); };
+  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b> — geser ke kiri dan kanan.'); };
   seret(area,{
     boleh:function(){ return !beres; },
     down:function(e){ ujung=e.clientX; arah=0; },
