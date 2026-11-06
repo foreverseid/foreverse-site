@@ -40,7 +40,8 @@ function fotoPenuh(n) { return Array.from({ length: n }, (_, i) => ({ data: FOTO
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  if (tema === "langit-harapan" || tema === "getwell-365") d.foto = fotoPenuh(4);
+  const JUMLAH_FOTO = { "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4 };
+  d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
     d.isi.kupon = ["Kupon satu", "Kupon dua", "Kupon tiga"];

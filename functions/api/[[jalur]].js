@@ -82,8 +82,8 @@ const KOTA_SAH = [
    (kalau ada, di luar isian dasar momennya) di rapikanIsi(). */
 const TEMA_SKEMA = {
   "bait":              { nfoto: 3, momen: "birthday" },
-  "kado-riang":        { nfoto: 3, momen: "birthday" },
-  "langit-harapan":    { nfoto: 4, momen: "birthday" },
+  "kado-riang":        { nfoto: 5, foto: "TTTTR", momen: "birthday" },
+  "langit-harapan":    { nfoto: 4, foto: "TTTR", momen: "birthday" },
   "peta-perjalanan":   { nfoto: 3, momen: "anniversary" },
   "zona-waktu":        { nfoto: 3, momen: "ldr" },
   "graduation-benih":  { nfoto: 3, momen: "graduation" },

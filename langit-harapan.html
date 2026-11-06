@@ -199,6 +199,7 @@ body.opened #soundBtn{display:grid}
 .quiz-end p{color:var(--muted);margin-bottom:14px}
 
 /* ---------- PUZZLE ---------- */
+.lebar .pz-grid{width:min(360px,100%);aspect-ratio:4/3}
 .pz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:min(300px,100%);aspect-ratio:1;margin:0 auto;border-radius:16px;overflow:hidden;background:var(--soft);padding:3px}
 .pz-tile{width:100%;height:100%;background-repeat:no-repeat;border-radius:6px;transition:transform .15s,box-shadow .15s,border-radius .4s;outline:3px solid transparent;outline-offset:-3px}
 .pz-tile.sel{transform:scale(.9);outline-color:var(--p)}
@@ -303,7 +304,7 @@ h2{font-weight:600}
 .bt{position:relative;margin:0;border-radius:18px;overflow:hidden;background:var(--soft);box-shadow:0 8px 20px rgba(42,33,69,.12);cursor:zoom-in}
 .bt img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .bt.tall{grid-row:span 2}
-.bt.wide{grid-column:1/-1;aspect-ratio:16/9}
+.bt.wide{grid-column:1/-1;aspect-ratio:4/3}
 .bt::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(transparent,rgba(42,33,69,.72));pointer-events:none}
 .bt figcaption{position:absolute;left:11px;right:11px;bottom:8px;z-index:1;color:#fff;font-family:var(--hand);font-size:1.08rem;line-height:1.12}
 .bt:active{transform:scale(.985)}
@@ -1201,7 +1202,20 @@ F.games.puzzle = (el, src, opt={}) => {
 (function(){
 const { $, $$, wait, el } = F;
 const D = F.data, G = F.greet(), A = F.age();
-const fotos = D.foto || [], photos = fotos.map(f => f.src);
+const fotos = (D.foto || []).filter(f => f && f.src);
+/* standar foto: tegak (T, 3:4) untuk hero, galeri, kepala surat; mendatar (R, 4:3) untuk galeri lebar & puzzle */
+const FT = fotos.filter(f => f.bentuk !== 'R'), FR = fotos.filter(f => f.bentuk === 'R');
+const photos = (FT.length ? FT : fotos).map(f => f.src);
+const fokus = (img, f) => { if(img && f) img.style.objectPosition = (f.fx == null ? 50 : f.fx) + '% ' + (f.fy == null ? 50 : f.fy) + '%'; };
+/* potong foto ke rasio tertentu sesuai titik fokus, untuk puzzle */
+function potong(f, rw, rh, jadi){
+  const im = new Image(); im.crossOrigin = 'anonymous';
+  im.onload = () => { try{ const W = im.naturalWidth, H = im.naturalHeight, r = rw/rh; let w = W, h = W/r; if(h > H){ h = H; w = H*r; }
+      const fx = (f.fx == null ? 50 : f.fx)/100, fy = (f.fy == null ? 50 : f.fy)/100, x = (W-w)*fx, y = (H-h)*fy;
+      const c = document.createElement('canvas'); c.width = Math.round(Math.min(w,900)); c.height = Math.round(c.width/r);
+      c.getContext('2d').drawImage(im, x, y, w, h, 0, 0, c.width, c.height); jadi(c.toDataURL('image/jpeg', .85)); }catch(e){ jadi(f.src); } };
+  im.onerror = () => jadi(f.src); im.src = f.src;
+}
 F.fx.colors = ['#6D5BD0','#F6C25B','#FF9E7A','#F2A7C3','#FFFFFF','#B596E2'];
 F.bind();
 
@@ -1243,8 +1257,8 @@ $('#hSmall').textContent = G.small;
 $('#hTitle').textContent = G.title;
 [...(D.penerima||'')].forEach((ch,i) => { const s = el('span', null, ch === ' ' ? ' ' : ch); s.style.setProperty('--i', i); $('#hName').appendChild(s); });
 $('#ageBadge').textContent = A.hide ? '✨ hari spesialmu' : `✨ ${A.age} tahun`;
-let hi = 0; $('#heroImg').src = photos[0] || '';
-$('#heroPh').onclick = () => { const im = $('#heroImg'); im.classList.add('swap'); F.sfx.flip(); setTimeout(() => { hi = (hi+1) % photos.length; im.src = photos[hi]; im.classList.remove('swap'); }, 300); };
+let hi = 0; $('#heroImg').src = photos[0] || ''; fokus($('#heroImg'), FT[0]);
+$('#heroPh').onclick = () => { const im = $('#heroImg'); im.classList.add('swap'); F.sfx.flip(); setTimeout(() => { hi = (hi+1) % photos.length; im.src = photos[hi]; fokus(im, FT[hi]); im.classList.remove('swap'); }, 300); };
 
 /* ---------- 3. langit ---------- */
 $('#cakeH').textContent = `Lepas bintang angka lama, sambut bintang angka baru si ${A.newLabel}`;
@@ -1259,9 +1273,10 @@ const cake = F.cake.mount($('#cakeStage'), {
 $('#cakeReplay').onclick = () => cake.replay();
 
 /* ---------- 4. galeri ---------- */
-const shapes = ['tall','','','wide'];
-fotos.slice(0,4).forEach((f,i) => {
-  const fig = el('figure','bt ' + (shapes[i]||'')); const im = el('img'); im.src = f.src; im.alt = ''; im.loading = 'lazy';
+let tTall = false;
+fotos.slice(0,6).forEach((f,i) => {
+  const bentuk = f.bentuk === 'R' ? 'wide' : (!tTall ? (tTall = true, 'tall') : '');
+  const fig = el('figure','bt ' + bentuk); const im = el('img'); im.src = f.src; im.alt = ''; im.loading = 'lazy'; fokus(im, f);
   fig.append(im, el('figcaption', null, f.caption || ''));
   fig.onclick = () => F.ui.lightbox(f.src, f.caption);
   $('#bento').appendChild(fig);
@@ -1307,10 +1322,11 @@ $$('#sky .st').forEach(g => g.addEventListener('click', () => {
 }));
 
 /* ---------- 7. puzzle ---------- */
-const pzF = fotos[3] || fotos[0] || {};
-F.games.puzzle($('#pzGame'), pzF.src, {
+const pzF = FR[0] || fotos[3] || fotos[0] || {}, pzLebar = !!FR[0];
+$('#pzGame').classList.toggle('lebar', pzLebar);
+potong(pzF, pzLebar ? 4 : 1, pzLebar ? 3 : 1, src => F.games.puzzle($('#pzGame'), src, {
   onWin: () => { if(pzF.caption){ $('#pzCap').textContent = pzF.caption; $('#pzCap').classList.add('show'); } mark('pz'); }
-});
+}));
 
 /* ---------- 8. finale + surat ---------- */
 $('#skipGames').onclick = () => openLetter();
@@ -1336,7 +1352,7 @@ async function openLetter(){
   await wait(300); $('#ltIntroTxt').classList.add('on');
   await wait(2800);
   $('#ltIntro').style.display = 'none';
-  $('#ltPic').src = photos[0] || '';
+  $('#ltPic').src = photos[0] || ''; fokus($('#ltPic'), FT[0]);
   $('#ltHello').textContent = `${D.penerima} sayang,`;
   const box = $('#ltPars');
   const pars = (D.surat || []).filter(Boolean).map(t => { const p = el('p','par', t); box.appendChild(p); return p; });
