@@ -52,7 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
-  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
+  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, maafLebaran: 70, sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -99,7 +99,8 @@ const TEMA_SKEMA = {
   "stasiun-terakhir":  { nfoto: 3, momen: "parting" },
   "rumah-menyala":     { nfoto: 3, momen: "spesial" },
   "hitung-mundur":     { nfoto: 3, momen: "spesial" },
-  "pabrik-cokelat":    { nfoto: 3, momen: "spesial" }
+  "pabrik-cokelat":    { nfoto: 3, momen: "spesial" },
+  "malam-takbiran":    { nfoto: 3, momen: "spesial" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -821,6 +822,14 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
        alasan aku sayang kamu, ditulis di atas tiap cokelat yang dituang pas. */
     isi.alasan = [0, 1, 2].map(i => teks((p.alasan || [])[i], BATAS.alasanSayang));
     if (isi.alasan.some(x => !x)) throw new Error("Ketiga alasan kamu sayang dia belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "malam-takbiran") {
+    /* "Malam Takbiran" (Hari Spesial · Idulfitri): `ucapan` = ucapan
+       Lebaran pilihan pembeli; `maaf` = tiga maaf kecil, satu per baris
+       anyaman ketupat yang rapi. */
+    isi.ucapan = ["idulfitri", "maaf", "minal"].includes(p.ucapan) ? p.ucapan : "idulfitri";
+    isi.maaf = [0, 1, 2].map(i => teks((p.maaf || [])[i], BATAS.maafLebaran));
+    if (isi.maaf.some(x => !x)) throw new Error("Ketiga maaf kecil belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "hitung-mundur") {
     /* "Hitung Mundur di Atap" (Hari Spesial · Tahun Baru): `janji` = tiga

@@ -30,7 +30,8 @@ const TEMA = {
   "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
   "rumah-menyala": { nama: "Rumah yang Menyala", demo: "/rumah-menyala-demo.html", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
   "hitung-mundur": { nama: "Hitung Mundur di Atap", demo: "/hitung-mundur-demo.html", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
-  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", demo: "/pabrik-cokelat-demo.html", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." }
+  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", demo: "/pabrik-cokelat-demo.html", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." },
+  "malam-takbiran": { nama: "Malam Takbiran", demo: "/malam-takbiran-demo.html", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
 };
 
 export const MOMEN = {
@@ -286,6 +287,23 @@ export const MOMEN = {
     faq: [
       ["Kapan sebaiknya dikirim?", "Menjelang 14 Februari. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
       ["Harus pacaran dulu?", "Tidak. Cocok juga untuk pasangan suami-istri atau gebetan yang mau dikasih kejutan manis."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "lebaran": {
+    judul: "Ucapan Idulfitri untuk Pacar — Kartu Lebaran Digital",
+    deskripsi: "Ucapan Lebaran yang bisa dimainkan: dia mencari hilal, menganyam ketupat yang membuka maaf-maafmu, membaca suratmu di malam takbiran, lalu bersalaman denganmu.",
+    h1: "Mohon maaf lahir dan batin, dengan cara yang dia ingat.",
+    lede: "Malam terakhir Ramadan sampai pagi Lebaran. Tiap baris ketupat yang dia anyam membuka satu maaf darimu, dan suratmu terbaca di antara suara beduk takbiran.",
+    tema: ["malam-takbiran"],
+    ide: [
+      "Ramadan ini terasa lebih ringan karena ada kamu.",
+      "Kalau ada kata-kataku yang nyakitin, aku minta maaf dari hati.",
+      "Semoga Lebaran berikutnya kita rayakan bareng."
+    ],
+    faq: [
+      ["Ucapannya bisa diganti?", "Bisa. Pilih \"Selamat Hari Raya Idulfitri\", \"Mohon Maaf Lahir dan Batin\", atau \"Minal ’Aidin wal Faizin\" di formulir."],
+      ["Kapan sebaiknya dikirim?", "Malam takbiran atau pagi Idulfitri. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
       ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
     ]
   }

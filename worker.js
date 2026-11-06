@@ -195,7 +195,7 @@ async function tangani(request, env, ctx) {
          langit-harapan.html, peta-perjalanan.html, zona-waktu.html,
          graduation-benih.html, confess-kunang.html, getwell-365.html,
          pasar-malam.html, lewat-duluan.html, kasus-pengirim.html, rumah-contoh.html,
-         kotak-musik.html, garis-finis.html, stasiun-terakhir.html, rumah-menyala.html, hitung-mundur.html, pabrik-cokelat.html,
+         kotak-musik.html, garis-finis.html, stasiun-terakhir.html, rumah-menyala.html, hitung-mundur.html, pabrik-cokelat.html, malam-takbiran.html,
          rekonstruksi.html)
          berbagi alamat /s/<kode> yang sama. Temanya dilihat dulu di D1,
          baru file yang cocok disajikan. Bait tetap mengambil datanya
@@ -251,6 +251,7 @@ async function tangani(request, env, ctx) {
           : tema === "rumah-menyala" ? "rumah-menyala"
           : tema === "hitung-mundur" ? "hitung-mundur"
           : tema === "pabrik-cokelat" ? "pabrik-cokelat"
+          : tema === "malam-takbiran" ? "malam-takbiran"
           : "surat";
         const r = await ambilHalaman(env, url.origin, nama, request);
 
