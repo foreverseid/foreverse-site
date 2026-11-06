@@ -17,12 +17,12 @@
   --violet:#3B3168; --violet-deep:#2C2450; --violet-soft:#6F63B8; --violet-tint:#EEEBF7;
   --coral:#E8734A; --blush:#E8A5B0; --gold:#F2C14E;
 
-  /* warna keadaan — hanya untuk status, tidak pernah dipakai sebagai warna kategori */
+  /* warna keadaan - hanya untuk status, tidak pernah dipakai sebagai warna kategori */
   --baik:#2E8B57; --baik-bg:#E8F6EE; --baik-ink:#1E6B42;
   --awas:#8A6416; --awas-bg:#FFF4DC;
   --gawat:#C0392B; --gawat-bg:#FDECEA; --gawat-ink:#8C2B20;
 
-  /* warna grafik — lulus uji buta warna (ΔE 21.9 protan) */
+  /* warna grafik - lulus uji buta warna (ΔE 21.9 protan) */
   --seri-1:#6F63B8;   /* lunas */
   --seri-2:#E8734A;   /* belum lunas */
 
@@ -31,7 +31,7 @@
   --r:16px;
 }
 *{box-sizing:border-box}
-/* .cangkang punya display:grid — tanpa baris ini atribut [hidden] kalah
+/* .cangkang punya display:grid - tanpa baris ini atribut [hidden] kalah
    dan dasbor ikut terlihat di layar masuk. */
 [hidden]{display:none!important}
 html,body{height:100%}
@@ -237,7 +237,7 @@ section{scroll-margin-top:16px;margin-bottom:26px}
 .sistem .sb.tidak .titik{background:var(--gawat)}
 .sistem .sb.netral .titik{background:var(--ink-faint)}
 .sistem .sb b{font-size:.83rem;font-weight:600}
-/* hanya nilainya yang didorong ke kanan — kalau memakai "span" saja, titiknya
+/* hanya nilainya yang didorong ke kanan - kalau memakai "span" saja, titiknya
    ikut terdorong dan seluruh baris jadi terlihat di tengah */
 .sistem .sb .nilai{margin-left:auto;font-size:.79rem;color:var(--ink-faint);text-align:right;padding-left:12px}
 .sistem .sb.tidak .nilai{color:var(--gawat-ink);font-weight:600}
@@ -419,7 +419,7 @@ a.tautan:hover{text-decoration:underline}
       <button type="button" data-p="0">Semua</button>
       <button type="button" data-p="k">Kustom</button>
       <span class="kustom" id="kustom" hidden>
-        <input type="date" id="pDari" aria-label="Dari tanggal"> – <input type="date" id="pSampai" aria-label="Sampai tanggal">
+        <input type="date" id="pDari" aria-label="Dari tanggal"> sampai <input type="date" id="pSampai" aria-label="Sampai tanggal">
         <button type="button" id="pTerapkan">Terapkan</button>
       </span>
     </div>
@@ -428,7 +428,7 @@ a.tautan:hover{text-decoration:underline}
     <section id="ringkasan" class="tab">
       <div class="judulbagian">
         <h2>Angka pokok</h2>
-        <span class="labelPeriode">—</span>
+        <span class="labelPeriode">-</span>
       </div>
       <div class="petak p4" id="ubin"></div>
       <div class="petak p4 p4b" id="ubin2"></div>
@@ -448,7 +448,7 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="judulbagian" style="margin-top:24px">
         <h2>Minat per tema</h2>
-        <span class="labelPeriode">—</span>
+        <span class="labelPeriode">-</span>
       </div>
       <div class="kartu">
         <p class="ket">Dibuka = tombol "lihat contoh" diketuk di beranda. Mulai isi = formulir pesan dibuka. Terbayar = surat lunas.</p>
@@ -457,7 +457,7 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="judulbagian" style="margin-top:24px">
         <h2>Pilihan pembeli</h2>
-        <span class="labelPeriode">—</span>
+        <span class="labelPeriode">-</span>
       </div>
       <div class="petak p2">
         <div class="kartu">
@@ -484,7 +484,7 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="petak p2a" style="margin-bottom:12px">
         <div class="kartu">
-          <h3>Pesanan masuk · <span class="labelPeriode">—</span></h3>
+          <h3>Pesanan masuk · <span class="labelPeriode">-</span></h3>
           <p class="ket" id="ketGrafik">Dihitung dari tanggal pesanan dibuat.</p>
           <div class="grafik" id="grafik"></div>
           <div class="sumbux" id="sumbux"></div>
@@ -529,7 +529,7 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="kartu" style="margin-bottom:12px">
         <h3>Metode pembayaran</h3>
-        <p class="ket">Centang metode yang <b>sudah disetujui DOKU</b> dan isi biayanya sesuai tarif DOKU (Rp tetap dan/atau % dari harga). Biaya ditagihkan ke pembeli dan tampil sebelum bayar. Pembeli memilih metodenya di formulir — kalau satu metode sedang gangguan, mereka bisa memilih yang lain. Uji satu transaksi sungguhan setiap kali membuka metode baru.</p>
+        <p class="ket">Centang metode yang <b>sudah disetujui DOKU</b> dan isi biayanya sesuai tarif DOKU (Rp tetap dan/atau % dari harga). Biaya ditagihkan ke pembeli dan tampil sebelum bayar. Pembeli memilih metodenya di formulir. Kalau satu metode sedang gangguan, mereka bisa memilih yang lain. Uji satu transaksi sungguhan setiap kali membuka metode baru.</p>
         <div class="gulung"><table class="tbl-mini" id="mDaftar"></table></div>
         <div style="margin-top:10px"><button class="tbl utamawarna" id="mSimpan" type="button">Simpan metode</button></div>
         <p class="kabar-atur" id="mKabar"></p>
@@ -537,7 +537,7 @@ a.tautan:hover{text-decoration:underline}
 
       <div class="kartu" style="margin-bottom:12px">
         <h3>Kode promo</h3>
-        <p class="ket"><b>Kode kreator:</b> isi akun kreator dan komisinya. Potongan boleh 0 (kode referral murni — pembeli bayar harga biasa, kreator tetap dapat komisi). Tautan untuk kreator: <code>foreverse.id/r/KODE</code> (kodenya diingat 30 hari dan terisi otomatis di formulir). Komisi = persen × harga yang dibayar pembeli (tanpa biaya transaksi); setelah kamu transfer, catat lewat tombol <b>Catat bayar</b>. Potongan dihitung dari harga surat (bukan biaya QRIS). Potongan 100% (atau harga Rp0) membuat surat gratis — langsung jadi tanpa pembayaran. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
+        <p class="ket"><b>Kode kreator:</b> isi akun kreator dan komisinya. Potongan boleh 0 (kode referral murni: pembeli bayar harga biasa, kreator tetap dapat komisi). Tautan untuk kreator: <code>foreverse.id/r/KODE</code> (kodenya diingat 30 hari dan terisi otomatis di formulir). Komisi = persen × harga yang dibayar pembeli (tanpa biaya transaksi); setelah kamu transfer, catat lewat tombol <b>Catat bayar</b>. Potongan dihitung dari harga surat (bukan biaya QRIS). Potongan 100% (atau harga Rp0) membuat surat gratis, langsung jadi tanpa pembayaran. Tautan siap bagi: <code>foreverse.id/pesan?tema=…&amp;promo=KODE</code></p>
         <div class="form-atur">
           <div><label for="pKode">Kode</label><input id="pKode" type="text" maxlength="20" placeholder="LAUNCH20"></div>
           <div><label for="pJenis">Jenis</label><select id="pJenis"><option value="persen">Persen (%)</option><option value="rupiah">Rupiah</option></select></div>
@@ -576,7 +576,7 @@ a.tautan:hover{text-decoration:underline}
       </div>
       <div class="kartu" style="margin-top:12px">
         <h3>Cadangan data</h3>
-        <p class="ket">Dibuat otomatis tiap hari pukul 02.00 WIB ke penyimpanan R2 (disimpan 30 hari): semua pesanan lunas, pengingat, promo, pengaturan. Foto &amp; lagu tetap di R2 — alamatnya ada di dalam cadangan. Unduh sesekali dan simpan di Google Drive untuk salinan di luar Cloudflare.</p>
+        <p class="ket">Dibuat otomatis tiap hari pukul 02.00 WIB ke penyimpanan R2 (disimpan 30 hari): semua pesanan lunas, pengingat, promo, pengaturan. Foto &amp; lagu tetap di R2, alamatnya ada di dalam cadangan. Unduh sesekali dan simpan di Google Drive untuk salinan di luar Cloudflare.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="tbl utamawarna" id="cUnduh" type="button">Unduh cadangan sekarang (.json)</button>
           <button class="tbl" id="cBuat" type="button">Buat cadangan ke R2 sekarang</button>
@@ -586,7 +586,7 @@ a.tautan:hover{text-decoration:underline}
       </div>
       <div class="kartu" style="margin-top:12px">
         <h3>Pulihkan dari cadangan</h3>
-        <p class="ket">Pakai kalau data hilang atau rusak. Pilih berkas .json (hasil unduhan) atau salah satu cadangan R2 di atas, lalu <b>Cek dulu</b> — belum ada yang diubah. Sebelum memulihkan, keadaan sekarang otomatis dicadangkan dulu ke R2.</p>
+        <p class="ket">Pakai kalau data hilang atau rusak. Pilih berkas .json (hasil unduhan) atau salah satu cadangan R2 di atas, lalu <b>Cek dulu</b>. Di tahap ini belum ada yang diubah. Sebelum memulihkan, keadaan sekarang otomatis dicadangkan dulu ke R2.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <input type="file" id="pBerkas" accept="application/json,.json">
           <select id="pR2"><option value="">…atau pilih cadangan R2</option></select>
@@ -631,7 +631,7 @@ a.tautan:hover{text-decoration:underline}
     var r = rentang();
     if(PERIODE.hari === "k"){
       var f = function(ms){ return new Date(ms).toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"}); };
-      return f(r.dari) + " – " + f(r.sampai);
+      return f(r.dari) + " sampai " + f(r.sampai);
     }
     return { 0:"sejak hari pertama", 7:"7 hari terakhir", 30:"30 hari terakhir", 90:"3 bulan terakhir",
              180:"6 bulan terakhir", 365:"1 tahun terakhir" }[PERIODE.hari] || "";
@@ -672,7 +672,7 @@ a.tautan:hover{text-decoration:underline}
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
   function rp(n){ return "Rp" + Number(n||0).toLocaleString("id-ID"); }
   function tgl(ms){
-    if(!ms) return "—";
+    if(!ms) return "-";
     var d = new Date(+ms);
     return d.toLocaleDateString("id-ID",{day:"2-digit",month:"short"}) + " " +
            d.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
@@ -760,7 +760,7 @@ a.tautan:hover{text-decoration:underline}
   /* ── ubin angka (mengikuti periode) ── */
   function selisih(kini, dulu){
     if(dulu == null) return "";
-    if(!dulu) return kini ? '<span><b class="naik">baru</b> — periode sebelumnya kosong</span>' : "";
+    if(!dulu) return kini ? '<span><b class="naik">baru</b>, periode sebelumnya kosong</span>' : "";
     var p = Math.round((kini - dulu) / dulu * 100);
     if(p === 0) return "<span>sama dengan periode sebelumnya</span>";
     return '<span><b class="' + (p > 0 ? "naik" : "turun") + '">' + (p > 0 ? "▲ " : "▼ ") + Math.abs(p) + '%</b> dari periode sebelumnya</span>';
@@ -788,9 +788,9 @@ a.tautan:hover{text-decoration:underline}
     $("ubin2").innerHTML =
       ubin(false, "Rata-rata per hari", rp(Math.round((d.pendapatan||0) / hari)),
            ((d.lunas||0) / hari).toFixed(1).replace(".", ",") + " surat per hari", '<path d="M2 12 6 8l3 2 5-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>') +
-      ubin(false, "Konversi bayar", masuk ? Math.round(lunasMasuk / masuk * 100) + "%" : "—",
+      ubin(false, "Konversi bayar", masuk ? Math.round(lunasMasuk / masuk * 100) + "%" : "-",
            lunasMasuk + " dari " + masuk + " pesanan dibayar", '<path d="M3 3h10l-4 5v5l-2-1V8z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>') +
-      ubin(false, "Dibuka penerima", lunasP.length ? Math.round(dibuka / lunasP.length * 100) + "%" : "—",
+      ubin(false, "Dibuka penerima", lunasP.length ? Math.round(dibuka / lunasP.length * 100) + "%" : "-",
            dibuka + " dari " + lunasP.length + " surat lunas", '<path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="8" cy="8" r="2" fill="currentColor"/>') +
       ubin(false, "Sepanjang waktu", rp(d.semua ? d.semua.pendapatan : 0),
            (d.semua ? d.semua.lunas : 0) + " surat lunas sejak awal", '<circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8 5v3h2.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>');
@@ -805,7 +805,7 @@ a.tautan:hover{text-decoration:underline}
       var tot = rows.reduce(function(a,x){ return a + x.n; }, 0);
       $(id).innerHTML = '<tr><th>' + nama + '</th><th>Surat</th><th>Pendapatan</th><th>Porsi</th></tr>' +
         (rows.length ? rows.map(function(x){
-          var k = x[kunci] || "—";
+          var k = x[kunci] || "-";
           return '<tr><td>' + esc((kunci==="tema" ? NAMA_TEMA[k] : NAMA_MOMEN[k]) || k) + '</td><td>' + x.n + '</td><td>' + rp(x.rp) +
                  '</td><td>' + Math.round(x.n / tot * 100) + '%</td></tr>';
         }).join("") : '<tr><td colspan="4" style="text-align:left;color:var(--ink-faint)">Belum ada penjualan di periode ini.</td></tr>');
@@ -851,7 +851,7 @@ a.tautan:hover{text-decoration:underline}
 
     if(DATA.periksa.sandbox) t.push({ tingkat:"gawat", n:1, ikon:"!",
       judul: "Pembayaran masih mode Sandbox",
-      ket: "Semua transaksi hanya uji coba — uangnya tidak masuk. Isi <code>DOKU_MODE=production</code> di Cloudflare setelah kredensial Production DOKU keluar." });
+      ket: "Semua transaksi hanya uji coba, uangnya tidak masuk. Isi <code>DOKU_MODE=production</code> di Cloudflare setelah kredensial Production DOKU keluar." });
 
     var editHabis = b.filter(function(x){
       return x.status==="lunas" && x.batas_edit && x.batas_edit > now && (x.batas_edit - now) < 48*3600000; });
@@ -925,7 +925,7 @@ a.tautan:hover{text-decoration:underline}
 
     var puncak = Math.max.apply(null, nilai.map(function(v){ return v.lunas + v.belum; }).concat([1]));
     /* batas atas selalu genap & minimal 2, supaya garis tengahnya jatuh di
-       bilangan bulat — kalau tidak, 0,5 dibulatkan jadi "1" dan labelnya kembar */
+       bilangan bulat - kalau tidak, 0,5 dibulatkan jadi "1" dan labelnya kembar */
     var atas = Math.max(2, puncak <= 4 ? Math.ceil(puncak/2)*2 : Math.ceil(puncak/4)*4);
 
     var kisi = "";
@@ -957,7 +957,7 @@ a.tautan:hover{text-decoration:underline}
     }).join("");
   }
 
-  /* kiat (tooltip) untuk grafik — nilainya juga selalu ada di tabel pesanan */
+  /* kiat (tooltip) untuk grafik - nilainya juga selalu ada di tabel pesanan */
   var kiat = $("kiat");
   function tampilKiat(el){
     var l = +el.dataset.l, b = +el.dataset.b;
@@ -976,7 +976,7 @@ a.tautan:hover{text-decoration:underline}
       var k = e.target.closest(".kolom"); if(k) tampilKiat(k);
     });
   });
-  /* disembunyikan saat penunjuk meninggalkan seluruh grafik — bukan saat
+  /* disembunyikan saat penunjuk meninggalkan seluruh grafik - bukan saat
      berpindah antar kolom di dalamnya */
   $("grafik").addEventListener("mouseleave", sembunyiKiat);
   $("grafik").addEventListener("focusout", sembunyiKiat);
@@ -1000,11 +1000,11 @@ a.tautan:hover{text-decoration:underline}
   }
   function alur(nama, n, dari){
     var p = dari ? n/dari*100 : 0;
-    /* nol digambar benar-benar nol — batang tipis untuk nilai nol itu menipu.
+    /* nol digambar benar-benar nol - batang tipis untuk nilai nol itu menipu.
        Nilai yang bukan nol dijaga minimal 1,5% supaya tetap kelihatan. */
     var lebar = n === 0 ? 0 : Math.max(p, 1.5);
     return '<div class="baris"><span class="nama">' + esc(nama) + '</span>' +
-      '<span class="ang">' + n + '<em>' + (dari ? Math.round(p) + "%" : "—") + '</em></span>' +
+      '<span class="ang">' + n + '<em>' + (dari ? Math.round(p) + "%" : "-") + '</em></span>' +
       '<span class="alur"><i style="width:' + lebar + '%"></i></span></div>';
   }
 
@@ -1036,7 +1036,7 @@ a.tautan:hover{text-decoration:underline}
   function gambarSistem(p){
     $("sambungan").innerHTML =
       sb("Database (D1)", p.d1, "tersambung", "mati") +
-      sb("Penyimpanan foto & lagu (R2)", p.r2, "tersambung", "belum — foto disimpan di D1") +
+      sb("Penyimpanan foto & lagu (R2)", p.r2, "tersambung", "belum, foto disimpan di D1") +
       sb("Pengiriman email (Resend)", p.resend, "tersambung", "belum dipasang") +
       sb("Pembayaran (DOKU)", p.doku, "tersambung", "kunci belum lengkap") +
       sbNetral("Email pengirim", p.pengirim || "(belum diisi)");
@@ -1046,7 +1046,7 @@ a.tautan:hover{text-decoration:underline}
       sbNetral("Masa berlaku tautan edit", (p.hari_edit || 3) + " hari") +
       sbNetral("Draf dihapus setelah", (p.jam_draf || 24) + " jam") +
       sbNetral("Surat disimpan", (p.bulan_simpan || 2) + " bulan sejak dibayar, bisa diperpanjang") +
-      sbNetral("Mode pembayaran", p.mode || "—") +
+      sbNetral("Mode pembayaran", p.mode || "-") +
       sbNetral("Email terkirim hari ini", (p.email_hari_ini || 0) + " dari " + (p.batas_email || 100) + " (kuota harian Resend)") +
       sbNetral("Lingkungan", p.staging ? "STAGING (uji)" : "produksi");
     TUTUP = p.tutup || "";
@@ -1134,11 +1134,11 @@ a.tautan:hover{text-decoration:underline}
     $("pDaftar").innerHTML = '<tr><th>Kode</th><th>Kreator</th><th>Potongan</th><th>Terpakai</th><th>Pendapatan</th><th>Komisi (belum dibayar)</th><th>Sampai</th><th></th></tr>' +
       (rows.length ? rows.map(function(p){
         var habis = (p.sampai && p.sampai < Date.now()) || (p.kuota && p.terpakai >= p.kuota);
-        return '<tr style="' + (p.aktif && !habis ? "" : "opacity:.5") + '"><td class="kode">' + esc(p.kode) + '</td><td>' + esc(p.kreator || "—") + '</td><td>' +
+        return '<tr style="' + (p.aktif && !habis ? "" : "opacity:.5") + '"><td class="kode">' + esc(p.kode) + '</td><td>' + esc(p.kreator || "-") + '</td><td>' +
           (p.jenis === "persen" ? p.nilai + "%" : rp(p.nilai)) + '</td><td>' + p.terpakai + (p.kuota ? " / " + p.kuota : "") +
           '</td><td>' + rp(p.pendapatan || 0) +
-          '</td><td>' + (p.komisi ? p.komisi + "% · " + rp(p.komisi_total || 0) + (p.komisi_sisa ? ' <b>(' + rp(p.komisi_sisa) + ')</b>' : "") : "—") +
-          '</td><td>' + (p.sampai ? esc(new Date(p.sampai).toLocaleDateString("id-ID")) : "—") + '</td><td style="white-space:nowrap">' +
+          '</td><td>' + (p.komisi ? p.komisi + "% · " + rp(p.komisi_total || 0) + (p.komisi_sisa ? ' <b>(' + rp(p.komisi_sisa) + ')</b>' : "") : "-") +
+          '</td><td>' + (p.sampai ? esc(new Date(p.sampai).toLocaleDateString("id-ID")) : "-") + '</td><td style="white-space:nowrap">' +
           (p.komisi_sisa > 0 ? '<button class="tbl kecil" data-p="bayar" data-k="' + esc(p.kode) + '" data-n="' + p.komisi_sisa + '">Catat bayar</button> ' : "") +
           '<button class="tbl kecil" data-p="ubah" data-k="' + esc(p.kode) + '">Ubah</button> ' +
           '<button class="tbl kecil" data-p="aktif" data-k="' + esc(p.kode) + '" data-n="' + (p.aktif ? 0 : 1) + '">' + (p.aktif ? "Matikan" : "Nyalakan") + '</button> ' +
@@ -1162,7 +1162,7 @@ a.tautan:hover{text-decoration:underline}
       $("pKode").value = x.kode; $("pJenis").value = x.jenis; $("pNilai").value = x.nilai; $("pKuota").value = x.kuota || 0;
       $("pSampai").value = x.sampai ? new Date(x.sampai + 7 * 3600000).toISOString().slice(0, 10) : "";
       $("pKreator").value = x.kreator || ""; $("pKomisi").value = x.komisi || 0;
-      $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Mengubah " + x.kode + " — ganti isinya lalu tekan Simpan promo. Jumlah terpakai & riwayat komisi tetap.";
+      $("pKabar").className = "kabar-atur"; $("pKabar").textContent = "Mengubah " + x.kode + ". Ganti isinya lalu tekan Simpan promo. Jumlah terpakai & riwayat komisi tetap.";
       $("pKode").scrollIntoView({ behavior:"smooth", block:"center" }); return;
     }
     if(t.dataset.p === "bayar"){
@@ -1212,7 +1212,7 @@ a.tautan:hover{text-decoration:underline}
     $("pKabar").textContent = "Memulihkan…";
     try{ var r = await panggil({ aksi:"pulihkan", mode: mode, data: DATA_PULIH });
          tampilLaporan(r.laporan); $("pTindak").hidden = true;
-         $("pKabar").textContent = "Selesai. Keadaan sebelumnya tersimpan di " + (r.laporan._cadanganSebelum || "—") + ".";
+         $("pKabar").textContent = "Selesai. Keadaan sebelumnya tersimpan di " + (r.laporan._cadanganSebelum || "-") + ".";
          await muatCadangan(); }
     catch(e){ $("pKabar").className = "kabar-atur salah"; $("pKabar").textContent = e.message; }
   }
@@ -1317,8 +1317,8 @@ a.tautan:hover{text-decoration:underline}
 
       html += '<tr class="' + (b.aktif ? "" : "mati") + '">' +
         '<td class="kode">' + esc(b.kode) + '</td>' +
-        '<td><strong>' + esc(b.penerima || "—") + '</strong><br>' +
-          '<span class="redup">dari ' + esc(b.pengirim || "—") + '</span></td>' +
+        '<td><strong>' + esc(b.penerima || "-") + '</strong><br>' +
+          '<span class="redup">dari ' + esc(b.pengirim || "-") + '</span></td>' +
         '<td><span class="st ' + esc(st) + '">' + esc(st) + '</span>' +
           (b.promo ? '<br><span class="redup">promo ' + esc(b.promo) + '</span>' : "") +
           (b.n_panjang ? '<br><span class="redup">diperpanjang ' + b.n_panjang + '×</span>' : "") +
@@ -1327,7 +1327,7 @@ a.tautan:hover{text-decoration:underline}
           (st==="lunas" && sisaEdit > 0
             ? '<br><span class="redup">edit ' + esc(jedaKata(sisaEdit)) + ' lagi</span>'
             : (st==="lunas" ? '<br><span class="redup">masa edit habis</span>' : '')) + '</td>' +
-        '<td style="font-size:.8rem">' + esc(b.email || "—") +
+        '<td style="font-size:.8rem">' + esc(b.email || "-") +
           (b.whatsapp ? '<br>' + esc(b.whatsapp) : "") +
           (st === "lunas"
             ? '<br><span class="redup" style="color:' + (b.email_terkirim ? "var(--baik)" : "var(--gawat)") + '">email ' +
@@ -1340,7 +1340,7 @@ a.tautan:hover{text-decoration:underline}
               '<br><span class="redup" style="color:' + (b.dibuka ? "var(--baik)" : "inherit") + '">' +
                 (b.dibuka ? "dibuka " + (b.n_buka || 1) + "× · pertama " + esc(tgl(b.dibuka)) : "belum dibuka") + '</span>' +
               '<br><a class="tautan redup" href="/edit/' + esc(b.token) + '" target="_blank" rel="noopener">tautan edit</a>'
-            : '<span class="redup">—</span>') + '</td>' +
+            : '<span class="redup">-</span>') + '</td>' +
         '<td><div class="aksi">' +
           (st === "lunas"
             ? '<button class="tbl kecil" data-a="email" data-k="' + esc(b.kode) + '">Kirim ulang email</button>' +

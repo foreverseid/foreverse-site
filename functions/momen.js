@@ -15,11 +15,11 @@ const TEMA = {
   "bait": { nama: "Bait", demo: "/bait-demo.html", ringkas: "Satu hari menerima pos: kotak pos dibuka, amplop dirobek pisau surat, perangko umur baru ditempel, kertas tipis diterawang, dan paket balasan ditimbang pas umurnya." },
   "kado-riang": { nama: "Kado Riang", demo: "/kado-riang-demo.html", ringkas: "Riang dan ramai: tiket disobek, lilin umur baru dinyalakan, dan kupon ulang tahun bisa ditukar langsung." },
   "langit-harapan": { nama: "Langit Harapan", demo: "/langit-harapan-demo.html", ringkas: "Hangat dan lembut: galeri kenangan, kuis seberapa kenal, bintang harapan, lalu ditutup surat senja." },
-  "peta-perjalanan": { nama: "Peta Perjalanan", demo: "/peta-perjalanan-demo.html", ringkas: "Peta yang digulung dibuka, rute kalian disusun, dan foto disingkap lewat teropong — rutenya memanjang tiap tahun." },
+  "peta-perjalanan": { nama: "Peta Perjalanan", demo: "/peta-perjalanan-demo.html", ringkas: "Peta yang digulung dibuka, rute kalian disusun, dan foto disingkap lewat teropong. Rutenya bertambah panjang tiap tahun." },
   "rekonstruksi": { nama: "Rekonstruksi Hari Pertama", demo: "/rekonstruksi-demo.html", ringkas: "Hari pertama kalian tinggal sketsa pensil. Dia mengumpulkan bukti dan menyusun jamnya sampai harinya berwarna lagi." },
-  "zona-waktu": { nama: "Dua Jendela", demo: "/zona-waktu-demo.html", ringkas: "Layar terbelah dua kota dengan jam aslinya masing-masing — sampai dua kamar itu jadi satu." },
+  "zona-waktu": { nama: "Dua Jendela", demo: "/zona-waktu-demo.html", ringkas: "Layar terbelah dua kota dengan jam aslinya masing-masing, sampai dua kamar itu jadi satu." },
   "graduation-benih": { nama: "Benih & Pohon Cita-Cita", demo: "/graduation-benih-demo.html", ringkas: "Kelulusan sebagai benih yang baru ditanam: disiram, dirawat, tumbuh satu lingkar tahun." },
-  "lewat-duluan": { nama: "Dia Lewat Sini Duluan", demo: "/lewat-duluan-demo.html", ringkas: "Satu hari biasa yang dijalani pakai joystick — dan di tiap tempat ternyata kamu sudah lewat duluan." },
+  "lewat-duluan": { nama: "Dia Lewat Sini Duluan", demo: "/lewat-duluan-demo.html", ringkas: "Satu hari biasa yang dijalani pakai joystick, dan di tiap tempat ternyata kamu sudah lewat duluan." },
   "pasar-malam": { nama: "Pasar Malam", demo: "/pasar-malam-demo.html", ringkas: "Ajakan jalan berbentuk pasar malam satu malam: lempar gelang, gula kapas, bianglala, dan papan lampu untuk menjawab." },
   "confess-kunang": { nama: "Toples Kunang-Kunang", demo: "/confess-kunang-demo.html", ringkas: "Kunang-kunang di toples membawa hal-hal kecil yang kamu simpan tentang dia, sampai pengakuannya terbang jadi hati." },
   "kasus-pengirim": { nama: "Kasus Pengirim Tanpa Nama", demo: "/kasus-pengirim-demo.html", ringkas: "Dia jadi detektif di kafe langganannya, mengumpulkan bukti sampai ketahuan siapa pengirim kertas tanpa nama itu." },
@@ -39,7 +39,7 @@ export const MOMEN = {
     judul: "Kado Ulang Tahun Digital untuk Pacar",
     deskripsi: "Kado ulang tahun digital yang bisa dimainkan: surat interaktif berisi ucapan, foto, dan lagu kalian. Dibuat 5 menit, tautannya langsung jadi.",
     h1: "Kado ulang tahun yang bisa dia mainkan.",
-    lede: "Bukan sekadar ucapan di chat. Dia meniup lilin, membuka amplop, memainkan game kecil — lalu sampai di surat yang kamu tulis sendiri.",
+    lede: "Lebih dari ucapan di chat. Dia meniup lilin, membuka amplop, memainkan game kecil, lalu sampai di surat yang kamu tulis sendiri.",
     tema: ["bait", "kado-riang", "langit-harapan"],
     ide: [
       "Selamat ulang tahun. Terima kasih sudah jadi bagian paling tenang dari hariku.",
@@ -49,14 +49,14 @@ export const MOMEN = {
     faq: [
       ["Bisa dikirim tepat jam 12 malam?", "Bisa. Pakai kunci waktu: suratnya baru terbuka di jam yang kamu pilih, dengan hitung mundur sebelum waktunya."],
       ["Umurnya bisa disembunyikan?", "Bisa. Di formulir ada pilihan untuk tidak menampilkan umur."],
-      ["Fotonya berapa?", "Tergantung tema, biasanya 3–4 foto. Semuanya kamu pilih sendiri."]
+      ["Fotonya berapa?", "Tergantung tema, biasanya 3 sampai 4 foto. Semuanya kamu pilih sendiri."]
     ]
   },
   "anniversary": {
     judul: "Kado Anniversary Digital untuk Pacar",
     deskripsi: "Kado anniversary digital: surat interaktif tentang perjalanan kalian, lengkap dengan foto, tanggal jadian, dan pesan pribadi.",
     h1: "Untuk hari jadi kalian, ceritakan ulang perjalanannya.",
-    lede: "Tanggal jadian, tempat-tempat yang pernah kalian datangi, foto-foto yang cuma kalian yang paham — dirangkai jadi satu surat yang dia jelajahi sendiri.",
+    lede: "Tanggal jadian, tempat-tempat yang pernah kalian datangi, foto-foto yang cuma kalian yang paham. Semuanya dirangkai jadi satu surat yang dia jelajahi sendiri.",
     tema: ["peta-perjalanan", "rekonstruksi"],
     ide: [
       "Sudah sekian hari, dan aku masih memilih kamu setiap paginya.",
@@ -66,11 +66,11 @@ export const MOMEN = {
     faq: [
       ["Jumlah harinya dihitung otomatis?", "Ya. Isi tanggal jadian, jumlah hari bersama dihitung saat surat dibuka. Bisa juga disembunyikan."],
       ["Bisa untuk anniversary pernikahan?", "Bisa. Pilih jenis hari jadinya di formulir."],
-      ["Bisa diingatkan tahun depan?", "Bisa. Pakai \"Ingetin aku\" di halaman selesai — kami kirim satu email seminggu sebelum harinya."]
+      ["Bisa diingatkan tahun depan?", "Bisa. Pakai \"Ingetin aku\" di halaman selesai, nanti kami kirim satu email seminggu sebelum harinya."]
     ]
   },
   "ldr": {
-    judul: "Kado untuk Pacar LDR — Surat Digital Dua Kota",
+    judul: "Kado untuk Pacar LDR · Surat Digital Dua Kota",
     deskripsi: "Kado untuk pacar LDR: surat digital yang menampilkan jam asli dua kota kalian, lengkap dengan foto dan pesan. Tinggal kirim tautannya.",
     h1: "Untuk yang lagi jauh, tetap satu layar.",
     lede: "Dua jendela, dua kota, jam aslinya masing-masing. Dia menebak kamu lagi apa di jam segini, membuka paket yang menyeberang, sampai dua kamar itu jadi satu.",
@@ -87,14 +87,14 @@ export const MOMEN = {
     ]
   },
   "wisuda": {
-    judul: "Ucapan Wisuda Digital — Kado Kelulusan Interaktif",
+    judul: "Ucapan Wisuda Digital · Kado Kelulusan Interaktif",
     deskripsi: "Ucapan wisuda digital yang bisa dimainkan: surat interaktif untuk merayakan kelulusannya, dengan foto dan pesan darimu.",
-    h1: "Selamat lulus — dalam bentuk yang bisa dia rawat.",
-    lede: "Kelulusan sebagai benih yang baru ditanam. Dia menyiram, merawat, dan melihatnya tumbuh — sambil membaca pesanmu tentang perjalanan yang sudah dia lewati.",
+    h1: "Selamat lulus, dalam bentuk yang bisa dia rawat.",
+    lede: "Kelulusan sebagai benih yang baru ditanam. Dia menyiram, merawat, dan melihatnya tumbuh sambil membaca pesanmu tentang perjalanan yang sudah dia lewati.",
     tema: ["graduation-benih"],
     ide: [
       "Semua malam begadangmu akhirnya punya nama. Selamat, sarjana.",
-      "Aku ikut bangga — dan aku tahu ini baru awal.",
+      "Aku ikut bangga, dan aku tahu ini baru awal.",
       "Terima kasih sudah nggak menyerah. Sekarang waktunya tumbuh."
     ],
     faq: [
@@ -105,9 +105,9 @@ export const MOMEN = {
   },
   "surat-cinta": {
     judul: "Surat Cinta Digital untuk Pacar",
-    deskripsi: "Surat cinta digital yang bisa dimainkan — untuk bilang sayang tanpa nunggu momen. Isi pesan, foto, dan lagumu, tautannya langsung jadi.",
+    deskripsi: "Surat cinta digital yang bisa dimainkan, untuk bilang sayang tanpa menunggu momen. Isi pesan, foto, dan lagumu, tautannya langsung jadi.",
     h1: "Bilang sayang, tanpa nunggu momen.",
-    lede: "Satu hari biasa yang dia jalani sendiri — dan di tiap tempat ternyata kamu sudah lewat duluan, meninggalkan hal-hal kecil untuknya.",
+    lede: "Satu hari biasa yang dia jalani sendiri, dan di tiap tempat ternyata kamu sudah lewat duluan, meninggalkan hal-hal kecil untuknya.",
     tema: ["lewat-duluan"],
     ide: [
       "Nggak ada acara apa-apa hari ini. Aku cuma lagi kepikiran kamu.",
@@ -121,7 +121,7 @@ export const MOMEN = {
     ]
   },
   "ajak-kencan": {
-    judul: "Cara Unik Ngajak Kencan — Undangan Jalan Digital",
+    judul: "Cara Unik Ngajak Kencan · Undangan Jalan Digital",
     deskripsi: "Cara unik ngajak dia jalan: undangan kencan digital berbentuk pasar malam, lengkap dengan pilihan acara dan papan lampu untuk menjawab.",
     h1: "Ngajak dia jalan, tapi jangan lewat chat biasa.",
     lede: "Pasar malam yang cuma buka satu malam. Dia memilih acara lewat permainan, naik bianglala melihat foto kalian, lalu menjawab ajakanmu di papan lampu.",
@@ -138,10 +138,10 @@ export const MOMEN = {
     ]
   },
   "nyatakan-perasaan": {
-    judul: "Cara Nyatakan Perasaan dengan Unik — Confess Digital",
+    judul: "Cara Nyatakan Perasaan dengan Unik · Confess Digital",
     deskripsi: "Cara menyatakan perasaan yang beda: surat confess digital interaktif berisi hal-hal kecil yang kamu simpan tentang dia.",
     h1: "Nyatakan perasaanmu, pelan-pelan.",
-    lede: "Hal-hal kecil yang selama ini kamu perhatikan tentang dia, disampaikan satu per satu — sampai akhirnya dia tahu siapa yang menyimpannya.",
+    lede: "Hal-hal kecil yang selama ini kamu perhatikan tentang dia, disampaikan satu per satu, sampai akhirnya dia tahu siapa yang menyimpannya.",
     tema: ["confess-kunang", "kasus-pengirim"],
     ide: [
       "Aku sudah lama memperhatikan caramu tertawa. Mungkin sudah waktunya kamu tahu.",
@@ -155,10 +155,10 @@ export const MOMEN = {
     ]
   },
   "cepat-sembuh": {
-    judul: "Ucapan Cepat Sembuh untuk Pacar — Surat Digital",
+    judul: "Ucapan Cepat Sembuh untuk Pacar · Surat Digital",
     deskripsi: "Ucapan cepat sembuh untuk pacar yang lagi sakit: surat digital interaktif yang menemaninya istirahat, dengan pesan dan foto darimu.",
     h1: "Untuk yang lagi sakit, temani dari jauh.",
-    lede: "Satu kamar yang panas dan buram. Tiap hal kecil yang dia lakukan — membuka jendela, minum, mengatur napas — menurunkan suhunya sampai 36,5.",
+    lede: "Satu kamar yang panas dan buram. Tiap hal kecil yang dia lakukan, seperti membuka jendela, minum, dan mengatur napas, menurunkan suhunya sampai 36,5.",
     tema: ["getwell-365"],
     ide: [
       "Istirahat dulu. Dunia bisa nunggu, aku juga.",
@@ -172,7 +172,7 @@ export const MOMEN = {
     ]
   },
   "lamaran": {
-    judul: "Ide Lamaran Unik — Surat Lamaran Digital",
+    judul: "Ide Lamaran Unik · Surat Lamaran Digital",
     deskripsi: "Ide lamaran yang unik: surat digital berbentuk tur rumah, tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin.",
     h1: "Ajak dia pulang ke rumah yang kalian bayangkan.",
     lede: "Tur rumah dari sudut pandangnya sendiri. Tiap ruangan menyimpan satu janji darimu, dan di kamar terakhir ada pertanyaan yang sudah lama kamu siapkan.",
@@ -183,13 +183,13 @@ export const MOMEN = {
       "Pertanyaannya sederhana, jawabannya aku tunggu."
     ],
     faq: [
-      ["Bisa dipakai sebelum lamaran langsung?", "Bisa — sebagai pembuka, atau sebagai kenang-kenangan setelahnya."],
+      ["Bisa dipakai sebelum lamaran langsung?", "Bisa, sebagai pembuka atau sebagai kenang-kenangan setelahnya."],
       ["Jawabannya sampai ke aku?", "Ya, lewat email, atau WhatsApp kalau kamu mengisi nomornya."],
       ["Bisa dikunci tanggal?", "Bisa, pakai kunci waktu atau kunci tanggal."]
     ]
   },
   "minta-maaf": {
-    judul: "Cara Minta Maaf ke Pacar — Surat Maaf Digital",
+    judul: "Cara Minta Maaf ke Pacar · Surat Maaf Digital",
     deskripsi: "Surat maaf digital yang bisa dimainkan: dia ikut memperbaiki kotak musik yang rusak, membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya.",
     h1: "Minta maaf yang bukan cuma kata-kata.",
     lede: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya, dan tiap bagian yang beres memperlihatkan satu hal yang kamu sadari.",
@@ -206,7 +206,7 @@ export const MOMEN = {
     ]
   },
   "selamat": {
-    judul: "Ucapan Selamat atas Pencapaian — Kado Digital",
+    judul: "Ucapan Selamat atas Pencapaian · Kado Digital",
     deskripsi: "Ucapan selamat digital yang bisa dimainkan: dia lari 100 meter terakhir diiringi sorakanmu, lalu mengalungkan medali berukir pencapaiannya.",
     h1: "Rayakan pencapaiannya seperti juara.",
     lede: "Hari perlombaan untuknya. Dia berlari ke garis finis diiringi spanduk sorakanmu, lalu naik podium dan membaca pesanmu di papan skor stadion.",
@@ -223,7 +223,7 @@ export const MOMEN = {
     ]
   },
   "selesai-baik-baik": {
-    judul: "Pamit dengan Baik — Surat Perpisahan Digital",
+    judul: "Pamit dengan Baik · Surat Perpisahan Digital",
     deskripsi: "Surat perpisahan digital yang hangat: satu perjalanan kereta terakhir, singgah di tempat-tempat kenangan, lalu berangkat ke arah masing-masing.",
     h1: "Selesai, tapi dengan baik.",
     lede: "Satu perjalanan kereta terakhir bersama. Kereta singgah di tempat-tempat kenangan kalian, lalu dua kereta berangkat ke arah yang berbeda.",
@@ -240,10 +240,10 @@ export const MOMEN = {
     ]
   },
   "natal": {
-    judul: "Ucapan Natal untuk Pacar — Kartu Natal Digital",
+    judul: "Ucapan Natal untuk Pacar · Kartu Natal Digital",
     deskripsi: "Ucapan Natal untuk pacar yang bisa dimainkan: dia menarik lonceng pintu, merangkai lampu sampai pohon menyala, dan membaca harapan-harapanmu di ornamennya.",
     h1: "Ucapan Natal yang bikin rumahnya menyala.",
-    lede: "Satu malam Natal di rumahnya. Bagian demi bagian menyala — lampu pohon, perapian, sampai bintang di puncak — dan di tiap bagian ada sesuatu darimu.",
+    lede: "Satu malam Natal di rumahnya. Satu per satu menyala, dari lampu pohon, perapian, sampai bintang di puncak, dan di tiap bagian ada sesuatu darimu.",
     tema: ["rumah-menyala"],
     ide: [
       "Selamat Natal. Semoga damainya tinggal lama di hatimu.",
@@ -257,7 +257,7 @@ export const MOMEN = {
     ]
   },
   "tahun-baru": {
-    judul: "Ucapan Tahun Baru untuk Pacar — Kartu Tahun Baru Digital",
+    judul: "Ucapan Tahun Baru untuk Pacar · Kartu Tahun Baru Digital",
     deskripsi: "Ucapan tahun baru yang bisa dimainkan: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, tiga rencana tahun depan, dan bersulang di atap.",
     h1: "Hitung mundur bareng, walau dari jauh.",
     lede: "Malam pergantian tahun di atap gedung. Dia menghitung mundur, meluncurkan kembang api sampai tahunnya berganti, lalu membaca rencana kalian untuk tahun depan.",
@@ -274,7 +274,7 @@ export const MOMEN = {
     ]
   },
   "valentine": {
-    judul: "Ucapan Valentine untuk Pacar — Kado Valentine Digital",
+    judul: "Ucapan Valentine untuk Pacar · Kado Valentine Digital",
     deskripsi: "Kado Valentine digital yang bisa dimainkan: dia membuat cokelatnya sendiri, membaca alasan kamu sayang dia di tiap cokelat, lalu membagi cokelatnya berdua.",
     h1: "Valentine yang manisnya dia bikin sendiri.",
     lede: "Dia mengelupas foil, menuang cokelat ke cetakan sampai pas, dan menemukan alasan kamu sayang dia tertulis di atas tiap cokelat.",
@@ -291,7 +291,7 @@ export const MOMEN = {
     ]
   },
   "lebaran": {
-    judul: "Ucapan Idulfitri untuk Pacar — Kartu Lebaran Digital",
+    judul: "Ucapan Idulfitri untuk Pacar · Kartu Lebaran Digital",
     deskripsi: "Ucapan Lebaran yang bisa dimainkan: dia mencari hilal, menganyam ketupat yang membuka maaf-maafmu, membaca suratmu di malam takbiran, lalu bersalaman denganmu.",
     h1: "Mohon maaf lahir dan batin, dengan cara yang dia ingat.",
     lede: "Malam terakhir Ramadan sampai pagi Lebaran. Tiap baris ketupat yang dia anyam membuka satu maaf darimu, dan suratmu terbaca di antara suara beduk takbiran.",
@@ -328,7 +328,7 @@ export function halamanMomen(slug, temaMati) {
       { "@type": "ListItem", position: 2, name: m.judul, item: url } ] }
   ];
   const lain = Object.entries(MOMEN).filter(([s]) => s !== slug)
-    .map(([s, x]) => `<a href="/${s}">${esc(x.judul.split(" — ")[0])}</a>`).join("");
+    .map(([s, x]) => `<a href="/${s}">${esc(x.judul.split(" · ")[0])}</a>`).join("");
 
   return `<!doctype html><html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -405,7 +405,7 @@ ${tema.length ? `<section>
 </section>` : `<section>
   <div class="segera" role="status"><span class="lbl">Segera hadir</span>
   <h2>Tema untuk momen ini sedang kami siapkan</h2>
-  <p>Untuk sementara belum ada tema yang bisa dipesan di momen ini. Kalau kamu butuh, kabari kami lewat WhatsApp — momen yang paling banyak diminta kami kerjakan duluan.</p>
+  <p>Untuk sementara belum ada tema yang bisa dipesan di momen ini. Kalau kamu butuh, kabari kami lewat WhatsApp. Momen yang paling banyak diminta kami kerjakan duluan.</p>
   <div class="aksi"><a class="btn" target="_blank" rel="noopener" href="https://wa.me/6289512385393?text=${encodeURIComponent("Halo Foreverse, saya butuh tema untuk momen ini: foreverse.id/" + slug)}">Kabari saya</a><a class="btn garis" href="/template">Lihat momen lain</a></div></div>
 </section>`}
 
@@ -422,7 +422,7 @@ ${tema.length ? `<section>
 <section>
   <h2>Ide kata-kata</h2>
   <div class="ide">${m.ide.map(x => `<blockquote>${esc(x)}</blockquote>`).join("")}</div>
-  <p class="catat">Pakai, ubah, atau tulis versimu sendiri — pesanmu ditampilkan persis seperti yang kamu tulis.</p>
+  <p class="catat">Pakai, ubah, atau tulis versimu sendiri. Pesanmu ditampilkan persis seperti yang kamu tulis.</p>
 </section>
 
 <section>

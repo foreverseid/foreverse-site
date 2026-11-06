@@ -467,7 +467,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "pabrik-cokelat":    { nama:"Cokelat Buatan Sendiri", nfoto:3, mesin:"/pabrik-cokelat.html", momen:"spesial" },
     "malam-takbiran":    { nama:"Malam Takbiran", nfoto:3, mesin:"/malam-takbiran.html", momen:"spesial" }
   };
-  /* Kota untuk momen LDR — harus sama persis dengan KOTA di
+  /* Kota untuk momen LDR - harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
   var KOTA_LDR = [
     ["jakarta","Jakarta"],["medan","Medan"],["surabaya","Surabaya"],["denpasar","Denpasar"],
@@ -610,14 +610,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
   /* ══ 2 · penghitung karakter ══
      pasangHitung dipakai juga untuk isian yang dibangun belakangan oleh
-     renderBlokKhusus() (kupon, kuis, harapan) — bukan cuma yang statis
+     renderBlokKhusus() (kupon, kuis, harapan) - bukan cuma yang statis
      di HTML. */
   function pasangHitung(id, maks){
     var el = $(id); if(!el) return;
     /* Kolom tanpa tempat angka (mis. pilihan jawaban kuis Langit Harapan)
        dilewati. Dulu ini melempar galat saat halaman dibuka, dan karena
-       siapkanTema() jalan di level atas, SELURUH sisa skrip formulir —
-       termasuk tombol bayar — tidak pernah terpasang. Batasnya tetap
+       siapkanTema() jalan di level atas, SELURUH sisa skrip formulir -
+       termasuk tombol bayar - tidak pernah terpasang. Batasnya tetap
        dijaga oleh atribut maxlength. */
     var baris = el.closest(".baris"), tampil = baris && baris.querySelector(".angka");
     if(!tampil) return;
@@ -1240,7 +1240,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   /* ══ 3 · pratinjau ══
      Panel kanan memuat mesin tema di dalam iframe dan memuatnya ulang
      tiap isian berubah (lewat sessionStorage, sama seperti tombol
-     "layar penuh") — jadi animasi/game ikut mengulang dari awal
+     "layar penuh") - jadi animasi/game ikut mengulang dari awal
      setiap kali diketik, bukan postMessage yang menyambung di tengah
      jalan. Dibuat agak jarang (debounce) supaya tidak memuat ulang di
      setiap ketukan huruf. */
@@ -1690,7 +1690,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       tirai(true, "Menyiapkan pesananmu…");
       var draf = await kirimJson("/api/draf", badan());
 
-      /* tautan edit disimpan di peramban pembeli saja — tidak pernah
+      /* tautan edit disimpan di peramban pembeli saja - tidak pernah
          dikirim lewat alamat surat, supaya penerima tidak bisa mengeditnya */
       try{ localStorage.setItem("fv-edit-" + draf.kode, draf.token); }catch(_){}
 
@@ -1872,7 +1872,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tirai(false);
         pesanGalat(e.message || "Tautan edit tidak bisa dibuka.");
         $("tblKirim").disabled = true;
-        /* masa edit habis tidak berarti masa simpan habis — perpanjangan tetap bisa */
+        /* masa edit habis tidak berarti masa simpan habis - perpanjangan tetap bisa */
         if(/Masa edit/.test(e.message || "")){
           var g = $("kabarGalat");
           g.innerHTML += ' Mau memperpanjang masa simpannya? <a href="/perpanjang/' + encodeURIComponent(TOKEN) + '" style="color:inherit;font-weight:600">Perpanjang 2 bulan →</a>';

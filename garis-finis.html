@@ -54,7 +54,7 @@
 </script>
 <style>
 /* Palet: lintasan biru, garis putih, hijau limau, biru malam stadion,
-   jingga papan skor. Hari perlombaan — tidak dipakai tema lain. */
+   jingga papan skor. Hari perlombaan - tidak dipakai tema lain. */
 :root{
   --lintas:#2D5DA8; --lintas2:#234C8C; --malam:#13213F; --limau:#C6E35B; --jingga:#FF9B3D; --putih:#F7FAFF; --ink:#101A30; --muted:#5D6B85;
   --cond:'Barlow Condensed','Arial Narrow',sans-serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --serif:'Fraunces',Georgia,serif;
@@ -320,7 +320,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -419,7 +419,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }

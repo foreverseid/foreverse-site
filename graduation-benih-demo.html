@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <!-- =====================================================================
-     FOREVERSE · Graduation · Tema "Benih & Pohon Cita-Cita" — BERKAS DEMO
+     FOREVERSE · Graduation · Tema "Benih & Pohon Cita-Cita" - BERKAS DEMO
      Data Amira & Adriel sudah dipatok langsung di bawah untuk pratinjau/
      demo publik. Untuk pesanan sungguhan, pakai graduation-benih.html
      (datanya disisipkan server saat itu juga).
@@ -79,21 +79,21 @@
 
 <style>
 /* =====================================================================
-   PALET TEMA — Benih & Pohon Cita-Cita: tanah muda, daun pagi, madu senja.
+   PALET TEMA - Benih & Pohon Cita-Cita: tanah muda, daun pagi, madu senja.
    Beda total dari palet merek (Bait) dan dari Peta Perjalanan.
    ===================================================================== */
 :root{
-  --bg:#EFF3E2;           /* dasar halaman — tanah muda */
+  --bg:#EFF3E2;           /* dasar halaman - tanah muda */
   --card:#FFFEF8;         /* kartu & panel */
-  --ink:#28331F;          /* teks & garis — hijau tanah tua */
+  --ink:#28331F;          /* teks & garis - hijau tanah tua */
   --muted:rgba(40,51,31,.62);
   --faint:rgba(40,51,31,.26);
   --hair:rgba(40,51,31,.13);
-  --p:#4F7A3D;            /* hijau daun — aksi utama */
+  --p:#4F7A3D;            /* hijau daun - aksi utama */
   --p-dk:#345226;
-  --a1:#D98C3D;           /* madu/amber — buah & aksen */
+  --a1:#D98C3D;           /* madu/amber - buah & aksen */
   --a1-dk:#A8631F;
-  --soft:#DEE9C6;         /* daun muda — isian lembut */
+  --soft:#DEE9C6;         /* daun muda - isian lembut */
   --soft-lt:#EEF3E0;
   --disp:'Fraunces',Georgia,serif;
   --hand:'Caveat',cursive;
@@ -138,9 +138,9 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 @keyframes hintFlash{50%{opacity:.25}}
 
 /* =====================================================================
-   SLOT 1 — PEMBUKA: Benih di Kantung
+   SLOT 1 - PEMBUKA: Benih di Kantung
    Satu gestur: goyangkan kantungnya ke kiri-kanan di atas pot sampai
-   benihnya tumpah — bukan tarik atau tekan-tahan seperti tema lain.
+   benihnya tumpah - bukan tarik atau tekan-tahan seperti tema lain.
    ===================================================================== */
 #open{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:30px 22px calc(30px + env(safe-area-inset-bottom));background:radial-gradient(120% 80% at 50% 10%,#FFFEF8 0%,var(--bg) 62%,#E2EAC9 100%);transition:opacity .8s ease,visibility .8s}
 #open.gone{opacity:0;visibility:hidden;pointer-events:none}
@@ -166,7 +166,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .progress-dots span.on{background:var(--p);transform:scale(1.2)}
 
 /* =====================================================================
-   SLOT 2 — GAME 1: Siram Teratur (ketuk tepat saat tetesan sampai)
+   SLOT 2 - GAME 1: Siram Teratur (ketuk tepat saat tetesan sampai)
    ===================================================================== */
 #siram{background:linear-gradient(180deg,var(--bg),var(--card))}
 .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 5px 22px rgba(40,51,31,.07),inset 0 0 0 1px var(--hair);margin-top:16px}
@@ -188,7 +188,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .water-btn{display:block;margin:12px auto 0}
 
 /* =====================================================================
-   SLOT 3 — INTERAKTIF 1: Kuncup yang Mekar (tekan & tahan tiap kuncup)
+   SLOT 3 - INTERAKTIF 1: Kuncup yang Mekar (tekan & tahan tiap kuncup)
    ===================================================================== */
 #kuncup{background:var(--card)}
 .bud-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:20px}
@@ -205,7 +205,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .bud-cue{text-align:center;font-size:.76rem;color:var(--muted);margin-top:4px}
 
 /* =====================================================================
-   SLOT 4 — MOMEN KHAS: Lingkar Tahun (ketuk berulang, tanpa jatah)
+   SLOT 4 - MOMEN KHAS: Lingkar Tahun (ketuk berulang, tanpa jatah)
    ===================================================================== */
 #lingkar{background:linear-gradient(180deg,var(--card),var(--bg))}
 .trunk-wrap{position:relative;width:200px;margin:18px auto 0;text-align:center}
@@ -214,7 +214,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .trunk-cue{font-size:.78rem;font-weight:800;color:var(--muted);margin-top:10px}
 
 /* =====================================================================
-   SLOT 5 — GAME 2: Cabut Gulma (tarik ke atas, keluar dari tanah)
+   SLOT 5 - GAME 2: Cabut Gulma (tarik ke atas, keluar dari tanah)
    ===================================================================== */
 #gulma{background:var(--bg)}
 .weed-bed{position:relative;height:200px;border-radius:16px;background:linear-gradient(180deg,#E9EFD8,#DCE6C5);overflow:hidden}
@@ -224,7 +224,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .weed-info{text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);margin-top:12px}
 
 /* =====================================================================
-   SLOT 6 — INTERAKTIF 2: Buah yang Dipetik (tarik ke samping)
+   SLOT 6 - INTERAKTIF 2: Buah yang Dipetik (tarik ke samping)
    ===================================================================== */
 #buah{background:linear-gradient(180deg,var(--bg),var(--card))}
 .fruit-scene{position:relative;height:180px;margin-top:12px}
@@ -240,7 +240,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .secret-foot{font-size:.72rem;color:var(--faint);margin-top:10px;font-style:italic}
 
 /* =====================================================================
-   SLOT 7 — SURAT
+   SLOT 7 - SURAT
    ===================================================================== */
 #surat{background:var(--card)}
 .lock{text-align:center;margin-top:18px;background:var(--bg);border-radius:20px;padding:24px 20px;box-shadow:inset 0 0 0 1px var(--hair)}
@@ -267,8 +267,8 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lt-sign b{font-family:var(--hand);font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1.1}
 
 /* =====================================================================
-   SLOT 8 — PENUTUP: Ditanam untuk Nanti
-   Satu bibit diseret dari pot ke petak tanah — satu-satunya tempat mark
+   SLOT 8 - PENUTUP: Ditanam untuk Nanti
+   Satu bibit diseret dari pot ke petak tanah - satu-satunya tempat mark
    Foreverse BOLEH muncul (sebagai papan nama kecil), tapi tidak wajib.
    ===================================================================== */
 #tanam{background:linear-gradient(180deg,var(--card),var(--bg));padding-bottom:86px}
@@ -322,7 +322,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 <div id="toast"></div>
 <button id="music" aria-label="Suara">🔊</button>
 
-<!-- ============ SLOT 1 — PEMBUKA: BENIH DI KANTUNG ============ -->
+<!-- ============ SLOT 1 - PEMBUKA: BENIH DI KANTUNG ============ -->
 <div id="open">
   <div class="op-to"><small>Untuk</small><b data-f="penerima"></b></div>
 
@@ -350,7 +350,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 </div>
 
 <main>
-<!-- ============ SLOT 2 — GAME 1: SIRAM TERATUR ============ -->
+<!-- ============ SLOT 2 - GAME 1: SIRAM TERATUR ============ -->
 <section id="siram">
   <div class="wrap">
     <div class="reveal">
@@ -381,7 +381,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 3 — INTERAKTIF 1: KUNCUP YANG MEKAR ============ -->
+<!-- ============ SLOT 3 - INTERAKTIF 1: KUNCUP YANG MEKAR ============ -->
 <section id="kuncup">
   <div class="wrap">
     <div class="reveal">
@@ -394,7 +394,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 4 — MOMEN KHAS: LINGKAR TAHUN ============ -->
+<!-- ============ SLOT 4 - MOMEN KHAS: LINGKAR TAHUN ============ -->
 <section id="lingkar">
   <div class="wrap center">
     <div class="reveal">
@@ -417,7 +417,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 5 — GAME 2: CABUT GULMA ============ -->
+<!-- ============ SLOT 5 - GAME 2: CABUT GULMA ============ -->
 <section id="gulma">
   <div class="wrap">
     <div class="reveal">
@@ -437,7 +437,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 6 — INTERAKTIF 2: BUAH YANG DIPETIK ============ -->
+<!-- ============ SLOT 6 - INTERAKTIF 2: BUAH YANG DIPETIK ============ -->
 <section id="buah">
   <div class="wrap">
     <div class="reveal">
@@ -469,7 +469,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 7 — SURAT ============ -->
+<!-- ============ SLOT 7 - SURAT ============ -->
 <section id="surat">
   <div class="wrap">
     <div class="reveal">
@@ -493,7 +493,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 8 — PENUTUP: DITANAM UNTUK NANTI ============ -->
+<!-- ============ SLOT 8 - PENUTUP: DITANAM UNTUK NANTI ============ -->
 <section id="tanam" hidden>
   <div class="wrap center">
     <div class="reveal in">
@@ -713,9 +713,9 @@ document.addEventListener('dragstart',function(e){
 },true);
 
 /* =====================================================================
-   SLOT 1 — PEMBUKA: BENIH DI KANTUNG
+   SLOT 1 - PEMBUKA: BENIH DI KANTUNG
    Goyangkan kantungnya ke kiri-kanan (dihitung tiap kali arahnya
-   berbalik) — bukan menarik atau menekan-tahan seperti tema lain.
+   berbalik) - bukan menarik atau menekan-tahan seperti tema lain.
    ===================================================================== */
 (function(){
   var packet=$('#seedPacket'), dust=$('#seedDust'), hint=$('#seedHint'), dots=$('#seedDots');
@@ -767,9 +767,9 @@ document.addEventListener('dragstart',function(e){
 })();
 
 /* =====================================================================
-   SLOT 2 — GAME 1: SIRAM TERATUR
+   SLOT 2 - GAME 1: SIRAM TERATUR
    Tetesan turun terus-menerus; ketuk tombol siram pas tetesannya ada
-   di zona bawah — bukan tangkap benda jatuh maupun seret bebas.
+   di zona bawah - bukan tangkap benda jatuh maupun seret bebas.
    ===================================================================== */
 var DONE={siram:false,gulma:false};
 function markDone(k){
@@ -833,9 +833,9 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 3 — INTERAKTIF 1: KUNCUP YANG MEKAR
+   SLOT 3 - INTERAKTIF 1: KUNCUP YANG MEKAR
    Tekan dan tahan tiap kuncup (maksimal ±1.2 detik) sampai mekar sendiri
-   — bukan tap-flip kartu, bukan ketukan sekali jadi.
+   - bukan tap-flip kartu, bukan ketukan sekali jadi.
    ===================================================================== */
 (function(){
   var row=$('#budRow');
@@ -893,9 +893,9 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 4 — MOMEN KHAS: LINGKAR TAHUN
+   SLOT 4 - MOMEN KHAS: LINGKAR TAHUN
    Ketuk berulang (tanpa jatah, tanpa jadwal) sampai lingkarannya penuh
-   — bukan tekan-tahan tunggal, bukan putar dial.
+   - bukan tekan-tahan tunggal, bukan putar dial.
    ===================================================================== */
 (function(){
   var svg=$('#trunkSvg'), ring=$('#trunkNewRing'), face=$('#trunkFace'), num=$('#trunkNum'), cue=$('#trunkCue');
@@ -933,7 +933,7 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 5 — GAME 2: CABUT GULMA
+   SLOT 5 - GAME 2: CABUT GULMA
    Tarik tiap gulma lurus ke ATAS (bukan ke bawah/ke samping seperti
    gestur lain) sampai akarnya tercabut dan terbang.
    ===================================================================== */
@@ -999,8 +999,8 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 6 — INTERAKTIF 2: BUAH YANG DIPETIK
-   Tarik buahnya ke SAMPING (mendatar) sampai lepas — bukan ke atas
+   SLOT 6 - INTERAKTIF 2: BUAH YANG DIPETIK
+   Tarik buahnya ke SAMPING (mendatar) sampai lepas - bukan ke atas
    seperti gulma, bukan ke bawah seperti ritual segel tema lain.
    ===================================================================== */
 (function(){
@@ -1044,7 +1044,7 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 7 — SURAT
+   SLOT 7 - SURAT
    ===================================================================== */
 (function(){
   var lock=$('#lock'), letter=$('#letter'), opened=false;
@@ -1077,8 +1077,8 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 8 — PENUTUP: DITANAM UNTUK NANTI
-   Satu bibit diseret dari pot ke SATU petak tanah tetap — bukan
+   SLOT 8 - PENUTUP: DITANAM UNTUK NANTI
+   Satu bibit diseret dari pot ke SATU petak tanah tetap - bukan
    mencocokkan beberapa keping ke beberapa penanda (Susun Rute), dan
    bukan segel lilin tarik-vertikal milik tema lain.
    ===================================================================== */

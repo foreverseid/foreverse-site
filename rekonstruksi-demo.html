@@ -17,10 +17,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
 <!-- =====================================================================
-     FOREVERSE · Anniversary · Tema "Rekonstruksi Hari Pertama" — BERKAS DEMO
+     FOREVERSE · Anniversary · Tema "Rekonstruksi Hari Pertama" - BERKAS DEMO
      Data Amira & Adriel dipatok langsung untuk demo publik. Pesanan
      sungguhan memakai rekonstruksi.html (datanya disisipkan server).
-     Berkas ini dibuat ulang dari mesin aslinya — jangan diedit tangan.
+     Berkas ini dibuat ulang dari mesin aslinya - jangan diedit tangan.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
 {
@@ -101,7 +101,7 @@
 
 <style>
 /* =====================================================================
-   REKONSTRUKSI HARI PERTAMA — dunia yang dijalani, tapi:
+   REKONSTRUKSI HARI PERTAMA - dunia yang dijalani, tapi:
    · digambar sebagai SKETSA pensil di kertas berpetak; tiap bangunan
      berganti ke palet berwarna sekali, saat buktinya ditemukan
    · waktunya HARI ITU, bukan hari ini (jam di baris atas)
@@ -309,7 +309,7 @@ var klem = function(v,a,b){ return v<a?a:(v>b?b:v); };
 var buzz = function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
 function tk(v){ return String(v == null ? '' : v).trim(); }
 
-/* ── isian pembeli — dipakai persis apa adanya ── */
+/* ── isian pembeli - dipakai persis apa adanya ── */
 var PENERIMA = tk(D.penerima) || 'kamu';
 var PENGIRIM = tk(D.pengirim) || 'aku';
 var KAR_A = D.karakterPenerima === 'laki' ? 'laki' : 'perempuan';
@@ -338,7 +338,7 @@ var KJ = [0,1,2,3].map(function(i){
     foto: FOTO[i] || null
   };
 });
-/* urutan kronologis — penentu jawaban garis waktu & urutan pemutaran */
+/* urutan kronologis - penentu jawaban garis waktu & urutan pemutaran */
 var URUT = KJ.slice().sort(function(a,b){ return menit(a.jam) - menit(b.jam) || a.i - b.i; });
 
 /* tanggal hari pertama & hitungan hari */
@@ -439,9 +439,9 @@ document.addEventListener('touchmove', function(e){
 }, { passive:false });
 
 /* ══════════════════════════════════════════════════════════════
-   PETA — alun-alun kecil. Empat bangunan di empat sudut; pintunya
+   PETA - alun-alun kecil. Empat bangunan di empat sudut; pintunya
    persis di empat sudut sebuah LINGKARAN JALAN. Dua sosok "dulu" hanya
-   meluncur di sepanjang lingkaran itu — rutenya pasti, tidak mungkin
+   meluncur di sepanjang lingkaran itu - rutenya pasti, tidak mungkin
    nyangkut di benda apa pun.
    ══════════════════════════════════════════════════════════════ */
 var COLS = 22, ROWS = 14;
@@ -498,7 +498,7 @@ function bisaDi(x, y){
 }
 var DULU = { tampil:false, x:0, y:0, hadap:'bawah', jalan:0, t:0, padat:false };
 /* setelah penutup: pemain menjadi salah satu dari "kalian", dan sosok
-   pengirim mengikuti dengan menapaki ulang JEJAK pemain sendiri — jalur
+   pengirim mengikuti dengan menapaki ulang JEJAK pemain sendiri - jalur
    yang pasti bisa dilewati, jadi pengikutnya tidak mungkin menembus apa pun */
 var BERSAMA = false, IKUT = { x:0, y:0, hadap:'bawah', jalan:0, t:0 }, JEJAK = [];
 
@@ -666,7 +666,7 @@ function bukaGaris(){
   ]);
 }
 
-/* ══════════════ pemutaran ulang — rute lingkaran yang pasti ══════════════
+/* ══════════════ pemutaran ulang - rute lingkaran yang pasti ══════════════
    Sosok "dulu" berangkat dari pintu kejadian pertama, lalu menyusuri
    lingkaran ke pintu kejadian berikutnya (jalur terpendek searah atau
    berlawanan jarum jam). Tidak ada pencarian jalan sama sekali. */
@@ -834,7 +834,7 @@ $('#suara').addEventListener('click', function(){
 });
 
 /* ══════════════════════════════════════════════════════════════
-   GAMBAR — kertas berpetak + garis pensil; palet berwarna dipasang
+   GAMBAR - kertas berpetak + garis pensil; palet berwarna dipasang
    per bangunan (sekali), tanpa animasi peralihan.
    ══════════════════════════════════════════════════════════════ */
 var cv = $('#dunia'), g = cv.getContext('2d');
@@ -956,7 +956,7 @@ function tandaBukti(i){
   g.fillStyle = '#C8372D'; g.fillRect(x - S*.2, y - S*.12, S*.4, S*.06);
 }
 
-/* tokoh balok — dipakai untuk pemain dan dua sosok "dulu" */
+/* tokoh balok - dipakai untuk pemain dan dua sosok "dulu" */
 function orang(x, y, o){
   var X = sx(x), Y = sy(y), u = S / 38;
   var ayun = o.jalan ? Math.sin(o.t * 14) * 2.4 * u : 0;

@@ -69,7 +69,7 @@
 
 <style>
 /* =====================================================================
-   FOREVERSE ENGINE v1 — gaya komponen bersama
+   FOREVERSE ENGINE v1 - gaya komponen bersama
    Setiap tema wajib mendefinisikan variabel ini di :root:
      --bg --card --ink --muted --p --p-dk --a1 --a2 --soft
      --disp (font judul) --hand (tulisan tangan) --sans (teks)
@@ -205,7 +205,7 @@ body.opened #soundBtn{display:grid}
 
 
 /* =====================================================================
-   TEMA: KADO RIANG — ceria, siang, ramai
+   TEMA: KADO RIANG - ceria, siang, ramai
    Palet: coral · kuning cerah · pink permen · mint · tinta plum
    ===================================================================== */
 :root{
@@ -416,7 +416,7 @@ h2{font-weight:800}
   </div>
 </section>
 
-<!-- ===================== 4. INTERAKTIF 1 — ANGKA ===================== -->
+<!-- ===================== 4. INTERAKTIF 1 - ANGKA ===================== -->
 <section id="angka">
   <div class="wrap">
     <div class="reveal">
@@ -429,7 +429,7 @@ h2{font-weight:800}
   </div>
 </section>
 
-<!-- ===================== 5. GAME 1 — MEMORI ===================== -->
+<!-- ===================== 5. GAME 1 - MEMORI ===================== -->
 <section id="memori">
   <div class="wrap">
     <div class="reveal">
@@ -444,7 +444,7 @@ h2{font-weight:800}
   </div>
 </section>
 
-<!-- ===================== 6. INTERAKTIF 2 — KUPON ===================== -->
+<!-- ===================== 6. INTERAKTIF 2 - KUPON ===================== -->
 <section id="kupon">
   <div class="wrap">
     <div class="reveal">
@@ -457,7 +457,7 @@ h2{font-weight:800}
   </div>
 </section>
 
-<!-- ===================== 7. GAME 2 — TANGKAP KADO ===================== -->
+<!-- ===================== 7. GAME 2 - TANGKAP KADO ===================== -->
 <section id="tangkap">
   <div class="wrap">
     <div class="reveal">
@@ -548,7 +548,7 @@ h2{font-weight:800}
      F.greet()         teks ucapan sesuai pilihan client
      F.sfx / F.tone    efek suara buatan browser (tanpa file)
      F.fx              konfeti
-     F.music           lagu latar (unggah sendiri / galeri, potongan mulai–selesai)
+     F.music           lagu latar (unggah sendiri / galeri, potongan mulai-selesai)
      F.cake            ADEGAN KUE: umur baru menendang umur lama
      F.ui.*            interaktif: kartu balik, kupon gosok, galeri, lightbox
      F.games.*         game: memori, tangkap kado, kuis, puzzle foto
@@ -760,7 +760,7 @@ F.toast = (msg, ms=2400) => {
 };
 
 /* =====================================================================
-   ADEGAN KUE — "lilin angka lama meleleh, lilin angka baru menyala"
+   ADEGAN KUE - "lilin angka lama meleleh, lilin angka baru menyala"
    Umurnya adalah lilin itu sendiri: tiap digit umur lama tercetak di
    badan lilin yang sedang menyala. Ditiup satu-satu, lalu semuanya
    meleleh turun ke icing, dan lilin angka baru menyala naik
@@ -998,7 +998,7 @@ F.ui.lightbox = (() => {
    ===================================================================== */
 F.games = {};
 
-/* Kartu Memori — pakai foto client (3 foto = 6 kartu) */
+/* Kartu Memori - pakai foto client (3 foto = 6 kartu) */
 F.games.memory = (el, photos, opt={}) => {
   const grid = F.el('div','mem-grid'), info = F.el('div','mem-info');
   const movesEl = F.el('span', null, 'Langkah: 0'), pairsEl = F.el('span', null, `Pasangan: 0/${photos.length}`);
@@ -1035,7 +1035,7 @@ F.games.memory = (el, photos, opt={}) => {
   return { deal };
 };
 
-/* Tangkap Kado — game refleks berbasis kanvas */
+/* Tangkap Kado - game refleks berbasis kanvas */
 F.games.catcher = (wrap, opt={}) => {
   const GOAL = opt.goal || 10;
   const good = opt.good || ['🎁','🎈','🍰','🧁'];
@@ -1093,7 +1093,7 @@ F.games.catcher = (wrap, opt={}) => {
   over.querySelector('button').onclick = start;
 };
 
-/* Kuis — [{tanya, pilihan:[a,b,c], benar:0..2}] */
+/* Kuis - [{tanya, pilihan:[a,b,c], benar:0..2}] */
 F.games.quiz = (el, qs, opt={}) => {
   let i = 0, score = 0;
   function show(){
@@ -1128,7 +1128,7 @@ F.games.quiz = (el, qs, opt={}) => {
   show();
 };
 
-/* Puzzle foto 3x3 — ketuk dua kotak untuk menukar */
+/* Puzzle foto 3x3 - ketuk dua kotak untuk menukar */
 F.games.puzzle = (el, src, opt={}) => {
   const N = 3;
   const grid = F.el('div','pz-grid'), info = F.el('div','pz-info','Ketuk dua kotak untuk menukar posisinya');
@@ -1170,7 +1170,7 @@ F.games.puzzle = (el, src, opt={}) => {
 </script>
 <script>
 /* =====================================================================
-   TEMA: KADO RIANG — alur halaman
+   TEMA: KADO RIANG - alur halaman
    ===================================================================== */
 (function(){
 const { $, $$, wait, el, nf } = F;
@@ -1366,7 +1366,7 @@ const fu = D.foreverseUrl || 'https://foreverse.id';
 $('#madeBy').href = fu + (fu.includes('?') ? '&' : '?') + 'ref=kado-riang';
 
 /* ---------- segel penutup (ritual tanda tangan Foreverse) ----------
-   Dipasang sekali di sini, hanya dipakai di kartu kado ini — bukan
+   Dipasang sekali di sini, hanya dipakai di kartu kado ini - bukan
    bagian dari F.* yang dipakai tema lain. */
 function drag(node, o){
   let on = false, sy = 0, travel = 0, done = false;

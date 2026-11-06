@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <!-- =====================================================================
-     FOREVERSE · Hari Spesial (Idulfitri) · Tema "Malam Takbiran" (id: malam-takbiran) — BERKAS DEMO
+     FOREVERSE · Hari Spesial (Idulfitri) · Tema "Malam Takbiran" (id: malam-takbiran) - BERKAS DEMO
      Data Amira & Adriel dipatok untuk demo publik. Pesanan sungguhan memakai malam-takbiran.html.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
@@ -67,7 +67,7 @@
 </script>
 <style>
 /* Palet: ungu malam, emas pelita, hijau janur, krem pagi Lebaran.
-   Malam terakhir Ramadan sampai pagi Idulfitri — beda dari Kotak Musik
+   Malam terakhir Ramadan sampai pagi Idulfitri - beda dari Kotak Musik
    (teal, Apology) dan tema Hari Spesial lain (hijau Natal, biru Tahun
    Baru, cokelat Valentine). */
 :root{
@@ -342,7 +342,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -441,7 +441,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
@@ -517,7 +517,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   }
 })();
 
-/* ═ 2 · menganyam ketupat (game): selang-seling atas–bawah ═ */
+/* ═ 2 · menganyam ketupat (game): selang-seling atas-bawah ═ */
 (function(){
   var an=$('#anyaman'), dm=$('#daftarMaaf'), N=4, BARIS=3, r=0, c=0, tip=0, mode=null, pegang=false, beres=false, pakan=null, tambal=[], uj=el('div','ujung');
   for(var i=0;i<N;i++){ var l=el('div','lungsin'); l.style.left=((i+.5)/N*100-9.5)+'%'; an.appendChild(l); }

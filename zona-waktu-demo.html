@@ -17,10 +17,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- =====================================================================
-     FOREVERSE · LDR · Tema "Dua Jendela" — BERKAS DEMO
+     FOREVERSE · LDR · Tema "Dua Jendela" - BERKAS DEMO
      Data Amira & Adriel dipatok langsung untuk demo publik. Pesanan
      sungguhan memakai zona-waktu.html (datanya disisipkan server).
-     Berkas ini dibuat ulang dari mesin aslinya — jangan diedit tangan.
+     Berkas ini dibuat ulang dari mesin aslinya - jangan diedit tangan.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
 {
@@ -96,12 +96,12 @@
 
 <style>
 /* =====================================================================
-   DUA JENDELA — layar terbelah dua kota.
+   DUA JENDELA - layar terbelah dua kota.
    · panggungnya SATU layar tetap yang terbelah: potret atas-bawah,
      landscape kiri-kanan. Tidak ada kolom tunggal, tidak ada scroll.
    · tiap sisi diterangi sesuai JAM ASLI kotanya saat surat dibuka
    · benda di meja diposisikan dalam persen kotak MEJA-nya sendiri,
-     berdiri di garis permukaan meja — tidak ada yang melayang
+     berdiri di garis permukaan meja - tidak ada yang melayang
    · penutup: garis tengah hilang, dua kamar jadi satu ruangan
    ===================================================================== */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -138,7 +138,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .papan .kota{font-size:.8rem;font-weight:600;opacity:.75}
 .papan .jam{margin-left:auto;font-family:var(--serif);font-weight:700;font-size:1.35rem;letter-spacing:.02em}
 .sisi.gelap{color:#FFF2DE}
-/* jendela & foto rata atas — sisa ruang di bawahnya dicadangkan untuk
+/* jendela & foto rata atas - sisa ruang di bawahnya dicadangkan untuk
    gelembung pikiran di atas jam meja, supaya tidak pernah menimpa */
 .dinding{flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:space-evenly;gap:10px;padding:2% 14px 0}
 .jendela{position:relative;height:66%;max-height:min(280px, 66%);aspect-ratio:4/3;border:4px solid var(--ink);border-radius:6px;overflow:hidden;
@@ -158,7 +158,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .meja .muka{position:absolute;left:0;right:0;top:38%;bottom:0;background:var(--kayu,#C99A63);border-top:4px solid var(--ink)}
 .meja .muka::after{content:"";position:absolute;left:0;right:0;top:12px;bottom:0;background:var(--kayu2,#A97B4A)}
 .benda{position:absolute;bottom:calc(62% - 2px);display:flex;flex-direction:column;align-items:center;
-  /* membesar mengikuti tinggi kamar (--sk dari JS), berporos di bawah —
+  /* membesar mengikuti tinggi kamar (--sk dari JS), berporos di bawah -
      tetap berpijak di permukaan meja; cincin penanda ikut membesar */
   transform:translateX(-50%) scale(var(--sk,1));transform-origin:50% 100%}
 .label{position:absolute;top:calc(38% + 20px);transform:translateX(-50%);font-size:.7rem;font-weight:700;background:var(--krem);
@@ -189,7 +189,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .dering{animation:bergetar .3s linear infinite}
 
 /* paket yang menyeberangi garis tengah */
-/* pointer-events:none — kotaknya hanya gambar; ketukan harus tembus ke
+/* pointer-events:none - kotaknya hanya gambar; ketukan harus tembus ke
    benda di bawahnya yang memang menerima ketukan (bercincin aktif) */
 #paket{position:fixed;z-index:6;width:62px;height:50px;left:0;top:0;pointer-events:none;transform-origin:50% 100%;transition:transform 1.3s cubic-bezier(.55,0,.35,1)}
 #paket .kotak{position:absolute;inset:0;background:#C98A52;border:3px solid var(--ink);border-radius:4px}
@@ -343,7 +343,7 @@ var el = function(t,c,x){ var e=document.createElement(t); if(c) e.className=c; 
 var buzz = function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
 function tk(v){ return String(v == null ? '' : v).trim(); }
 
-/* Kota — harus sama persis dengan KOTA_SAH di functions/api/[[jalur]].js
+/* Kota - harus sama persis dengan KOTA_SAH di functions/api/[[jalur]].js
    dan KOTA_LDR di pesan.html. Zona IANA, bukan selisih GMT tetap. */
 var KOTA = {
   jakarta:{nama:"Jakarta",tz:"Asia/Jakarta"}, medan:{nama:"Medan",tz:"Asia/Jakarta"}, surabaya:{nama:"Surabaya",tz:"Asia/Jakarta"},
@@ -540,7 +540,7 @@ function bukaPanggil(){
   buka([wrap]);
 }
 
-/* ── 2 · game: "jam segini aku lagi apa?" — jawabannya bergantung
+/* ── 2 · game: "jam segini aku lagi apa?" - jawabannya bergantung
    pada JAM ASLI di kota pengirim saat surat dibuka ── */
 /* kebiasaan yang jamnya PALING DEKAT dengan jam sekarang di kota
    pengirim (melingkar 24 jam). Bukan "yang terakhir sudah lewat": jam
@@ -598,7 +598,7 @@ function bukaSurat(){
   }, 'putih');
   tutupB.hidden = true;
   var i = 0, kini = waktuDi(KA.tz);
-  /* panel dibuka DULU, baru rangkaian pesannya dimulai — kalau dibalik,
+  /* panel dibuka DULU, baru rangkaian pesannya dimulai - kalau dibalik,
      pemeriksaan "panel masih terbuka?" di langkah pertama langsung gagal
      dan tidak ada satu pesan pun yang muncul */
   buka([ h3('Pesan masuk'), hp, tutupB ]);
@@ -617,7 +617,7 @@ function bukaSurat(){
   })();
 }
 
-/* ── 4 · game: samakan jadwal — jam meja penerima diputar ke jam
+/* ── 4 · game: samakan jadwal - jam meja penerima diputar ke jam
    lokalnya yang setara dengan rutinitas si pengirim, dua ronde ── */
 function keJadwal(){
   setLangkah(3);
@@ -626,7 +626,7 @@ function keJadwal(){
 function bukaJadwal(ronde){
   var r = RUT[ronde === 0 ? 0 : 2], d = selisih();
   var asal = menitDari(r.jam), target = ((asal + d) % 1440 + 1440) % 1440;
-  var nilai = asal;                                    // jarum mulai di angka yang sama — selisihnya yang harus dicari
+  var nilai = asal;                                    // jarum mulai di angka yang sama - selisihnya yang harus dicari
   var kA = el('div', 'k'), kB = el('div', 'k');
   kA.appendChild(el('small', '', KA.nama)); kA.appendChild(el('b', '', tulis(asal))); kA.appendChild(el('em', '', ''));
   kB.appendChild(el('small', '', KB.nama + ' (punyamu)'));

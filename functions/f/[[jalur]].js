@@ -7,7 +7,7 @@
 export async function onRequestGet({ params, env, request }) {
   const kunci = (Array.isArray(params.jalur) ? params.jalur.join("/") : String(params.jalur || ""));
   /* Hanya berkas pesanan: <kode>/<nama>.<foto|lagu>. Bucket yang sama juga
-     menyimpan cadangan database (cadangan/…json) — itu TIDAK BOLEH bisa
+     menyimpan cadangan database (cadangan/…json) - itu TIDAK BOLEH bisa
      dibuka dari sini. Daftar putih, bukan daftar hitam. */
   if (!/^[a-z0-9]{4,16}\/[a-z0-9-]{1,40}\.(jpg|png|webp|mp3|m4a|aac)$/i.test(kunci))
     return new Response("Tidak ditemukan", { status: 404 });

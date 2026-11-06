@@ -53,7 +53,7 @@
 </script>
 <style>
 /* Palet: biru tengah malam, emas sampanye, magenta, toska. Atap gedung
-   di malam pergantian tahun — beda dari Rumah yang Menyala (hijau-merah). */
+   di malam pergantian tahun - beda dari Rumah yang Menyala (hijau-merah). */
 :root{
   --malam:#141A3A; --malam2:#1F2758; --emas:#F2D49B; --emas2:#FFE9BD; --magenta:#E2457A; --toska:#3FC1C9; --putih:#F7F5FF; --ink:#15142A; --muted:#6C6A86;
   --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --angka:'Space Grotesk','Plus Jakarta Sans',sans-serif; --tangan:'Caveat',cursive;
@@ -89,7 +89,7 @@ img{-webkit-user-drag:none;pointer-events:none}
   border:0;border-radius:99px;padding:13px 28px;font:700 15px var(--sans);color:var(--ink);background:linear-gradient(180deg,var(--emas2),var(--emas));box-shadow:0 0 22px rgba(242,212,155,.55);cursor:pointer}
 #lanjut.tampil{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 
-/* adegan: kamera mendongak — adegan baru naik dari bawah */
+/* adegan: kamera mendongak - adegan baru naik dari bawah */
 .sc{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 50px);bottom:calc(env(safe-area-inset-bottom) + 82px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*5);
   opacity:0;pointer-events:none;transform:translateY(40%);transition:transform 1s cubic-bezier(.5,0,.2,1),opacity .6s;z-index:5}
 .sc.aktif{opacity:1;pointer-events:auto;transform:none}
@@ -304,7 +304,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -403,7 +403,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }

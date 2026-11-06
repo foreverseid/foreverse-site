@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <!-- =====================================================================
-     FOREVERSE · Get Well Soon · Tema "36,5" — BERKAS DEMO
+     FOREVERSE · Get Well Soon · Tema "36,5" - BERKAS DEMO
      Data Amira & Adriel sudah dipatok langsung di bawah untuk pratinjau/
      demo publik. Untuk pesanan sungguhan, pakai getwell-365.html
      (datanya disisipkan server saat itu juga).
@@ -70,7 +70,7 @@
 
 <style>
 /* =====================================================================
-   PALET — kamar sore yang terang. Palet merek dipakai apa adanya supaya
+   PALET - kamar sore yang terang. Palet merek dipakai apa adanya supaya
    kontrasnya tinggi dan bentuknya kebaca: kertas krem, garis navy,
    koral untuk demam, mint untuk pulih, madu untuk cahaya lampu.
    --panas (1 -> 0) hanya mengubah WARNA CAHAYA, tidak pernah ketajaman.
@@ -111,7 +111,7 @@ svg{display:block}
 
 /* ── KAMAR: panggung tetap, tidak discroll ───────────────────────── */
 /* layar mendatar: kamar dirender di ukuran potret tetap (412×836) lalu
-   diskalakan utuh ke tengah — komposisinya sama persis dengan versi HP,
+   diskalakan utuh ke tengah - komposisinya sama persis dengan versi HP,
    jadi tidak ada benda yang bisa bertumpuk. Sisi kiri-kanan = dinding & lantai. */
 #ruang.skala{right:auto;bottom:auto;left:50%;width:412px;height:836px;margin-left:-206px;
   transform:scale(var(--k,1));transform-origin:50% 0}
@@ -140,7 +140,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 .obj.beres .ring{display:none}
 .obj.beres .label{background:var(--mint-muda);border-color:var(--mint);color:#17483E}
 .obj.beres .label::after{content:" ✓"}
-/* label nama objek — selalu tampil supaya penerima tahu itu benda apa */
+/* label nama objek - selalu tampil supaya penerima tahu itu benda apa */
 .label{position:absolute;left:50%;transform:translateX(-50%);bottom:-24px;white-space:nowrap;
   font-size:.64rem;font-weight:900;letter-spacing:.02em;padding:3px 8px;border-radius:999px;
   background:#fff;border:1.5px solid var(--navy-18);color:var(--navy-70);z-index:5}
@@ -172,7 +172,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 .jd-kait i::after{content:"";position:absolute;left:3px;right:3px;top:12px;height:10px;
   background:repeating-linear-gradient(180deg,var(--navy) 0 2px,transparent 2px 4px);opacity:.5}
 
-/* foto 1 — ditempel di dinding, miring, pakai selotip */
+/* foto 1 - ditempel di dinding, miring, pakai selotip */
 #fotoA{right:5%;top:4%;width:23%;transform:rotate(5deg)}
 .ft-tempel{position:relative;padding:7% 7% 16%;background:#fff;border:2.5px solid var(--navy);
   box-shadow:3px 4px 0 var(--navy-18)}
@@ -198,7 +198,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 .bt-zona.siap{background:rgba(242,193,78,.35);border-color:var(--navy)}
 #bantal.beres .bt-zona{border-color:var(--mint);color:#17483E}
 
-/* handuk kompres — tergeletak di selimut */
+/* handuk kompres - tergeletak di selimut */
 #handuk{left:5%;bottom:4%;width:21%;min-width:76px;z-index:9}
 .hd-kain{position:relative;width:100%;aspect-ratio:1.4/1;min-height:52px;border-radius:8px;
   background:repeating-linear-gradient(135deg,var(--mint-muda) 0 8px,#B7DCD2 8px 16px);
@@ -210,7 +210,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 .tahanRing circle{fill:none;stroke:var(--coral);stroke-width:4;stroke-linecap:round;
   transform:rotate(-90deg);transform-origin:50% 50%}
 
-/* meja samping — permukaannya di bottom:42%, semua benda duduk di situ,
+/* meja samping - permukaannya di bottom:42%, semua benda duduk di situ,
    dan di bawahnya ada rak terbuka tempat kotak obat. */
 #meja{right:0;bottom:0;width:54%;height:46%;background:var(--kayu);
   border:3px solid var(--navy);border-radius:10px 0 0 0;z-index:4}
@@ -219,7 +219,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 #meja .rak{position:absolute;left:6%;right:6%;top:26%;bottom:10%;background:var(--kertas-2);
   border:3px solid var(--navy);border-radius:6px}
 
-/* lampu meja — duduk di permukaan meja */
+/* lampu meja - duduk di permukaan meja */
 #lampu{right:7%;bottom:46%;width:21%;min-width:80px;z-index:5}
 .lp-kap{width:100%;aspect-ratio:2/1.1;clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);
   background:var(--madu);border-bottom:3px solid var(--navy)}
@@ -255,7 +255,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
   font-weight:900;font-size:.76rem;color:var(--coral-tua);opacity:0;transition:opacity .5s}
 .tm-angka.jelas{opacity:1}
 
-/* kotak obat — 3 laci jelas, bukan kisi-kisi */
+/* kotak obat - 3 laci jelas, bukan kisi-kisi */
 #kotakobat{right:9%;bottom:14%;width:38%;min-width:148px;z-index:7}
 .ko-badan{position:relative;width:100%;background:#fff;border:3px solid var(--navy);border-radius:8px;
   padding:6px;display:flex;flex-direction:column;gap:5px}
@@ -276,11 +276,11 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 #ponsel.nyala .pn-layar{background:linear-gradient(180deg,#CDE9E1,var(--mint));
   box-shadow:0 0 16px 4px rgba(95,183,163,.5)}
 
-/* foto 2 — bingkai berdiri di meja */
+/* foto 2 - bingkai berdiri di meja */
 #fotoB{left:6%;top:32%;width:20%;min-width:66px;z-index:5;transform:rotate(-3deg)}
 .ft-bingkai{position:relative;padding:8%;background:var(--kain);border:3px solid var(--navy)}
 .ft-bingkai img{width:100%;aspect-ratio:1/1.15;object-fit:cover;background:var(--kertas-2)}
-/* foto 3 — digantung di tali jepitan */
+/* foto 3 - digantung di tali jepitan */
 #fotoC{left:46%;top:9%;width:19%;min-width:64px;z-index:5;transform:rotate(-4deg)}
 .ft-jepit{position:relative;padding:7% 7% 14%;background:#fff;border:2.5px solid var(--navy)}
 .ft-jepit img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--kertas-2)}
@@ -348,7 +348,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:64px;
 .rt-jalan[disabled]{opacity:.4}
 .rt-main{margin-top:11px;text-align:center;font-family:var(--hand);font-size:1.2rem;min-height:1.4em}
 
-/* irama napas — tekan-tahan PENDEK, lalu lepas */
+/* irama napas - tekan-tahan PENDEK, lalu lepas */
 .np-ring{position:relative;width:min(200px,58vw);aspect-ratio:1;margin:12px auto 0;border-radius:50%;
   background:var(--mint-muda);border:3px solid var(--navy);transform:scale(var(--np,.66));
   transition:transform .09s linear;touch-action:none;display:grid;place-items:center}
@@ -651,7 +651,7 @@ body.jalan #suara.ada{display:grid}
    Mesin tema "36,5" × Get Well Soon.
    Satu angka menggerakkan halaman: SUHU 39,2 -> 36,5.
    Perubahan suhu hanya mengubah WARNA CAHAYA, tidak pernah ketajaman
-   gambar — tidak ada blur() sama sekali di tema ini.
+   gambar - tidak ada blur() sama sekali di tema ini.
    ═══════════════════════════════════════════════════════════════ */
 function FV_MULAI(){
 'use strict';
@@ -825,7 +825,7 @@ function beres(sel){
 function langkahIni(){ return (LANGKAH[langkah]||{}).objek; }
 
 /* ── seret pendek ── */
-/* skala panggung — K dipakai untuk mengubah piksel layar ke piksel kamar */
+/* skala panggung - K dipakai untuk mengubah piksel layar ke piksel kamar */
 var K=1;
 function aturSkala(){
   var r=$('#ruang'), w=innerWidth, h=innerHeight-64;
@@ -871,7 +871,7 @@ $('#dekatBg').addEventListener('click',function(){
   tutupDekat();
 });
 
-/* ══════ 1 · PEMBUKA — layar terang dengan tombol jelas ══════ */
+/* ══════ 1 · PEMBUKA - layar terang dengan tombol jelas ══════ */
 $('#tblMulai').addEventListener('click', function(){
   ac(); SFX.ketuk(); buzz(12);
   document.body.classList.add('jalan');
@@ -881,7 +881,7 @@ $('#tblMulai').addEventListener('click', function(){
   setTimeout(majuLangkah,350);
 });
 
-/* ══════ 2 · JENDELA — seret kait ke kanan ══════ */
+/* ══════ 2 · JENDELA - seret kait ke kanan ══════ */
 (function(){
   var node=$('#jendela'), kait=$('#jdKait'), daun=$('#jdDaun'), kelar=false;
   seret(kait, function(dx){
@@ -901,7 +901,7 @@ $('#tblMulai').addEventListener('click', function(){
   }
 })();
 
-/* ══════ 3 · GELAS — ketuk untuk minum ══════ */
+/* ══════ 3 · GELAS - ketuk untuk minum ══════ */
 (function(){
   var node=$('#gelas'), badan=$('#glBadan'), air=$('#glAir'), dasar=$('#glDasar'), kelar=false;
   air.style.setProperty('--air','70%');
@@ -922,7 +922,7 @@ $('#tblMulai').addEventListener('click', function(){
   node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); minum(); } });
 })();
 
-/* ══════ 4 · KOMPRES — seret ke dahi, lalu TAHAN 0,8 detik ══════
+/* ══════ 4 · KOMPRES - seret ke dahi, lalu TAHAN 0,8 detik ══════
    Tahannya sengaja pendek, dan menu long-press browser sudah dicegah
    di atas (contextmenu + touchstart + callout).                     */
 (function(){
@@ -971,7 +971,7 @@ $('#tblMulai').addEventListener('click', function(){
   }
 })();
 
-/* ══════ 5 · KOTAK OBAT — 3 laci, diketuk ══════ */
+/* ══════ 5 · KOTAK OBAT - 3 laci, diketuk ══════ */
 (function(){
   var badan=$('#koBadan'), sisa=0;
   DOSIS.slice(0,3).forEach(function(d,i){
@@ -1002,7 +1002,7 @@ $('#tblMulai').addEventListener('click', function(){
   if(!sisa) $('#kotakobat').style.display='none';
 })();
 
-/* ══════ 6 · FOTO — tiga tempat berbeda di kamar ══════ */
+/* ══════ 6 · FOTO - tiga tempat berbeda di kamar ══════ */
 (function(){
   var slot=['#fotoA','#fotoB','#fotoC'], sudah=0, perlu=0;
   slot.forEach(function(s,i){
@@ -1027,7 +1027,7 @@ $('#tblMulai').addEventListener('click', function(){
   });
 })();
 
-/* ══════ 7 · RUTINITAS — ketuk hal, lalu ketuk nomornya ══════ */
+/* ══════ 7 · RUTINITAS - ketuk hal, lalu ketuk nomornya ══════ */
 function bukaRutin(){
   var hal=(D.enakan||[]).slice(0,3);
   if(!hal.length) return majuLangkah();
@@ -1093,7 +1093,7 @@ function bukaRutin(){
   };
 }
 
-/* ══════ 8 · IRAMA NAPAS — tahan 1,1 detik, lalu lepas ══════
+/* ══════ 8 · IRAMA NAPAS - tahan 1,1 detik, lalu lepas ══════
    Tekan-tahan tetap dipakai, tapi pendek (1,1 detik per tarikan) dan
    menu long-press browser sudah dicegah.                            */
 function bukaNapas(){
@@ -1152,7 +1152,7 @@ function bukaNapas(){
   }
 }
 
-/* ══════ 9 · TERMOMETER — diketuk, dibaca ══════ */
+/* ══════ 9 · TERMOMETER - diketuk, dibaca ══════ */
 (function(){
   var node=$('#termo'), angka=$('#tmAngka'), kelar=false;
   function baca(){
@@ -1168,7 +1168,7 @@ function bukaNapas(){
   node.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); baca(); } });
 })();
 
-/* ══════ 10 · SURAT — lipatannya dibuka satu-satu ══════ */
+/* ══════ 10 · SURAT - lipatannya dibuka satu-satu ══════ */
 function bukaLembar(){
   $('#lembar').classList.add('tampil');
   $('#arahan').innerHTML='Satu lipatan, satu bagian. <b>Ketuk tiap lipatannya</b>.';
@@ -1199,7 +1199,7 @@ function bukaLembar(){
   });
 })();
 
-/* ══════ 11 · PENUTUP — tarik tali lampu ══════ */
+/* ══════ 11 · PENUTUP - tarik tali lampu ══════ */
 (function(){
   var tali=$('#tali'), kelar=false;
   seret(tali, function(dx,dy){

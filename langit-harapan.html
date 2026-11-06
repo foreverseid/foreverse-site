@@ -98,7 +98,7 @@
 
 <style>
 /* =====================================================================
-   FOREVERSE ENGINE v1 — gaya komponen bersama
+   FOREVERSE ENGINE v1 - gaya komponen bersama
    Setiap tema wajib mendefinisikan variabel ini di :root:
      --bg --card --ink --muted --p --p-dk --a1 --a2 --soft
      --disp (font judul) --hand (tulisan tangan) --sans (teks)
@@ -231,7 +231,7 @@ body.opened #soundBtn{display:grid}
 
 
 /* =====================================================================
-   TEMA: LANGIT HARAPAN — hangat, senja, lembut
+   TEMA: LANGIT HARAPAN - hangat, senja, lembut
    Palet: violet senja · peach · emas bintang · lilac · tinta ungu
    ===================================================================== */
 :root{
@@ -435,7 +435,7 @@ h2{font-weight:600}
   </div>
 </section>
 
-<!-- ===================== 4. INTERAKTIF 1 — GALERI ===================== -->
+<!-- ===================== 4. INTERAKTIF 1 - GALERI ===================== -->
 <section id="galeri">
   <div class="wrap">
     <div class="reveal">
@@ -447,7 +447,7 @@ h2{font-weight:600}
   </div>
 </section>
 
-<!-- ===================== 5. GAME 1 — KUIS ===================== -->
+<!-- ===================== 5. GAME 1 - KUIS ===================== -->
 <section id="kuis">
   <div class="wrap">
     <div class="reveal">
@@ -462,7 +462,7 @@ h2{font-weight:600}
   </div>
 </section>
 
-<!-- ===================== 6. INTERAKTIF 2 — BINTANG HARAPAN ===================== -->
+<!-- ===================== 6. INTERAKTIF 2 - BINTANG HARAPAN ===================== -->
 <section id="harapan">
   <div class="wrap">
     <div class="reveal">
@@ -490,7 +490,7 @@ h2{font-weight:600}
   </div>
 </section>
 
-<!-- ===================== 7. GAME 2 — PUZZLE ===================== -->
+<!-- ===================== 7. GAME 2 - PUZZLE ===================== -->
 <section id="puzzle">
   <div class="wrap">
     <div class="reveal">
@@ -570,7 +570,7 @@ h2{font-weight:600}
      F.greet()         teks ucapan sesuai pilihan client
      F.sfx / F.tone    efek suara buatan browser (tanpa file)
      F.fx              konfeti
-     F.music           lagu latar (unggah sendiri / galeri, potongan mulai–selesai)
+     F.music           lagu latar (unggah sendiri / galeri, potongan mulai-selesai)
      F.cake            ADEGAN LANGIT: bintang umur lama jatuh, bintang baru terbit
      F.ui.*            interaktif: kartu balik, kupon gosok, galeri, lightbox
      F.games.*         game: memori, tangkap kado, kuis, puzzle foto
@@ -782,7 +782,7 @@ F.toast = (msg, ms=2400) => {
 };
 
 /* =====================================================================
-   ADEGAN LANGIT — "bintang umur lama jatuh, bintang umur baru terbit"
+   ADEGAN LANGIT - "bintang umur lama jatuh, bintang umur baru terbit"
    Umurnya adalah bintang itu sendiri: tiap digit umur lama bersinar di
    langit sebagai bintang angka. Diketuk satu-satu untuk membuat harapan,
    lalu bintang-bintang itu meluncur jatuh melewati ufuk, dan bintang
@@ -1024,7 +1024,7 @@ F.ui.lightbox = (() => {
    ===================================================================== */
 F.games = {};
 
-/* Kartu Memori — pakai foto client (3 foto = 6 kartu) */
+/* Kartu Memori - pakai foto client (3 foto = 6 kartu) */
 F.games.memory = (el, photos, opt={}) => {
   const grid = F.el('div','mem-grid'), info = F.el('div','mem-info');
   const movesEl = F.el('span', null, 'Langkah: 0'), pairsEl = F.el('span', null, `Pasangan: 0/${photos.length}`);
@@ -1061,7 +1061,7 @@ F.games.memory = (el, photos, opt={}) => {
   return { deal };
 };
 
-/* Tangkap Kado — game refleks berbasis kanvas */
+/* Tangkap Kado - game refleks berbasis kanvas */
 F.games.catcher = (wrap, opt={}) => {
   const GOAL = opt.goal || 10;
   const good = opt.good || ['🎁','🎈','🍰','🧁'];
@@ -1119,7 +1119,7 @@ F.games.catcher = (wrap, opt={}) => {
   over.querySelector('button').onclick = start;
 };
 
-/* Kuis — [{tanya, pilihan:[a,b,c], benar:0..2}] */
+/* Kuis - [{tanya, pilihan:[a,b,c], benar:0..2}] */
 F.games.quiz = (el, qs, opt={}) => {
   let i = 0, score = 0;
   function show(){
@@ -1154,7 +1154,7 @@ F.games.quiz = (el, qs, opt={}) => {
   show();
 };
 
-/* Puzzle foto 3x3 — ketuk dua kotak untuk menukar */
+/* Puzzle foto 3x3 - ketuk dua kotak untuk menukar */
 F.games.puzzle = (el, src, opt={}) => {
   const N = 3;
   const grid = F.el('div','pz-grid'), info = F.el('div','pz-info','Ketuk dua kotak untuk menukar posisinya');
@@ -1196,7 +1196,7 @@ F.games.puzzle = (el, src, opt={}) => {
 </script>
 <script>
 /* =====================================================================
-   TEMA: LANGIT HARAPAN — alur halaman
+   TEMA: LANGIT HARAPAN - alur halaman
    ===================================================================== */
 (function(){
 const { $, $$, wait, el } = F;

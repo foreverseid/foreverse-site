@@ -518,7 +518,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -995,11 +995,11 @@ window.FV_MULAI = FV_MULAI;
 <script>
 /* ══════════════════════════════════════════════════════════════
    Pemuat: ambil isi surat, lalu jalankan tampilannya.
-   Dua cara pakai —
+   Dua cara pakai -
      /s/<kode>              → diambil dari server
      /surat.html#pratinjau  → dibuka dari halaman /pesan lewat tombol
                               "Lihat pratinjau penuh"; isinya diambil
-                              dari sessionStorage, bukan postMessage —
+                              dari sessionStorage, bukan postMessage -
                               tema ini terkunci-game, jadi pratinjau
                               dimuat ulang penuh tiap kali dibuka,
                               bukan ditambal sebagian saat mengetik.
@@ -1043,7 +1043,7 @@ window.FV_MULAI = FV_MULAI;
   if(!kode){ gagal("Tautan ini tidak lengkap. Minta tautan yang benar ke pengirimnya, ya."); return; }
 
   /* unduh semua foto dulu di balik tirai, supaya tidak muncul sepotong-sepotong.
-     Batas tunggu 12 detik — kalau sinyal sangat lambat, surat tetap dibuka. */
+     Batas tunggu 12 detik - kalau sinyal sangat lambat, surat tetap dibuka. */
   function siapkanFoto(daftar){
     var tugas = (daftar || []).filter(function(f){ return f && f.src; }).map(function(f){
       return new Promise(function(beres){

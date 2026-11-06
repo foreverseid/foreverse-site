@@ -3,7 +3,7 @@
 
    Disajikan worker.js di /s/<kode> selama surat masih terkunci (PIN,
    pertanyaan rahasia, tanggal) atau belum waktunya dibuka (kunci waktu).
-   Halaman ini TIDAK berisi isi surat sama sekali — hanya nama penerima,
+   Halaman ini TIDAK berisi isi surat sama sekali - hanya nama penerima,
    pertanyaan/petunjuk yang memang ditulis pengirim untuk dibaca penerima,
    dan waktu buka. Jawaban dicek di server (/api/buka); kalau benar, server
    memasang cookie tiket dan halaman dimuat ulang menjadi suratnya.
@@ -18,7 +18,7 @@ function esc(s) {
 }
 
 export function halamanGerbang(info, kode) {
-  /* selama kunci waktu belum lewat, yang tampil hanya hitung mundur —
+  /* selama kunci waktu belum lewat, yang tampil hanya hitung mundur -
      kunci lain (kalau ada) baru ditanyakan setelah waktunya tiba */
   if (info.buka) info = Object.assign({}, info, { jenis: "", petunjuk: "" });
   const judul = info.jenis === "pin" ? "Masukkan PIN-nya"

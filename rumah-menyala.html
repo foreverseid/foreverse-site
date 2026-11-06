@@ -54,7 +54,7 @@
 </script>
 <style>
 /* Palet: hijau cemara tua, merah cranberry, emas hangat, putih salju,
-   kayu. Satu malam Natal di rumahnya — tidak dipakai tema lain. */
+   kayu. Satu malam Natal di rumahnya - tidak dipakai tema lain. */
 :root{
   --cemara:#16392B; --cemara2:#1F4D3A; --merah:#A8323E; --merah2:#7E2230; --emas:#E8B64C; --emas2:#FFD98A; --salju:#F6F3EC; --kayu:#6B4426; --ink:#1A1512; --muted:#6B625A;
   --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --tangan:'Caveat',cursive;
@@ -368,7 +368,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -467,7 +467,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
@@ -486,7 +486,7 @@ function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
 
 /* ═══════════════════════════════════════════════════════════════
    Rumah yang Menyala (Hari Spesial · Natal). Satu malam Natal di
-   rumahnya: rumahnya gelap, lalu menyala bagian demi bagian —
+   rumahnya: rumahnya gelap, lalu menyala bagian demi bagian -
    lonceng pintu ditarik, kabel lampu dirangkai sampai pohon menyala
    (tiga ornamen = isian `harapan`), kaus kaki di perapian berisi
    foto, kereta rusa mengantar kado ke cerobong rumahnya, pita kado
@@ -498,7 +498,7 @@ SFX.lonceng=function(){ [1318,1760,2637].forEach(function(f,i){ tone(f,1.1-i*.2,
 SFX.ubin=function(){ tone(520,.05,{type:'triangle',vol:.08}); };
 SFX.kain=function(){ noise(.3,1600,.14); };
 
-/* salju — ringan, selalu turun; lebih lebat di penutup */
+/* salju - ringan, selalu turun; lebih lebat di penutup */
 var salju=(function(){
   var cv=$('#salju'), c=cv.getContext('2d'), P=[], W=0, H=0, lebat=40;
   function ukur(){ var d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; cv.width=W*d; cv.height=H*d; c.setTransform(d,0,0,d,0,0); }

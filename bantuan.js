@@ -120,7 +120,7 @@
   gaya.textContent = css;
   document.head.appendChild(gaya);
 
-  /* Avatar Vera: amplop kecil bermata — gaya "benda yang diberi wajah" khas tema Foreverse */
+  /* Avatar Vera: amplop kecil bermata - gaya "benda yang diberi wajah" khas tema Foreverse */
   var VERA = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#FAF3E8"/>' +
     '<rect x="9" y="14" width="30" height="22" rx="5" fill="#E8A5B0"/><path d="M10 16l14 11 14-11" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>' +
     '<circle cx="19" cy="29" r="1.8" fill="#2C2450"/><circle cx="29" cy="29" r="1.8" fill="#2C2450"/>' +
@@ -207,7 +207,7 @@
      tautan, gmn → bagaimana), akhiran -nya/-kah/-lah dibuang, lalu tiap
      kata dicocokkan dengan kata kunci secara longgar: sama persis, salah
      satu awalan yang lain (min. 4 huruf), atau beda satu huruf (salah ketik).
-     Kalau yakin → langsung dijawab; kalau ragu → ditawarkan 2–3 pertanyaan
+     Kalau yakin → langsung dijawab; kalau ragu → ditawarkan 2-3 pertanyaan
      yang paling mirip ("Mungkin maksudmu…"); kalau sama sekali tidak ada
      yang mirip → diarahkan ke WhatsApp/email. */
   var BAKU = {
@@ -297,7 +297,7 @@
         else if (k.length > 1 && k.some(function (w) {
           return w.length >= 4 && !UMUM[w] && t.some(function (x) { return samaKata(x, w); }); })) sebagian = 1;
       });
-      /* kecocokan sebagian paling banyak bernilai 1 — tidak pernah cukup
+      /* kecocokan sebagian paling banyak bernilai 1 - tidak pernah cukup
          untuk menjawab sendiri, hanya untuk saran "Mungkin maksudmu…" */
       return { q: q, n: n + sebagian };
     }).sort(function (a, b) { return b.n - a.n; });

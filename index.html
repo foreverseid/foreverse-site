@@ -31,7 +31,7 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   FOREVERSE — KONFIGURASI SITUS
+   FOREVERSE - KONFIGURASI SITUS
    Semua yang biasa kamu ubah ada di sini. Isi tanda kutipnya, simpan.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -981,13 +981,13 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   var s=M.map(function(m){ return "<span>"+m.emoji+" "+esc(m.nama)+"</span>"; }).join("");
   $("strip").innerHTML=s+s;
 
-  /* hitungan minat tema untuk dasbor — hanya nama tema, tanpa data pengunjung */
+  /* hitungan minat tema untuk dasbor - hanya nama tema, tanpa data pengunjung */
   function catat(tema,jenis){
     try{ navigator.sendBeacon("/api/catat", new Blob([JSON.stringify({tema:tema,jenis:jenis})],{type:"application/json"})); }catch(e){}
   }
   /* contoh */
   var current=null, currentMomen=M[0]?M[0].nama:"";
-  /* skala iframe mengikuti lebar layar ponsel — hanya dihitung ulang saat
+  /* skala iframe mengikuti lebar layar ponsel - hanya dihitung ulang saat
      LEBAR berubah, bukan saat tinggi berubah karena bilah alamat */
   var lebarTerakhir=0;
   function skalaPonsel(){
@@ -1006,7 +1006,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     $("pvFlow").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
     $("pvPilih").querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.t===k ? "true" : "false"); });
   }
-  /* momen pertama yang memuat sebuah tema — untuk tautan "Pesan tema ini" di halaman Contoh */
+  /* momen pertama yang memuat sebuah tema - untuk tautan "Pesan tema ini" di halaman Contoh */
   function momenDari(k){ for(var i=0;i<M.length;i++) if(M[i].tema.indexOf(k)>-1) return M[i].nama; return ""; }
   var semuaTema=[]; M.forEach(function(m){ m.tema.forEach(function(k){ if(semuaTema.indexOf(k)<0 && T[k]) semuaTema.push(k); }); });
   $("pvPilih").innerHTML=semuaTema.map(function(k){ return '<button type="button" data-t="'+esc(k)+'" aria-pressed="false">'+esc(T[k].nama)+'</button>'; }).join("");
@@ -1068,7 +1068,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   M.forEach(function(m,i){ if(awalMomen && m.nama.toLowerCase()===awalMomen.toLowerCase()) iAwal=i; });
   if(M.length) pick(iAwal);
 
-  /* harga & tema yang dibuka — diatur dari /developer tanpa deploy ulang */
+  /* harga & tema yang dibuka - diatur dari /developer tanpa deploy ulang */
   fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
     if(i.tutup){
       var pita = document.createElement("div");
@@ -1146,7 +1146,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     e.preventDefault(); pergi(a.getAttribute("href"));
   });
   addEventListener("popstate",tampilkan);
-  /* alias alamat lama: path lama, atau #bagian di beranda — query (?tema=) ikut dibawa */
+  /* alias alamat lama: path lama, atau #bagian di beranda - query (?tema=) ikut dibawa */
   var jl=location.pathname.replace(/\/+$/,"")||"/";
   var tuju=ALIAS[jl]||(jl==="/" && ALIAS[location.hash]);
   if(tuju){ var bag=tuju.split("#"); history.replaceState(null,"",bag[0]+location.search+(bag[1]?"#"+bag[1]:"")); }

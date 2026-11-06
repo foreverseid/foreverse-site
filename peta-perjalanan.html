@@ -65,21 +65,21 @@
 
 <style>
 /* =====================================================================
-   PALET TEMA — Peta Perjalanan: kertas peta tua, teal & terakota.
+   PALET TEMA - Peta Perjalanan: kertas peta tua, teal & terakota.
    Beda total dari palet merek (Bait): bukan cream/coral/navy/blush.
    ===================================================================== */
 :root{
-  --bg:#F3EAD6;           /* dasar halaman — kertas peta tua */
+  --bg:#F3EAD6;           /* dasar halaman - kertas peta tua */
   --card:#FFFBF2;         /* kartu & panel */
-  --ink:#2B2117;          /* teks & garis — coklat tua, bukan navy */
+  --ink:#2B2117;          /* teks & garis - coklat tua, bukan navy */
   --muted:rgba(43,33,23,.62);
   --faint:rgba(43,33,23,.26);
   --hair:rgba(43,33,23,.13);
-  --p:#2F6F6B;            /* teal — aksi utama */
+  --p:#2F6F6B;            /* teal - aksi utama */
   --p-dk:#1E4D4A;
-  --a1:#C97A46;           /* terakota — pin, rute */
+  --a1:#C97A46;           /* terakota - pin, rute */
   --a1-dk:#A15E33;
-  --soft:#E7D9BC;         /* sand — isian lembut */
+  --soft:#E7D9BC;         /* sand - isian lembut */
   --soft-lt:#F1E6CC;
   --disp:'Fraunces',Georgia,serif;
   --hand:'Caveat',cursive;
@@ -125,7 +125,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 @keyframes hintFlash{50%{opacity:.25}}
 
 /* =====================================================================
-   SLOT 1 — PEMBUKA: Peta Gulung
+   SLOT 1 - PEMBUKA: Peta Gulung
    Satu gestur: tarik batang gulungannya ke samping, petanya tersingkap
    dari kiri ke kanan (bukan buka ikatan/lipatan seperti tema lain).
    ===================================================================== */
@@ -150,7 +150,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 #open.gone .roll-hint{opacity:0}
 
 /* =====================================================================
-   SLOT 2 — GAME 1: Susun Rute (seret keping kata ke penanda yang tepat)
+   SLOT 2 - GAME 1: Susun Rute (seret keping kata ke penanda yang tepat)
    ===================================================================== */
 #rute{background:linear-gradient(180deg,var(--bg),var(--card))}
 .card{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 5px 22px rgba(43,33,23,.07),inset 0 0 0 1px var(--hair);margin-top:16px}
@@ -175,7 +175,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .route-done.show{display:block;animation:fin .5s}
 
 /* =====================================================================
-   SLOT 3 — INTERAKTIF 1: Teropong Saku (geser lensa untuk menyingkap foto)
+   SLOT 3 - INTERAKTIF 1: Teropong Saku (geser lensa untuk menyingkap foto)
    ===================================================================== */
 #teropong{background:var(--card)}
 .scope-strip{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
@@ -189,7 +189,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .scope-cue{text-align:center;font-size:.76rem;color:var(--muted);margin-top:10px}
 
 /* =====================================================================
-   SLOT 4 — MOMEN KHAS: Rute yang Memanjang
+   SLOT 4 - MOMEN KHAS: Rute yang Memanjang
    Satu gestur tarik-menelusuri: garis putus-putus jadi garis padat
    mengikuti jari, berakhir dengan pin baru tertancap.
    ===================================================================== */
@@ -201,7 +201,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .stamp-msg{text-align:center;font-family:var(--hand);font-size:1.4rem;color:var(--p);min-height:1.4em;line-height:1.2;margin-top:10px}
 
 /* =====================================================================
-   SLOT 5 — GAME 2: Titik Singgah Berurutan
+   SLOT 5 - GAME 2: Titik Singgah Berurutan
    ===================================================================== */
 #singgah{background:var(--bg)}
 .stop-board{position:relative;height:210px;border-radius:14px;background:linear-gradient(180deg,#EFE2C4,#E3D2AE);overflow:hidden}
@@ -213,7 +213,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .stop-info{text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);margin-top:12px}
 
 /* =====================================================================
-   SLOT 6 — INTERAKTIF 2: Kompas yang Mengunci
+   SLOT 6 - INTERAKTIF 2: Kompas yang Mengunci
    Putar jarumnya (gestur melingkar) sampai mengunci ke utara.
    ===================================================================== */
 #kompas-kunci{background:linear-gradient(180deg,var(--bg),var(--card))}
@@ -226,7 +226,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .secret-foot{font-size:.72rem;color:var(--faint);margin-top:10px;font-style:italic}
 
 /* =====================================================================
-   SLOT 7 — SURAT
+   SLOT 7 - SURAT
    ===================================================================== */
 #surat{background:var(--card)}
 .lock{text-align:center;margin-top:18px;background:var(--bg);border-radius:20px;padding:24px 20px;box-shadow:inset 0 0 0 1px var(--hair)}
@@ -253,10 +253,10 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 .lt-sign b{font-family:var(--hand);font-size:1.8rem;font-weight:700;color:var(--ink);line-height:1.1}
 
 /* =====================================================================
-   SLOT 8 — PENUTUP: Segel Foreverse (satu-satunya tempat merek muncul)
+   SLOT 8 - PENUTUP: Segel Foreverse (satu-satunya tempat merek muncul)
    Ritual wajib di setiap tema/momen: pecahkan segel di pembuka, tekan
    segel baru di sini. Mark dua-busur Foreverse-nya identik di semua
-   tema — hanya warna lilinnya yang menyesuaikan palet tema ini.
+   tema - hanya warna lilinnya yang menyesuaikan palet tema ini.
    ===================================================================== */
 #segel{background:linear-gradient(180deg,var(--card),var(--bg));padding-bottom:86px}
 .wax{position:relative;width:118px;height:118px;margin:22px auto 0}
@@ -313,7 +313,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 <div id="toast"></div>
 <button id="music" aria-label="Suara">🔊</button>
 
-<!-- ============ SLOT 1 — PEMBUKA: PETA GULUNG ============ -->
+<!-- ============ SLOT 1 - PEMBUKA: PETA GULUNG ============ -->
 <div id="open">
   <div class="op-to"><small>Untuk</small><b data-f="penerima"></b></div>
 
@@ -341,7 +341,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
 </div>
 
 <main>
-<!-- ============ SLOT 2 — GAME 1: SUSUN RUTE ============ -->
+<!-- ============ SLOT 2 - GAME 1: SUSUN RUTE ============ -->
 <section id="rute">
   <div class="wrap">
     <div class="reveal">
@@ -362,7 +362,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 3 — INTERAKTIF 1: TEROPONG SAKU ============ -->
+<!-- ============ SLOT 3 - INTERAKTIF 1: TEROPONG SAKU ============ -->
 <section id="teropong">
   <div class="wrap">
     <div class="reveal">
@@ -375,7 +375,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 4 — MOMEN KHAS: RUTE YANG MEMANJANG ============ -->
+<!-- ============ SLOT 4 - MOMEN KHAS: RUTE YANG MEMANJANG ============ -->
 <section id="rute-tumbuh">
   <div class="wrap center">
     <div class="reveal">
@@ -400,7 +400,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 5 — GAME 2: TITIK SINGGAH BERURUTAN ============ -->
+<!-- ============ SLOT 5 - GAME 2: TITIK SINGGAH BERURUTAN ============ -->
 <section id="singgah">
   <div class="wrap">
     <div class="reveal">
@@ -420,7 +420,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 6 — INTERAKTIF 2: KOMPAS YANG MENGUNCI ============ -->
+<!-- ============ SLOT 6 - INTERAKTIF 2: KOMPAS YANG MENGUNCI ============ -->
 <section id="kompas-kunci">
   <div class="wrap">
     <div class="reveal">
@@ -450,7 +450,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 7 — SURAT ============ -->
+<!-- ============ SLOT 7 - SURAT ============ -->
 <section id="surat">
   <div class="wrap">
     <div class="reveal">
@@ -474,7 +474,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
   </div>
 </section>
 
-<!-- ============ SLOT 8 — PENUTUP: SEGEL FOREVERSE ============ -->
+<!-- ============ SLOT 8 - PENUTUP: SEGEL FOREVERSE ============ -->
 <section id="segel" hidden>
   <div class="wrap center">
     <div class="reveal in">
@@ -729,7 +729,7 @@ document.addEventListener('dragstart',function(e){
 },true);
 
 /* =====================================================================
-   SLOT 1 — PEMBUKA: PETA GULUNG
+   SLOT 1 - PEMBUKA: PETA GULUNG
    Satu gestur tarik mendatar: batang gulungan ditarik ke samping,
    kertas penutupnya tersingkap dari kiri ke kanan.
    ===================================================================== */
@@ -763,9 +763,9 @@ document.addEventListener('dragstart',function(e){
 })();
 
 /* =====================================================================
-   SLOT 2 — GAME 1: SUSUN RUTE
+   SLOT 2 - GAME 1: SUSUN RUTE
    Keping kata diseret (drag bebas 2 dimensi) ke penanda bernomor yang
-   cocok di sepanjang garis rute — bukan tangkap benda jatuh maupun
+   cocok di sepanjang garis rute - bukan tangkap benda jatuh maupun
    tukar-posisi dengan ketukan.
    ===================================================================== */
 var DONE={rute:false,singgah:false};
@@ -856,8 +856,8 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 3 — INTERAKTIF 1: TEROPONG SAKU
-   Lensa mengikuti jari (pan), area yang dilewati jadi tajam — bukan
+   SLOT 3 - INTERAKTIF 1: TEROPONG SAKU
+   Lensa mengikuti jari (pan), area yang dilewati jadi tajam - bukan
    tap-flip, bukan gosok kanvas.
    ===================================================================== */
 (function(){
@@ -892,10 +892,10 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 4 — MOMEN KHAS: RUTE YANG MEMANJANG
+   SLOT 4 - MOMEN KHAS: RUTE YANG MEMANJANG
    Satu gestur tarik-menelusuri: garis putus-putus berubah jadi garis
    padat mengikuti jarak tempuh jari, berakhir dengan pin baru tertancap
-   dan angka tahun muncul di situ — bukan tarik pin ke bawah.
+   dan angka tahun muncul di situ - bukan tarik pin ke bawah.
    ===================================================================== */
 (function(){
   var scene=$('#growScene'), svg=scene.querySelector('svg'), handle=$('#growHandle');
@@ -935,7 +935,7 @@ function markDone(k){
     var totalDist=Math.hypot(endPx.x-startPx.x,endPx.y-startPx.y);
     var travelled=Math.hypot(e.clientX-startPx.x,e.clientY-startPx.y);
     var toEnd=Math.hypot(e.clientX-endPx.x,e.clientY-endPx.y);
-    /* selesai saat jari sudah DEKAT ke pin baru — bukan menuntut jarak lurus
+    /* selesai saat jari sudah DEKAT ke pin baru - bukan menuntut jarak lurus
        persis dari titik awal, supaya tarikan yang sedikit melengkung tetap
        dianggap sampai (lebih wajar untuk gestur jari sungguhan). */
     var p=Math.min(1,Math.max(travelled/totalDist,1-toEnd/(totalDist*.22)));
@@ -986,8 +986,8 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 5 — GAME 2: TITIK SINGGAH BERURUTAN
-   Ketuk titik-titik lokasi sesuai urutan nomornya — bukan tukar-posisi
+   SLOT 5 - GAME 2: TITIK SINGGAH BERURUTAN
+   Ketuk titik-titik lokasi sesuai urutan nomornya - bukan tukar-posisi
    dua potongan.
    ===================================================================== */
 (function(){
@@ -1033,7 +1033,7 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 6 — INTERAKTIF 2: KOMPAS YANG MENGUNCI
+   SLOT 6 - INTERAKTIF 2: KOMPAS YANG MENGUNCI
    Putar jarumnya (gestur melingkar, bukan tarik lurus / gosok) sampai
    mengunci ke utara, barulah pesan rahasianya muncul.
    ===================================================================== */
@@ -1055,7 +1055,7 @@ function markDone(k){
   grab.addEventListener('pointermove',function(e){
     if(!on||done) return;
     var a=angOf(e), d=a-startAng;
-    d=((d+540)%360)-180; /* bungkus ke (-180,180] — tanpa ini jarumnya akan "lompat"
+    d=((d+540)%360)-180; /* bungkus ke (-180,180] - tanpa ini jarumnya akan "lompat"
       kalau jari melewati batas ±180° saat memutar penuh */
     angle=((startRot+d)%360+360)%360;
     needle.setAttribute('transform','rotate('+angle.toFixed(1)+' 60 60)');
@@ -1084,7 +1084,7 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 7 — SURAT
+   SLOT 7 - SURAT
    ===================================================================== */
 (function(){
   var lock=$('#lock'), letter=$('#letter'), opened=false;
@@ -1117,7 +1117,7 @@ function markDone(k){
 })();
 
 /* =====================================================================
-   SLOT 8 — PENUTUP: SEGEL FOREVERSE
+   SLOT 8 - PENUTUP: SEGEL FOREVERSE
    ===================================================================== */
 (function(){
   var wax=$('#wax'), hint=$('#waxHint'), sealed=false;
@@ -1176,7 +1176,7 @@ window.FV_MULAI = FV_MULAI;
    Pemuat: ambil isi surat, lalu jalankan tampilannya.
    Berbeda dari Bait: data DITULIS LANGSUNG oleh server (worker.js)
    ke dalam blok <script id="foreverse-data"> di atas sebelum halaman
-   ini dikirim — jadi di sini tinggal dibaca, tidak perlu fetch lagi.
+   ini dikirim - jadi di sini tinggal dibaca, tidak perlu fetch lagi.
    ══════════════════════════════════════════════════════════════ */
 (function(){
   "use strict";

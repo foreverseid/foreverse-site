@@ -17,10 +17,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- =====================================================================
-     FOREVERSE · Love Note · Tema "Dia Lewat Sini Duluan" — BERKAS DEMO
+     FOREVERSE · Love Note · Tema "Dia Lewat Sini Duluan" - BERKAS DEMO
      Data Amira & Adriel dipatok langsung untuk demo publik. Pesanan
      sungguhan memakai lewat-duluan.html (datanya disisipkan server).
-     Berkas ini dibuat ulang dari mesin aslinya — jangan diedit tangan.
+     Berkas ini dibuat ulang dari mesin aslinya - jangan diedit tangan.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
 {
@@ -85,10 +85,10 @@
 
 <style>
 /* =====================================================================
-   DIA LEWAT SINI DULUAN — satu dunia yang dijalani, bukan halaman.
+   DIA LEWAT SINI DULUAN - satu dunia yang dijalani, bukan halaman.
    · halaman TIDAK bisa discroll sama sekali; berjalan = cara berpindah
    · satu jalan utuh (kos → halte → minimarket → balik ke pintu kos),
-     tanpa ganti latar — kameranya saja yang mengikuti
+     tanpa ganti latar - kameranya saja yang mengikuti
    · satu skema kontrol: joystick diam di kiri bawah + satu tombol aksi
      di kanan bawah; yang berbeda di tiap tempat cuma kata kerjanya
    · baris instruksi di ATAS, karena bawah milik kontrol
@@ -185,7 +185,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .tbl[disabled]{opacity:.4;pointer-events:none}
 .baris-tbl{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 
-/* foto di laci — terbalik, dibalik satu per satu */
+/* foto di laci - terbalik, dibalik satu per satu */
 .laci{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 10px;
   background:#C99A63;border:3px solid var(--ink);border-radius:8px;padding:12px}
 .fk{position:relative;aspect-ratio:3/4;perspective:600px;cursor:pointer}
@@ -213,7 +213,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .struk{white-space:pre-wrap;font-family:'Courier New',monospace;font-size:.86rem;background:#fff;border:2px dashed #B8AC98;padding:12px;margin:6px 0 10px;line-height:1.45}
 .struk .garis{border-top:1px dashed #B8AC98;margin:6px 0}
 
-/* surat — kertas yang terselip di bawah pintu */
+/* surat - kertas yang terselip di bawah pintu */
 .surat{background:var(--kertas);border:2px solid #D8C9AC;border-radius:4px;padding:16px;margin:4px 0 10px;
   box-shadow:inset 0 0 0 6px #fff}
 .surat .kepada{font-family:var(--piksel);font-weight:700;font-size:1.1rem;color:var(--merah);margin-bottom:8px}
@@ -299,7 +299,7 @@ var klem = function(v,a,b){ return v<a?a:(v>b?b:v); };
 var buzz = function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
 function tk(v){ return String(v == null ? '' : v).trim(); }
 
-/* ── isian pembeli — dipakai persis apa adanya; kalimat bawaan hanya
+/* ── isian pembeli - dipakai persis apa adanya; kalimat bawaan hanya
    untuk isian yang kosong (pratinjau sebelum diisi) ── */
 var PENERIMA = tk(D.penerima) || 'kamu';
 var PENGIRIM = tk(D.pengirim) || 'aku';
@@ -396,10 +396,10 @@ document.addEventListener('touchmove', function(e){
 }, { passive:false });
 
 /* ══════════════════════════════════════════════════════════════
-   PETA — satu jalan utuh. Satuan: petak.
-     baris 0–5  : bangunan (kos di kiri, minimarket di kanan)
-     baris 6–8  : trotoar — tempat berjalan
-     baris 9–11 : aspal — tidak bisa diinjak
+   PETA - satu jalan utuh. Satuan: petak.
+     baris 0-5  : bangunan (kos di kiri, minimarket di kanan)
+     baris 6-8  : trotoar - tempat berjalan
+     baris 9-11 : aspal - tidak bisa diinjak
    ══════════════════════════════════════════════════════════════ */
 var COLS = 46, ROWS = 12;
 var G = [];
@@ -430,7 +430,7 @@ var DERET = [
 ];
 function deretDi(c){ for(var i=0;i<DERET.length;i++) if(c >= DERET[i].c0 && c <= DERET[i].c1) return DERET[i]; return DERET[0]; }
 
-/* benda — semua duduk di petaknya sendiri */
+/* benda - semua duduk di petaknya sendiri */
 blok(2,1);                                  // rak mug
 blok(6,2); blok(7,2);                       // meja makan
 blok(17,6); blok(18,6); blok(19,6);         // bangku halte
@@ -491,7 +491,7 @@ function selesaiIA(o){
   return false;
 }
 
-/* tujuan berikutnya — penunjuk arah & baris instruksi */
+/* tujuan berikutnya - penunjuk arah & baris instruksi */
 function tujuan(){
   if(!ST.mug)  return { o:iaId('mug'),   n:1, t:'Dapur · ambil mug kedua di rak' };
   if(!ST.laci) return { o:iaId('laci'),  n:1, t:'Dapur · tarik laci meja makan' };
@@ -564,7 +564,7 @@ function arahKB(){
 /* ══════════════ tombol aksi ══════════════ */
 var aksiBtn = $('#aksi'), aksiT = $('#aksiT'), dekat = null;
 /* Di layar sentuh, aksinya jalan saat jari DIANGKAT (touchend), bukan
-   saat menempel — supaya panel tidak muncul di bawah jari yang masih
+   saat menempel - supaya panel tidak muncul di bawah jari yang masih
    menekan. touchstart dicegah supaya tidak ada menu tekan-lama. */
 var sentuhAksi = false;
 aksiBtn.addEventListener('touchstart', function(e){ e.preventDefault(); sentuhAksi = true; }, { passive:false });
@@ -598,7 +598,7 @@ function segarAksi(){
 
 /* ══════════════ panel ══════════════
    Dibuka dari tombol (setelah jari diangkat). Latarnya TIDAK menutup
-   panel — panel hanya ditutup lewat tombol penyelesaiannya sendiri,
+   panel - panel hanya ditutup lewat tombol penyelesaiannya sendiri,
    dan tombol baru bisa ditekan 400ms setelah panel muncul. */
 var panelBuka = false, panelSejak = 0, kartu = $('#kartu');
 function buka(isi){
@@ -819,7 +819,7 @@ $('#suara').addEventListener('click', function(){
 });
 
 /* ══════════════════════════════════════════════════════════════
-   GAMBAR — kanvas tunggal. Ukuran petak S dihitung supaya seluruh
+   GAMBAR - kanvas tunggal. Ukuran petak S dihitung supaya seluruh
    tinggi dunia muat di bawah baris atas, dan di potret kira-kira 7
    petak kelihatan mendatar. Kameranya cuma bergeser mendatar.
    ══════════════════════════════════════════════════════════════ */
@@ -873,7 +873,7 @@ function petak(c, r){
     return;
   }
   /* dinding / bangunan: atap di atas, muka depan di bawah kalau petak
-     di bawahnya bukan dinding — itu yang memberi kesan balok 3/4 */
+     di bawahnya bukan dinding - itu yang memberi kesan balok 3/4 */
   var atap, depan;
   if(t === 'W'){ atap = '#F1E1C2'; depan = '#C9A57A'; }
   else if(t === 'M'){ atap = '#FDFDFB'; depan = '#BFD9DE'; }
@@ -899,7 +899,7 @@ function papan(cx, cy, w, teks, latar, warna){
   g.fillText(teks, x + w*S/2, y + S*.17);
 }
 
-/* benda-benda — digambar urut dari atas ke bawah bersama pemain */
+/* benda-benda - digambar urut dari atas ke bawah bersama pemain */
 function benda(){
   var L = [];
   L.push({ y:1.9, f:function(){                      // rak mug
@@ -949,7 +949,7 @@ function benda(){
     }});
   });
   /* kertas di bawah pintu: kunci urutnya sengaja paling besar, supaya
-     digambar SETELAH pemain dan tidak pernah tertimbun badannya — benda
+     digambar SETELAH pemain dan tidak pernah tertimbun badannya - benda
      yang harus ditemukan wajib kelihatan */
   if(siapPulang() && !ST.surat){
     L.push({ y:99, f:function(){
@@ -990,10 +990,10 @@ function gambarAku(){
   if(!dekat) pil(X, Y - 39*u, 'kamu', 'kamu');
 }
 
-/* label nama — selalu tampil, supaya tiap benda yang bisa disentuh
+/* label nama - selalu tampil, supaya tiap benda yang bisa disentuh
    langsung kebaca namanya */
 function pil(x, y, teks, gaya){
-  /* benda yang di luar layar tidak diberi label — kalau labelnya ikut
+  /* benda yang di luar layar tidak diberi label - kalau labelnya ikut
      dijepit ke tepi, label-label itu menumpuk di pinggir */
   if(x < -S*.5 || x > VW + S*.5) return;
   var fs = Math.max(10.5, S * .22);
@@ -1049,7 +1049,7 @@ function gambar(now){
   benda();
 
   /* waktu: satu lapisan warna. Bergantinya pelan (±1 detik), tapi itu
-     cuma empat kali seumur halaman — bukan animasi terus-menerus. */
+     cuma empat kali seumur halaman - bukan animasi terus-menerus. */
   var target = WAKTU[fase()].tint;
   for(var i=0;i<4;i++) tintKini[i] += (target[i] - tintKini[i]) * .05;
   if(tintKini[3] > .005){
@@ -1065,7 +1065,7 @@ function gambar(now){
     g.globalCompositeOperation = 'source-over';
   }
 
-  /* label — digambar terakhir supaya tetap terbaca di malam hari */
+  /* label - digambar terakhir supaya tetap terbaca di malam hari */
   IA.forEach(function(o){
     if(o.id === 'pintu' && !siapPulang() && !ST.surat) return;
     var gaya = selesaiIA(o) ? 'selesai' : (o === dekat ? 'aktif' : '');

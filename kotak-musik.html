@@ -53,7 +53,7 @@
 </script>
 <style>
 /* Palet: alas potong hijau tua, kayu walnut, kuningan, kain mustard, kertas
-   krem. Bengkel servis kecil di malam hari — tidak dipakai tema lain. */
+   krem. Bengkel servis kecil di malam hari - tidak dipakai tema lain. */
 :root{
   --alas:#1F4B4A; --alas2:#173A39; --walnut:#5A3A26; --walnut2:#7B5136; --kuning:#C9A44C; --kuning2:#F0D58A;
   --kain:#D9A441; --krem:#F7F1E3; --ink:#1E1A17; --muted:#6F675E; --coral:#E8734A; --teal:#2E7F7A;
@@ -352,7 +352,7 @@ function noise(dur,freq,vol){ var a=ac(); if(!a||muted) return;
   var g=a.createGain(); g.gain.value=vol; n.buffer=b; n.connect(f); f.connect(g); g.connect(a.__out||a.destination); n.start();
 }
 /* ---- lagu latar: lagu unggahan pembeli, atau kotak musik bawaan ----
-   Kalau tidak ada berkas lagu, surat TIDAK pernah diam — ini aturan
+   Kalau tidak ada berkas lagu, surat TIDAK pernah diam - ini aturan
    produk (Project Instructions, Bagian 5), bukan selera tampilan. */
 function musicBox(){
   var a=ac(); if(!a) return null;
@@ -451,7 +451,7 @@ var konfeti=(function(){
     if(!jalan){ jalan=true; requestAnimationFrame(langkah); } };
 })();
 
-/* petunjuk & tombol lanjut — bentuknya diatur CSS tiap tema */
+/* petunjuk & tombol lanjut - bentuknya diatur CSS tiap tema */
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }

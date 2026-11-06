@@ -2,7 +2,7 @@
    FOREVERSE · pintu masuk Worker
 
    File ini yang membuat Cloudflare mengenali project sebagai Worker
-   yang punya kode — bukan cuma kumpulan file statis. Tanpa ini,
+   yang punya kode - bukan cuma kumpulan file statis. Tanpa ini,
    Bindings dan Secrets tidak bisa dipasang.
 
    Tugasnya cuma mengarahkan:
@@ -22,7 +22,7 @@ import { onRequestGet as tanganiFoto } from "./functions/f/[[jalur]].js";
 
    Cloudflare menjawab permintaan "/surat.html" dengan pengalihan 307 ke
    "/surat". Kalau pengalihan itu diteruskan ke browser, alamat berubah dari
-   "/s/nyk67z" menjadi "/surat" — kodenya hilang, dan suratnya tidak bisa
+   "/s/nyk67z" menjadi "/surat" - kodenya hilang, dan suratnya tidak bisa
    dibuka. Jadi pengalihannya diikuti di sini, di server, dan browser hanya
    menerima isi halamannya. */
 async function ambilHalaman(env, asal, nama, request) {
@@ -57,8 +57,8 @@ const KEAMANAN = {
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()",
   /* script-src: hanya skrip dari situs sendiri (tema memakai skrip sebaris; tidak
      ada skrip pihak ketiga selain Cloudflare Web Analytics yang disisipkan Cloudflare)
-     — kalaupun ada celah, skrip luar tidak bisa dimuat.
-     connect-src: fetch hanya ke /api sendiri — data tidak bisa dikirim keluar. */
+     - kalaupun ada celah, skrip luar tidak bisa dimuat.
+     connect-src: fetch hanya ke /api sendiri - data tidak bisa dikirim keluar. */
   "content-security-policy": "base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; connect-src 'self' https://cloudflareinsights.com"
 };
 function pasangKeamanan(r, jalur, env) {
@@ -95,7 +95,7 @@ function sisipDibuka(html, kode) {
   return i < 0 ? html + skrip : html.slice(0, i) + skrip + html.slice(i);
 }
 
-/* window.fvBalas — dipakai penutup tiap tema untuk tombol "Kirim balasan".
+/* window.fvBalas - dipakai penutup tiap tema untuk tombol "Kirim balasan".
    Hanya ada di surat sungguhan (/s/<kode>), tidak di demo atau pratinjau,
    jadi tema yang dibuka tanpa skrip ini tetap memakai jalur WhatsApp saja.
    tombol(sumber, contoh, label): membuat tombol sejenis elemen "contoh"
@@ -199,7 +199,7 @@ async function tangani(request, env, ctx) {
          rekonstruksi.html)
          berbagi alamat /s/<kode> yang sama. Temanya dilihat dulu di D1,
          baru file yang cocok disajikan. Bait tetap mengambil datanya
-         sendiri lewat fetch client-side (lihat surat.html) — mesin-mesin
+         sendiri lewat fetch client-side (lihat surat.html) - mesin-mesin
          lain datanya ditulis langsung di sini, karena mesinnya membaca
          data secara serentak (tanpa fetch) saat halamannya baru dibuka. */
       if (/^\/s\/[A-Za-z0-9]{4,16}\/?$/.test(p)) {

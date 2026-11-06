@@ -15,10 +15,10 @@
 
 const HARGA = 15000;                 // rupiah, bersih yang masuk ke Foreverse
 /* Biaya transaksi DOKU (QRIS, Rp500 + PPN 12%) dibebankan ke pembeli,
-   ditambahkan di atas HARGA saat checkout — bukan dipotong dari HARGA.
+   ditambahkan di atas HARGA saat checkout - bukan dipotong dari HARGA.
    Sumber: balasan email DOKU 20-10-2026 ("DOKU Fee Rp500 per transaksi,
    belum termasuk PPN"). PPN 12% adalah tarif umum berlaku 2026, belum
-   dikonfirmasi langsung oleh DOKU untuk biaya ini — perlu dicek ulang
+   dikonfirmasi langsung oleh DOKU untuk biaya ini - perlu dicek ulang
    di nota transaksi sungguhan nanti.                                  */
 const BIAYA_TRANSAKSI = 560;
 const HARI_EDIT = 3;                 // masa berlaku tautan edit
@@ -27,7 +27,7 @@ const BULAN_SIMPAN = 2;               // surat & foto disimpan sekian bulan seja
 const HARI_PENGINGAT = 14;            // email pengingat sekian hari sebelum masa simpan habis
 const PANJANG_KODE = 10;             // kode surat baru (/s/<kode>); kode lama 6 huruf tetap berlaku
 /* Batas laju per alamat IP: [maks permintaan, jendela detik].
-   Alamat IP tidak disimpan mentah — hanya sidik SHA-256 pendeknya. */
+   Alamat IP tidak disimpan mentah - hanya sidik SHA-256 pendeknya. */
 const LAJU = {
   draf: [12, 600], simpan: [30, 600], bayar: [20, 600], catat: [80, 600],
   status: [150, 600], surat: [150, 600], dibuka: [40, 600], balas: [6, 600], developer: [25, 600],
@@ -40,7 +40,7 @@ const MAKS_BADAN = 32 * 1024 * 1024; // batas satu permintaan POST ke /api
 /* ── batas karakter; dijaga di server juga, bukan cuma di formulir ──
    Isian dasar sama untuk semua tema Birthday (lihat claude/bait-
    birthday-panduan.md untuk Bait). Isian khas tema (rahasia / kupon /
-   kuis+harapan) beda per tema — lihat TEMA_SKEMA di bawah.            */
+   kuis+harapan) beda per tema - lihat TEMA_SKEMA di bawah.            */
 const BATAS = {
   penerima: 20, pengirim: 20,
   surat: 220, caption: 40, rahasia: 120,
@@ -64,7 +64,7 @@ const KARAKTER_SAH = ["perempuan", "laki"];
 
 /* Kota yang bisa dipilih untuk momen LDR (tema Zona Waktu). Zona IANA
    dipakai di mesin tema untuk menghitung jam & selisihnya secara hidup
-   (tahan DST) — bukan angka GMT tetap. Daftar ini harus sama dengan
+   (tahan DST) - bukan angka GMT tetap. Daftar ini harus sama dengan
    KOTA di zona-waktu.html dan di pesan.html. */
 const KOTA_SAH = [
   "jakarta","medan","surabaya","denpasar","makassar","manado","jayapura",
@@ -137,7 +137,7 @@ function tanggalSah(v) {
   return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : "";
 }
 
-/* Jam ajakan (momen Ask Out) — "HH:MM" 24 jam. Dipakai mesin tema untuk
+/* Jam ajakan (momen Ask Out) - "HH:MM" 24 jam. Dipakai mesin tema untuk
    jarum jam menara di puncak bianglala, jadi harus benar-benar jam. */
 function jamSah(v) {
   const s = teks(v, 5);
@@ -160,7 +160,7 @@ const DOKU = {
      metode itu, jadi biaya yang tampil selalu sama dengan yang ditagih.
      Kode sesuai daftar resmi DOKU Checkout (developers.doku.com →
      Supported Payment Methods, dicek 5 Nov 2026). Selain QRIS, belum ada
-     yang diuji ke DOKU sungguhan — uji satu transaksi tiap metode
+     yang diuji ke DOKU sungguhan - uji satu transaksi tiap metode
      setelah dibuka. */
   metodeTersedia: [
     { kode: "QRIS", nama: "QRIS", ket: "GoPay, OVO, DANA, ShopeePay, m-banking", tetap: 560, persen: 0, aktif: true },
@@ -170,7 +170,7 @@ const DOKU = {
     { kode: "EMONEY_LINKAJA", nama: "LinkAja", ket: "aplikasi LinkAja", tetap: 0, persen: 0, aktif: false },
     { kode: "EMONEY_DOKU", nama: "DOKU e-Wallet", ket: "aplikasi DOKU", tetap: 0, persen: 0, aktif: false },
     /* Virtual Account: cadangan saat QRIS/e-wallet gangguan. Biayanya biasanya
-       Rp tetap per transaksi — isi sesuai tarif DOKU di /developer. Kode dari
+       Rp tetap per transaksi - isi sesuai tarif DOKU di /developer. Kode dari
        developers.doku.com → DOKU Checkout → Supported Payment Methods. */
     { kode: "VIRTUAL_ACCOUNT_BRI", nama: "VA BRI", ket: "transfer ke Virtual Account BRI", tetap: 0, persen: 0, aktif: false },
     { kode: "VIRTUAL_ACCOUNT_BNI", nama: "VA BNI", ket: "transfer ke Virtual Account BNI", tetap: 0, persen: 0, aktif: false },
@@ -195,7 +195,7 @@ const DOKU = {
 
 /* Mode ditentukan oleh DOKU_MODE, tidak pernah ditebak dari kuncinya.
    Kunci DOKU tidak punya awalan yang bisa dipercaya. Kalau DOKU_MODE
-   belum diisi, kita jatuh ke Sandbox — bukan Production. Salah ke
+   belum diisi, kita jatuh ke Sandbox - bukan Production. Salah ke
    Sandbox hanya membuat pembayaran gagal dan ketahuan langsung;
    salah ke Production membuat uji coba memotong uang sungguhan.     */
 function modeSandbox(env) {
@@ -267,7 +267,7 @@ function samaAman(a, b) {
 }
 
 /* Satu pintu untuk semua panggilan ke DOKU. Secret Key tidak pernah
-   ikut keluar dari fungsi ini — tidak ke log, tidak ke respons.     */
+   ikut keluar dari fungsi ini - tidak ke log, tidak ke respons.     */
 async function panggilDoku(env, pilihan) {
   const metode = pilihan.metode, sasaran = pilihan.sasaran;
   const clientId = env.DOKU_CLIENT_ID;
@@ -345,7 +345,7 @@ async function siapkan(db) {
     db.prepare(`CREATE INDEX IF NOT EXISTS i_dibayar ON pesanan(dibayar)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS kejadian(
       id INTEGER PRIMARY KEY AUTOINCREMENT, waktu INTEGER, jenis TEXT, pesan TEXT, kode TEXT)`),
-    /* kode pesanan yang datanya sudah dihapus (tanpa data pribadi apa pun) —
+    /* kode pesanan yang datanya sudah dihapus (tanpa data pribadi apa pun) -
        dipakai supaya pemulihan cadangan tidak pernah menghidupkannya lagi */
     db.prepare(`CREATE TABLE IF NOT EXISTS terhapus(kode TEXT PRIMARY KEY, waktu INTEGER, alasan TEXT)`)
   ]);
@@ -446,7 +446,7 @@ export async function kodeDitahan(env, request, catatMeleset) {
 }
 
 /* ══════════════════ catatan kegagalan ══════════════════
-   Disimpan untuk tab Sistem, dan dikabarkan ke email pemilik — paling
+   Disimpan untuk tab Sistem, dan dikabarkan ke email pemilik - paling
    sering satu email per jenis kegagalan per jam, supaya tidak banjir. */
 async function catatKejadian(env, db, jenis, pesan, kode) {
   try {
@@ -530,7 +530,7 @@ async function hapusUnggahanLama(env, kode, lama) {
   }
 }
 
-/* Skema lagu: {src, judul, artis, mulai, selesai} — src kosong berarti
+/* Skema lagu: {src, judul, artis, mulai, selesai} - src kosong berarti
    kotak musik bawaan. Semua mesin tema (surat.html, kado-riang.html,
    langit-harapan.html) membaca field ini. */
 async function rapikanLagu(env, kode, masuk, lama) {
@@ -565,7 +565,7 @@ async function rapikanLagu(env, kode, masuk, lama) {
 }
 
 /* ══════════════════ kunci pembuka ══════════════════
-   jenis: "pin" (4–6 angka) · "tanya" (pertanyaan + jawaban) · "tanggal"
+   jenis: "pin" (4-6 angka) · "tanya" (pertanyaan + jawaban) · "tanggal"
    (YYYY-MM-DD), ditambah opsional "buka" = waktu paling cepat surat bisa
    dibuka (milidetik). Kunci TIDAK PERNAH dikirim ke penerima: worker.js
    menyajikan halaman gerbang, dan isi surat baru dikirim setelah kuncinya
@@ -651,7 +651,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
      Birthday: ucapan + tanggal lahir + sembunyikan umur.
      Anniversary: jenis hari jadi + tanggal mulai + sembunyikan tahun.
      LDR: kota pengirim + kota penerima (dipakai tema Zona Waktu untuk
-     menghitung jam & jarak live — tidak ada angka berulang di sini,
+     menghitung jam & jarak live - tidak ada angka berulang di sini,
      beda struktur dari birthday/anniversary dengan sengaja).
      Graduation: jenjang + tanggal wisuda + sembunyikan tahun. */
   if (skema.momen === "anniversary") {
@@ -671,14 +671,14 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (!isi.tanggalWisuda) throw new Error("Tanggal wisuda belum diisi.");
   } else if (skema.momen === "getwell") {
     /* Get Well Soon: tanggal mulai sakit dipakai mesin tema untuk
-       menghitung "hari ke-N" secara hidup — bukan angka tahunan yang
+       menghitung "hari ke-N" secara hidup - bukan angka tahunan yang
        berulang seperti birthday/anniversary/graduation. */
     isi.tanggalSakit = tanggalSah(p.tanggalSakit);
     isi.sembunyikanHari = !!p.sembunyikanHari;
     if (!isi.tanggalSakit) throw new Error("Tanggal mulai sakit belum diisi.");
   } else if (skema.momen === "askout") {
     /* Ask Out: tidak ada angka berulang (bukan umur/tahun jadian).
-       Angka pribadinya justru tanggal & jam ajakan itu sendiri —
+       Angka pribadinya justru tanggal & jam ajakan itu sendiri -
        dipakai mesin tema untuk jam menara dan tiga pilihan malam.
        Titik temu opsional: tidak semua ajakan punya tempat jemput. */
     isi.tanggalAjak = tanggalSah(p.tanggalAjak);
@@ -689,11 +689,11 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   } else if (skema.momen === "lovenote" || skema.momen === "proposal" ||
              skema.momen === "apology" || skema.momen === "congrats" || skema.momen === "parting" ||
              skema.momen === "spesial") {
-    /* Love Note: tidak butuh tanggal atau angka apa pun — surat sayang
+    /* Love Note: tidak butuh tanggal atau angka apa pun - surat sayang
        yang bisa dikirim hari apa saja. Hanya nama, foto, surat, dan isian
        khas temanya. */
   } else if (skema.momen === "confess") {
-    /* Confess sengaja TIDAK punya isian dasar tambahan — tidak ada
+    /* Confess sengaja TIDAK punya isian dasar tambahan - tidak ada
        tanggal atau angka berulang yang masuk akal untuk satu
        pengakuan (beda dari birthday/anniversary/graduation yang
        semuanya berulang tahunan). Hanya nama, foto, surat, dan pesan
@@ -708,7 +708,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   /* ── isian khas tema ──
      waPengirim dipakai semua tema untuk tombol balas WhatsApp
      penerima di penutup. Diisi dari nomor WA pembeli (kolom
-     "whatsapp" di pesanan) — pembeli hampir selalu juga pengirimnya
+     "whatsapp" di pesanan) - pembeli hampir selalu juga pengirimnya
      sendiri. */
   if (tema === "kado-riang") {
     isi.kupon = [0, 1, 2].map(i => teks((p.kupon || [])[i], BATAS.kupon));
@@ -759,7 +759,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "zona-waktu") {
     /* "Dua Jendela" (menggantikan Zona Waktu lama, id tetap): `rutinitas`
-       = 3 kebiasaan harian pengirim dengan jam di KOTANYA — dipakai kuis
+       = 3 kebiasaan harian pengirim dengan jam di KOTANYA - dipakai kuis
        "jam segini aku lagi apa" & game samakan jadwal, jadi jamnya wajib
        jam sungguhan. `oleh` = isi paket 3 lapis. `tanggalKetemu`
        opsional (hitung mundur di penutup). */
@@ -777,7 +777,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "rekonstruksi") {
-    /* "Rekonstruksi Hari Pertama": empat kejadian di hari pertama —
+    /* "Rekonstruksi Hari Pertama": empat kejadian di hari pertama -
        tempat (jadi nama bangunan di sketsa), jam (jadi jawaban game garis
        waktu & urutan pemutaran ulang, jadi WAJIB jam sungguhan), dan
        cerita singkat. `karakterPenerima`/`karakterPengirim` = tampilan
@@ -995,7 +995,7 @@ async function kirimEmailKode(env, db, kode, asal) {
   return hasil;
 }
 
-/* Kabar ke pembeli saat suratnya pertama kali dibuka — dikirim sekali saja. */
+/* Kabar ke pembeli saat suratnya pertama kali dibuka - dikirim sekali saja. */
 async function kirimEmailDibuka(env, b, asal) {
   if (!env.RESEND_API_KEY || !b.email) return;
   const isi = JSON.parse(b.isi || "{}");
@@ -1024,7 +1024,7 @@ async function kirimEmailDibuka(env, b, asal) {
 
 /* ══════════════════ balasan dari penerima ══════════════════
    Penerima menulis balasan di penutup surat; isinya TIDAK disimpan di
-   database — langsung dikirim ke email pembeli. Yang dicatat hanya
+   database - langsung dikirim ke email pembeli. Yang dicatat hanya
    jumlahnya (n_balas), supaya batasnya bisa dijaga. */
 const MAKS_BALAS = 3, PANJANG_BALAS = 600;
 async function kirimEmailBalasan(env, b, isiBalas) {
@@ -1059,7 +1059,7 @@ async function lunasi(env, db, kode, asal) {
   if (!b || b.status === "lunas") return;
   const skr = Date.now();
   /* atomik: hanya satu dari beberapa notifikasi serentak yang lolos syarat
-     status!='lunas' — sisanya berhenti di sini (tanpa email & promo dobel) */
+     status!='lunas' - sisanya berhenti di sini (tanpa email & promo dobel) */
   const u = await db.prepare(`UPDATE pesanan SET status='lunas', dibayar=?, batas_edit=?, simpan_sampai=? WHERE kode=? AND status!='lunas'`)
     .bind(skr, skr + HARI_EDIT * 86400000, tambahBulan(skr, BULAN_SIMPAN), kode).run();
   if (!u || !u.meta || !u.meta.changes) return;
@@ -1075,7 +1075,7 @@ function tglPanjang(ms) {
 }
 
 /* Dijalankan sekali sehari oleh Cron Trigger (lihat worker.js & wrangler.jsonc):
-   1. email pengingat ke pembeli 14 hari sebelum masa simpan habis — sekali saja;
+   1. email pengingat ke pembeli 14 hari sebelum masa simpan habis - sekali saja;
    2. surat yang masa simpannya habis: foto & lagu dihapus, isi dan kontak dikosongkan,
       tautan dinonaktifkan. Yang tersisa hanya catatan transaksi (kode, tema, jumlah, tanggal).
    Pesanan lunas sebelum aturan ini dibuat (simpan_sampai masih kosong) ikut
@@ -1285,7 +1285,7 @@ async function hitungPromo(db, kode, harga) {
    Salinan JSON seluruh data penting (pesanan non-draf, pengingat, promo,
    pengaturan, perpanjangan, kunjungan 90 hari). Dibuat tiap hari ke R2
    (cadangan/YYYY-MM-DD.json, disimpan 30 hari) dan bisa diunduh dari
-   /developer. Foto & lagu tidak disalin ulang — sudah tersimpan di R2,
+   /developer. Foto & lagu tidak disalin ulang - sudah tersimpan di R2,
    dan alamatnya ada di dalam isi tiap pesanan. */
 const HARI_CADANGAN = 30;
 async function buatCadangan(db) {
@@ -1317,11 +1317,11 @@ async function cadangkanHarian(env, db) {
 /* ══════════════════ penghapusan data pribadi (UU PDP) ══════════════════
    Satu pintu untuk semua penghapusan: masa simpan habis, permintaan pemilik
    data, dan hapus dari /developer. Urutannya:
-     1. email pemberitahuan ke pembeli (Pasal 45) — sebelum emailnya ikut dihapus;
+     1. email pemberitahuan ke pembeli (Pasal 45) - sebelum emailnya ikut dihapus;
      2. foto & lagu di R2 dihapus, isi & kontak di D1 dikosongkan;
      3. kodenya dicatat di tabel `terhapus` (tanpa data pribadi);
      4. pesanan yang sama dibersihkan dari SEMUA berkas cadangan di R2
-        (Pasal 16 ayat 2 huruf g, Pasal 43–44: dihapus berarti benar-benar hilang).
+        (Pasal 16 ayat 2 huruf g, Pasal 43-44: dihapus berarti benar-benar hilang).
    `penuh` = baris pesanan dibuang seluruhnya (aksi "hapus"); selain itu catatan
    transaksi (kode, tema, jumlah, tanggal) tetap untuk pembukuan. */
 const KOSONG_PRIBADI = { isi: "{}", email: "", whatsapp: "", token: null, aktif: 0 };
@@ -1858,7 +1858,7 @@ export async function onRequest(ctx) {
         return salah("Waktu notifikasi di luar batas.", 403);
 
       /* Digest dihitung dari teks asli badan, bukan dari hasil
-         JSON.stringify ulang — satu spasi beda pun akan menggagalkan. */
+         JSON.stringify ulang - satu spasi beda pun akan menggagalkan. */
       const digest = await digestDoku(mentah);
       const harusnya = await hmacDoku(env.DOKU_SECRET_KEY,
         rangkaiTandaTangan(kepalaId, kepalaReq, kepalaWaktu, url.pathname, digest));
@@ -1908,7 +1908,7 @@ export async function onRequest(ctx) {
     }
 
     /* ── cek status; kalau perlu, tanya langsung ke DOKU ───────
-       Catatan penting: kode surat itu umum — dikirim ke penerima.
+       Catatan penting: kode surat itu umum - dikirim ke penerima.
        Jadi jawaban di sini TIDAK BOLEH memuat token edit.        */
     if (jalur === "status") {
       const kode = teks(url.searchParams.get("kode"), 16);
@@ -1978,7 +1978,7 @@ export async function onRequest(ctx) {
       if (b.batas_edit && Date.now() > b.batas_edit) return salah("Masa edit sudah lewat.", 403);
 
       const lama = JSON.parse(b.isi || "{}");
-      /* tema dikunci dari pesanan asli, bukan dari badan kiriman klien —
+      /* tema dikunci dari pesanan asli, bukan dari badan kiriman klien -
          tema tidak boleh berubah lewat edit. */
       const isi = await rapikanIsi(env, b.kode, badan, lama, temaSah(b.tema));
       await db.prepare(`UPDATE pesanan SET isi=?, email=? WHERE kode=?`)
@@ -1997,7 +1997,7 @@ export async function onRequest(ctx) {
       const aksi = teks(badan.aksi, 20);
 
       if (aksi === "daftar") {
-        /* Periode: dari–sampai (milidetik). Kosong = sejak hari pertama.
+        /* Periode: dari-sampai (milidetik). Kosong = sejak hari pertama.
            Pesanan dihitung masuk periode menurut tanggal dibuat; penjualan
            (lunas & pendapatan) menurut tanggal dibayar. Periode sebelumnya
            yang sama panjang ikut dihitung untuk perbandingan.            */
@@ -2057,7 +2057,7 @@ export async function onRequest(ctx) {
         for (const x of (kj.results || [])) if (minat[x.tema]) minat[x.tema][x.jenis] = x.n;
         for (const x of (perTema.results || [])) if (minat[x.tema]) minat[x.tema].lunas = x.n;
 
-        /* hal yang perlu tindakan — selalu dari SEMUA pesanan, tidak ikut periode */
+        /* hal yang perlu tindakan - selalu dari SEMUA pesanan, tidak ikut periode */
         const perlu = await db.prepare(kolom + ` WHERE
             (status='lunas' AND email_terkirim=0 AND COALESCE(email,'')!='')
             OR (status='lunas' AND aktif=0 AND isi!='{}')
@@ -2110,7 +2110,7 @@ export async function onRequest(ctx) {
 
       /* ── kode promo ── */
       if (aksi === "promo_daftar") {
-        /* pendapatan per kode = jumlah yang benar-benar dibayar pembeli (tanpa biaya QRIS) —
+        /* pendapatan per kode = jumlah yang benar-benar dibayar pembeli (tanpa biaya QRIS) -
            dipakai untuk menghitung hasil tiap kreator */
         /* komisi = persen × pendapatan (harga setelah promo, tanpa biaya transaksi); refund tidak dihitung */
         const r = await db.prepare(`SELECT p.*, (SELECT COUNT(*) FROM pesanan WHERE promo=p.kode AND status='lunas') AS laku,
@@ -2129,7 +2129,7 @@ export async function onRequest(ctx) {
         const jenis = badan.jenis === "persen" ? "persen" : "rupiah";
         const nilai = Math.round(Number(badan.nilai) || 0);
         const kreatorP = teks(badan.kreator, 40).replace(/^@+/, "");
-        /* kode referral kreator boleh tanpa potongan (0) — pembeli bayar harga biasa, kreator tetap dapat komisi */
+        /* kode referral kreator boleh tanpa potongan (0) - pembeli bayar harga biasa, kreator tetap dapat komisi */
         if (nilai < 0 || (!(nilai > 0) && !kreatorP) || (jenis === "persen" && nilai > 100)) return salah("Besar potongan belum benar.");
         const komisi = Math.max(0, Math.min(90, Math.round(Number(badan.komisi) || 0)));
         if (komisi && !kreatorP) return salah("Komisi hanya untuk kode kreator. Isi akun kreatornya dulu.");
@@ -2258,7 +2258,7 @@ export async function onRequest(ctx) {
   } catch (e) {
     /* Pesan validasi (throw new Error("Nama penerima belum diisi.")) memang
        untuk pembeli. Galat internal (D1/SQL, TypeError, dll.) tidak boleh
-       sampai ke klien — dicatat di tab Sistem, klien dapat pesan umum. */
+       sampai ke klien - dicatat di tab Sistem, klien dapat pesan umum. */
     if (e && e.constructor === Error && !/D1_|SQLITE|SQL|no such|constraint/i.test(e.message || ""))
       return salah(e.message, 400);
     try { if (env.DB) await catatKejadian(env, env.DB, "galat server", (e && (e.name + ": " + e.message)) || "?", ""); } catch (_) {}

@@ -75,18 +75,18 @@
 
 <style>
 /* =====================================================================
-   PASAR MALAM — tata letaknya sengaja TIDAK memakai kerangka tema lain:
+   PASAR MALAM - tata letaknya sengaja TIDAK memakai kerangka tema lain:
    tidak ada kolom tunggal 520px berisi kartu membulat, tidak ada
    .reveal fade-up, tidak ada trio eyebrow/h2/lead yang diulang.
 
    Yang dipakai di sini:
-   · lorong — kios berselang-seling kiri & kanan, bukan satu kolom tengah
+   · lorong - kios berselang-seling kiri & kanan, bukan satu kolom tengah
    · "muncul" = untaian bohlam menyala satu per satu (.untai), isinya
      ikut terang; tidak ada translateY
-   · terpal berkibar, bohlam berkedip, bohlam penutup naik-turun —
+   · terpal berkibar, bohlam berkedip, bohlam penutup naik-turun -
      kosakata geraknya sendiri
    · tiap panggung = kotak beraspek tetap; semua benda diposisikan dalam
-     PERSEN KOTAK ITU, tidak pernah terhadap layar — supaya landscape
+     PERSEN KOTAK ITU, tidak pernah terhadap layar - supaya landscape
      tidak pernah berantakan
    ===================================================================== */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -106,7 +106,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
   --redup:#6E6480;
   --senja:#FFE0AE;        /* langit awal */
   --senja2:#FFC98C;
-  --malam:#1F4A63;        /* hanya di bianglala — bagian paling malam */
+  --malam:#1F4A63;        /* hanya di bianglala - bagian paling malam */
   --malam2:#133449;
   --krem:#FFF7E8;
   --kertas:#FFFCF3;
@@ -183,7 +183,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 @keyframes denyut{50%{opacity:.35}}
 
 /* gerak khas tema: terpal berkibar, bohlam berkedip, benda naik-turun
-   — bukan fade-up seperti tema lain */
+   - bukan fade-up seperti tema lain */
 @keyframes kibar{0%,100%{transform:skewY(0deg) scaleY(1)}50%{transform:skewY(-2.2deg) scaleY(.97)}}
 @keyframes kedip{0%,100%{opacity:1}45%{opacity:.55}}
 @keyframes naikTurun{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
@@ -230,7 +230,7 @@ body.masuk #soundBtn{display:grid}
 
 /* ---------- 1 · gerbang ---------- */
 #gerbang{min-height:92svh;display:flex;align-items:center}
-/* untaian bendera segitiga di pucuk halaman — mengisi ruang atas di layar
+/* untaian bendera segitiga di pucuk halaman - mengisi ruang atas di layar
    lebar, sekaligus menandai dunia temanya sejak detik pertama */
 .bendera{
   position:absolute;top:0;left:0;right:0;height:22px;pointer-events:none;
@@ -249,7 +249,7 @@ body.masuk #soundBtn{display:grid}
 .gelang-sisa i.habis{border-color:#C9BBA6}
 /* Label botol dibuat dua tingkat berselang-seling: label tetangga tidak
    pernah bertabrakan walau botolnya berdekatan, dan teksnya boleh turun
-   ke baris kedua — tidak dipotong jadi tidak kebaca. */
+   ke baris kedua - tidak dipotong jadi tidak kebaca. */
 .botol-label{
   position:absolute;left:50%;transform:translateX(-50%);
   width:132%;font-size:.6rem;font-weight:700;line-height:1.12;text-align:center;
@@ -293,7 +293,7 @@ body.masuk #soundBtn{display:grid}
   overflow:hidden;box-shadow:0 3px 0 rgba(0,0,0,.25)
 }
 .kabin img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-/* Caption kabin boleh turun ke baris kedua — dipotong jadi "entah ken…"
+/* Caption kabin boleh turun ke baris kedua - dipotong jadi "entah ken…"
    bukan caption, itu cuma teks rusak. */
 .kabin .cap{
   font-family:var(--tulis);font-size:.74rem;line-height:1.06;
@@ -593,7 +593,7 @@ if(!ALASAN.length) ALASAN = ['Pengen ketemu aja.'];
 while(KEGIATAN.length < 4) KEGIATAN.push('bebas, kamu yang pilih');
 KEGIATAN = KEGIATAN.slice(0,4);
 
-/* ── malam yang ditawarkan — angka pribadinya ada di sini ── */
+/* ── malam yang ditawarkan - angka pribadinya ada di sini ── */
 var HARI_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 var BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 function keTanggal(s){
@@ -656,7 +656,7 @@ var SFX = {
   nyala: function(){ [523,659,784,1046].forEach(function(f,i){ tone(f,.45,{when:i*.08,vol:.12}); }); },
   buka:  function(){ noise(.3, 1800, .12); }
 };
-/* kotak musik bawaan — dipakai kalau pembeli tidak mengunggah lagu */
+/* kotak musik bawaan - dipakai kalau pembeli tidak mengunggah lagu */
 function musicBox(){
   var a = ac(); if(!a) return function(){};
   var stop = false, i = 0;
@@ -809,7 +809,7 @@ function setLangkah(i, teks){
   }, { threshold:.2 });
   $$('.scene').forEach(function(s){ io.observe(s); });
 
-  /* Baris langkah mengikuti kios yang sedang dibaca — yaitu yang menutupi
+  /* Baris langkah mengikuti kios yang sedang dibaca - yaitu yang menutupi
      sepertiga atas layar. Memakai IntersectionObserver saja salah: kalau
      dua section terlihat bersamaan, yang menang cuma yang callback-nya
      kebetulan terakhir dipanggil. */
@@ -829,7 +829,7 @@ function setLangkah(i, teks){
 })();
 
 /* ══════════════ pembantu gestur ══════════════
-   seret(node, {awal, gerak, lepas}) — pointer events, jalan sama di
+   seret(node, {awal, gerak, lepas}) - pointer events, jalan sama di
    sentuh maupun klik. Ambang selalu dihitung dalam PIKSEL; transform
    visual punya satuannya sendiri dan dikonversi sadar. */
 function seret(node, o){
@@ -858,7 +858,7 @@ function seret(node, o){
 function kotak(node){ return node.getBoundingClientRect(); }
 
 /* ══════════════════════════════════════════════════════════════
-   1 · GERBANG — belah terpalnya
+   1 · GERBANG - belah terpalnya
    ══════════════════════════════════════════════════════════════ */
 var masuk = false;
 (function(){
@@ -947,7 +947,7 @@ var masuk = false;
     document.body.classList.add('masuk');
     var r = $('.aktif-ring', ka); if(r) r.remove();
     var label = $('.nama', ka); if(label) label.remove();
-    /* terpalnya menyingkir sambil memudar — kalau cuma digeser, ujungnya
+    /* terpalnya menyingkir sambil memudar - kalau cuma digeser, ujungnya
        terpotong di tepi layar dan terbaca seperti benda nyangkut */
     [ka, ki].forEach(function(n, i){
       n.style.transition = 'transform .55s ease, opacity .55s ease';
@@ -974,7 +974,7 @@ var masuk = false;
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   2 · LEMPAR GELANG — tarik mundur, bidik, lepas
+   2 · LEMPAR GELANG - tarik mundur, bidik, lepas
    Bahan pembeli: 4 label kegiatan di leher botol.
    ══════════════════════════════════════════════════════════════ */
 var HASIL_KENA = [], HASIL_LUPUT = [];
@@ -1160,7 +1160,7 @@ var gelangSelesai = false;
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   3 · GULA KAPAS — putar melingkar, tiap lapis membuka satu alasan
+   3 · GULA KAPAS - putar melingkar, tiap lapis membuka satu alasan
    Bahan pembeli: 3 alasan mengajak.
    ══════════════════════════════════════════════════════════════ */
 (function(){
@@ -1178,7 +1178,7 @@ var gelangSelesai = false;
         '<circle cx="80" cy="80" r="74" fill="#F6E2C0" stroke="#241C2E" stroke-width="4"/>' +
         '<circle cx="80" cy="80" r="60" fill="#FFF4E2" stroke="#241C2E" stroke-width="2.5" stroke-dasharray="4 7"/>' +
         /* batang & gulanya satu benda: diputar bersama, gulanya tumbuh
-           mengelilingi batang di tengah tabung — bukan gumpalan diam. */
+           mengelilingi batang di tengah tabung - bukan gumpalan diam. */
         '<g id="batang">' +
           '<rect x="76" y="14" width="8" height="132" rx="4" fill="#C98A52" stroke="#241C2E" stroke-width="3"/>' +
           '<g id="gulaMassa"></g>' +
@@ -1258,7 +1258,7 @@ var gelangSelesai = false;
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   4 · BIANGLALA — roda terikat scroll, kabinnya membawa foto
+   4 · BIANGLALA - roda terikat scroll, kabinnya membawa foto
    ══════════════════════════════════════════════════════════════ */
 (function(){
   var st = $('#stRoda');
@@ -1319,7 +1319,7 @@ var gelangSelesai = false;
   var raf = null;
   function segar(){
     raf = null;
-    /* begitu kabin puncak berhenti, rodanya berhenti juga — kalau tetap
+    /* begitu kabin puncak berhenti, rodanya berhenti juga - kalau tetap
        terikat scroll, tinggi section berubah saat #puncak muncul dan
        rodanya akan melompat mundur. */
     if(pasangPuncak) return;
@@ -1352,7 +1352,7 @@ var gelangSelesai = false;
     var jamSudut = ((JAM_JAM[0] % 12) + JAM_JAM[1]/60) * 30;
     var menitSudut = JAM_JAM[1] * 6;
     /* lampu kota disebar rata selebar pemandangan, bukan menumpuk di satu
-       sisi — di landscape ruangnya melebar dan tetap terisi */
+       sisi - di landscape ruangnya melebar dan tetap terisi */
     var lampu = '', N = 58;
     for(var i=0;i<N;i++){
       var x = 3 + (194 / (N - 1)) * i + rand(-1.4, 1.4);
@@ -1439,7 +1439,7 @@ var gelangSelesai = false;
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   5 · PANCING BOTOL — kail berayun, dikendalikan sampai tenang
+   5 · PANCING BOTOL - kail berayun, dikendalikan sampai tenang
    Bahan pembeli: kegiatan yang tadi meleset.
    ══════════════════════════════════════════════════════════════ */
 var pancingSelesai = false;
@@ -1450,7 +1450,7 @@ var siapkanPancing = function(){};
   var botolSisa = [], tertangkap = [];
   var hookX = 50, vx = 0, pivotX = 50, sim = null, dekatSejak = 0, target = -1;
 
-  /* Kios yang belum buka tetap punya gambar — rolling door yang tertutup,
+  /* Kios yang belum buka tetap punya gambar - rolling door yang tertutup,
      bukan kotak kosong. */
   st.innerHTML =
     '<svg viewBox="0 0 320 200" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">' +
@@ -1610,7 +1610,7 @@ var siapkanPancing = function(){};
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   6 · PAPAN LAMPU — ketuk bohlam, ketuk soket, putar seperempat
+   6 · PAPAN LAMPU - ketuk bohlam, ketuk soket, putar seperempat
    ══════════════════════════════════════════════════════════════ */
 var bukaPapan = function(){};
 (function(){
@@ -1715,7 +1715,7 @@ var bukaPapan = function(){};
   function nyalakan(f){
     terkunci = true;
     f.classList.remove('terisi'); f.classList.add('menyala');
-    /* papan di panggung ikut menyala di baris yang sama — gambarnya
+    /* papan di panggung ikut menyala di baris yang sama - gambarnya
        bukan hiasan mati, dia menunjukkan malam yang dipilih */
     var s = $('.pSoket[data-s="' + f.dataset.malam + '"]', st);
     if(s){ s.setAttribute('fill', '#FFC24A'); s.setAttribute('r', '10'); }
