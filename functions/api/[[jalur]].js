@@ -544,7 +544,7 @@ async function rapikanLagu(env, kode, masuk, lama) {
 
   /* berkas baru diunggah */
   if (m.data && String(m.data).length > 32) {
-    if (!env.FOTO) throw new Error("Unggah lagu sedang tidak bisa dipakai. Kosongkan saja — suratnya tetap bermusik.");
+    if (!env.FOTO) throw new Error("Unggah lagu sedang tidak bisa dipakai. Kosongkan saja, suratnya tetap ada musik bawaannya.");
     const jenis = JENIS_LAGU[String(m.mime || "").toLowerCase()];
     if (!jenis) throw new Error("Format lagu harus MP3 atau M4A.");
     const bytes = dariBase64(m.data);
@@ -582,7 +582,7 @@ function rapikanKunci(masuk, lama) {
   const jenis = JENIS_KUNCI.includes(k.jenis) ? k.jenis : "";
   if (jenis === "pin") {
     const pin = String(k.pin || "").replace(/\D/g, "");
-    if (pin.length < 4 || pin.length > 6) throw new Error("PIN kunci harus 4–6 angka.");
+    if (pin.length < 4 || pin.length > 6) throw new Error("PIN kunci harus 4 sampai 6 angka.");
     hasil.jenis = "pin"; hasil.pin = pin;
   } else if (jenis === "tanya") {
     const tanya = teks(k.tanya, 120), jawab = teks(k.jawab, 60);
@@ -724,7 +724,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
       };
     });
     if (isi.kuis.some(q => !q.tanya || !q.pilihan[0] || !q.pilihan[1] || !q.pilihan[2]))
-      throw new Error("Kuis belum lengkap — tiap soal perlu pertanyaan dan 3 pilihan.");
+      throw new Error("Kuisnya belum lengkap. Tiap soal perlu pertanyaan dan 3 pilihan.");
     isi.harapan = [0, 1, 2].map(i => teks((p.harapan || [])[i], BATAS.harapan));
     if (!isi.harapan[0] || !isi.harapan[1] || !isi.harapan[2]) throw new Error("Ketiga harapan belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
@@ -943,11 +943,11 @@ function badanEmail(o) {
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah jadi.</h1>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">
       Surat untuk <strong>${esc(o.penerima)}</strong> sudah aktif. Tinggal kirim tautan di bawah ini ke dia.
-      Suratnya bisa dibuka selama ${BULAN_SIMPAN} bulan; kami ingatkan lewat email ${HARI_PENGINGAT} hari sebelum masanya habis, dan kamu bisa <a href="${esc(o.asal + "/perpanjang/" + o.token)}" style="color:#3B3168">memperpanjangnya kapan saja</a>.
+      Suratnya bisa dibuka selama ${BULAN_SIMPAN} bulan. Kami ingatkan lewat email ${HARI_PENGINGAT} hari sebelum masanya habis, dan kamu bisa <a href="${esc(o.asal + "/perpanjang/" + o.token)}" style="color:#3B3168">memperpanjangnya kapan saja</a>.
     </p>
     <a href="${esc(tautan)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
     <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(tautan)}</p>
-    <p style="margin:12px 0 0;font-size:14px;line-height:1.6"><a href="${esc(o.asal + "/selesai?kode=" + o.kode + "#qr")}" style="color:#3B3168">Buat kode QR berbentuk hati atau amplop</a> untuk dikirim bersama tautannya — gambarnya juga bisa kamu cetak dan selipkan di kado.</p>
+    <p style="margin:12px 0 0;font-size:14px;line-height:1.6"><a href="${esc(o.asal + "/selesai?kode=" + o.kode + "#qr")}" style="color:#3B3168">Buat kode QR berbentuk hati atau amplop</a> untuk dikirim bersama tautannya. Gambarnya juga bisa kamu cetak dan selipkan di kado.</p>
   </div>
 
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:22px 24px;margin-top:14px">
@@ -1185,7 +1185,7 @@ async function kirimEmailIngat(env, r, asal, konfirmasi) {
     ? "Siap, kami ingatkan menjelang " + judulIngat(r).toLowerCase().replace(/^ulang/, "ulang")
     : judulIngat(r) + " tinggal " + HARI_SEBELUM_INGAT + " hari lagi";
   const isi = konfirmasi
-    ? `Kami akan mengirim satu email ${HARI_SEBELUM_INGAT} hari sebelum <strong>${esc(tgl)}</strong>, supaya kamu sempat menyiapkan sesuatu. Hanya itu — tidak ada promosi lain.`
+    ? `Kami akan mengirim satu email ${HARI_SEBELUM_INGAT} hari sebelum <strong>${esc(tgl)}</strong>, supaya kamu sempat menyiapkan sesuatu. Cuma itu, tidak ada promosi lain.`
     : `<strong>${esc(tgl)}</strong> sebentar lagi. Mau menyiapkan surat baru untuknya? Masih ada waktu untuk menulis pelan-pelan.`;
   const r2 = await kirimResend(env, {
     method: "POST",
@@ -1201,7 +1201,7 @@ async function kirimEmailIngat(env, r, asal, konfirmasi) {
     <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">${isi}</p>
     ${konfirmasi ? "" : `<a href="${esc(asal + "/template?momen=" + momen)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Lihat tema ${momen}</a>`}
   </div>
-  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Tidak mau diingatkan? <a href="${esc(batal)}" style="color:#8A8598">Hapus pengingat ini</a> — tanggal dan namanya langsung kami hapus.</p>
+  <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Tidak mau diingatkan? <a href="${esc(batal)}" style="color:#8A8598">Hapus pengingat ini</a>, nanti tanggal dan namanya langsung kami hapus.</p>
 </div></body></html>`
     })
   }).catch(() => null);
@@ -1388,7 +1388,7 @@ async function kirimEmailDihapus(env, b, alasan) {
   <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Datanya sudah kami hapus.</h1>
-    <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">${sebab} isi surat untuk <strong>${esc(isi.penerima || "")}</strong>, foto, lagu, email, dan nomor WhatsApp-mu sudah kami hapus — termasuk dari salinan cadangan. Tautan suratnya tidak bisa dibuka lagi.</p>
+    <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">${sebab} isi surat untuk <strong>${esc(isi.penerima || "")}</strong>, foto, lagu, email, dan nomor WhatsApp-mu sudah kami hapus, termasuk dari salinan cadangan. Tautan suratnya tidak bisa dibuka lagi.</p>
     <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#4E4A5E">Yang kami simpan hanya catatan transaksi (kode pesanan, tema, jumlah, tanggal) untuk pembukuan. Ini email terakhir dari kami untuk surat ini.</p>
   </div>
   <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
@@ -2132,7 +2132,7 @@ export async function onRequest(ctx) {
         /* kode referral kreator boleh tanpa potongan (0) — pembeli bayar harga biasa, kreator tetap dapat komisi */
         if (nilai < 0 || (!(nilai > 0) && !kreatorP) || (jenis === "persen" && nilai > 100)) return salah("Besar potongan belum benar.");
         const komisi = Math.max(0, Math.min(90, Math.round(Number(badan.komisi) || 0)));
-        if (komisi && !kreatorP) return salah("Komisi hanya untuk kode kreator — isi akun kreatornya.");
+        if (komisi && !kreatorP) return salah("Komisi hanya untuk kode kreator. Isi akun kreatornya dulu.");
         const lama = await db.prepare(`SELECT terpakai,dibuat FROM promo WHERE kode=?`).bind(kode).first();
         await db.prepare(`INSERT OR REPLACE INTO promo(kode,jenis,nilai,kuota,terpakai,sampai,aktif,dibuat,kreator,komisi) VALUES(?,?,?,?,?,?,?,?,?,?)`)
           .bind(kode, jenis, nilai, Math.max(0, Math.round(Number(badan.kuota) || 0)), lama ? lama.terpakai : 0,
@@ -2232,7 +2232,7 @@ export async function onRequest(ctx) {
           doku: !!env.DOKU_CLIENT_ID && !!env.DOKU_SECRET_KEY,
           metode: (await bacaPengaturan(db)).metode.filter(m => m.aktif).map(m => m.nama).join(", ") || "tidak ada yang dibuka",
           mode: (modeSandbox(env) ? "Sandbox (uji coba)" : "Production (sungguhan)")
-                + (modeDitegaskan(env) ? "" : " — DOKU_MODE belum diisi, dianggap Sandbox"),
+                + (modeDitegaskan(env) ? "" : " (DOKU_MODE belum diisi, dianggap Sandbox)"),
           sandbox: modeSandbox(env),
           mode_tegas: modeDitegaskan(env),
           pengirim: env.EMAIL_PENGIRIM || "(belum diisi)",

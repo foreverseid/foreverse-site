@@ -1,8 +1,7 @@
 /* ══════════════════════════════════════════════════════════════════
    FOREVERSE · Tanya Vera (asisten bantuan mengambang)
 
-   Jawaban sudah disiapkan di daftar TANYA di bawah — tidak ada AI,
-   tidak ada server, tidak ada biaya per pesan. Pertanyaan yang diketik
+   Jawaban sudah disiapkan di daftar TANYA di bawah. Tidak ada server, tidak ada biaya per pesan. Pertanyaan yang diketik
    dicocokkan dengan kata kunci; kalau tidak ada yang cocok, pembeli
    diarahkan ke WhatsApp atau email.
 
@@ -31,37 +30,37 @@
       j: "Pembayaran lewat <b>QRIS</b>, diproses DOKU. QRIS bisa dibayar dari DANA, OVO, ShopeePay, GoPay, atau aplikasi m-banking mana pun. Kami <b>tidak pernah</b> meminta transfer ke rekening pribadi lewat chat." },
     { id: "jadi", t: "Kapan tautannya jadi?",
       k: ["kapan", "berapa lama", "jadi", "selesai", "dikirim", "proses", "langsung", "nunggu", "menunggu"],
-      j: "Beberapa saat setelah pembayaran berhasil, tautan surat langsung <b>muncul di layar</b> dan <b>dikirim ke email</b> yang kamu isi. Tidak perlu menunggu admin — semuanya otomatis." },
+      j: "Beberapa saat setelah pembayaran berhasil, tautan surat langsung <b>muncul di layar</b> dan <b>dikirim ke email</b> yang kamu isi. Tidak perlu menunggu admin, semuanya berjalan sendiri." },
     { id: "belum", t: "Sudah bayar, tapi tautannya belum muncul",
       k: ["belum muncul", "belum masuk", "belum dapat", "belum dikirim", "tautan tidak muncul", "tautan tidak masuk", "email tidak masuk", "spam", "tautan hilang", "gagal", "error", "sudah bayar", "sudah lunas", "padahal lunas", "terpotong"],
-      j: "Tunggu 1–2 menit, lalu cek email (termasuk folder <b>spam/promosi</b>). Kalau tetap belum ada, kirim <b>kode pesananmu</b> ke WhatsApp kami. Uangmu aman — kalau karena kendala di pihak kami tautannya tidak sampai dalam 1×24 jam, dana dikembalikan penuh." },
+      j: "Tunggu 1 sampai 2 menit, lalu cek email (termasuk folder <b>spam/promosi</b>). Kalau tetap belum ada, kirim <b>kode pesananmu</b> ke WhatsApp kami. Uangmu aman. Kalau karena kendala dari kami tautannya tidak sampai dalam 1×24 jam, uangmu kami kembalikan penuh." },
     { id: "ubah", t: "Bisa mengubah isinya setelah bayar?",
       k: ["ubah", "edit", "ganti", "revisi", "salah ketik", "typo", "salah", "perbaiki", "koreksi", "ganti foto", "tukar"],
       j: "Bisa. Kamu dapat <b>tautan edit pribadi</b> (di layar dan di email) yang berlaku <b>3 hari</b> dan boleh dipakai berkali-kali. Perubahan langsung berlaku di tautan surat yang sama. Isi suratmu dipasang persis seperti yang kamu tulis, jadi baca ulang sebelum menyimpan, ya." },
     { id: "lama", t: "Suratnya bisa dibuka sampai kapan?",
       k: ["sampai kapan", "selamanya", "masa", "berlaku", "aktif", "kedaluwarsa", "expired", "dihapus", "hapus", "2 bulan", "dua bulan", "perpanjang", "permanen"],
-      j: "Surat bisa dibuka selama <b>2 bulan</b> sejak dibayar. 14 hari sebelum masanya habis, kami kirim email pengingat. Mau lebih lama? <b>Perpanjang 2 bulan</b> lewat tautan di email itu atau di halaman edit — bisa berkali-kali. Kalau tidak diperpanjang, isi dan fotonya dihapus untuk menjaga privasi kalian." },
+      j: "Surat bisa dibuka selama <b>2 bulan</b> sejak dibayar. 14 hari sebelum masanya habis, kami kirim email pengingat. Mau lebih lama? <b>Perpanjang 2 bulan</b> lewat tautan di email itu atau di halaman edit, dan bisa berkali-kali. Kalau tidak diperpanjang, isi dan fotonya dihapus untuk menjaga privasi kalian." },
     { id: "refund", t: "Bisa dibatalkan atau refund?",
       k: ["refund", "batal", "pembatalan", "uang kembali", "kembalikan", "pengembalian", "cancel"],
-      j: "Setelah pembayaran berhasil, pesanan tidak bisa dibatalkan karena suratnya langsung dibuat dari isimu. Kalau kesalahannya di pihak kami — tautan tidak sampai dalam 1×24 jam, atau surat rusak dan tidak bisa kami perbaiki — dana <b>dikembalikan penuh</b>. Makanya ada contoh gratis untuk dicoba dulu." },
+      j: "Setelah pembayaran berhasil, pesanan tidak bisa dibatalkan karena suratnya langsung dibuat dari isimu. Kalau salahnya dari kami, misalnya tautan tidak sampai dalam 1×24 jam atau suratnya rusak dan tidak bisa kami perbaiki, uangmu <b>kami kembalikan penuh</b>. Makanya ada contoh gratis untuk dicoba dulu." },
     { id: "kirim", t: "Cara mengirim suratnya ke dia?",
       k: ["kirim", "cara kirim", "share", "bagikan", "kasih", "ngirim", "whatsapp dia", "qr", "barcode", "scan", "pindai", "cetak", "print"],
-      j: "Setelah bayar kamu dapat satu tautan. Kirim lewat <b>WhatsApp</b> (ada tombolnya), salin tautannya, atau buat <b>kode QR berbentuk hati atau amplop</b> — gambarnya bisa dikirim atau dicetak dan diselipkan di kado. Dia cukup memindainya dengan kamera HP." },
+      j: "Setelah bayar kamu dapat satu tautan. Kirim lewat <b>WhatsApp</b> (ada tombolnya), salin tautannya, atau buat <b>kode QR berbentuk hati atau amplop</b>. Gambarnya bisa dikirim atau dicetak dan diselipkan di kado. Dia cukup memindainya dengan kamera HP." },
     { id: "hp", t: "Dia perlu pasang aplikasi?",
       k: ["aplikasi", "install", "pasang", "download", "unduh", "hp", "iphone", "android", "browser", "laptop", "buka di"],
-      j: "Tidak perlu. Suratnya halaman web biasa — dibuka langsung di browser HP mana pun (iPhone atau Android) atau laptop. Paling nyaman dibuka di HP dengan suara menyala." },
+      j: "Tidak perlu. Suratnya halaman web biasa, jadi bisa dibuka langsung di browser HP mana pun (iPhone atau Android) atau laptop. Paling nyaman dibuka di HP dengan suara menyala." },
     { id: "dibuka", t: "Aku bisa tahu kalau suratnya sudah dibuka?",
       k: ["sudah dibuka", "dibuka", "dibaca", "notifikasi", "tahu kalau", "kabar", "read"],
       j: "Bisa. Saat suratnya <b>pertama kali dibuka</b>, kami kirim satu email ke kamu. Bukaan dari HP yang kamu pakai memesan tidak dihitung, jadi mengecek suratmu sendiri tidak memicu kabar itu." },
     { id: "lagu", t: "Bisa pakai lagu sendiri?",
       k: ["lagu", "musik", "mp3", "m4a", "spotify", "youtube", "suara", "audio"],
-      j: "Bisa. Unggah berkas <b>MP3 atau M4A</b> milikmu (maks. 10 MB) dan pilih detik mulai–selesainya. Kalau dikosongkan, surat memakai kotak musik lembut bawaan Foreverse. Tautan Spotify/YouTube belum bisa dipakai." },
+      j: "Bisa. Unggah berkas <b>MP3 atau M4A</b> milikmu (maks. 10 MB) lalu pilih detik mulai dan selesainya. Kalau dikosongkan, suratnya memakai kotak musik bawaan Foreverse. Tautan Spotify/YouTube belum bisa dipakai." },
     { id: "foto", t: "Berapa foto yang bisa dipasang?",
       k: ["foto", "gambar", "berapa foto", "ukuran foto", "video", "jumlah foto"],
-      j: "Tergantung tema — jumlahnya tertulis di formulir pesan. Fotonya dikecilkan otomatis di HP-mu sebelum dikirim, jadi tidak perlu diedit dulu. Video belum didukung." },
+      j: "Tergantung temanya. Jumlahnya tertulis di formulir pesan. Fotonya dikecilkan otomatis di HP-mu sebelum dikirim, jadi tidak perlu diedit dulu. Video belum didukung." },
     { id: "tema", t: "Bedanya tiap tema apa?",
       k: ["tema", "beda", "bedanya", "pilih tema", "rekomendasi", "bagus", "momen", "ulang tahun", "anniversary", "ldr", "wisuda"],
-      j: "Tiap tema adalah dunia kecil yang dimainkan — ada yang digulir, ada yang dijelajah pakai joystick, ada tur ruangan. Isi tulisanmu dibawa masuk ke dalam permainannya. Cara terbaik memilih: buka <b>contohnya gratis</b> di beranda, lalu pilih yang paling terasa seperti kalian." },
+      j: "Tiap tema punya permainannya sendiri. Ada yang tinggal digulir, ada yang dijelajah pakai joystick, ada juga yang seperti tur keliling rumah. Tulisanmu ikut masuk ke permainannya. Cara paling gampang memilih: buka <b>contohnya gratis</b> di beranda, lalu pilih yang paling terasa seperti kalian." },
     { id: "coba", t: "Bisa lihat contohnya dulu?",
       k: ["contoh", "demo", "coba", "lihat dulu", "preview", "pratinjau", "sampel"],
       j: "Bisa. Setiap tema punya contoh lengkap yang bisa dimainkan gratis di beranda. Saat mengisi formulir pun ada <b>pratinjau langsung</b> yang berubah sesuai isianmu." },
@@ -70,19 +69,19 @@
       j: "Tautan surat memakai kode acak yang panjang, jadi tidak bisa ditebak. Mau lebih aman lagi? Pasang <b>kunci pembuka</b> (PIN, pertanyaan rahasia, atau tanggal). Data hanya dipakai untuk membuat dan mengirim suratmu, tidak dijual atau dibagikan, dan dihapus otomatis setelah masa simpannya habis. Rinciannya di Kebijakan Privasi." },
     { id: "jadwal", t: "Bisa dijadwalkan terbuka jam 00.00?",
       k: ["jadwal", "terjadwal", "tengah malam", "jam 12", "00 00", "0000", "kirim otomatis", "nanti"],
-      j: "Bisa, pakai <b>kunci waktu</b> di formulir. Tautannya boleh kamu kirim lebih dulu — sebelum waktunya, dia hanya melihat hitung mundur, lalu suratnya terbuka tepat di jam yang kamu pilih (WIB)." },
+      j: "Bisa, pakai <b>kunci waktu</b> di formulir. Tautannya boleh kamu kirim lebih dulu. Sebelum waktunya, dia hanya melihat hitung mundur, lalu suratnya terbuka tepat di jam yang kamu pilih (WIB)." },
     { id: "pengirim", t: "Dia tahu ini dari siapa?",
       k: ["anonim", "nama pengirim", "siapa pengirim", "rahasia nama", "tanpa nama", "dari siapa"],
-      j: "Nama pengirim yang tampil adalah nama yang <b>kamu tulis sendiri</b> di formulir — boleh nama asli, nama panggilan, atau sebutan sayang. Beberapa tema (misalnya Kasus Pengirim Tanpa Nama) memang dirancang supaya dia menebak dulu." }
+      j: "Nama pengirim yang tampil adalah nama yang <b>kamu tulis sendiri</b> di formulir. Boleh nama asli, nama panggilan, atau sebutan sayang. Beberapa tema (misalnya Kasus Pengirim Tanpa Nama) memang dirancang supaya dia menebak dulu." }
     ,{ id: "kunci", t: "Suratnya bisa dikunci?",
       k: ["kunci", "pin", "password", "sandi", "kata sandi", "pertanyaan rahasia", "dikunci", "gembok", "lock"],
-      j: "Bisa. Di formulir ada <b>kunci pembuka</b>: PIN 4–6 angka, pertanyaan rahasia, atau tanggal penting kalian — plus petunjuk kalau perlu. Jawabannya dicek di server, jadi tidak bisa diintip. Bisa juga ditambah <b>kunci waktu</b> supaya baru terbuka di jam tertentu." },
+      j: "Bisa. Di formulir ada <b>kunci pembuka</b>: PIN 4 sampai 6 angka, pertanyaan rahasia, atau tanggal penting kalian, ditambah petunjuk kalau perlu. Jawabannya dicek di server, jadi tidak bisa diintip. Bisa juga ditambah <b>kunci waktu</b> supaya baru terbuka di jam tertentu." },
     { id: "ingat", t: "Bisa diingatkan tahun depan?",
       k: ["ingetin", "ingatkan", "pengingat", "reminder", "tahun depan", "lupa"],
-      j: "Bisa, untuk surat ulang tahun dan anniversary. Setelah bayar, ketuk <b>Ingetin aku</b> — kami kirim satu email 7 hari sebelum harinya tahun depan. Yang disimpan hanya tanggal, bulan, dan nama panggilannya, dan bisa dihapus kapan saja." },
+      j: "Bisa, untuk surat ulang tahun dan anniversary. Setelah bayar, ketuk <b>Ingetin aku</b>, nanti kami kirim satu email 7 hari sebelum harinya tahun depan. Yang disimpan hanya tanggal, bulan, dan nama panggilannya, dan bisa dihapus kapan saja." },
     { id: "vera", t: "Vera itu siapa?",
-      k: ["vera", "kamu siapa", "siapa kamu", "bot", "robot", "ai", "manusia", "admin", "chatgpt"],
-      j: "Aku Vera, asisten otomatis Foreverse 👋 Aku menjawab dari daftar pertanyaan yang sudah disiapkan tim — bukan AI, dan pertanyaanmu tidak dikirim ke mana-mana. Kalau aku belum bisa bantu, tim kami siap lewat WhatsApp." }
+      k: ["vera", "kamu siapa", "siapa kamu", "admin"],
+      j: "Aku Vera dari Foreverse 👋 Jawabanku diambil dari daftar pertanyaan yang sudah disiapkan tim, dan pertanyaanmu tidak dikirim ke mana-mana. Kalau aku belum bisa bantu, tim kami siap lewat WhatsApp." }
   ];
   var POPULER = ["harga", "jadi", "kunci", "ubah", "kirim"];
 
@@ -322,7 +321,7 @@
         kp.addEventListener("click", function () {
           kp.remove();
           gelembung("Maaf ya, jawabanku belum pas 🙏 Tim kami bisa bantu lebih lengkap lewat WhatsApp.", "kami");
-          pilihan([], true, "Halo Foreverse, saya mau tanya soal: " + q.t + " — ");
+          pilihan([], true, "Halo Foreverse, saya mau tanya soal: " + q.t + ". ");
         });
         isi.appendChild(kp);
         pilihan(lain, true, "Halo Foreverse, saya mau tanya soal: " + q.t);
