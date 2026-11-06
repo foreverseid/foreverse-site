@@ -434,7 +434,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
                 catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50, janji:90,
-                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , harapanNatal:70, janjiTahun:60, sadar:90, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
+                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , harapanNatal:70, janjiTahun:60, alasanSayang:60, sadar:90, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -463,7 +463,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "garis-finis":       { nama:"Garis Finis", nfoto:3, mesin:"/garis-finis.html", momen:"congrats" },
     "stasiun-terakhir":  { nama:"Stasiun Terakhir", nfoto:3, mesin:"/stasiun-terakhir.html", momen:"parting" },
     "rumah-menyala":     { nama:"Rumah yang Menyala", nfoto:3, mesin:"/rumah-menyala.html", momen:"spesial" },
-    "hitung-mundur":     { nama:"Hitung Mundur di Atap", nfoto:3, mesin:"/hitung-mundur.html", momen:"spesial" }
+    "hitung-mundur":     { nama:"Hitung Mundur di Atap", nfoto:3, mesin:"/hitung-mundur.html", momen:"spesial" },
+    "pabrik-cokelat":    { nama:"Cokelat Buatan Sendiri", nfoto:3, mesin:"/pabrik-cokelat.html", momen:"spesial" }
   };
   /* Kota untuk momen LDR — harus sama persis dengan KOTA di
      zona-waktu.html dan KOTA_SAH di functions/api/[[jalur]].js. */
@@ -1006,6 +1007,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         [0,1,2].map(function(i){ return '<div class="baris" data-f="sorakan'+i+'"><label for="sorakan'+i+'">Spanduk '+(i+1)+'</label>' +
           '<input id="sorakan'+i+'" type="text" maxlength="60" placeholder="'+contohSr[i]+'">' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Sorakan ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "pabrik-cokelat"){
+      var contohAs = ["Ketawamu yang bikin capekku hilang.", "Kamu selalu ingat hal-hal kecil.", "Sama kamu aku jadi diri sendiri."];
+      html = '<h2><span class="n">5</span> Tiga alasan aku sayang kamu</h2>' +
+        '<p class="jelas">Tiap cetakan cokelat yang dia tuang pas akan dihias satu alasan ini.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="alasanS'+i+'"><label for="alasanS'+i+'">Alasan '+(i+1)+'</label>' +
+          '<input id="alasanS'+i+'" type="text" maxlength="60" placeholder="'+contohAs[i]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Alasan ini belum diisi.</p></div>'; }).join("");
     } else if(tema === "hitung-mundur"){
       var contohJt = ["Liburan berdua minimal sekali, beneran berangkat.", "Masak bareng tiap Minggu, walau gosong.", "Nabung bareng buat rencana besar kita."];
       html = '<h2><span class="n">5</span> Tiga rencana tahun depan</h2>' +
@@ -1095,6 +1103,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     } else if(tema === "garis-finis"){
       pasangHitung("pencapaian", BATAS.pencapaian);
       for(var sr=0;sr<3;sr++) pasangHitung("sorakan"+sr, BATAS.sorakan);
+    } else if(tema === "pabrik-cokelat"){
+      for(var as=0;as<3;as++) pasangHitung("alasanS"+as, BATAS.alasanSayang);
     } else if(tema === "hitung-mundur"){
       for(var jt=0;jt<3;jt++) pasangHitung("janjiT"+jt, BATAS.janjiTahun);
     } else if(tema === "rumah-menyala"){
@@ -1202,6 +1212,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     }
     if(TEMA === "kotak-musik") return { sadar: [0,1,2].map(function(i){ return $("sadar"+i).value; }) };
     if(TEMA === "garis-finis") return { pencapaian: $("pencapaian").value, sorakan: [0,1,2].map(function(i){ return $("sorakan"+i).value; }) };
+    if(TEMA === "pabrik-cokelat") return { alasan: [0,1,2].map(function(i){ return $("alasanS"+i).value; }) };
     if(TEMA === "hitung-mundur") return { janji: [0,1,2].map(function(i){ return $("janjiT"+i).value; }) };
     if(TEMA === "rumah-menyala") return { ucapan: $("ucapanNatal").value, harapan: [0,1,2].map(function(i){ return $("harapanN"+i).value; }) };
     if(TEMA === "stasiun-terakhir") return {
@@ -1445,11 +1456,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tandai("alasan"+i, kosongA);
         if(kosongA) kurang.push("alasan"+i);
       });
-    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir" || TEMA === "rumah-menyala" || TEMA === "hitung-mundur"){
+    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir" || TEMA === "rumah-menyala" || TEMA === "hitung-mundur" || TEMA === "pabrik-cokelat"){
       (TEMA === "kotak-musik" ? ["sadar0","sadar1","sadar2"]
         : TEMA === "garis-finis" ? ["pencapaian","sorakan0","sorakan1","sorakan2"]
         : TEMA === "rumah-menyala" ? ["harapanN0","harapanN1","harapanN2"]
         : TEMA === "hitung-mundur" ? ["janjiT0","janjiT1","janjiT2"]
+        : TEMA === "pabrik-cokelat" ? ["alasanS0","alasanS1","alasanS2"]
         : ["stNama0","stKenang0","stNama1","stKenang1","stNama2","stKenang2"]).forEach(function(nm){
         var kosongX = !$(nm).value.trim(); tandai(nm, kosongX); if(kosongX) kurang.push(nm);
       });
@@ -1804,6 +1816,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         } else if(TEMA === "garis-finis"){
           if($("pencapaian")) $("pencapaian").value = i.pencapaian || "";
           (i.sorakan||[]).forEach(function(v,n){ if($("sorakan"+n)) $("sorakan"+n).value = v || ""; });
+        } else if(TEMA === "pabrik-cokelat"){
+          (i.alasan||[]).forEach(function(v,n){ if($("alasanS"+n)) $("alasanS"+n).value = v || ""; });
         } else if(TEMA === "hitung-mundur"){
           (i.janji||[]).forEach(function(v,n){ if($("janjiT"+n)) $("janjiT"+n).value = v || ""; });
         } else if(TEMA === "rumah-menyala"){

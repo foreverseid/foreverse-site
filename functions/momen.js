@@ -29,7 +29,8 @@ const TEMA = {
   "garis-finis": { nama: "Garis Finis", demo: "/garis-finis-demo.html", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
   "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
   "rumah-menyala": { nama: "Rumah yang Menyala", demo: "/rumah-menyala-demo.html", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
-  "hitung-mundur": { nama: "Hitung Mundur di Atap", demo: "/hitung-mundur-demo.html", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." }
+  "hitung-mundur": { nama: "Hitung Mundur di Atap", demo: "/hitung-mundur-demo.html", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
+  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", demo: "/pabrik-cokelat-demo.html", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." }
 };
 
 export const MOMEN = {
@@ -268,6 +269,23 @@ export const MOMEN = {
     faq: [
       ["Angka tahunnya ikut berganti otomatis?", "Ya. Surat menghitung tahun baru yang akan datang dari tanggal saat dibuka."],
       ["Kapan sebaiknya dikirim?", "Menjelang malam pergantian tahun. Pakai kunci waktu kalau mau suratnya baru terbuka tepat tengah malam."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "valentine": {
+    judul: "Ucapan Valentine untuk Pacar — Kado Valentine Digital",
+    deskripsi: "Kado Valentine digital yang bisa dimainkan: dia membuat cokelatnya sendiri, membaca alasan kamu sayang dia di tiap cokelat, lalu membagi cokelatnya berdua.",
+    h1: "Valentine yang manisnya dia bikin sendiri.",
+    lede: "Dia mengelupas foil, menuang cokelat ke cetakan sampai pas, dan menemukan alasan kamu sayang dia tertulis di atas tiap cokelat.",
+    tema: ["pabrik-cokelat"],
+    ide: [
+      "Setiap hari sama kamu rasanya manis.",
+      "Makasih udah ingat hal-hal kecil tentang aku.",
+      "Separuh cokelatnya buat kamu, separuh lagi kita makan bareng."
+    ],
+    faq: [
+      ["Kapan sebaiknya dikirim?", "Menjelang 14 Februari. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
+      ["Harus pacaran dulu?", "Tidak. Cocok juga untuk pasangan suami-istri atau gebetan yang mau dikasih kejutan manis."],
       ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
     ]
   }
