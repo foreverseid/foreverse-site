@@ -124,9 +124,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .jendela::before{left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%)}
 .jendela::after{top:50%;left:0;right:0;height:3px;transform:translateY(-50%)}
 .bulat{position:absolute;width:26%;aspect-ratio:1/1;border-radius:50%;right:14%;top:14%;background:var(--surya,#FFD36B);box-shadow:0 0 18px var(--surya,#FFD36B)}
-.tempel{position:relative;height:60%;max-height:min(230px, 60%);aspect-ratio:4/5;background:#fff;padding:5px 5px 18px;border:2px solid var(--ink);
+.tempel{position:relative;height:60%;max-height:min(230px, 60%);aspect-ratio:3/4;background:#fff;padding:5px 5px 18px;border:2px solid var(--ink);
   box-shadow:2px 3px 0 rgba(0,0,0,.18);transform:rotate(-4deg);flex:none}
 .tempel img{width:100%;height:100%;object-fit:cover;display:block}
+.tempel.rebah{aspect-ratio:5/4}
 .tempel::before{content:"";position:absolute;left:50%;top:-8px;width:34px;height:14px;background:rgba(255,226,140,.85);transform:translateX(-50%) rotate(3deg)}
 .tempel span{position:absolute;left:4px;right:4px;bottom:2px;font-size:.6rem;font-weight:600;text-align:center;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -236,6 +237,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .lapisan{display:grid;gap:8px;margin:2px 0 10px}
 .lapis{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-weight:600}
 .lapis img{width:100%;max-height:28svh;object-fit:cover;display:block;border:2px solid var(--ink);margin-top:8px}
+.lapis img.tegak{width:auto;height:26svh;aspect-ratio:3/4;margin:8px auto 0}
+.lapis img.rebah{aspect-ratio:4/3;height:auto}
 .kertasKado{display:block;width:100%;text-align:center;background:repeating-linear-gradient(45deg,#F6C9B6 0 10px,#FBE0D4 10px 20px);border:2px dashed var(--ink);border-radius:10px;padding:14px;font-weight:700}
 
 .hitung{font-family:var(--serif);font-size:1.05rem;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;margin:2px 0 10px}
@@ -342,7 +345,11 @@ var KA = KOTA[D.kotaPengirim] || KOTA.jakarta, KB = KOTA[D.kotaPenerima] || KOTA
    (pratinjau, atau pesanan dari versi tema lama yang belum punya
    isian ini). `rahasia` dari versi lama dipakai sebagai penutup. ── */
 var PENERIMA = tk(D.penerima) || 'kamu', PENGIRIM = tk(D.pengirim) || 'aku';
-var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,4);
+/* standar foto: T tegak 3:4, R mendatar 4:3; fx/fy titik fokus */
+function pas(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
+function posBg(n,f){ n.style.backgroundImage='url("'+f.src+'")'; n.style.backgroundPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; }
+
 var SURAT = (D.surat || []).map(tk).filter(Boolean); if(!SURAT.length) SURAT = ['Halo dari sini.'];
 function menitDari(j){ var m = String(j||'').match(/^(\d{1,2}):(\d{2})$/); return m ? (+m[1])*60 + (+m[2]) : -1; }
 var BAWAAN_R = [['07:30','berangkat kerja, sambil dengerin lagu yang kamu kirim'],['12:15','makan siang, sambil lihat fotomu'],['22:30','siap-siap tidur, nungguin chat darimu']];
@@ -498,7 +505,7 @@ function aktifkan(node, fn){
 /* ── 1 · pembuka: panggilan masuk ── */
 function bukaPanggil(){
   var fotoB = el('div', 'foto-bulat');
-  if(FOTO[0]) fotoB.style.backgroundImage = 'url("' + FOTO[0].src + '")'; else fotoB.textContent = PENGIRIM.charAt(0).toUpperCase();
+  if(FOTO[0]) posBg(fotoB, FOTO[0]); else fotoB.textContent = PENGIRIM.charAt(0).toUpperCase();
   var wrap = el('div', 'panggil');
   wrap.appendChild(p('panggilan video', 'dari'));
   wrap.appendChild(fotoB);
@@ -507,7 +514,7 @@ function bukaPanggil(){
   wrap.appendChild(tombol('Angkat', function(){
     ac(); MU.main(); SFX.angkat(); buzz(30);
     tutup(); $('#ponselB').classList.remove('dering');
-    if(FOTO[0]) $('#layarB').style.backgroundImage = 'url("' + FOTO[0].src + '")';
+    if(FOTO[0]) posBg($('#layarB'), FOTO[0]);
     toast('Tersambung. ' + KA.nama + ' ke ' + KB.nama + '.');
     setLangkah(1);
     var awan = el('div', 'awan', 'jam segini aku lagi apa?'); $('#pikirA').appendChild(awan);
@@ -564,7 +571,7 @@ function keSurat(){
 function bukaSurat(){
   $('#ponselB').classList.remove('dering'); $('#notifB').hidden = true;
   var hp = el('div', 'hp'), kep = el('div', 'kepala'), av = el('i');
-  if(FOTO[0]) av.style.backgroundImage = 'url("' + FOTO[0].src + '")';
+  if(FOTO[0]) posBg(av, FOTO[0]);
   var nm = el('div'); nm.appendChild(el('b', '', PENGIRIM)); nm.appendChild(el('small', '', 'online · ' + KA.nama));
   kep.appendChild(av); kep.appendChild(nm); hp.appendChild(kep);
   var ketik = el('div', 'ketik'); ketik.innerHTML = '<i></i><i></i><i></i>';
@@ -668,7 +675,8 @@ function bukaPaket(){
   kertas.addEventListener('click', function(){
     if(!siap()) return;
     var i = 3 - sisa, kotak = el('div', 'lapis', OLEH[i]);
-    if(i === 2 && FOTO[2]){ var img = el('img'); img.alt = ''; img.src = FOTO[2].src; kotak.appendChild(img); if(FOTO[2].caption) kotak.appendChild(el('div', '', FOTO[2].caption)); }
+    var fi = i === 2 ? FOTO[2] : i === 1 ? FOTO[3] : null;
+    if(fi){ var img = el('img'); img.alt = ''; pas(img, fi); img.className = fi.bentuk === 'R' ? 'rebah' : 'tegak'; kotak.appendChild(img); if(fi.caption) kotak.appendChild(el('div', '', fi.caption)); }
     lap.appendChild(kotak); sisa--; SFX.benar(); buzz(15);
     if(sisa <= 0){ kertas.remove(); selesai.hidden = false; }
     else kertas.textContent = 'Masih ada lapis lagi, ketuk';
@@ -738,7 +746,7 @@ $('#suara').addEventListener('click', function(){
 /* ── mulai ── */
 $('#namaA').textContent = PENGIRIM; $('#kotaA').textContent = KA.nama;
 $('#namaB').textContent = PENERIMA; $('#kotaB').textContent = KB.nama;
-if(FOTO[1]){ var tp = $('#tempelA'); tp.hidden = false; tp.querySelector('img').src = FOTO[1].src; tp.querySelector('span').textContent = FOTO[1].caption || ''; }
+if(FOTO[1]){ var tp = $('#tempelA'); tp.hidden = false; pas(tp.querySelector('img'), FOTO[1]); tp.classList.toggle('rebah', FOTO[1].bentuk === 'R'); tp.querySelector('span').textContent = FOTO[1].caption || ''; }
 document.title = 'Panggilan dari ' + KA.nama + ' buat ' + PENERIMA;
 function skala(){
   var h = $('#sisiA').getBoundingClientRect().height;

@@ -109,7 +109,10 @@ img{display:block;max-width:100%;-webkit-user-drag:none;pointer-events:none}
 #kartu h3{font-family:var(--disp);font-weight:600;font-size:1.3rem;line-height:1.2;margin-bottom:6px}
 #kartu .ket{font-size:.86rem;color:var(--muted);margin-bottom:12px}
 #kartu .foto{border-radius:12px;overflow:hidden;border:5px solid #F3EEE4;transform:rotate(-1.5deg);margin:4px auto 10px;max-width:300px}
-#kartu .foto img{width:100%;aspect-ratio:1;object-fit:cover}
+#kartu .foto img{width:100%;aspect-ratio:3/4;object-fit:cover}
+#kartu .foto{max-width:260px}
+#kartu .foto.rebah{max-width:340px}
+#kartu .foto.rebah img{aspect-ratio:4/3}
 #kartu .cap{font-family:var(--hand);font-size:1.4rem;text-align:center;color:#FCE6A3}
 #kartu p.par{font-family:var(--disp);font-size:1.02rem;line-height:1.6;margin:0 0 12px;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s}
 #kartu p.par.tampil{opacity:1;transform:none}
@@ -251,9 +254,9 @@ function ukur(){
   if(!TOPLES.x||!langkahPakaiGeser()) TOPLES.x=TOPLES.tx=W/2;
   TOPLES.x=TOPLES.tx=klem(TOPLES.tx,js/2+8,W-js/2-8);
   /* tali jemuran & tiga foto */
-  var pw=klem(Math.min(W*.22,H*(mendatar?.3:.17)),58,130);
+  var pw=klem(Math.min(W*.17,H*(mendatar?.26:.15)),48,120);
   L.pw=pw; L.tali={x0:W*.06,x1:W*.94,y:Math.max(30,H*.1)};
-  L.fotoPos=[.24,.5,.76].map(function(t){ var x=W*t; return {x:x,y:taliY(x)+8}; });
+  L.fotoPos=[.16,.39,.61,.84].map(function(t){ var x=W*t; return {x:x,y:taliY(x)+8}; });
   /* enam kunang-kunang pasangan */
   var kol=3, bar=2, gx=Math.min(W*.68,mendatar?W*.5:W*.8), gy=Math.min(H*.3,mendatar?H*.36:H*.26);
   L.orb=[]; for(var r=0;r<bar;r++) for(var c=0;c<kol;c++) L.orb.push({x:W/2+(c-1)*gx/2, y:H*.16+r*gy});
@@ -448,18 +451,20 @@ var bisikT; function bisik(t,ms){ var b=$('#bisik'); b.textContent=t; b.classLis
 
 /* ══════ 3 · foto di tali jemuran ══════ */
 function fotoDi(q){ if(!D.foto.length) return -1;
-  for(var i=0;i<Math.min(3,D.foto.length);i++){ var f=L.fotoPos[i]; if(Math.abs(q.x-f.x)<L.pw*.6 && q.y>f.y-8 && q.y<f.y+L.pw*1.25) return i; } return -1; }
+  for(var i=0;i<Math.min(4,D.foto.length);i++){ var f=L.fotoPos[i]; if(Math.abs(q.x-f.x)<L.pw*.6 && q.y>f.y-8 && q.y<f.y+L.pw*1.25) return i; } return -1; }
 var GAMBAR=D.foto.map(function(f){ var im=new Image(); im.src=f.src; return im; });
 function gambarTali(){
   cx.strokeStyle='rgba(243,238,228,.55)'; cx.lineWidth=1.5; cx.beginPath();
   for(var x=L.tali.x0;x<=L.tali.x1;x+=8) x===L.tali.x0?cx.moveTo(x,taliY(x)):cx.lineTo(x,taliY(x)); cx.stroke();
   cx.fillStyle='#5A4A7A'; cx.fillRect(L.tali.x0-4,L.tali.y-6,8,L.tanah-L.tali.y+6); cx.fillRect(L.tali.x1-4,L.tali.y-6,8,L.tanah-L.tali.y+6);
-  var n=Math.min(3,D.foto.length);
-  for(var i=0;i<n;i++){ var f=L.fotoPos[i], w=L.pw, h=w*1.18, nyala=FOTO_LIHAT[i]||fotoNyala===i;
-    cx.save(); cx.translate(f.x,f.y); cx.rotate((i-1)*.06);
+  var n=Math.min(4,D.foto.length);
+  for(var i=0;i<n;i++){ var fo=D.foto[i]||{}, rb=fo.bentuk==='R', f=L.fotoPos[i], w=rb?L.pw*1.2:L.pw*.9, dh=rb?(w-10)*.75:(w-10)*4/3, h=dh+w*.3, nyala=FOTO_LIHAT[i]||fotoNyala===i;
+    cx.save(); cx.translate(f.x,f.y); cx.rotate((i-1.5)*.05);
     cx.fillStyle=nyala?'#F3EEE4':'#3A3160'; cx.fillRect(-w/2,0,w,h);
     var im=GAMBAR[i]; if(im&&im.complete&&im.naturalWidth){ cx.globalAlpha=nyala?1:.18;
-      var s=Math.min(im.naturalWidth,im.naturalHeight); cx.drawImage(im,(im.naturalWidth-s)/2,(im.naturalHeight-s)/2,s,s,-w/2+5,5,w-10,w-10); cx.globalAlpha=1; }
+      /* foto dipotong sesuai bentuk slot (tegak 3:4 / mendatar 4:3) dan titik fokus */
+      var nw=im.naturalWidth, nh=im.naturalHeight, r=(w-10)/dh, sw=nw, sh=nw/r; if(sh>nh){ sh=nh; sw=nh*r; }
+      cx.drawImage(im,(nw-sw)*((fo.fx==null?50:fo.fx)/100),(nh-sh)*((fo.fy==null?50:fo.fy)/100),sw,sh,-w/2+5,5,w-10,dh); cx.globalAlpha=1; }
     cx.fillStyle='#C9A36A'; cx.fillRect(-5,-8,10,14);   // jepitan
     if(langkah===3&&!FOTO_LIHAT[i]){ cx.strokeStyle='rgba(240,180,41,'+(.5+.4*Math.sin(performance.now()/300))+')'; cx.lineWidth=2.5; cx.strokeRect(-w/2-5,-5,w+10,h+10); }
     cx.restore(); }
@@ -469,10 +474,10 @@ function lihatFoto(i){
   setTimeout(function(){
     FOTO_LIHAT[i]=true; var f=D.foto[i];
     panel(function(k){
-      var w=el('div','foto'), im=el('img'); im.src=f.src; im.alt=f.caption||'foto'; w.appendChild(im); k.appendChild(w);
+      var w=el('div','foto'+(f.bentuk==='R'?' rebah':'')), im=el('img'); im.src=f.src; im.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; im.alt=f.caption||'foto'; w.appendChild(im); k.appendChild(w);
       if(f.caption) k.appendChild(el('div','cap',f.caption));
-      k.appendChild(tombol(FOTO_LIHAT.slice(0,Math.min(3,D.foto.length)).every(Boolean)?'Lanjut':'Lihat foto lainnya',function(){
-        tutupPanel(); fotoNyala=-1; if(FOTO_LIHAT.slice(0,Math.min(3,D.foto.length)).every(Boolean)) setTimeout(maju,400); }));
+      k.appendChild(tombol(FOTO_LIHAT.slice(0,Math.min(4,D.foto.length)).every(Boolean)?'Lanjut':'Lihat foto lainnya',function(){
+        tutupPanel(); fotoNyala=-1; if(FOTO_LIHAT.slice(0,Math.min(4,D.foto.length)).every(Boolean)) setTimeout(maju,400); }));
     });
   },550);
 }

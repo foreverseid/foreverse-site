@@ -31,7 +31,7 @@ function isiDraf() {
       tanggalLahir: "2001-05-14", sembunyikanUmur: false,
       rahasia: "Aku menunggu di halaman terakhir."
     },
-    foto: fotoPenuh(3)
+    foto: fotoPenuh(4)
   };
 }
 
@@ -40,7 +40,7 @@ function fotoPenuh(n) { return Array.from({ length: n }, (_, i) => ({ data: FOTO
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  const JUMLAH_FOTO = { "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4 };
+  const JUMLAH_FOTO = { "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4 };
   d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;

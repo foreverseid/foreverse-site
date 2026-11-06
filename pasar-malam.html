@@ -292,7 +292,10 @@ body.masuk #soundBtn{display:grid}
   border:3px solid #10293A;border-radius:9px;background:#FFF4E2;
   overflow:hidden;box-shadow:0 3px 0 rgba(0,0,0,.25)
 }
-.kabin img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.kabin img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.kabin.tegak{width:19%}
+.kabin.rebah{width:25%}
+.kabin.rebah img{aspect-ratio:4/3}
 /* Caption kabin boleh turun ke baris kedua - dipotong jadi "entah ken…"
    bukan caption, itu cuma teks rusak. */
 .kabin .cap{
@@ -1262,7 +1265,7 @@ var gelangSelesai = false;
    ══════════════════════════════════════════════════════════════ */
 (function(){
   var st = $('#stRoda');
-  var KABIN = 6;
+  var KABIN = Math.max(6, FOTO.length * 2);
   st.innerHTML =
     '<svg viewBox="0 0 300 225" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">' +
       '<line x1="0" y1="222" x2="300" y2="222" stroke="#FFF4E2" stroke-width="4" opacity=".6"/>' +
@@ -1277,11 +1280,11 @@ var gelangSelesai = false;
   var fotoIdx = 0;
   for(var i=0;i<KABIN;i++){
     var adaFoto = (i % 2 === 0) && fotoIdx < FOTO.length;
-    var k = el('div', 'kabin' + (adaFoto ? '' : ' lampion'));
+    var k = el('div', 'kabin' + (adaFoto ? (FOTO[fotoIdx].bentuk === 'R' ? ' rebah' : ' tegak') : ' lampion'));
     if(adaFoto){
       var f = FOTO[fotoIdx++];
       k.innerHTML = '<div class="badan"><img alt=""><div class="cap"></div></div>';
-      k.querySelector('img').src = f.src;
+      var im = k.querySelector('img'); im.src = f.src; im.style.objectPosition = (f.fx == null ? 50 : f.fx) + '% ' + (f.fy == null ? 50 : f.fy) + '%';
       var cap = k.querySelector('.cap');
       if(f.caption) cap.textContent = f.caption; else cap.remove();
     } else {

@@ -251,11 +251,13 @@ body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
 #pembuka{position:fixed;inset:0;z-index:50;background:var(--kertas);
   background-image:linear-gradient(#DCE4EC 1px,transparent 1px),linear-gradient(90deg,#DCE4EC 1px,transparent 1px);background-size:24px 24px;
   display:flex;align-items:center;justify-content:center;padding:18px}
-.map{position:relative;width:100%;max-width:400px;background:#E9C98F;border:3px solid var(--ink);border-radius:4px 14px 6px 6px;box-shadow:6px 6px 0 var(--ink);padding:24px 20px 18px;text-align:center}
-.map::before{content:"BERKAS";position:absolute;left:14px;top:-17px;background:#E9C98F;border:3px solid var(--ink);border-bottom:0;border-radius:8px 8px 0 0;padding:0 12px;font-family:var(--piksel);font-size:.78rem;font-weight:700}
-.map .no{font-family:var(--ketik);font-size:.85rem}
-.map h1{font-family:var(--piksel);font-weight:700;font-size:1.5rem;line-height:1.15;margin:4px 0 8px}
-.map .tgl{font-family:var(--ketik);font-size:1rem;background:#fff;border:2px solid var(--ink);padding:6px 10px;display:inline-block;margin-bottom:12px}
+.map{position:relative;width:100%;max-width:400px;background:#FFFDF6;background-image:linear-gradient(transparent 31px,#C9D6E4 32px);background-size:100% 32px;border:2px solid var(--ink);border-radius:2px 2px 10px 10px;box-shadow:0 14px 30px rgba(36,28,46,.18);padding:34px 22px 18px;text-align:center;transform:rotate(-1.2deg)}
+/* buku sketsa berspiral: beda dari map berkas di Kasus Pengirim */
+.map::before{content:"";position:absolute;left:16px;right:16px;top:-12px;height:22px;background:radial-gradient(circle at 9px 11px,transparent 5px,var(--ink) 5.5px,var(--ink) 7px,transparent 7.5px) 0 0/22px 22px repeat-x}
+.map::after{content:"sketsa · hal. 1";position:absolute;right:14px;bottom:8px;font-family:var(--ketik);font-size:.7rem;color:#8B8298;transform:rotate(1.2deg)}
+.map .no{font-family:var(--ketik);font-size:.85rem;color:#5A4F63}
+.map h1{font-family:var(--piksel);font-weight:700;font-size:1.6rem;line-height:1.15;margin:4px 0 8px;display:inline-block;padding:0 6px;background:linear-gradient(transparent 62%,#F6D77A 62% 88%,transparent 88%)}
+.map .tgl{font-family:var(--ketik);font-size:1rem;border:2px dashed var(--ink);border-radius:50%;padding:8px 16px;display:inline-block;margin-bottom:12px;transform:rotate(2deg)}
 .map p{font-size:.94rem;margin-bottom:12px}
 .petunjuk{display:flex;justify-content:center;gap:16px;margin:2px 0 12px;font-size:.8rem;font-weight:600;color:#5A4F63}
 .petunjuk span{display:flex;align-items:center;gap:6px}
@@ -295,7 +297,7 @@ body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
 
 <div id="pembuka">
   <div class="map">
-    <p class="no">Berkas rekonstruksi · untuk <span id="pbNama"></span></p>
+    <p class="no">Buku sketsa rekonstruksi · untuk <span id="pbNama"></span></p>
     <h1>Hari Pertama</h1>
     <p class="tgl" id="pbTgl"></p>
     <p>Hari itu tinggal sketsa. Jalan ke tiap tempat, kumpulkan barang buktinya, lalu susun ulang urutan jamnya sampai harinya hidup lagi.</p>

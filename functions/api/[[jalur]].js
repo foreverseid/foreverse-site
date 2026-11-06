@@ -81,15 +81,15 @@ const KOTA_SAH = [
    Tema baru = tambah satu baris di sini, lalu tangani isian khasnya
    (kalau ada, di luar isian dasar momennya) di rapikanIsi(). */
 const TEMA_SKEMA = {
-  "bait":              { nfoto: 3, momen: "birthday" },
+  "bait":              { nfoto: 4, foto: "TTRR", momen: "birthday" },
   "kado-riang":        { nfoto: 5, foto: "TTTTR", momen: "birthday" },
   "langit-harapan":    { nfoto: 4, foto: "TTTR", momen: "birthday" },
   "peta-perjalanan":   { nfoto: 3, momen: "anniversary" },
-  "zona-waktu":        { nfoto: 3, momen: "ldr" },
+  "zona-waktu":        { nfoto: 4, foto: "TTRR", momen: "ldr" },
   "graduation-benih":  { nfoto: 3, momen: "graduation" },
-  "confess-kunang":    { nfoto: 3, momen: "confess" },
+  "confess-kunang":    { nfoto: 4, foto: "TTRR", momen: "confess" },
   "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
-  "pasar-malam":       { nfoto: 3, momen: "askout" },
+  "pasar-malam":       { nfoto: 4, foto: "TRTR", momen: "askout" },
   "lewat-duluan":      { nfoto: 4, foto: "TTRR", momen: "lovenote" },
   "kasus-pengirim":    { nfoto: 4, foto: "TTRR", momen: "confess" },
   "rekonstruksi":      { nfoto: 4, foto: "TRTR", momen: "anniversary" },
