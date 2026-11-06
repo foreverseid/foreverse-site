@@ -178,8 +178,7 @@ const DOKU = {
     { kode: "VIRTUAL_ACCOUNT_BANK_SYARIAH_MANDIRI", nama: "VA BSI", ket: "transfer ke Virtual Account BSI", tetap: 0, persen: 0, aktif: false },
     { kode: "VIRTUAL_ACCOUNT_BANK_PERMATA", nama: "VA Permata", ket: "transfer ke Virtual Account Permata", tetap: 0, persen: 0, aktif: false },
     { kode: "VIRTUAL_ACCOUNT_BANK_CIMB", nama: "VA CIMB Niaga", ket: "transfer ke Virtual Account CIMB Niaga", tetap: 0, persen: 0, aktif: false },
-    { kode: "VIRTUAL_ACCOUNT_DOKU", nama: "VA bank lain", ket: "transfer dari bank mana pun ke Virtual Account DOKU", tetap: 0, persen: 0, aktif: false },
-    { kode: "ONLINE_TO_OFFLINE_ALFA", nama: "Alfamart", ket: "bayar tunai di kasir Alfamart/Alfamidi/Lawson", tetap: 0, persen: 0, aktif: false }
+    { kode: "VIRTUAL_ACCOUNT_DOKU", nama: "VA bank lain", ket: "transfer dari bank mana pun ke Virtual Account DOKU", tetap: 0, persen: 0, aktif: false }
   ],
 
   jatuhTempoMenit: 60,                    // umur halaman pembayaran
