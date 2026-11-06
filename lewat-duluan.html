@@ -246,7 +246,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <i class="setrip s1"></i><i class="setrip s2"></i><i class="setrip s3"></i><i class="setrip s4"></i>
   <div id="joyBola"></div>
 </div>
-<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">—</span></button>
+<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">-</span></button>
 
 <div id="toast"></div>
 <div id="tirai" hidden><div class="kartu" id="kartu"></div></div>
@@ -561,7 +561,7 @@ function tekanAksi(){
   if(panelBuka || !sudahMulai) return;
   ac();
   if(dekat){ dekat.aksi(); return; }
-  if(siapPulang() && !ST.surat) toast('Pulang dulu — ada yang nunggu di pintu kos.');
+  if(siapPulang() && !ST.surat) toast('Pulang dulu, ada yang nunggu di pintu kos.');
   else toast('Dekati benda yang berlabel dulu, ya.');
 }
 function cariDekat(){
@@ -577,7 +577,7 @@ function segarAksi(){
   var d = cariDekat();
   if(d === dekat) return;
   dekat = d;
-  aksiT.textContent = d ? d.kata : '—';
+  aksiT.textContent = d ? d.kata : '-';
   aksiBtn.classList.toggle('mati', !d);
   if(d) buzz(12);
 }
@@ -612,7 +612,7 @@ function bukaMug(){
     h3('Mug kedua'),
     p('Semalam masih kotor di bak cuci. Pagi ini udah bersih, ditaruh terbalik di rak.'),
     p(KEBIASAAN, 'kutip'),
-    p('— ' + PENGIRIM, 'ttd'),
+    p(PENGIRIM, 'ttd'),
     tombol('Taruh lagi', function(){ ST.mug = true; tutup(); cekTahap(); })
   ]);
 }
@@ -699,7 +699,7 @@ function bukaRak(i){
 }
 function bukaKasir(){
   var struk = el('div', 'struk');
-  struk.appendChild(el('div', '', 'MINIMARKET — 24 JAM'));
+  struk.appendChild(el('div', '', 'MINIMARKET 24 JAM'));
   struk.appendChild(el('div', 'garis'));
   diambil.forEach(function(n){ struk.appendChild(el('div', '', '1x  ' + n)); });
   struk.appendChild(el('div', 'garis'));
@@ -720,7 +720,7 @@ function bukaSurat(){
   var kertas = el('div', 'surat');
   kertas.appendChild(el('div', 'kepada', 'Buat ' + PENERIMA + ','));
   var lipat = SURAT.map(function(t){ var d = el('div', 'lipat'); d.appendChild(el('p', '', t)); d.hidden = true; kertas.appendChild(d); return d; });
-  var ttd = el('p', 'ttd', '— ' + PENGIRIM); ttd.hidden = true; kertas.appendChild(ttd);
+  var ttd = el('p', 'ttd', PENGIRIM); ttd.hidden = true; kertas.appendChild(ttd);
   var i = 0;
   lipat[0].hidden = false; i = 1;
   var tbl = tombol(SURAT.length > 1 ? 'Buka lipatan berikutnya' : 'Selesai baca', function(){
@@ -748,7 +748,7 @@ function mulaiPenutup(){
   segarBar();
 }
 function bukaAkhir(){
-  var isi = [ h3('Jalannya terang sekarang'), p(PENUTUP, 'kutip'), p('— ' + PENGIRIM, 'ttd') ];
+  var isi = [ h3('Jalannya terang sekarang'), p(PENUTUP, 'kutip'), p(PENGIRIM, 'ttd') ];
   var wa = String(D.waPengirim || '').replace(/\D/g, '');
   var nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
   if(nomor.length >= 10 || window.fvBalas){

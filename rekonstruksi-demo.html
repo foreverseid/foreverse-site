@@ -70,7 +70,7 @@
     }
   ],
   "surat": [
-    "Kalau ada yang tanya kapan aku mulai suka kamu, aku nggak bisa jawab satu jam. Jawabanku satu hari penuh — dari rak diskon sampai taman kota.",
+    "Kalau ada yang tanya kapan aku mulai suka kamu, aku nggak bisa jawab satu jam. Jawabanku satu hari penuh, dari rak diskon sampai taman kota.",
     "Aku masih ingat urutannya, tapi aku pengen kamu yang nyusun ulang, karena hari itu juga punyamu.",
     "Sejak itu harinya berganti terus. Tapi aku masih orang yang sama yang pura-pura mikir dulu sebelum ngasih nomor."
   ],
@@ -256,7 +256,7 @@ body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
 <canvas id="dunia" aria-label="Sketsa hari pertama yang bisa dijalani"></canvas>
 
 <div id="atas">
-  <span id="jam">—</span>
+  <span id="jam">-</span>
   <span id="kantong"><span class="kata">bukti</span> <i></i><i></i><i></i><i></i></span>
   <button class="kecil" id="lewati">lewati</button>
   <button class="kecil" id="suara" aria-label="Suara">🔊</button>
@@ -267,7 +267,7 @@ body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
   <i class="setrip s1"></i><i class="setrip s2"></i><i class="setrip s3"></i><i class="setrip s4"></i>
   <div id="joyBola"></div>
 </div>
-<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">—</span></button>
+<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">-</span></button>
 
 <div id="toast"></div>
 <div id="tirai" hidden><div class="kartu" id="kartu"></div></div>
@@ -277,7 +277,7 @@ body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
     <p class="no">Berkas rekonstruksi · untuk <span id="pbNama"></span></p>
     <h1>Hari Pertama</h1>
     <p class="tgl" id="pbTgl"></p>
-    <p>Hari itu tinggal sketsa. Jalan ke tiap tempat, kumpulkan barang buktinya, lalu susun ulang urutan jamnya — sampai harinya hidup lagi.</p>
+    <p>Hari itu tinggal sketsa. Jalan ke tiap tempat, kumpulkan barang buktinya, lalu susun ulang urutan jamnya sampai harinya hidup lagi.</p>
     <div class="petunjuk">
       <span><i class="ij"></i>lingkaran kiri: jalan</span>
       <span><i class="ia"></i>tombol kanan: periksa</span>
@@ -569,7 +569,7 @@ function segarAksi(){
   var d = cariDekat();
   if(d === dekat) return;
   dekat = d;
-  aksiT.textContent = d ? d.kata : '—';
+  aksiT.textContent = d ? d.kata : '-';
   aksiBtn.classList.toggle('mati', !d);
   if(d) buzz(12);
 }
@@ -699,7 +699,7 @@ function majuPutar(dt){
     if(tunda === 0){
       tunda = a.tunggu; nyala[a.tiba] = true; jamTampil = KJ[a.tiba].jam;
       SFX.warna(); buzz(15);
-      toast(tulisJam(KJ[a.tiba].jam) + ' · ' + KJ[a.tiba].tempat + ' — ' + KJ[a.tiba].cerita, 1500);
+      toast(tulisJam(KJ[a.tiba].jam) + ' · ' + KJ[a.tiba].tempat + ': ' + KJ[a.tiba].cerita, 1500);
       segarBar();
     }
     DULU.jalan = 0;
@@ -722,7 +722,7 @@ function bukaLaporan(){
     'LAPORAN REKONSTRUKSI\nTanggal kejadian : ' + tulisTgl(TGL) +
     '\nUntuk            : ' + PENERIMA + '\nDisusun oleh     : ' + PENGIRIM));
   SURAT.forEach(function(t){ lap.appendChild(el('p', '', t)); });
-  lap.appendChild(el('p', 'ttd', '— ' + PENGIRIM));
+  lap.appendChild(el('p', 'ttd', PENGIRIM));
   buka([
     h3('Laporan rekonstruksi'),
     lap,
@@ -781,7 +781,7 @@ function bukaAkhir(){
   if(SEMBUNYI || !TGL){ hari.appendChild(el('b', '', 'sampai hari ini')); hari.appendChild(document.createTextNode('sejak hari pertama itu.')); }
   else { hari.appendChild(el('b', '', SELISIH.toLocaleString('id-ID') + ' hari')); hari.appendChild(document.createTextNode('sejak ' + tulisTgl(TGL) + '.')); }
   var isi = [ h3('Dan sekarang'), hari ];
-  if(PENUTUP) isi.push(p(PENUTUP + ' — ' + PENGIRIM));
+  if(PENUTUP) isi.push(p(PENUTUP + ' · ' + PENGIRIM));
   var wa = String(D.waPengirim || '').replace(/\D/g, '');
   var nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
   if(nomor.length >= 10){
@@ -1085,7 +1085,7 @@ function tik(now){
 
 $('#pbNama').textContent = PENERIMA;
 $('#pbTgl').textContent = tulisTgl(TGL);
-document.title = 'Rekonstruksi hari pertama — ' + PENERIMA;
+document.title = 'Rekonstruksi hari pertama · ' + PENERIMA;
 $('#mulai').addEventListener('click', function(){
   ac(); MU.main(); sudahMulai = true;
   $('#pembuka').hidden = true;

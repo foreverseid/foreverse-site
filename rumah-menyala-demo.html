@@ -699,7 +699,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var ekor=$('#ekor'), kado=$('#kado'), kartu=$('#kartu'), lepas=false;
   $('#kartuJudul').textContent=UCAPAN+', '+PENERIMA;
   var isi=$('#kartuIsi'); (SURAT.length?SURAT:['']).forEach(function(t){ isi.appendChild(el('p',null,t)); });
-  $('#kartuTtd').textContent='— '+PENGIRIM;
+  $('#kartuTtd').textContent=PENGIRIM;
   MASUK[4]=function(){ petunjuk('Kadonya sampai di bawah pohon. <b>Tarik ujung pitanya</b> sampai simpulnya lepas.'); };
   seret(ekor,{
     boleh:function(){ return !lepas; },

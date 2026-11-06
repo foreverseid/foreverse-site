@@ -1345,7 +1345,7 @@ async function openLetter(){
   $('#ltHello').textContent = `${D.penerima} sayang,`;
   const box = $('#ltPars');
   const pars = (D.surat || []).filter(Boolean).map(t => { const p = el('p','par', t); box.appendChild(p); return p; });
-  $('#ltSign').textContent = '— ' + (D.pengirim || '');
+  $('#ltSign').textContent = (D.pengirim || '');
   $('#paper').classList.add('show');
   for(const p of pars){ await wait(350); p.classList.add('in'); await wait(Math.min(4500, 1000 + p.textContent.length * 24)); }
   await wait(400); $('#ltSign').classList.add('in');

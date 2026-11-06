@@ -494,11 +494,11 @@ function p(t, c){ return el('p', c || '', t); }
 
 /* ══════════════ alur: enam langkah ══════════════ */
 var LANGKAH = [
-  'Ada panggilan masuk — angkat',
+  'Ada panggilan masuk. Angkat',
   'Ketuk jam meja ' + PENGIRIM + ': jam segini dia lagi apa?',
-  'Ponselmu bergetar — ketuk untuk membaca pesannya',
+  'Ponselmu bergetar, ketuk untuk membaca pesannya',
   'Ketuk jam mejamu: samakan jadwal kalian',
-  'Ada paket di meja ' + PENGIRIM + ' — ketuk untuk mengirim',
+  'Ada paket di meja ' + PENGIRIM + ', ketuk untuk mengirim',
   'Dua jendela, satu ruangan'
 ];
 var langkah = 0, jadwalBuka = false, lewatiMode = false, paketDi = null;
@@ -526,12 +526,12 @@ function bukaPanggil(){
   wrap.appendChild(p('panggilan video', 'dari'));
   wrap.appendChild(fotoB);
   wrap.appendChild(el('div', 'siapa', PENGIRIM));
-  wrap.appendChild(p('dari ' + KA.nama + ', jam ' + tulis(waktuDi(KA.tz)) + ' di sana — buat ' + PENERIMA + ' di ' + KB.nama, 'dari'));
+  wrap.appendChild(p('dari ' + KA.nama + ', jam ' + tulis(waktuDi(KA.tz)) + ' di sana, buat ' + PENERIMA + ' di ' + KB.nama, 'dari'));
   wrap.appendChild(tombol('Angkat', function(){
     ac(); MU.main(); SFX.angkat(); buzz(30);
     tutup(); $('#ponselB').classList.remove('dering');
     if(FOTO[0]) $('#layarB').style.backgroundImage = 'url("' + FOTO[0].src + '")';
-    toast('Tersambung. ' + KA.nama + ' — ' + KB.nama + '.');
+    toast('Tersambung. ' + KA.nama + ' ke ' + KB.nama + '.');
     setLangkah(1);
     var awan = el('div', 'awan', 'jam segini aku lagi apa?'); $('#pikirA').appendChild(awan);
     aktifkan($('#pikirA'), bukaKuis);
@@ -651,7 +651,7 @@ function bukaJadwal(ronde){
     p('Jam ' + tulis(asal) + ' di ' + KA.nama + ', dia ' + r.kegiatan + '. Putar jam mejamu: di ' + KB.nama + ' itu jam berapa?'),
     dua ];
   if(d === 0){
-    isi.push(p('Kalian ternyata di zona waktu yang sama — jamnya memang sama persis. Tinggal cocokkan.'));
+    isi.push(p('Kalian ternyata di zona waktu yang sama, jadi jamnya memang sama persis. Tinggal cocokkan.'));
   }
   isi.push(putar, ok);
   panelSejak = performance.now();
@@ -694,7 +694,7 @@ function bukaPaket(){
     if(i === 2 && FOTO[2]){ var img = el('img'); img.alt = ''; img.src = FOTO[2].src; kotak.appendChild(img); if(FOTO[2].caption) kotak.appendChild(el('div', '', FOTO[2].caption)); }
     lap.appendChild(kotak); sisa--; SFX.benar(); buzz(15);
     if(sisa <= 0){ kertas.remove(); selesai.hidden = false; }
-    else kertas.textContent = 'Masih ada lapis lagi — ketuk';
+    else kertas.textContent = 'Masih ada lapis lagi, ketuk';
   });
   buka([ h3('Paket dari ' + KA.nama), p('Dibungkus tiga lapis. Pelan-pelan aja.'), lap, kertas, selesai ]);
 }
@@ -717,7 +717,7 @@ function bukaAkhir(){
   } else if(hari === 0){
     var h0 = el('div', 'hitung'); h0.appendChild(el('b', '', 'Hari ini')); h0.appendChild(document.createTextNode('kalian ketemu.')); isi.push(h0);
   }
-  if(PENUTUP) isi.push(p(PENUTUP + ' — ' + PENGIRIM));
+  if(PENUTUP) isi.push(p(PENUTUP + ' · ' + PENGIRIM));
   var wa = String(D.waPengirim || '').replace(/\D/g, ''), nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
   if(nomor.length >= 10){
     var ta = el('textarea', 'balas'); ta.value = 'Udah aku buka. Di sini jam ' + tulis(waktuDi(KB.tz)) + ', kangen kamu yang di jam ' + tulis(waktuDi(KA.tz)) + '.';

@@ -142,7 +142,7 @@ img{display:block;max-width:100%;-webkit-user-drag:none;pointer-events:none}
 <div id="tirai" hidden><div id="kartu" role="dialog" aria-modal="true"></div></div>
 <div id="pembuka"><div>
   <small>untuk</small><b data-f="penerima"></b>
-  <p>Ada satu rumah yang mau aku tunjukin. Bukan rumah sungguhan — belum. Masuk aja, geser layarnya buat lihat-lihat.</p>
+  <p>Ada satu rumah yang mau aku tunjukin. Bukan rumah sungguhan. Belum. Masuk aja, geser layarnya buat lihat-lihat.</p>
   <button class="tbl" id="tblMulai" type="button">Datang ke rumahnya</button>
 </div></div>
 
@@ -393,7 +393,7 @@ cv.addEventListener('pointermove',function(e){
 function lepasTekan(e){
   if(!tekan) return; var t=tekan; tekan=null; var q=e?pos(e):{x:t.x0,y:t.y0};
   if(t.jenis==='teko'){ tuang=false; nilaiTeh(); return; }
-  if(t.jenis==='lampu'&&!lampuNyala){ lampuJejak=[]; SFX.salah(); toast('talinya lepas — ulangi dari kait pertama'); return; }
+  if(t.jenis==='lampu'&&!lampuNyala){ lampuJejak=[]; SFX.salah(); toast('talinya lepas, ulangi dari kait pertama'); return; }
   if(t.jenis==='keset'&&keset<.95){ var k0=keset; (function balik(){ keset=Math.max(0,keset-.08); if(keset>0&&tugas===0) requestAnimationFrame(balik); })(); return; }
   if(t.jenis==='tutup'&&!cincin){ tutupKotak=0; return; }
   if(t.jenis==='lihat'&&!t.geser&&performance.now()-t.t<500) ketuk(q);
@@ -421,7 +421,7 @@ function lurusFoto(i){ bingkai[i]=true; SFX.ketuk(); var f=D.foto[i];
 /* ── dapur: tuang teh (game 1) ── */
 function nilaiTeh(){
   if(air>=.72&&air<=.9){ game++; SFX.bagus(); buzz([10,30,10]); tugas=1; toast('pas. tehnya siap'); $('#lewati').hidden=true; perbarui(); }
-  else { SFX.salah(); if(air>.9){ tumpah=.8; toast('kepenuhan — tumpah, ulangi ya'); } else toast('masih kurang, tuang lagi');
+  else { SFX.salah(); if(air>.9){ tumpah=.8; toast('kepenuhan, tumpah. Ulangi, ya'); } else toast('masih kurang, tuang lagi');
     if(air>.9) setTimeout(function(){ air=0; tumpah=0; },700); }
 }
 /* ── halaman: lampu tali (game 2) ── */
@@ -430,7 +430,7 @@ function lampuSelesai(){ lampuNyala=true; tekan=null; game++; SFX.ting(); buzz([
 function bacaSurat(){ suratDibaca=true; SFX.geser();
   panel(function(k){ k.appendChild(el('h3',null,'Untuk '+(D.penerima||'kamu')));
     (D.surat.length?D.surat:['…']).forEach(function(s){ k.appendChild(el('p','par',s)); });
-    k.appendChild(el('div','ttd','— '+(D.pengirim||''))); k.appendChild(tombol('Taruh suratnya',function(){ tutupPanel(); tugas=1; perbarui(); })); }); }
+    k.appendChild(el('div','ttd',(D.pengirim||''))); k.appendChild(tombol('Taruh suratnya',function(){ tutupPanel(); tugas=1; perbarui(); })); }); }
 function kotakTerbuka(){ if(cincin) return; cincin=true; tutupKotak=1; tekan=null; SFX.ting(); buzz([20,40,20]); tugas=2; perbarui();
   setTimeout(lamaran,1400); }
 function lamaran(){
@@ -453,7 +453,7 @@ function lamaran(){
 
 function janjiPanel(i,judul,lanjut){
   panel(function(k){ k.appendChild(el('p','ket',judul)); k.appendChild(el('div','catat',JANJI[i]||'…'));
-    k.appendChild(el('div','ttd','— '+(D.pengirim||''))); k.appendChild(tombol('Simpan',function(){ tutupPanel(); lanjut(); })); }); }
+    k.appendChild(el('div','ttd',(D.pengirim||''))); k.appendChild(tombol('Simpan',function(){ tutupPanel(); lanjut(); })); }); }
 
 /* ── melangkah ke ruangan berikutnya ── */
 var pindah=false;

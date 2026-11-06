@@ -462,7 +462,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function kelupas(){
     beres=true; $('#sudutFoil').remove(); foil.style.display='none'; SFX.kertas(); buzz(20); MU.play();
     var a=k; (function f(){ a-=6; k=a; gambar(); if(a>-100) requestAnimationFrame(f); else { g.style.transition='opacity .4s'; g.style.opacity='0'; } })();
-    var j=$('#judulAwal'); j.innerHTML=''; j.appendChild(document.createTextNode('Selamat Hari Valentine, '+PENERIMA)); j.appendChild(el('small',null,'yang ini kita bikin bareng — dari '+PENGIRIM));
+    var j=$('#judulAwal'); j.innerHTML=''; j.appendChild(document.createTextNode('Selamat Hari Valentine, '+PENERIMA)); j.appendChild(el('small',null,'yang ini kita bikin bareng, dari '+PENGIRIM));
     setTimeout(function(){ j.classList.add('tampil'); petunjuk('Yang ini sudah jadi. Sekarang giliranmu bikin tiga lagi.'); },500);
     setTimeout(function(){ lanjut(berikut,'Ke dapur'); },2200);
   }
@@ -546,7 +546,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var lp=$('#lipatan'), panel=[];
   var s=el('div','panel sampul'); s.appendChild(el('h2',null,'Untuk '+PENERIMA)); s.appendChild(el('p',null,'bacanya pelan-pelan, ya')); s.appendChild(el('span','gagang')); panel.push(s);
   var daftar=SURAT.length?SURAT:[''];
-  daftar.forEach(function(t,i){ var p=el('div','panel'); p.appendChild(el('p','par',t)); if(i===daftar.length-1) p.appendChild(el('div','ttd','— '+PENGIRIM)); else p.appendChild(el('span','gagang'));
+  daftar.forEach(function(t,i){ var p=el('div','panel'); p.appendChild(el('p','par',t)); if(i===daftar.length-1) p.appendChild(el('div','ttd',PENGIRIM)); else p.appendChild(el('span','gagang'));
     p.appendChild(el('div','no',(i+1)+' / '+daftar.length)); panel.push(p); });
   panel.forEach(function(p,i){ p.style.zIndex=panel.length-i; lp.appendChild(p); });
   var atas=0;
@@ -570,7 +570,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var sn=$('#separuhN'), bt=$('#batang'), beres=false;
   $('#labelKu').textContent='untukmu, '+PENERIMA; $('#labelDia').textContent='untuk '+PENGIRIM;
-  MASUK[4]=function(){ petunjuk('Cokelat terakhir untuk dibagi berdua. <b>Patahkan di tengah</b> — tarik separuh kanannya.'); };
+  MASUK[4]=function(){ petunjuk('Cokelat terakhir untuk dibagi berdua. <b>Patahkan di tengah</b>, tarik separuh kanannya.'); };
   seret(sn,{
     boleh:function(){ return !beres; },
     down:function(){ sn.classList.add('seret'); },

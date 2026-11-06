@@ -441,7 +441,7 @@ body.masuk #soundBtn{display:grid}
       <div class="isi">
         <div class="untai"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="papan-nama">Kios Lempar Gelang</div>
-        <p class="kata">Empat botol, empat rencana. Tiga gelang di tanganmu — yang tersangkut jadi acara malam itu.</p>
+        <p class="kata">Empat botol, empat rencana. Tiga gelang di tanganmu. Yang tersangkut jadi acara malam itu.</p>
         <p class="ket" id="gelangKet">tarik gelangnya ke bawah, bidik, lalu lepas</p>
         <div class="gelang-sisa" id="sisaGelang" style="margin-top:10px"><span>sisa gelang</span><i></i><i></i><i></i></div>
       </div>
@@ -474,7 +474,7 @@ body.masuk #soundBtn{display:grid}
       <div class="isi">
         <div class="untai"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="papan-nama">Bianglala</div>
-        <p class="kata">Rodanya ikut jalan selama kamu turun. Kabin-kabinnya bawa foto — kabin paling atas bawa yang lain.</p>
+        <p class="kata">Rodanya ikut jalan selama kamu turun. Kabin-kabinnya bawa foto. Kabin paling atas bawa yang lain.</p>
         <p class="ket" id="rodaKet">terus turun, rodanya ikut berputar ↓</p>
       </div>
       <div class="panggung" id="stRoda"></div>
@@ -483,7 +483,7 @@ body.masuk #soundBtn{display:grid}
     <div id="puncak" hidden>
       <div class="pandangan" id="pandangan"></div>
       <div id="saku">
-        <p class="ket" id="sakuKet">ada kertas terlipat di saku kursi — tarik keluar</p>
+        <p class="ket" id="sakuKet">ada kertas terlipat di saku kursi, tarik keluar</p>
         <button class="tbl kecil putih" id="tarikSurat" style="margin-top:8px">Tarik kertasnya</button>
       </div>
       <div class="surat" id="surat" hidden>
@@ -508,7 +508,7 @@ body.masuk #soundBtn{display:grid}
       <div class="isi">
         <div class="untai"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="papan-nama">Kios Pancing</div>
-        <p class="kata">Botol yang tadi meleset berdiri lagi di sini. Kailnya berayun — lawan ayunannya, jangan diseret kasar.</p>
+        <p class="kata">Botol yang tadi meleset berdiri lagi di sini. Kailnya berayun. Lawan ayunannya, jangan diseret kasar.</p>
         <p class="ket" id="pancingKet">geser pelan, tahan diam pas di atas leher botol</p>
       </div>
       <div class="panggung lebar" id="stPancing"></div>
@@ -528,7 +528,7 @@ body.masuk #soundBtn{display:grid}
       <div class="isi">
         <div class="untai"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="papan-nama">Papan "Buka Malam Ini"</div>
-        <p class="kata" id="papanKata">Tiga malam, tiga soket kosong. Pasang bohlamnya di malam yang kamu mau — baris ketiga sama sahnya dengan baris pertama.</p>
+        <p class="kata" id="papanKata">Tiga malam, tiga soket kosong. Pasang bohlamnya di malam yang kamu mau. Baris ketiga sama sahnya dengan baris pertama.</p>
         <p class="ket" id="papanKet">ketuk bohlamnya dulu</p>
         <div class="bohlam-krat">
           <div id="bohlam"></div>
@@ -615,7 +615,7 @@ var TUNDA = String(D.catatanTunda||'').trim() || 'Nggak apa-apa. Pasar malamnya 
 
 var MALAM = [
   { id:'utama',  judul: tulisTanggal(TGL1), sub: 'jam ' + JAM + (TITIK ? ' · ' + TITIK : ''), balas:'Ayo, yang ini aja.' },
-  { id:'lusa',   judul: tulisTanggal(TGL2), sub: 'jam ' + JAM + ' — minggu depannya', balas:'Yang ini lebih bisa buat aku.' },
+  { id:'lusa',   judul: tulisTanggal(TGL2), sub: 'jam ' + JAM + ', minggu depannya', balas:'Yang ini lebih bisa buat aku.' },
   { id:'nanti',  judul: 'Kapan pun kamu siap', sub: 'belum bisa sekarang, dan itu nggak apa-apa', balas:'Belum bisa sekarang, tapi aku mau.' }
 ];
 
@@ -937,7 +937,7 @@ var masuk = false;
       if(buka < 1){
         pasang(0);
         ka.classList.add('berkibar'); ki.classList.add('berkibar');
-        $('#gerbangKet').textContent = 'belum kebuka — seret terpal kanan ke kanan →';
+        $('#gerbangKet').textContent = 'belum kebuka, seret terpal kanan ke kanan →';
       }
     }
   });
@@ -1071,7 +1071,7 @@ var gelangSelesai = false;
       gelang.style.transform = 'translate(-50%,-50%)';
       bersihBusur();
       if(l.kuat < .32){
-        $('#gelangKet').textContent = 'kurang kuat — tarik gelangnya lebih jauh ke bawah';
+        $('#gelangKet').textContent = 'kurang kuat, tarik gelangnya lebih jauh ke bawah';
         return;
       }
       lempar(l);
@@ -1120,7 +1120,7 @@ var gelangSelesai = false;
     } else {
       SFX.luput();
       gelang.style.transform = 'translate(-50%,-50%) rotate(26deg)';
-      $('#gelangKet').textContent = 'meleset — tenang, kios pancing di bawah masih ada.';
+      $('#gelangKet').textContent = 'meleset. Tenang, kios pancing di bawah masih ada.';
       setTimeout(function(){ ulangGelang(); }, 620);
     }
     segarAcara();
@@ -1152,7 +1152,7 @@ var gelangSelesai = false;
     segarAcara();
     $('#gelangKet').textContent = HASIL_KENA.length
       ? 'gelangnya habis. ' + HASIL_KENA.length + ' rencana tersangkut.'
-      : 'semua meleset. nggak apa-apa — semuanya bisa diambil lagi di kios pancing.';
+      : 'semua meleset. nggak apa-apa, semuanya bisa diambil lagi di kios pancing.';
     siapkanPancing();
     toast('Gelangnya habis. Turun terus, ada bianglala.');
   }
@@ -1383,7 +1383,7 @@ var gelangSelesai = false;
       '<div class="tanda-tanggal">' + tulisTanggal(TGL1) + ' · ' + JAM + '</div>';
 
     $('#suratKepada').textContent = 'Buat ' + PENERIMA + ',';
-    $('#suratTtd').textContent = PENGIRIM ? '— ' + PENGIRIM : '';
+    $('#suratTtd').textContent = PENGIRIM ? PENGIRIM : '';
     $$('.lipat').forEach(function(n, i){
       var t = SURAT[i] || '';
       if(!t){ n.remove(); return; }
@@ -1433,7 +1433,7 @@ var gelangSelesai = false;
     });
   }
   function selesaiSurat(){
-    toast('Surat terbaca. Turun lagi, ya — masih ada dua kios.');
+    toast('Surat terbaca. Turun lagi, ya. Masih ada dua kios.');
   }
   $('#ppBtn').addEventListener('click', function(){ ac(); MU.tukar(); });
 })();
@@ -1674,7 +1674,7 @@ var bukaPapan = function(){};
   baris.addEventListener('click', function(e){
     var f = e.target.closest('.fitting'); if(!f) return;
     if(terkunci || dipasang >= 0) return;
-    if(!terpilih){ toast('Ambil bohlamnya dulu — ketuk bohlam di atas.'); return; }
+    if(!terpilih){ toast('Ambil bohlamnya dulu, ketuk bohlam di atas.'); return; }
     var i = +f.dataset.malam;
     pasangBohlam(i, f);
   });
@@ -1704,7 +1704,7 @@ var bukaPapan = function(){};
         soket.style.transform = 'rotate(' + (maju/60*90).toFixed(1) + 'deg)';
         if(maju >= 58){ sudah = true; nyalakan(f); }
       },
-      lepas: function(){ if(!sudah){ soket.style.transform = ''; $('#papanKet').textContent = 'belum klik — putar soketnya ke kanan →'; } }
+      lepas: function(){ if(!sudah){ soket.style.transform = ''; $('#papanKet').textContent = 'belum klik, putar soketnya ke kanan →'; } }
     });
     soket.tabIndex = 0;
     soket.addEventListener('keydown', function(e){

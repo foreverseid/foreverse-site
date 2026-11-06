@@ -364,7 +364,7 @@ function langkahPakaiGeser(){ return langkah===2; }
 var TEKS={
   1:'Toplesnya masih bersegel. <b>Seret tab oranye</b> menyusuri labelnya sampai terkelupas.',
   2:'Kunang-kunangnya keluar. <b>Geser toplesnya ke kiri-kanan</b> untuk menampung yang turun.',
-  3:'Ada tiga foto di tali jemuran. <b>Ketuk tiap foto</b> — toplesnya akan meneranginya.',
+  3:'Ada tiga foto di tali jemuran. <b>Ketuk tiap foto</b>, toplesnya akan meneranginya.',
   4:'Enam kunang-kunang berkedip berpasangan. <b>Ketuk dua yang warnanya sama.</b>',
   5:'Kunang-kunangnya menulis sesuatu. <b>Ketuk toplesnya</b> untuk membaca.',
   6:'<b>Tekan dan tahan toplesnya</b> sebentar, lalu biarkan mereka terbang.',
@@ -516,7 +516,7 @@ function bukaSurat(){
   panel(function(k){
     k.appendChild(el('h3',null,'Untuk '+(D.penerima||'kamu')));
     var ps=par.map(function(s){ var p=el('p','par',s); k.appendChild(p); return p; });
-    var ttd=el('div','ttd','— '+(D.pengirim||'')); ttd.hidden=true; k.appendChild(ttd);
+    var ttd=el('div','ttd',(D.pengirim||'')); ttd.hidden=true; k.appendChild(ttd);
     var b=tombol('Baca lanjutannya',function(){
       if(n<ps.length){ ps[n++].classList.add('tampil'); SFX.nyala(600+n*80); }
       if(n>=ps.length){ ttd.hidden=false; b.textContent='Tutup suratnya'; b.onclick=function(){ if(!siap()) return; tutupPanel(); setTimeout(maju,300); }; }
@@ -539,7 +539,7 @@ function lepaskan(){
       var p=el('div','pengakuan'); p.innerHTML='Aku suka kamu, <em></em>.'; p.querySelector('em').textContent=D.penerima||'';
       k.appendChild(p);
       if(SEJAK) k.appendChild(el('p','ket','Sejak '+SEJAK+'.'));
-      k.appendChild(el('div','ttd','— '+(D.pengirim||'')));
+      k.appendChild(el('div','ttd',(D.pengirim||'')));
       k.appendChild(tombol('Lanjut',function(){ tutupPanel(); setTimeout(maju,300); }));
     });
   },2600);

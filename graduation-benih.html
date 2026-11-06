@@ -448,7 +448,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
       </div>
     </div>
     <div class="secret-sheet reveal">
-      <div class="secret-head">P.S. —</div>
+      <div class="secret-head">P.S.</div>
       <p class="secret-txt" id="fruitSecret" data-f="rahasia" style="opacity:0"></p>
       <p class="secret-foot" id="fruitFoot">masih di dalam buahnya</p>
     </div>
@@ -978,7 +978,7 @@ function markDone(k){
       w.classList.add('gone');
       SFX.snap(); buzz(16);
       left=Math.max(0,left-1);
-      info.textContent = left>0 ? 'Sisa: '+left : 'Bersih — tanahnya siap!';
+      info.textContent = left>0 ? 'Sisa: '+left : 'Bersih, tanahnya siap!';
       if(left<=0){ SFX.win(); FX.at(bed,70); markDone('gulma'); }
     }
   });
@@ -1023,7 +1023,7 @@ function markDone(k){
       halves.classList.add('show'); SFX.thud();
     },280);
     setTimeout(function(){
-      secret.style.opacity='1'; foot.textContent='— cuma kebaca setelah buahnya dipetik';
+      secret.style.opacity='1'; foot.textContent='cuma kebaca setelah buahnya dipetik';
       SFX.chime(); FX.at(halves,50);
     },620);
   }

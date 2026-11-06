@@ -48,7 +48,7 @@
   ],
   "surat": [
     "Iya, itu aku. Seminggu ini aku yang ninggalin kertas-kertas itu, karena tiap mau ngomong langsung, kalimatnya selalu hilang di jalan.",
-    "Aku udah lama suka cara kamu duduk diam di kafe ini — kayak dunia boleh ramai, tapi kamu punya pojok sendiri. Aku cuma pengen ada di pojok itu juga.",
+    "Aku udah lama suka cara kamu duduk diam di kafe ini. Kayak dunia boleh ramai, tapi kamu punya pojok sendiri. Aku cuma pengen ada di pojok itu juga.",
     "Kamu nggak harus jawab sekarang. Aku cuma nggak mau kamu terus nebak-nebak siapa orangnya."
   ],
   "waPengirim": "081234567890",
@@ -274,7 +274,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <i class="setrip s1"></i><i class="setrip s2"></i><i class="setrip s3"></i><i class="setrip s4"></i>
   <div id="joyBola"></div>
 </div>
-<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">—</span></button>
+<button id="aksi" class="mati" aria-label="Tombol aksi"><span id="aksiT">-</span></button>
 
 <div id="toast"></div>
 <div id="tirai" hidden><div class="kartu" id="kartu"></div></div>
@@ -468,8 +468,8 @@ function selesaiIA(o){
   return false;
 }
 function tujuan(){
-  if(!ST.tkp) return { o:iaId('tkp'), t:'Periksa meja langgananmu — kertasnya masih di situ' };
-  if(!ST.barista) return { o:iaId('barista'), t:'Tanya barista — dia yang paling sering lihat meja itu' };
+  if(!ST.tkp) return { o:iaId('tkp'), t:'Periksa meja langgananmu, kertasnya masih di situ' };
+  if(!ST.barista) return { o:iaId('barista'), t:'Tanya barista, dia yang paling sering lihat meja itu' };
   if(!ST.papan) return { o:iaId('papan'), t:'Cek papan pengumuman di sekat tengah' };
   if(!ST.terungkap) return { o:iaId('pojok'), t:'Bawa ketiga bukti ke pojok detektif, susun kasusnya' };
   if(!ST.cap) return { o:iaId('pojok'), t:'Pelakunya ketemu. Baca pernyataannya di pojok detektif' };
@@ -554,7 +554,7 @@ function segarAksi(){
   var d = cariDekat();
   if(d === dekat) return;
   dekat = d;
-  aksiT.textContent = d ? d.kata : '—';
+  aksiT.textContent = d ? d.kata : '-';
   aksiBtn.classList.toggle('mati', !d);
   if(d) buzz(12);
 }
@@ -615,7 +615,7 @@ function bukaBarista(){
   var transkrip = el('div', 'transkrip'), wadah = el('div', 'tanya');
   var catat = tombol('Catat kesaksiannya', function(){
     ST.barista = true; SFX.bukti(); tutup();
-    toast('Bukti 2: kesaksian barista — ' + PESANAN + '.');
+    toast('Bukti 2: kesaksian barista. ' + PESANAN + '.');
   });
   catat.hidden = true;
   TANYA.forEach(function(q){
@@ -674,7 +674,7 @@ function bukaPapan(){
   papan.style.paddingBottom = '46px';
   buka([
     h3('Papan pengumuman'),
-    p(FOTO.length ? 'Di antara brosur, ada ' + FOTO.length + ' foto. Semuanya diambil dari arah meja langgananmu. Ketuk tiap foto untuk memeriksanya.' : 'Tidak ada foto di papan — tapi ada secarik kertas terselip.'),
+    p(FOTO.length ? 'Di antara brosur, ada ' + FOTO.length + ' foto. Semuanya diambil dari arah meja langgananmu. Ketuk tiap foto untuk memeriksanya.' : 'Tidak ada foto di papan, tapi ada secarik kertas terselip.'),
     papan, zoom, balik, simpan
   ]);
 }
@@ -764,7 +764,7 @@ function bukaPernyataan(){
   var lembar = el('div', 'pernyataan');
   lembar.appendChild(el('div', 'kop', 'PERNYATAAN\nNama    : ' + PENGIRIM + '\nKepada  : ' + PENERIMA + '\nPerihal : kertas tanpa nama di meja langganan'));
   SURAT.forEach(function(t){ lembar.appendChild(el('p', '', t)); });
-  lembar.appendChild(el('p', 'ttd', '— ' + PENGIRIM));
+  lembar.appendChild(el('p', 'ttd', PENGIRIM));
   var capNode = el('div', 'cap'); capNode.hidden = true; lembar.appendChild(capNode);
   var wadah = el('div', 'stempel'), akhir = el('div');
   STEMPEL.forEach(function(s){
@@ -791,7 +791,7 @@ function bukaPernyataan(){
 }
 function isiAkhir(wadah, s){
   wadah.innerHTML = '';
-  if(PENUTUP) wadah.appendChild(p(PENUTUP + ' — ' + PENGIRIM));
+  if(PENUTUP) wadah.appendChild(p(PENUTUP + ' · ' + PENGIRIM));
   var wa = String(D.waPengirim || '').replace(/\D/g, '');
   var nomor = wa.charAt(0) === '0' ? '62' + wa.slice(1) : wa;
   if(nomor.length >= 10){

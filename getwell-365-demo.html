@@ -642,7 +642,7 @@ body.jalan #suara.ada{display:grid}
   <div class="nama" data-f="penerima"></div>
   <div class="pintu"><i></i></div>
   <p class="tok">tok… tok…</p>
-  <p class="pengantar">Ada yang nganterin sesuatu ke kamarmu. Nggak usah bangun — cukup ketuk tombolnya.</p>
+  <p class="pengantar">Ada yang nganterin sesuatu ke kamarmu. Nggak usah bangun, cukup ketuk tombolnya.</p>
   <button class="btn" id="tblMulai" type="button">Buka pintunya</button>
 </div>
 
@@ -785,9 +785,9 @@ var LANGKAH=[
   { objek:'#jendela', kata:'Kamarnya pengap. Seret <b>tuas oranye di tepi jendela</b> ke kanan.' },
   { objek:'#gelas',   kata:'Tenggorokannya kering. <b>Ketuk gelas airnya</b>.' },
   { objek:'#handuk',  kata:'Seret <b>kompres</b> ke kotak putus-putus di bantal, lalu tahan sebentar.' },
-  { objek:'#kotakobat', kata:'<b>Ketuk tiap laci kotak obat</b> — ada dosis yang belum diminum.' },
+  { objek:'#kotakobat', kata:'<b>Ketuk tiap laci kotak obat</b>. Ada dosis yang belum diminum.' },
   { objek:'#fotoA',   kata:'<b>Ketuk foto-fotonya</b> satu per satu (ada tiga di kamar ini).' },
-  { objek:'#kotakobat', kata:'<b>Susun rutinitas malamnya</b> — ketuk halnya, lalu ketuk nomor urutannya.' },
+  { objek:'#kotakobat', kata:'<b>Susun rutinitas malamnya</b>: ketuk halnya, lalu ketuk nomor urutannya.' },
   { objek:'#bantal',  kata:'<b>Samakan napasnya</b>: tahan saat lingkarannya mengembang, lepas saat mengempis.' },
   { objek:'#termo',   kata:'<b>Ketuk termometernya</b> untuk membaca suhunya sekarang.' },
   { objek:'#kotakobat', kata:'Ada lembar terselip di kotak obat. <b>Buka lipatannya</b>.' },
@@ -1038,7 +1038,7 @@ function bukaRutin(){
   hal.forEach(function(_,i){
     var kotak=el('div','rt-kotak'); kotak.dataset.i=String(i);
     kotak.appendChild(el('span','no',String(i+1)));
-    kotak.appendChild(el('span','t','—'));
+    kotak.appendChild(el('span','t','-'));
     kotak.setAttribute('role','button'); kotak.setAttribute('tabindex','0');
     kotak.addEventListener('click',function(){ taruh(kotak); });
     kotak.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); taruh(kotak); } });
@@ -1135,7 +1135,7 @@ function bukaNapas(){
           var d=$$('i',titik)[lolos-1]; if(d) d.classList.add('on');
           SFX.lembut(); info.textContent='pas. tahan lagi…';
         } else {
-          info.textContent='belum pas — tahan saat mengembang, lepas saat mengempis';
+          info.textContent='belum pas. Tahan saat mengembang, lepas saat mengempis';
         }
         okT=totT=okB=totB=0; fase='tarik'; t0=now; $('b',ring).textContent='tahan';
         if(lolos>=PERLU){ selesai(); return; }

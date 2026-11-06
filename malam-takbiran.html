@@ -484,7 +484,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function jarak(){ var r=ck.getBoundingClientRect(), h=pusat(hl); return Math.hypot(h.x-r.left-x,h.y-r.top-y); }
   function cek(){ var j=jarak(); ls.classList.toggle('dekat',j<R*1.1);
     if(j<R*.45){ if(!tahan) tahan=setTimeout(ketemu,450); } else { clearTimeout(tahan); tahan=null; } }
-  MASUK[0]=function(){ ukur(); petunjuk('Malam terakhir Ramadan. <b>Geser teropongnya</b> — cari bulan sabit tipis di langit barat, dekat cakrawala.'); };
+  MASUK[0]=function(){ ukur(); petunjuk('Malam terakhir Ramadan. <b>Geser teropongnya</b>, cari bulan sabit tipis di langit barat, dekat cakrawala.'); };
   addEventListener('resize',function(){ if(kini===0) ukur(); });
   seret(ck,{
     boleh:function(){ return !beres; },
@@ -518,7 +518,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     uj.className='ujung'+(mode?' '+mode:''); $('b',uj).textContent=mode==='atas'?'lewat atas':mode==='bawah'?'lewat bawah':''; }
   function aturan(){ return 'Lembar janur pertama di baris ini lewat <b>'+perlu(0)+'</b>, lalu bergantian.'; }
   MASUK[1]=function(){ baruBaris();
-    petunjuk('Tarik ujung janur ke kanan. <b>Naikkan jari</b> untuk lewat atas, <b>turunkan</b> untuk lewat bawah — selang-seling, mulai dari <b>atas</b>.'); };
+    petunjuk('Tarik ujung janur ke kanan. <b>Naikkan jari</b> untuk lewat atas, <b>turunkan</b> untuk lewat bawah, selang-seling, mulai dari <b>atas</b>.'); };
   addEventListener('resize',function(){ if(kini===1 && pakan) gambar(); });
   seret(an,{
     boleh:function(){ return !beres; },
@@ -584,13 +584,13 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   fn.addEventListener('click',function(){ if(!aktif) return; fn.classList.remove('tampil'); aktif.classList.add('simpan'); aktif=null; ptj.style.visibility=''; sisa--; SFX.klik();
     if(sisa<=0) lanjut(berikut,'Dengar takbirnya'); else petunjuk('<b>'+sisa+' toples lagi.</b> Putar tutupnya ke kiri.'); });
   noMenu(fn);
-  MASUK[2]=function(){ petunjuk('Kue Lebaran sudah siap di toples. <b>Putar tutupnya ke kiri</b> — gerakkan jari memutar di atas tutup.'); };
+  MASUK[2]=function(){ petunjuk('Kue Lebaran sudah siap di toples. <b>Putar tutupnya ke kiri</b>, gerakkan jari memutar di atas tutup.'); };
 })();
 
 /* ═ 4 · beduk takbiran: tiap tiga pukulan membuka satu bagian surat ═ */
 (function(){
   var bd=$('#beduk'), ut=$('#untai'), par=$('#ksPar'), daftar=SURAT.length?SURAT:[''], n=0, akhir=0, beres=false;
-  $('#ksJudul').textContent=UCAPAN[UC]+', '+PENERIMA; $('#ksTtd').textContent='— '+PENGIRIM;
+  $('#ksJudul').textContent=UCAPAN[UC]+', '+PENERIMA; $('#ksTtd').textContent=PENGIRIM;
   for(var i=0;i<daftar.length*3;i++) ut.appendChild(el('i','pelita'));
   var pl=$$('.pelita',ut);
   MASUK[3]=function(){ petunjuk('Malam takbiran. <b>Pukul bedugnya tiga kali</b> untuk menyalakan pelita dan membuka tiap bagian surat.'); };
@@ -631,7 +631,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     beres=true; kn.classList.remove('seret'); kn.style.removeProperty('--x'); sl.classList.add('genggam'); SFX.dentang(); buzz([15,40,15]);
     var c=pusat(sl); konfeti(c.x,c.y,70,['#E9B949','#C9D86A','#9DB23F','#5a3f7d']);
     var j=$('#judulAkhir'); j.innerHTML=''; j.appendChild(document.createTextNode(UCAPAN[UC]));
-    j.appendChild(el('small',null,(UC==='maaf'?'Selamat Hari Raya Idulfitri':'Mohon maaf lahir dan batin')+', '+PENERIMA+' — dari '+PENGIRIM));
+    j.appendChild(el('small',null,(UC==='maaf'?'Selamat Hari Raya Idulfitri':'Mohon maaf lahir dan batin')+', '+PENERIMA+', dari '+PENGIRIM));
     setTimeout(function(){ j.classList.add('tampil'); },400);
     setTimeout(function(){ ptj.hidden=true; var t=$('#balasTeks'); t.value='Mohon maaf lahir dan batin juga, ya. Selamat Lebaran! 🤍';
       $('#akhirJudul').textContent='Mau balas ke '+PENGIRIM+'?'; sl.style.display='none';

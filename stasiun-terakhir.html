@@ -546,7 +546,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var judul=('UNTUK '+PENERIMA).toUpperCase().slice(0,22), HURUF='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   judul.split('').forEach(function(c){ var e=el('i',c===' '?'spasi':null,c===' '?'':' '); e.dataset.c=c; flap.appendChild(e); });
   daftar.forEach(function(t){ peng.appendChild(el('p',null,t)); });
-  var ttd=el('div','ttd','— '+PENGIRIM+', dari peron sebelah'); peng.appendChild(ttd);
+  var ttd=el('div','ttd',PENGIRIM+', dari peron sebelah'); peng.appendChild(ttd);
   function balik(){ $$('i',flap).forEach(function(e,n){ if(e.dataset.c===' ') return; var putar=0; var t=setInterval(function(){ putar++; e.textContent=HURUF[Math.floor(Math.random()*26)]; if(putar>6+n){ clearInterval(t); e.textContent=e.dataset.c; tone(2400,.015,{type:'square',vol:.03}); } },55); }); }
   MASUK[3]=function(){ setTimeout(balik,500); petunjuk('Ada pengumuman untukmu. <b>Ketuk pengeras suaranya.</b>'); };
   sp.addEventListener('click',function(){
@@ -564,7 +564,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var area=$('#lambai'), tangan=$('#tangan'), hit=0, arah=0, ujung=0, beres=false;
   $('#penutupTeks').textContent=String(D.penutup||'').trim()||'Semoga perjalananmu baik, ke mana pun arahnya.';
   function tulis(){ $('#lambaiHitung').textContent=beres?'':'lambaian '+hit+' / 3'; }
-  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b> — geser ke kiri dan kanan.'); };
+  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b>, geser ke kiri dan kanan.'); };
   seret(area,{
     boleh:function(){ return !beres; },
     down:function(e){ ujung=e.clientX; arah=0; },

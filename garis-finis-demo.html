@@ -570,7 +570,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   var dp=$('#diPodium'); dp.innerHTML=orang(false);
   var med=$('#medali'), leher=$('#leher'), beres=false;
   $('#ukiranTeks').textContent=CAPAI;
-  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b> — seret ke lehernya.'); };
+  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b>, seret ke lehernya.'); };
   bawa(med,{
     boleh:function(){ return !beres; },
     up:function(){
@@ -590,7 +590,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   $('#papanJudul').textContent='PESAN DARI '+PENGIRIM.toUpperCase();
   function tampil(n){ i=n; $('#papanNo').textContent=(n+1)+'/'+daftar.length; var t=daftar[n], k=0; penuh=false; isi.textContent='';
     clearInterval(ketik); ketik=setInterval(function(){ k+=2; isi.textContent=t.slice(0,k); if(k>=t.length){ clearInterval(ketik); penuh=true; if(n===daftar.length-1) habis(); } },28); }
-  function habis(){ var t=$('#papanTtd'); t.textContent='— '+PENGIRIM; t.classList.add('tampil'); $('#papanBawah').textContent=' '; setTimeout(function(){ lanjut(berikut,'Penutup'); },1800); }
+  function habis(){ var t=$('#papanTtd'); t.textContent=PENGIRIM; t.classList.add('tampil'); $('#papanBawah').textContent=' '; setTimeout(function(){ lanjut(berikut,'Penutup'); },1800); }
   MASUK[4]=function(){ tampil(0); petunjuk('Papan skor stadion sedang menampilkan pesan untukmu. <b>Ketuk papannya</b> untuk pesan berikutnya.'); };
   pap.addEventListener('click',function(){ if(!penuh || i>=daftar.length-1) return; SFX.klik(); tampil(i+1); });
   noMenu(pap);

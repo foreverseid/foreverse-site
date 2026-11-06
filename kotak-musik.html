@@ -551,7 +551,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
         rantai.forEach(function(s){ if(s.tetap||s.node) return; var a=pusat(s.as), d=Math.hypot(a.x-c.x,a.y-c.y); if(d<jarak){ jarak=d; cocok=s; } });
         if(!cocok || jarak>U()*10) return false;
         if(Math.abs(cocok.r-r)>.01){ salah++; SFX.salah(); buzz(30);
-          petunjuk(r>cocok.r?'<b>Kebesaran</b> — giginya nabrak roda di sebelahnya. Coba yang lebih kecil.':'<b>Kekecilan</b> — giginya nggak sampai ke roda sebelahnya. Coba yang lebih besar.');
+          petunjuk(r>cocok.r?'<b>Kebesaran</b>. Giginya nabrak roda di sebelahnya. Coba yang lebih kecil.':'<b>Kekecilan</b>. Giginya nggak sampai ke roda sebelahnya. Coba yang lebih besar.');
           if(salah>=2) rantai.forEach(function(s){ if(s.as) s.as.classList.add('bantu'); });
           return false; }
         /* pas */
@@ -598,7 +598,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
       else { laci.style.transform=''; if(t<.06) kedip(); } }
   });
   var ang=$('#angkat');
-  function lihat(i){ $('#angkatImg').src=FOTO[i].src; $('#angkatKet').textContent=FOTO[i].caption||'—'; ang.classList.add('tampil'); ptj.style.visibility='hidden'; SFX.kertas();
+  function lihat(i){ $('#angkatImg').src=FOTO[i].src; $('#angkatKet').textContent=FOTO[i].caption||'-'; ang.classList.add('tampil'); ptj.style.visibility='hidden'; SFX.kertas();
     dilihat[i]=1; var f=$$('.ft',isi)[i]; f.classList.add('dilihat'); f.style.zIndex=1; }
   ang.addEventListener('click',function(){ ang.classList.remove('tampil'); ptj.style.visibility='';
     var v=Object.keys(dilihat).length; if(v>=n) lanjut(berikut); else petunjuk('<b>'+(n-v)+' foto lagi</b> di laci.'); });
@@ -639,7 +639,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     '<div>Pemilik : '+teks(PENERIMA)+'</div><div>Teknisi : '+teks(PENGIRIM)+'</div><hr>'+
     '<div>Yang diperbaiki:</div><ul>'+SADAR.filter(function(s){ return s.trim(); }).map(function(s){ return '<li>✓ '+teks(s)+'</li>'; }).join('')+'</ul><hr>'+
     '<div>Catatan teknisi:</div><br>'+(SURAT.length?SURAT:['']).map(function(s){ return '<p>'+teks(s)+'</p>'; }).join('')+
-    '<div class="ttd">— '+teks(PENGIRIM)+'</div><hr><div class="kp">TERIMA KASIH SUDAH MEMBACA</div>';
+    '<div class="ttd">'+teks(PENGIRIM)+'</div><hr><div class="kp">TERIMA KASIH SUDAH MEMBACA</div>';
   function maks(){ return $('#printerWrap').offsetHeight-$('.printer').offsetHeight-U()*2; }
   function atur(){ var H=Math.min(p,maks()); st.style.height=H+'px'; isi.style.transform='translateY('+(-Math.max(0,p-maks()))+'px)'; }
   MASUK[4]=function(){ p=U()*6; atur(); petunjuk('Catatan servisnya keluar dari printer. <b>Tarik kertasnya ke atas</b> pelan-pelan.'); };
@@ -655,7 +655,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var PILIH={ maaf:{teks:'SUDAH DIMAAFKAN',warna:'#C8502A',balas:'Sudah kumaafkan. Makasih udah mau benerin, ya.'},
               waktu:{teks:'BUTUH WAKTU',warna:'#1F6B66',balas:'Aku butuh waktu dulu, ya. Tapi makasih udah jujur.'} };
-  MASUK[5]=function(){ petunjuk('Kotaknya sudah bunyi lagi. Sekarang statusnya <b>kamu yang tentukan</b> — dua-duanya boleh.'); };
+  MASUK[5]=function(){ petunjuk('Kotaknya sudah bunyi lagi. Sekarang statusnya <b>kamu yang tentukan</b>. Dua-duanya boleh.'); };
   $$('.stempel').forEach(function(b){
     noMenu(b);
     b.addEventListener('click',function(){

@@ -805,7 +805,7 @@ function berikut(){ var pos=URUT.indexOf(kini); ke(URUT[pos+1]); }
     }
   });
   var kot=$('#lihat'), kt=$('#lihatKartu'), aktifI=0;
-  function lihat(i){ aktifI=i; $('#lkImg').src=FOTO[i].src; $('#lkKet').textContent=FOTO[i].caption||'—';
+  function lihat(i){ aktifI=i; $('#lkImg').src=FOTO[i].src; $('#lkKet').textContent=FOTO[i].caption||'-';
     $('#lkUntuk').setAttribute('data-t','untuk '+PENERIMA); kt.classList.remove('balik'); $('#lkPetunjuk').textContent='ketuk kartunya untuk membaca baliknya';
     kot.classList.add('tampil'); ptj.style.visibility='hidden'; SFX.kertas(); }
   kt.addEventListener('click',function(e){ e.stopPropagation(); kt.classList.toggle('balik'); SFX.kertas();
@@ -848,7 +848,7 @@ function berikut(){ var pos=URUT.indexOf(kini); ke(URUT[pos+1]); }
   lbr.push(sampul);
   (SURAT.length?SURAT:['']).forEach(function(t,i,arr){
     var l=el('div','lbr'); l.appendChild(el('p','par',t));
-    if(i===arr.length-1) l.appendChild(el('div','ttd','— '+PENGIRIM));
+    if(i===arr.length-1) l.appendChild(el('div','ttd',PENGIRIM));
     else l.appendChild(el('span','angkat'));
     l.appendChild(el('div','nomor',(i+1)+' / '+arr.length));
     lbr.push(l);

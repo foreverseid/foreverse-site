@@ -468,7 +468,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var meja=$('#mejaKorek'), kr=$('#korek'), gs=$('#geseran'), met=$('#meteranIsi'), pos={x:0,y:0}, ox=0, oy=0, lalu=null, gesek=0, nyala=false;
   function kepala(){ var r=kr.getBoundingClientRect(); return { x:r.left+U()*3, y:r.top+r.height/2 }; }
-  MASUK[0]=function(){ pos.x=kr.offsetLeft; pos.y=kr.offsetTop; petunjuk('Malam terakhir tahun ini. <b>Gesek kepala koreknya</b> di sisi kotak — cepat, sekali tarik.'); };
+  MASUK[0]=function(){ pos.x=kr.offsetLeft; pos.y=kr.offsetTop; petunjuk('Malam terakhir tahun ini. <b>Gesek kepala koreknya</b> di sisi kotak. Cepat, sekali tarik.'); };
   seret(kr,{
     boleh:function(){ return !nyala; },
     down:function(e){ ox=e.clientX-pos.x; oy=e.clientY-pos.y; lalu={x:e.clientX,t:performance.now()}; },
@@ -488,7 +488,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function nyalakan(h){
     nyala=true; kr.classList.add('nyala'); SFX.gesek(); buzz(30); MU.play();
     var t=0, iv=setInterval(function(){ var k=kepala(); percik.api(k.x,k.y); if(++t>40) clearInterval(iv); },50);
-    var j=$('#judulAwal'); j.innerHTML=''; j.appendChild(document.createTextNode('Malam ini, '+PENERIMA)); j.appendChild(el('small',null,'sebentar lagi '+TAHUN_BARU+' — dari '+PENGIRIM));
+    var j=$('#judulAwal'); j.innerHTML=''; j.appendChild(document.createTextNode('Malam ini, '+PENERIMA)); j.appendChild(el('small',null,'sebentar lagi '+TAHUN_BARU+', dari '+PENGIRIM));
     setTimeout(function(){ j.classList.add('tampil'); petunjuk('Apinya menyala. Kita naik ke atap, hitung mundurnya sebentar lagi.'); },500);
     setTimeout(function(){ lanjut(berikut,'Naik ke atap'); },2200);
   }
@@ -596,7 +596,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function taruh(x,y){ kt.style.left=x+'px'; kt.style.top=y+'px'; }
   $('#suratJudul').textContent='Untuk '+PENERIMA+', di '+TAHUN_BARU;
   (SURAT.length?SURAT:['']).forEach(function(t){ $('#suratIsi').appendChild(el('p',null,t)); });
-  $('#suratTtd').textContent='— '+PENGIRIM;
+  $('#suratTtd').textContent=PENGIRIM;
   MASUK[4]=function(){ setTimeout(function(){ hitungTitik(); taruh(titik[0].x,titik[0].y); },1050);
     petunjuk('Kembang api tangan di ujung hati itu. <b>Seret mengikuti garisnya</b> sampai hatinya utuh.'); };
   addEventListener('resize',function(){ if(kini===4 && !beres){ hitungTitik(); taruh(titik[idx].x,titik[idx].y); } });

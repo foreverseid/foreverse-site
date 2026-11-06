@@ -443,7 +443,7 @@ img{-webkit-touch-callout:none;-webkit-user-drag:none;user-drag:none}
       <p class="dial-cue" id="dialCue">putar untuk mengunci</p>
     </div>
     <div class="secret-sheet reveal">
-      <div class="secret-head">P.S. —</div>
+      <div class="secret-head">P.S.</div>
       <p class="secret-txt" id="dialSecret" data-f="rahasia" style="opacity:0"></p>
       <p class="secret-foot" id="dialFoot">terkunci</p>
     </div>
@@ -849,7 +849,7 @@ function markDone(k){
   }
 
   function finish(){
-    doneEl.textContent='"'+kalimat+'" — rutenya tersambung';
+    doneEl.textContent='"'+kalimat+'". Rutenya tersambung';
     doneEl.classList.add('show');
     SFX.win(); FX.at(board,70); markDone('rute');
   }
@@ -1023,7 +1023,7 @@ function markDone(k){
         svg.appendChild(ln);
       }
       next++;
-      info.textContent = next<N ? 'Berikutnya: '+(next+1) : 'Selesai — rutenya runtut!';
+      info.textContent = next<N ? 'Berikutnya: '+(next+1) : 'Selesai, rutenya runtut!';
       if(next>=N){ SFX.win(); FX.at(board,70); markDone('singgah'); }
     } else {
       SFX.bad(); buzz(45);
@@ -1079,7 +1079,7 @@ function markDone(k){
     SFX.good(); buzz(20);
     cue.textContent='terkunci ke utara';
     secret.style.opacity='1';
-    foot.textContent='— cuma kebaca kalau jarumnya pas ke utara';
+    foot.textContent='cuma kebaca kalau jarumnya pas ke utara';
   }
 })();
 
