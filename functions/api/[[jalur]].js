@@ -171,8 +171,6 @@ const DOKU = {
     /* Virtual Account: cadangan saat QRIS/e-wallet gangguan. Biayanya biasanya
        Rp tetap per transaksi — isi sesuai tarif DOKU di /developer. Kode dari
        developers.doku.com → DOKU Checkout → Supported Payment Methods. */
-    { kode: "VIRTUAL_ACCOUNT_BCA", nama: "VA BCA", ket: "transfer ke Virtual Account BCA", tetap: 0, persen: 0, aktif: false },
-    { kode: "VIRTUAL_ACCOUNT_BANK_MANDIRI", nama: "VA Mandiri", ket: "transfer ke Virtual Account Mandiri", tetap: 0, persen: 0, aktif: false },
     { kode: "VIRTUAL_ACCOUNT_BRI", nama: "VA BRI", ket: "transfer ke Virtual Account BRI", tetap: 0, persen: 0, aktif: false },
     { kode: "VIRTUAL_ACCOUNT_BNI", nama: "VA BNI", ket: "transfer ke Virtual Account BNI", tetap: 0, persen: 0, aktif: false },
     { kode: "VIRTUAL_ACCOUNT_BANK_SYARIAH_MANDIRI", nama: "VA BSI", ket: "transfer ke Virtual Account BSI", tetap: 0, persen: 0, aktif: false },
