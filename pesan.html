@@ -111,10 +111,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .fotokartu{border:1.5px dashed var(--stone);border-radius:13px;padding:10px;background:var(--cream)}
 .fotokartu.isi{border-style:solid;border-color:var(--violet-soft);background:var(--paper)}
 .jendela{
-  position:relative;aspect-ratio:3/3.6;border-radius:9px;overflow:hidden;background:var(--cream-lift);
+  position:relative;aspect-ratio:3/4;border-radius:9px;overflow:hidden;background:var(--cream-lift);
   display:grid;place-items:center;cursor:pointer;
 }
-.jendela img{width:100%;height:100%;object-fit:cover;display:block}
+.jendela[data-bentuk="R"]{aspect-ratio:4/3}
+.jendela img{width:100%;height:100%;object-fit:cover;display:block;touch-action:none;cursor:grab;-webkit-user-drag:none;user-select:none}
+.jendela .geser{position:absolute;left:6px;top:6px;background:rgba(22,22,26,.6);color:#fff;font-size:.68rem;font-weight:600;padding:4px 8px;border-radius:7px;pointer-events:none}
+.fotokartu .bentuk{display:block;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--violet);margin-bottom:6px}
 .jendela .ajak{text-align:center;color:var(--ink-faint);font-size:.8rem;padding:10px;line-height:1.45}
 .jendela .ajak b{display:block;color:var(--violet);font-size:.86rem;margin-bottom:3px}
 .ganti{
@@ -453,7 +456,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "zona-waktu":        { nama:"Dua Jendela",       nfoto:3, mesin:"/zona-waktu.html",        momen:"ldr" },
     "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:3, mesin:"/confess-kunang.html",  momen:"confess" },
-    "getwell-365":       { nama:"36,5",                  nfoto:3, mesin:"/getwell-365.html",     momen:"getwell" },
+    "getwell-365":       { nama:"36,5",                  nfoto:4, foto:"TTRR", mesin:"/getwell-365.html",     momen:"getwell" },
     "pasar-malam":       { nama:"Pasar Malam",           nfoto:3, mesin:"/pasar-malam.html",     momen:"askout" },
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:3, mesin:"/lewat-duluan.html",    momen:"lovenote" },
     "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:3, mesin:"/kasus-pengirim.html", momen:"confess" },
@@ -484,13 +487,34 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   }
   var TEMA = (new URLSearchParams(location.search).get("tema")) || "bait";
   if(!TEMA_INFO[TEMA]) TEMA = "bait";
-  var NFOTO = TEMA_INFO[TEMA].nfoto;
+  var NFOTO = (TEMA_INFO[TEMA].foto || "").length || TEMA_INFO[TEMA].nfoto;
   var MOMEN_GRUP = TEMA_INFO[TEMA].momen;
 
   /* ══ 1 · kartu foto ══ */
   var FOTO = [], FOTO_ADA = [];         // {data, mime, caption} atau null · src lama dari server saat mode edit
 
+  /* Standar foto (7 Nov 2026): tiap tema punya slot tegak (T, 3:4) dan
+     mendatar (R, 4:3) — 4–6 foto, minimal satu dari masing-masing.
+     Tema yang belum dirombak masih memakai nfoto (semua tegak). */
+  function slotTema(t){ var x = TEMA_INFO[t]; return (x.foto || new Array(x.nfoto + 1).join("T")).split(""); }
+  function posisiFoto(img, f){ img.style.objectPosition = (f.fx == null ? 50 : f.fx) + "% " + (f.fy == null ? 50 : f.fy) + "%"; }
+  function isiJendela(i, src, f){
+    var jend = kartu(i).querySelector(".jendela");
+    jend.removeAttribute("data-buka");
+    jend.innerHTML = '<img src="'+src+'" alt=""><span class="geser">geser untuk atur posisi</span><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
+    var img = jend.querySelector("img"); posisiFoto(img, f);
+    var mulai = null;
+    img.addEventListener("pointerdown", function(e){ e.preventDefault(); img.setPointerCapture(e.pointerId); mulai = { x:e.clientX, y:e.clientY, fx:f.fx == null ? 50 : f.fx, fy:f.fy == null ? 50 : f.fy }; });
+    img.addEventListener("pointermove", function(e){ if(!mulai) return; var r = jend.getBoundingClientRect();
+      f.fx = Math.max(0, Math.min(100, Math.round(mulai.fx - (e.clientX - mulai.x) / r.width * 100)));
+      f.fy = Math.max(0, Math.min(100, Math.round(mulai.fy - (e.clientY - mulai.y) / r.height * 100)));
+      posisiFoto(img, f); });
+    img.addEventListener("pointerup", function(){ if(typeof jadwalkanPratinjauLive === "function") jadwalkanPratinjauLive(); });
+    img.addEventListener("pointerup", function(){ mulai = null; });
+    img.addEventListener("pointercancel", function(){ mulai = null; });
+  }
   function buatFoto(n){
+    var SLOT = slotTema(TEMA); n = SLOT.length;
     FOTO = new Array(n).fill(null);
     FOTO_ADA = new Array(n).fill(null);
     var bungkus = $("fotos");
@@ -499,8 +523,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       var d = document.createElement("div");
       d.className = "fotokartu"; d.dataset.i = i;
       d.innerHTML =
-        '<div class="jendela" data-buka="'+i+'">'+
-          '<div class="ajak"><b>Foto '+(i+1)+'</b>Ketuk untuk pilih</div>'+
+        '<span class="bentuk">Foto '+(i+1)+' · '+(SLOT[i]==="R"?"mendatar":"tegak")+'</span>'+
+        '<div class="jendela" data-buka="'+i+'" data-bentuk="'+SLOT[i]+'">'+
+          '<div class="ajak"><b>Foto '+(SLOT[i]==="R"?"mendatar":"tegak")+'</b>Ketuk untuk pilih</div>'+
         '</div>'+
         '<input type="file" accept="image/*" data-file="'+i+'">'+
         '<div class="ket"><input type="text" maxlength="40" placeholder="Keterangan (opsional)" data-caption="'+i+'"></div>';
@@ -514,7 +539,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       var f = e.target.closest("[data-file]");
       if(f && f.files && f.files[0]) ambilFoto(+f.dataset.file, f.files[0]);
     });
-    $("judulFoto").textContent = n===3 ? "Tiga foto" : n + " foto";
+    $("judulFoto").textContent = n + " foto";
   }
 
   function kartu(i){ return document.querySelector('.fotokartu[data-i="'+i+'"]'); }
@@ -580,9 +605,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     kecilkan(berkas, function(hasil, galat){
       sibuk.remove();
       if(galat){ pesanGalat("Fotonya tidak bisa dibaca. Coba foto lain."); return; }
-      FOTO[i] = { data: hasil, mime: "image/jpeg", caption: "" };
+      FOTO[i] = { data: hasil, mime: "image/jpeg", caption: "", fx: 50, fy: 50 };
       FOTO_ADA[i] = null;
-      jend.innerHTML = '<img src="'+hasil+'" alt=""><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
+      isiJendela(i, hasil, FOTO[i]);
       k.classList.add("isi");
       $("galatFoto").style.display = "none";
     });
@@ -1134,7 +1159,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   /* ══ 2c · bagian yang bergantung pada tema, disatukan ══ */
   function siapkanTema(tema){
     TEMA = TEMA_INFO[tema] ? tema : "bait";
-    NFOTO = TEMA_INFO[TEMA].nfoto;
+    NFOTO = slotTema(TEMA).length;
     MOMEN_GRUP = TEMA_INFO[TEMA].momen;
     buatFoto(NFOTO);
     renderBlokDasar(MOMEN_GRUP);
@@ -1298,8 +1323,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       surat: [$("surat1").value, $("surat2").value, $("surat3").value],
       foto: fotoRange().map(function(i){
         var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
-        if(FOTO[i]) return { src: FOTO[i].data, caption: caption };
-        if(FOTO_ADA[i]) return { src: FOTO_ADA[i], caption: caption };
+        var bentuk = slotTema(TEMA)[i];
+        if(FOTO[i]) return { src: FOTO[i].data, caption: caption, bentuk: bentuk, fx: FOTO[i].fx, fy: FOTO[i].fy, slot: i };
+        if(FOTO_ADA[i]) return { src: FOTO_ADA[i].src, caption: caption, bentuk: bentuk, fx: FOTO_ADA[i].fx, fy: FOTO_ADA[i].fy, slot: i };
         return null;
       }).filter(Boolean),
       waPengirim: $("wa").value.trim(),
@@ -1652,7 +1678,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       }, isiDasarUntuk("kirim"), isiKhusus()),
       foto: fotoRange().map(function(i){
         var caption = (document.querySelector('[data-caption="'+i+'"]')||{}).value || "";
-        return FOTO[i] ? { data: FOTO[i].data, mime: FOTO[i].mime, caption: caption } : { caption: caption };
+        var x = FOTO[i] || FOTO_ADA[i] || {};
+        return FOTO[i] ? { data: FOTO[i].data, mime: FOTO[i].mime, caption: caption, fx: x.fx, fy: x.fy } : { caption: caption, fx: x.fx, fy: x.fy };
       })
     };
   }
@@ -1855,10 +1882,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         namaLagu(LAGU_ADA ? "Lagu tersimpan: " + (lagu.judul || "berkas kamu") + ". Pilih berkas baru kalau mau mengganti."
                           : "");
         (i.foto||[]).forEach(function(f, n){
+          if(f && f.slot != null) n = f.slot;
           if(n >= NFOTO || !f || !f.src) return;
-          FOTO_ADA[n] = f.src;
+          FOTO_ADA[n] = { src: f.src, fx: f.fx, fy: f.fy };
           var k = kartu(n);
-          k.querySelector(".jendela").innerHTML = '<img src="'+f.src+'" alt=""><button class="ganti" type="button" data-buka="'+n+'">Ganti</button>';
+          isiJendela(n, f.src, FOTO_ADA[n]);
           k.classList.add("isi");
           k.querySelector('[data-caption="'+n+'"]').value = f.caption || "";
         });

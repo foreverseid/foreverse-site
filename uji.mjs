@@ -1393,6 +1393,20 @@ await uji("lewat-duluan · momen lovenote tidak kena isian momen lain, dan isian
   harus(!("rahasia" in isi), "tema ini tidak memakai pesan rahasia");
 });
 
+await uji("standar foto · slot tegak/mendatar, titik fokus, dan nomor slot tersimpan", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("getwell-365");
+  d.foto = [{ data: FOTO, mime: "image/jpeg", caption: "satu", fx: 20, fy: 140 }, { caption: "" },
+            { data: FOTO, mime: "image/jpeg", caption: "tiga", fx: "x" }, { caption: "" }];
+  const j = await draf(L, d);
+  harus(j.ok, "draf gagal: " + JSON.stringify(j));
+  const b = await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first();
+  const f = JSON.parse(b.isi).foto;
+  sama(f.length, 2, "dua foto tersimpan");
+  harus(f[0].bentuk === "T" && f[0].slot === 0 && f[0].fx === 20 && f[0].fy === 100, "slot 0 tegak, fokus dijepit: " + JSON.stringify(f[0]));
+  harus(f[1].bentuk === "R" && f[1].slot === 2 && f[1].fx === 50, "slot 2 mendatar, fokus bawaan 50: " + JSON.stringify(f[1]));
+});
+
 await uji("kasus-pengirim · pesanan lengkap diterima, momen confess, isian khas tersimpan", async () => {
   const L = await buatLingkungan();
   const j = await draf(L, isiDrafTema("kasus-pengirim"));

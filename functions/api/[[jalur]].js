@@ -88,7 +88,7 @@ const TEMA_SKEMA = {
   "zona-waktu":        { nfoto: 3, momen: "ldr" },
   "graduation-benih":  { nfoto: 3, momen: "graduation" },
   "confess-kunang":    { nfoto: 3, momen: "confess" },
-  "getwell-365":       { nfoto: 3, momen: "getwell" },
+  "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
   "pasar-malam":       { nfoto: 3, momen: "askout" },
   "lewat-duluan":      { nfoto: 3, momen: "lovenote" },
   "kasus-pengirim":    { nfoto: 3, momen: "confess" },
@@ -904,7 +904,12 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   }
 
-  const nfoto = skema.nfoto;
+  /* Standar foto: skema.foto = urutan slot, "T" tegak 3:4 / "R" mendatar
+     4:3. Tema lama tanpa skema.foto = nfoto slot tegak. Tiap foto
+     menyimpan bentuk, titik fokus (fx/fy, 0–100) dan nomor slotnya. */
+  const slot = (skema.foto || "T".repeat(skema.nfoto)).split("");
+  const nfoto = slot.length;
+  const fokus = v => { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 50; };
   const fotoLama = (lamaIsi && lamaIsi.foto) || [];
   const masuk = Array.isArray(badan.foto) ? badan.foto : [];
 
@@ -913,9 +918,10 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     const caption = teks(f.caption, BATAS.caption);
     if (f.data && String(f.data).length > 32) {
       const mime = /^image\/(png|webp|jpeg)$/.test(f.mime || "") ? f.mime : "image/jpeg";
-      isi.foto.push({ src: await simpanFoto(env, kode, i + 1, f.data, mime), caption });
-    } else if (fotoLama[i] && fotoLama[i].src) {
-      isi.foto.push({ src: fotoLama[i].src, caption });
+      isi.foto.push({ src: await simpanFoto(env, kode, i + 1, f.data, mime), caption, bentuk: slot[i], fx: fokus(f.fx), fy: fokus(f.fy), slot: i });
+    } else {
+      const lama = fotoLama.find(x => x && x.slot === i) || (fotoLama.every(x => !x || x.slot == null) ? fotoLama[i] : null);
+      if (lama && lama.src) isi.foto.push({ src: lama.src, caption, bentuk: slot[i], fx: fokus(f.fx != null ? f.fx : lama.fx), fy: fokus(f.fy != null ? f.fy : lama.fy), slot: i });
     }
   }
   if (isi.foto.length < 1) throw new Error("Minimal satu foto harus diunggah.");

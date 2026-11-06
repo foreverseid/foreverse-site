@@ -155,8 +155,9 @@ body.redup .judul{color:var(--putih)}
 .pesan-air{position:absolute;left:10%;right:10%;bottom:8%;margin:0;z-index:0;text-align:center;font:700 calc(var(--u)*4.6)/1.15 var(--tangan);color:var(--ink)}
 
 /* 5 · jendela & tirai */
-.jendela{position:relative;width:calc(var(--u)*72);height:calc(var(--u)*80);border-radius:calc(var(--u)*2);background:#bcd3e0;box-shadow:0 0 0 calc(var(--u)*2) var(--putih),0 16px 34px rgba(34,49,58,.2);overflow:hidden}
-@media (min-aspect-ratio:1/1){.jendela{width:calc(var(--u)*62);height:calc(var(--u)*62)}}
+.jendela{position:relative;width:calc(var(--u)*66);height:calc(var(--u)*88);transition:width .6s,height .6s;border-radius:calc(var(--u)*2);background:#bcd3e0;box-shadow:0 0 0 calc(var(--u)*2) var(--putih),0 16px 34px rgba(34,49,58,.2);overflow:hidden}
+.jendela.rebah{width:calc(var(--u)*86);height:calc(var(--u)*64.5)}
+@media (min-aspect-ratio:1/1){.jendela{width:calc(var(--u)*48);height:calc(var(--u)*64)}.jendela.rebah{width:calc(var(--u)*84);height:calc(var(--u)*63)}}
 .jendela img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
 .jendela img.ada{opacity:1}
 .jendela .tirai{position:absolute;top:0;bottom:0;width:52%;background:repeating-linear-gradient(90deg,#f4efe6 0 14px,#e8e0d2 14px 22px);transition:transform 1s cubic-bezier(.5,0,.2,1);z-index:2}
@@ -274,7 +275,7 @@ function FV_MULAI(){
 "use strict";
 var D = KADO || {};
 D.lagu = D.lagu || {}; D.lagu.src = D.lagu.src || D.lagu.file || "";
-D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "" }; });
+D.foto = (D.foto || []).map(function(f){ return { src: f && f.src, caption: (f && (f.caption || f.ket)) || "", bentuk: f && f.bentuk === "R" ? "R" : "T", fx: f && f.fx, fy: f && f.fy }; });
 var $=function(s,r){ return (r||document).querySelector(s); };
 var $$=function(s,r){ return [].slice.call((r||document).querySelectorAll(s)); };
 var rand=function(a,b){ return a+Math.random()*(b-a); };
@@ -283,7 +284,10 @@ var buzz=function(ms){ try{ navigator.vibrate && navigator.vibrate(ms); }catch(e
 var el=function(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; };
 var pusat=function(n){ var r=n.getBoundingClientRect(); return { x:r.left+r.width/2, y:r.top+r.height/2, r:r }; };
 var U=(function(){ var p=el('div'); p.style.cssText='position:fixed;visibility:hidden;pointer-events:none;width:calc(var(--u)*100)'; document.body.appendChild(p); return function(){ return p.getBoundingClientRect().width/100; }; })();
-var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO=(D.foto||[]).filter(function(f){ return f && f.src; }).slice(0,6);
+/* standar foto: T = tegak 3:4, R = mendatar 4:3, fx/fy = titik fokus (%) */
+var FOTO_T=FOTO.filter(function(f){ return f.bentuk!=='R'; }), FOTO_R=FOTO.filter(function(f){ return f.bentuk==='R'; });
+function pasFoto(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
 var SURAT=(D.surat||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
@@ -517,9 +521,9 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     move:function(e,dx,dy){ tl.style.setProperty('--y',klem(dy,0,U()*16)+'px'); },
     up:function(e,dx,dy){ tl.classList.remove('tarik'); tl.style.setProperty('--y','0px'); if(dy<U()*10){ kedip(); return; } tampil(); } });
   function tampil(){ sibuk=true; SFX.klik(); var f=FOTO[i]; jd.classList.remove('buka');
-    setTimeout(function(){ im.src=f.src; im.classList.add('ada'); kt.textContent=f.caption||''; kt.className=f.caption?'isi':''; jd.classList.add('buka'); SFX.pop(); i++; sibuk=false;
+    setTimeout(function(){ jd.classList.toggle('rebah',f.bentuk==='R'); pasFoto(im,f); im.classList.add('ada'); kt.textContent=f.caption||''; kt.className=f.caption?'isi':''; jd.classList.add('buka'); SFX.pop(); i++; sibuk=false;
       if(i>=FOTO.length){ beres=true; suhu(36.8); petunjuk('36,8. Cahaya masuk.'); setTimeout(function(){ lanjut(berikut,'Baca resepnya'); },2600); }
-      else petunjuk('<b>Tarik lagi</b> — masih ada '+(FOTO.length-i)+' pemandangan.'); },i?700:200); }
+      else petunjuk('<b>Tarik lagi</b> — masih ada '+(FOTO.length-i)+' pemandangan.'); },i?1000:200); }
 })();
 
 /* 6 · blok resep: robek tiap lembar ke bawah */
