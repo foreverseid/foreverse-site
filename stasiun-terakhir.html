@@ -143,6 +143,9 @@ img{-webkit-user-drag:none;pointer-events:none}
 .gerbong{position:relative;width:calc(var(--u)*88);padding:calc(var(--u)*6);border-radius:calc(var(--u)*3);background:linear-gradient(180deg,#e9dfc8,#d6c9ab);box-shadow:inset 0 calc(var(--u)*-6) 0 var(--marun),0 calc(var(--u)*2) calc(var(--u)*5) rgba(0,0,0,.4)}
 .jendela{position:relative;width:100%;aspect-ratio:4/5;border-radius:calc(var(--u)*5);overflow:hidden;background:#000;box-shadow:inset 0 0 0 calc(var(--u)*1.6) #5b5f6b}
 @media (min-aspect-ratio:1/1){ .gerbong{width:auto} .jendela{width:auto;height:calc(var(--u)*76)} }
+.jendela{transition:aspect-ratio .5s}
+.jendela.rebah{aspect-ratio:4/3}
+@media (min-aspect-ratio:1/1){ .jendela.rebah{height:calc(var(--u)*60)} }
 .pemandangan{position:absolute;inset:0;background:linear-gradient(180deg,#F6C99A,#D99A8E 60%,#6E6A8E 61%,#4d4a6c);overflow:hidden}
 .pemandangan::after{content:"";position:absolute;left:0;right:0;bottom:22%;height:12%;background:radial-gradient(60% 100% at 30% 100%,#3e3c5c 0 50%,transparent 51%) 0 0/50% 100% repeat-x;background-position-x:var(--px,0px)}
 .jendela img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
@@ -405,8 +408,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -528,7 +535,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   if(!FOTO.length) return;
   var krey=$('#krey'), jen=$('#jendela'), img=$('#jendelaImg'), idx=0, h=100, h0=100, buka=false;
-  function muat(){ img.classList.remove('tampil'); img.src=FOTO[idx].src; $('#stiker').classList.remove('tampil'); buka=false; krey.classList.add('jalan'); krey.style.setProperty('--h','100%'); h=100; }
+  function muat(){ img.classList.remove('tampil'); pasFoto(img,FOTO[idx]); jen.classList.toggle('rebah',FOTO[idx].bentuk==='R'); $('#stiker').classList.remove('tampil'); buka=false; krey.classList.add('jalan'); krey.style.setProperty('--h','100%'); h=100; }
   MASUK[2]=function(){ muat(); petunjuk('Di luar jendela ada yang ingin kutunjukkan. <b>Tarik kreynya ke atas.</b>'); };
   seret(krey,{
     boleh:function(){ return !buka; },
@@ -567,7 +574,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var area=$('#lambai'), tangan=$('#tangan'), hit=0, arah=0, ujung=0, beres=false;
   $('#penutupTeks').textContent=String(D.penutup||'').trim()||'Semoga perjalananmu baik, ke mana pun arahnya.';
   function tulis(){ $('#lambaiHitung').textContent=beres?'':'lambaian '+hit+' / 3'; }
-  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b> — geser ke kiri dan kanan.'); };
+  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b>, geser ke kiri dan kanan.'); };
   seret(area,{
     boleh:function(){ return !beres; },
     down:function(e){ ujung=e.clientX; arah=0; },

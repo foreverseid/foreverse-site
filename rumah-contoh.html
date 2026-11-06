@@ -101,7 +101,9 @@ img{display:block;max-width:100%;-webkit-user-drag:none;pointer-events:none}
 #kartu .catat{font-family:var(--hand);font-size:1.6rem;line-height:1.2;color:var(--ink);background:#FFF3C9;padding:14px 16px;
   border-radius:6px;transform:rotate(-1deg);box-shadow:2px 3px 0 rgba(43,36,32,.12);margin:4px 0 10px}
 #kartu .foto{border:8px solid #fff;box-shadow:0 4px 14px rgba(43,36,32,.2);margin:4px auto 10px;max-width:300px}
-#kartu .foto img{width:100%;aspect-ratio:1;object-fit:cover}
+#kartu .foto img{width:100%;aspect-ratio:3/4;object-fit:cover}
+#kartu .foto.rebah{max-width:360px}
+#kartu .foto.rebah img{aspect-ratio:4/3}
 #kartu .cap{font-family:var(--hand);font-size:1.45rem;text-align:center}
 #kartu p.par{font-family:var(--disp);font-size:1.02rem;line-height:1.62;margin:0 0 12px}
 #kartu .ttd{font-family:var(--hand);font-size:1.55rem;color:var(--tera);text-align:right}
@@ -227,7 +229,7 @@ function sasaran(){
   if(r==='teras') return tugas===0?{u:.55,v:.86,r:.1,kata:'Ada yang ganjil di <b>keset depan pintu</b>. Seret kesetnya ke samping.'}
     : tugas===1?{u:.6,v:.88,r:.06,kata:'<b>Ketuk kuncinya</b>.'}
     : {u:.55,v:.52,r:.14,kata:'Pintunya terbuka. <b>Ketuk pintunya</b> untuk masuk.',pintu:1};
-  if(r==='tamu'){ var n=jumlahFoto(); var sisa=[0,1,2].filter(function(i){ return i<n&&!bingkai[i]; });
+  if(r==='tamu'){ var n=jumlahFoto(); var sisa=[0,1,2,3].filter(function(i){ return i<n&&!bingkai[i]; });
     if(sisa.length) return {u:FRAME[sisa[0]].u,v:FRAME[sisa[0]].v+.12,r:.1,kata:'Bingkai di dinding miring semua. <b>Ketuk tiap bingkai</b> untuk meluruskannya.',semua:sisa.map(function(i){ return {u:FRAME[i].u,v:FRAME[i].v+.12}; })};
     return tugas===0?{u:.3,v:.7,r:.1,kata:'Ada catatan di meja. <b>Ketuk catatannya</b>.'}:{u:.9,v:.5,r:.13,kata:'<b>Ketuk pintu dapur</b> di ujung ruangan.',pintu:1}; }
   if(r==='dapur') return tugas===0?{u:.42,v:.48,r:.1,kata:'<b>Tekan dan tahan teko</b> untuk menuang. Lepas tepat di garis cangkir.'}
@@ -238,8 +240,8 @@ function sasaran(){
     : tugas===1?{u:.72,v:.6,r:.07,kata:'Di meja ada kotak kecil. <b>Seret tutupnya ke atas</b>.'}:null;
   return null;
 }
-function jumlahFoto(){ return Math.min(3,D.foto.length); }
-var FRAME=[{u:.5,v:.2,m:-.12},{u:.62,v:.24,m:.1},{u:.74,v:.18,m:-.08}];
+function jumlahFoto(){ return Math.min(4,D.foto.length); }
+var FRAME=[{u:.5,v:.2,m:-.12},{u:.63,v:.24,m:.1},{u:.77,v:.18,m:-.08},{u:.36,v:.23,m:.09}];
 
 /* ══════ gambar ruangan ══════ */
 function dinding(warna,lantai,papan){
@@ -287,8 +289,11 @@ function gambarTamu(){
   for(var i=0;i<jumlahFoto();i++){ var f=FRAME[i], w=.1, x=X(f.u), y=Y(f.v), s=w*PW;
     cx.save(); cx.translate(x,y); cx.rotate(bingkai[i]?0:f.m); cx.translate(-s/2,0);
     cx.strokeStyle=GARIS; cx.lineWidth=1.5; cx.beginPath(); cx.moveTo(s/2,-14); cx.lineTo(0,0); cx.moveTo(s/2,-14); cx.lineTo(s,0); cx.stroke();
-    cx.fillStyle='#A47A52'; cx.fillRect(0,0,s,s*1.15); cx.fillStyle='#fff'; cx.fillRect(s*.08,s*.08,s*.84,s*.99);
-    var im=GAMBAR[i]; if(im&&im.complete&&im.naturalWidth){ var q=Math.min(im.naturalWidth,im.naturalHeight); cx.drawImage(im,(im.naturalWidth-q)/2,(im.naturalHeight-q)/2,q,q,s*.14,s*.14,s*.72,s*.72); }
+    /* bingkai mengikuti bentuk foto: tegak 3:4, mendatar 4:3; isi dipotong sesuai titik fokus */
+    var fo=D.foto[i]||{}, rb=fo.bentuk==='R', bw=rb?s*1.25:s, bh=rb?s*.94:s*1.25; if(rb) cx.translate(-(bw-s)/2,0);
+    cx.fillStyle='#A47A52'; cx.fillRect(0,0,bw,bh); cx.fillStyle='#fff'; cx.fillRect(bw*.07,bw*.07,bw*.86,bh-bw*.14);
+    var im=GAMBAR[i]; if(im&&im.complete&&im.naturalWidth){ var dw=bw*.76, dh=bh-bw*.24, r=dw/dh, nw=im.naturalWidth, nh=im.naturalHeight, sw=nw, sh=nw/r; if(sh>nh){ sh=nh; sw=nh*r; }
+      var fx=(fo.fx==null?50:fo.fx)/100, fy=(fo.fy==null?50:fo.fy)/100; cx.drawImage(im,(nw-sw)*fx,(nh-sh)*fy,sw,sh,bw*.12,bw*.12,dw,dh); }
     cx.restore(); }
   pintu(.9,tugas>=1,'#F3E3C6');
   tanaman(.47,.78,.2);
@@ -416,7 +421,7 @@ function ketuk(q){
 function kesetSelesai(){ if(tugas!==0) return; tekan=null; keset=1; tugas=1; SFX.bagus(); buzz(12); toast('ada kunci di bawahnya'); perbarui(); }
 /* ── ruang tamu: bingkai ── */
 function lurusFoto(i){ bingkai[i]=true; SFX.ketuk(); var f=D.foto[i];
-  panel(function(k){ var w=el('div','foto'), im=el('img'); im.src=f.src; im.alt=f.caption||'foto'; w.appendChild(im); k.appendChild(w);
+  panel(function(k){ var w=el('div','foto'+(f.bentuk==='R'?' rebah':'')), im=el('img'); im.src=f.src; im.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; im.alt=f.caption||'foto'; w.appendChild(im); k.appendChild(w);
     if(f.caption) k.appendChild(el('div','cap',f.caption)); k.appendChild(tombol('Taruh lagi di dinding',function(){ tutupPanel(); perbarui(); })); }); }
 /* ── dapur: tuang teh (game 1) ── */
 function nilaiTeh(){

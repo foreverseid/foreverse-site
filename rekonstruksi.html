@@ -168,6 +168,8 @@ body.sinema #joy, body.sinema #aksi{opacity:.35;pointer-events:none}
 .bukti .stempel-jam{display:inline-block;font-family:var(--ketik);font-size:1.4rem;color:var(--biru);border:3px solid var(--biru);border-radius:6px;padding:0 10px;transform:rotate(-3deg);margin-bottom:8px}
 .bukti .cerita{font-family:var(--tangan);font-size:1.45rem;line-height:1.2}
 .bukti img{width:100%;max-height:30svh;object-fit:cover;display:block;border:2px solid var(--ink);margin-top:10px}
+.bukti img.tegak{width:auto;height:30svh;aspect-ratio:3/4;margin:10px auto 0}
+.bukti img.rebah{aspect-ratio:4/3;height:auto}
 
 /* garis waktu */
 .ket-kecil{font-family:var(--piksel);font-size:.8rem;color:var(--redup);margin:2px 0 6px}
@@ -284,7 +286,10 @@ var PENERIMA = tk(D.penerima) || 'kamu';
 var PENGIRIM = tk(D.pengirim) || 'aku';
 var KAR_A = D.karakterPenerima === 'laki' ? 'laki' : 'perempuan';
 var KAR_B = D.karakterPengirim === 'perempuan' ? 'perempuan' : 'laki';
-var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,4);
+/* standar foto: T tegak 3:4, R mendatar 4:3; fx/fy titik fokus */
+function pas(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
+
 var SEMBUNYI = !!D.sembunyikanTahun;
 var PENUTUP = tk(D.penutup);
 var SURAT = (D.surat || []).map(tk).filter(Boolean);
@@ -571,7 +576,7 @@ function bukaBukti(i){
   var kotakB = el('div', 'bukti');
   kotakB.appendChild(el('div', 'stempel-jam', tulisJam(k.jam)));
   kotakB.appendChild(el('div', 'cerita', k.cerita));
-  if(k.foto){ var img = el('img'); img.alt = ''; img.src = k.foto.src; kotakB.appendChild(img); if(k.foto.caption) kotakB.appendChild(p(k.foto.caption)); }
+  if(k.foto){ var img = el('img'); img.alt = ''; pas(img, k.foto); img.className = k.foto.bentuk === 'R' ? 'rebah' : 'tegak'; kotakB.appendChild(img); if(k.foto.caption) kotakB.appendChild(p(k.foto.caption)); }
   buka([
     h3(k.tempat),
     p(ST.bukti[i] ? 'Bukti ini sudah ada di berkas.' : 'Ada yang tertinggal di depan pintunya. Jamnya masih kebaca:'),

@@ -444,8 +444,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -458,9 +462,9 @@ function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   36,5 (Get Well Soon) — dibangun ulang. Satu angka mengikat semua
+   36,5 (Get Well Soon), dibangun ulang. Satu angka mengikat semua
    adegan: suhu di kepala halaman turun dari 38,9 ke 36,5 setiap kali
-   penerima merawat dirinya — kompres, sirup, segelas air, membuka
+   penerima merawat dirinya, kompres, sirup, segelas air, membuka
    tirai, membaca resep, mematikan lampu.
    Data tetap: tanggalSakit, sembunyikanHari, dosis[{teks,aturan}],
    enakan[], airPesan, rahasia, surat[], foto[].
@@ -525,7 +529,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     if(!tumpah && lv>=60 && lv<=74){ SFX.benar(); buzz(15); var d=daftar[r], li=el('li'); li.appendChild(el('small',null,'dosis '+(r+1)+(d.aturan?' · '+d.aturan:''))); li.appendChild(document.createTextNode(d.teks)); ol.appendChild(li);
       r++; setTimeout(function(){ ca.style.height='0'; },700);
       if(r>=daftar.length){ beres=true; suhu(37.6); petunjuk('Semua dosis pas. 37,6.'); setTimeout(function(){ lanjut(berikut,'Segelas air'); },2000); }
-      else petunjuk('Pas! <b>Sendok berikutnya</b> — kali ini sirupnya keluar lebih cepat.'); }
+      else petunjuk('Pas! <b>Sendok berikutnya</b>, kali ini sirupnya keluar lebih cepat.'); }
     else { SFX.salah(); sd.classList.add('tumpah'); setTimeout(function(){ sd.classList.remove('tumpah'); ca.style.height='0'; },500);
       petunjuk(tumpah||lv>74?'Kebanyakan, tumpah. <b>Lepas lebih cepat</b>.':'Masih kurang. <b>Tahan sedikit lebih lama</b>.'); } }
   ['pointerup','pointerleave','pointercancel'].forEach(function(ev){ tb.addEventListener(ev,function(){ lepas(false); }); }); noMenu(tb);

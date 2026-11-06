@@ -169,8 +169,11 @@ body.pagi .judul small{color:#b07a12}
 .foto-naik{position:fixed;z-index:70;left:50%;top:50%;width:min(74vw,calc(var(--u)*64));transform:translate(-50%,-30%) scale(.3);opacity:0;pointer-events:none;transition:transform .7s cubic-bezier(.3,1.3,.5,1),opacity .5s;display:flex;flex-direction:column;align-items:center;gap:10px}
 @media (min-aspect-ratio:1/1){ .foto-naik{width:min(42vh,calc(var(--u)*52))} }
 .foto-naik.tampil{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
-.foto-naik img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:calc(var(--u)*4) calc(var(--u)*4) calc(var(--u)*1) calc(var(--u)*1);border:calc(var(--u)*1.4) solid var(--krem);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.foto-naik img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:calc(var(--u)*4) calc(var(--u)*4) calc(var(--u)*1) calc(var(--u)*1);border:calc(var(--u)*1.4) solid var(--krem);box-shadow:0 20px 50px rgba(0,0,0,.5)}
 .foto-naik p{margin:-34px 0 0;position:relative;padding:6px 14px;background:var(--emas);color:var(--ink);border-radius:4px;font:700 clamp(17px,calc(var(--u)*4.6),26px)/1.1 var(--tangan);text-align:center;transform:rotate(-2deg);max-width:92%}
+.foto-naik.rebah{width:min(90vw,calc(var(--u)*88))}
+.foto-naik.rebah img{aspect-ratio:4/3}
+@media (min-aspect-ratio:1/1){ .foto-naik.rebah{width:min(70vh,calc(var(--u)*76))} }
 .foto-naik small{color:var(--krem);font-size:13px;opacity:.85}
 
 /* ═ 4 · beduk & kartu surat ═ */
@@ -219,6 +222,8 @@ body.pagi .judul small{color:#b07a12}
 .t-utama{background:var(--malam);color:#fff}.t-wa{background:#25D366;color:#073b1c}.ulang{background:transparent;color:var(--malam);box-shadow:inset 0 0 0 1.5px var(--malam)}
 .dibuat{font-size:12px;color:var(--muted);text-align:center;text-decoration:none}
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01s!important} }
+.rak.empat{gap:calc(var(--u)*2.4)}
+.rak.empat .toples{width:calc(var(--u)*21);height:calc(var(--u)*34)}
 
 .dibawa{position:fixed!important;z-index:80!important;margin:0!important;transition:none!important}
 .memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:#2B1E47;transition:opacity .4s}
@@ -435,8 +440,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -487,7 +496,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   function jarak(){ var r=ck.getBoundingClientRect(), h=pusat(hl); return Math.hypot(h.x-r.left-x,h.y-r.top-y); }
   function cek(){ var j=jarak(); ls.classList.toggle('dekat',j<R*1.1);
     if(j<R*.45){ if(!tahan) tahan=setTimeout(ketemu,450); } else { clearTimeout(tahan); tahan=null; } }
-  MASUK[0]=function(){ ukur(); petunjuk('Malam terakhir Ramadan. <b>Geser teropongnya</b> — cari bulan sabit tipis di langit barat, dekat cakrawala.'); };
+  MASUK[0]=function(){ ukur(); petunjuk('Malam terakhir Ramadan. <b>Geser teropongnya</b>, cari bulan sabit tipis di langit barat, dekat cakrawala.'); };
   addEventListener('resize',function(){ if(kini===0) ukur(); });
   seret(ck,{
     boleh:function(){ return !beres; },
@@ -521,7 +530,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     uj.className='ujung'+(mode?' '+mode:''); $('b',uj).textContent=mode==='atas'?'lewat atas':mode==='bawah'?'lewat bawah':''; }
   function aturan(){ return 'Lembar janur pertama di baris ini lewat <b>'+perlu(0)+'</b>, lalu bergantian.'; }
   MASUK[1]=function(){ baruBaris();
-    petunjuk('Tarik ujung janur ke kanan. <b>Naikkan jari</b> untuk lewat atas, <b>turunkan</b> untuk lewat bawah — selang-seling, mulai dari <b>atas</b>.'); };
+    petunjuk('Tarik ujung janur ke kanan. <b>Naikkan jari</b> untuk lewat atas, <b>turunkan</b> untuk lewat bawah, selang-seling, mulai dari <b>atas</b>.'); };
   addEventListener('resize',function(){ if(kini===1 && pakan) gambar(); });
   seret(an,{
     boleh:function(){ return !beres; },
@@ -559,13 +568,13 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 /* ═ 3 · toples kue: putar tutupnya ke kiri (foto) ═ */
 (function(){
   if(!FOTO.length) return;
-  var rak=$('#rak'), fn=$('#fotoNaik'), sisa=FOTO.length, aktif=null;
-  var JENIS=[{n:'nastar',w:'#c9463d',w2:'#a83530',k:'#E9A33D'},{n:'kastengel',w:'#6F8A2A',w2:'#57701e',k:'#F0C46A'},{n:'putri salju',w:'#5a3f7d',w2:'#45305f',k:'#FFFDF5'}];
+  var rak=$('#rak'), fn=$('#fotoNaik'), sisa=FOTO.length, aktif=null; rak.classList.toggle('empat',FOTO.length>3);
+  var JENIS=[{n:'nastar',w:'#c9463d',w2:'#a83530',k:'#E9A33D'},{n:'kastengel',w:'#6F8A2A',w2:'#57701e',k:'#F0C46A'},{n:'putri salju',w:'#5a3f7d',w2:'#45305f',k:'#FFFDF5'},{n:'lidah kucing',w:'#c98a1f',w2:'#a8721a',k:'#F6DFA0'}];
   FOTO.forEach(function(f,i){
-    var J=JENIS[i%3], t=el('div','toples'), tp=el('div','tutup'), kc=el('div','kaca');
+    var J=JENIS[i%4], t=el('div','toples'), tp=el('div','tutup'), kc=el('div','kaca');
     tp.style.setProperty('--w',J.w); tp.style.setProperty('--w2',J.w2);
     for(var k=0;k<9;k++){ var q=el('i','kue'), s=rand(18,26); q.style.cssText='width:'+s+'%;height:'+(s*.6)+'%;left:'+rand(4,72)+'%;top:'+rand(30,82)+'%;background:'+J.k+';box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)'; kc.appendChild(q); }
-    var im=el('img','mini'); im.src=f.src; im.alt=''; kc.appendChild(im); kc.appendChild(el('span','label',J.n));
+    var im=el('img','mini'); pasFoto(im,f); im.alt=''; kc.appendChild(im); kc.appendChild(el('span','label',J.n));
     t.appendChild(el('span','panah','↺')); t.appendChild(tp); t.appendChild(kc); rak.appendChild(t);
     var total=0, sudut=0, cx=0, cy=0, lepas=false;
     seret(tp,{
@@ -580,14 +589,14 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     });
     function buka(){
       lepas=true; aktif=t; tp.classList.remove('seret'); tp.classList.add('lepas'); t.classList.add('buka'); SFX.pop(); buzz(15);
-      $('#fnImg').src=f.src; $('#fnKet').textContent=f.caption||''; $('#fnKet').style.display=f.caption?'':'none';
+      pasFoto($('#fnImg'),f); fn.classList.toggle('rebah',f.bentuk==='R'); $('#fnKet').textContent=f.caption||''; $('#fnKet').style.display=f.caption?'':'none';
       setTimeout(function(){ fn.classList.add('tampil'); ptj.style.visibility='hidden'; },250);
     }
   });
   fn.addEventListener('click',function(){ if(!aktif) return; fn.classList.remove('tampil'); aktif.classList.add('simpan'); aktif=null; ptj.style.visibility=''; sisa--; SFX.klik();
     if(sisa<=0) lanjut(berikut,'Dengar takbirnya'); else petunjuk('<b>'+sisa+' toples lagi.</b> Putar tutupnya ke kiri.'); });
   noMenu(fn);
-  MASUK[2]=function(){ petunjuk('Kue Lebaran sudah siap di toples. <b>Putar tutupnya ke kiri</b> — gerakkan jari memutar di atas tutup.'); };
+  MASUK[2]=function(){ petunjuk('Kue Lebaran sudah siap di toples. <b>Putar tutupnya ke kiri</b>, gerakkan jari memutar di atas tutup.'); };
 })();
 
 /* ═ 4 · beduk takbiran: tiap tiga pukulan membuka satu bagian surat ═ */

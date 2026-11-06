@@ -137,7 +137,10 @@ img{-webkit-user-drag:none;pointer-events:none}
 .kartu-foto .bingkai{width:min(74vw,calc(var(--u)*66));background:#fff;padding:3% 3% 16%;border-radius:4px;transform:rotate(-2deg) translateY(30px);transition:transform .5s cubic-bezier(.3,1.4,.5,1);position:relative;box-shadow:0 20px 50px rgba(0,0,0,.4)}
 @media (min-aspect-ratio:1/1){ .kartu-foto .bingkai{width:min(44vh,calc(var(--u)*56))} }
 .kartu-foto.tampil .bingkai{transform:rotate(-2deg)}
-.kartu-foto img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block}
+.kartu-foto img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.kartu-foto .bingkai.rebah{width:min(90vw,calc(var(--u)*88))}
+.kartu-foto .bingkai.rebah img{aspect-ratio:4/3}
+@media (min-aspect-ratio:1/1){ .kartu-foto .bingkai.rebah{width:min(72vh,calc(var(--u)*80))} }
 .kartu-foto p{position:absolute;left:4%;right:4%;bottom:3%;margin:0;font:600 clamp(18px,calc(var(--u)*5),28px)/1.1 var(--tangan);text-align:center;color:var(--ink)}
 .kartu-foto small{color:#fff;font-size:13px;opacity:.85}
 
@@ -386,8 +389,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -405,7 +412,7 @@ function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
    dituang ke tiga cetakan sampai pas di garis (tiap cetakan dihias
    satu `alasan` aku sayang kamu), bendera di kotak praline ditarik
    (foto), bungkus cokelat dibuka lipat demi lipat (surat), lalu
-   cokelatnya dipatahkan jadi dua — separuh untuk masing-masing.
+   cokelatnya dipatahkan jadi dua, separuh untuk masing-masing.
    ═══════════════════════════════════════════════════════════════ */
 var ALASAN=(D.alasan||[]).map(function(s){ return String(s||''); }).filter(function(s){ return s.trim(); });
 SFX.kertas2=function(){ noise(.12,6000,.08); };
@@ -522,7 +529,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
       move:function(e,dx,dy){ b.style.setProperty('--y',Math.min(0,dy)+'px'); },
       up:function(e,dx,dy){ b.classList.remove('seret'); b.style.setProperty('--y','0px');
         if(-dy<U()*14){ kedip(); return; }
-        b.classList.add('diambil'); SFX.pop(); $('#kfImg').src=f.src; $('#kfKet').textContent=f.caption||''; kf.classList.add('tampil'); ptj.style.visibility='hidden'; }
+        b.classList.add('diambil'); SFX.pop(); pasFoto($('#kfImg'),f); $('#kartuFoto .bingkai').classList.toggle('rebah',f.bentuk==='R'); $('#kfKet').textContent=f.caption||''; kf.classList.add('tampil'); ptj.style.visibility='hidden'; }
     });
   });
   kf.addEventListener('click',function(){ kf.classList.remove('tampil'); ptj.style.visibility=''; sisa--;
@@ -560,7 +567,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var sn=$('#separuhN'), bt=$('#batang'), beres=false;
   $('#labelKu').textContent='untukmu, '+PENERIMA; $('#labelDia').textContent='untuk '+PENGIRIM;
-  MASUK[4]=function(){ petunjuk('Cokelat terakhir untuk dibagi berdua. <b>Patahkan di tengah</b> — tarik separuh kanannya.'); };
+  MASUK[4]=function(){ petunjuk('Cokelat terakhir untuk dibagi berdua. <b>Patahkan di tengah</b>, tarik separuh kanannya.'); };
   seret(sn,{
     boleh:function(){ return !beres; },
     down:function(){ sn.classList.add('seret'); },

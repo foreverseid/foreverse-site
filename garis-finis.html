@@ -97,6 +97,10 @@ img{-webkit-user-drag:none;pointer-events:none}
 #lanjut{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 16px);z-index:45;transform:translate(-50%,14px) skewX(-8deg);opacity:0;pointer-events:none;transition:.35s;
   border:0;padding:14px 30px;font:800 20px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--malam);background:var(--limau);box-shadow:6px 6px 0 var(--malam);cursor:pointer}
 #lanjut.tampil{opacity:1;transform:translate(-50%,0) skewX(-8deg);pointer-events:auto}
+/* lomba jalan terus: tombol jadi papan lampu start yang terisi sendiri */
+#lanjut.otomatis{overflow:hidden}
+#lanjut.otomatis::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:#fff;transform-origin:0 50%;animation:isiOto var(--oto) linear forwards}
+@keyframes isiOto{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 /* pergantian adegan: pita miring menyapu layar */
 .sapu{position:fixed;top:-20%;bottom:-20%;left:-120%;width:50%;z-index:60;background:repeating-linear-gradient(90deg,var(--limau) 0 40px,var(--malam) 40px 52px);transform:skewX(-18deg) translateX(-40%);pointer-events:none}
@@ -153,6 +157,9 @@ img{-webkit-user-drag:none;pointer-events:none}
 .finis-judul b{color:var(--jingga)}
 .bingkai{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;background:repeating-linear-gradient(90deg,#1b2744 0 2px,#111a30 2px 4px)}
 @media (min-aspect-ratio:1/1){ .finis{width:auto;height:calc(var(--u)*92)} .bingkai{height:calc(var(--u)*70);width:auto} }
+.bingkai.rebah{aspect-ratio:4/3}
+.finis:has(.bingkai.rebah){width:calc(var(--u)*90)}
+@media (min-aspect-ratio:1/1){ .finis:has(.bingkai.rebah){width:auto} .bingkai.rebah{height:calc(var(--u)*62)} }
 .bingkai img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 calc(100% - var(--s,0%)) 0 0)}
 .pindai{position:absolute;top:0;bottom:0;left:var(--s,0%);width:calc(var(--u)*10);margin-left:calc(var(--u)*-5);touch-action:none;cursor:ew-resize;z-index:3}
 .pindai::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:#ff3b30;box-shadow:0 0 12px #ff3b30}
@@ -426,8 +433,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -464,6 +475,7 @@ function orang(medali){
     '</svg>';
 }
 
+LANJUT_OTOMATIS=2600;
 var URUT=[0,1]; if(FOTO.length) URUT.push(2); URUT.push(3,4,5);
 var MASUK={}, kini=-1, sapu=$('#sapu');
 function ke(no){
@@ -539,7 +551,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
 (function(){
   if(!FOTO.length) return;
   var b=$('#bingkai'), pd=$('#pindai'), idx=0, s=0, kunci=false;
-  function muat(){ $('#finisImg').src=FOTO[idx].src; s=0; b.style.setProperty('--s','0%'); $('#finisNo').textContent=(idx+1)+'/'+FOTO.length; $('#finisKet').classList.remove('tampil'); kunci=false; }
+  function muat(){ pasFoto($('#finisImg'),FOTO[idx]); b.classList.toggle('rebah',FOTO[idx].bentuk==='R'); s=0; b.style.setProperty('--s','0%'); $('#finisNo').textContent=(idx+1)+'/'+FOTO.length; $('#finisKet').classList.remove('tampil'); kunci=false; }
   MASUK[2]=function(){ muat(); petunjuk('Kamera foto finis merekam garisnya. <b>Geser garis merah ke kanan</b> untuk memindai fotonya.'); };
   seret(pd,{
     boleh:function(){ return !kunci; },
@@ -560,7 +572,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   var dp=$('#diPodium'); dp.innerHTML=orang(false);
   var med=$('#medali'), leher=$('#leher'), beres=false;
   $('#ukiranTeks').textContent=CAPAI;
-  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b> — seret ke lehernya.'); };
+  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b>, seret ke lehernya.'); };
   bawa(med,{
     boleh:function(){ return !beres; },
     up:function(){

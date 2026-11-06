@@ -90,17 +90,17 @@ const TEMA_SKEMA = {
   "confess-kunang":    { nfoto: 3, momen: "confess" },
   "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
   "pasar-malam":       { nfoto: 3, momen: "askout" },
-  "lewat-duluan":      { nfoto: 3, momen: "lovenote" },
-  "kasus-pengirim":    { nfoto: 3, momen: "confess" },
-  "rekonstruksi":      { nfoto: 3, momen: "anniversary" },
-  "rumah-contoh":      { nfoto: 3, momen: "proposal" },
-  "kotak-musik":       { nfoto: 3, momen: "apology" },
-  "garis-finis":       { nfoto: 3, momen: "congrats" },
-  "stasiun-terakhir":  { nfoto: 3, momen: "parting" },
-  "rumah-menyala":     { nfoto: 3, momen: "spesial" },
-  "hitung-mundur":     { nfoto: 3, momen: "spesial" },
-  "pabrik-cokelat":    { nfoto: 3, momen: "spesial" },
-  "malam-takbiran":    { nfoto: 3, momen: "spesial" }
+  "lewat-duluan":      { nfoto: 4, foto: "TTRR", momen: "lovenote" },
+  "kasus-pengirim":    { nfoto: 4, foto: "TTRR", momen: "confess" },
+  "rekonstruksi":      { nfoto: 4, foto: "TRTR", momen: "anniversary" },
+  "rumah-contoh":      { nfoto: 4, foto: "TRTR", momen: "proposal" },
+  "kotak-musik":       { nfoto: 4, foto: "TTRR", momen: "apology" },
+  "garis-finis":       { nfoto: 4, foto: "TRRR", momen: "congrats" },
+  "stasiun-terakhir":  { nfoto: 4, foto: "RRTT", momen: "parting" },
+  "rumah-menyala":     { nfoto: 4, foto: "TTTR", momen: "spesial" },
+  "hitung-mundur":     { nfoto: 4, foto: "TRTR", momen: "spesial" },
+  "pabrik-cokelat":    { nfoto: 4, foto: "TTTR", momen: "spesial" },
+  "malam-takbiran":    { nfoto: 4, foto: "TTRR", momen: "spesial" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 

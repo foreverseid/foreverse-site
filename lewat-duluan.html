@@ -172,9 +172,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .baris-tbl{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 
 /* foto di laci - terbalik, dibalik satu per satu */
-.laci{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 10px;
+.laci{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:6px 0 10px;
   background:#C99A63;border:3px solid var(--ink);border-radius:8px;padding:12px}
 .fk{position:relative;aspect-ratio:3/4;perspective:600px;cursor:pointer}
+.fk.rebah{grid-column:span 2;aspect-ratio:4/3}
 .fk .muka{position:absolute;inset:0;border:2px solid var(--ink);border-radius:4px;backface-visibility:hidden;transition:transform .45s ease;overflow:hidden}
 .fk .belakang{background:repeating-linear-gradient(45deg,#FFF3DF 0 6px,#F4E3C4 6px 12px);display:grid;place-items:center;font-family:var(--piksel);font-size:.7rem;color:var(--redup)}
 .fk .depan{background:#fff;transform:rotateY(180deg);display:flex;flex-direction:column}
@@ -289,7 +290,10 @@ function tk(v){ return String(v == null ? '' : v).trim(); }
    untuk isian yang kosong (pratinjau sebelum diisi) ── */
 var PENERIMA = tk(D.penerima) || 'kamu';
 var PENGIRIM = tk(D.pengirim) || 'aku';
-var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,3);
+var FOTO = (D.foto || []).filter(function(f){ return f && f.src; }).slice(0,6);
+/* standar foto: T tegak 3:4, R mendatar 4:3; fx/fy titik fokus */
+function pas(img,f){ img.src=f.src; img.style.objectFit='cover'; img.style.objectPosition=(f.fx==null?50:f.fx)+'% '+(f.fy==null?50:f.fy)+'%'; return img; }
+
 var KEBIASAAN = tk(D.kebiasaan) || 'Tiap pagi aku masih nyiapin dua mug, padahal yang minum cuma aku.';
 var KANGEN = (D.kangen || []).map(tk).filter(Boolean);
 if(!KANGEN.length) KANGEN = ['Cara kamu ketawa duluan sebelum ceritanya selesai.', 'Kamu yang selalu tahu jalan pintas.', 'Diam-diam berdua tapi tidak canggung.'];
@@ -624,9 +628,9 @@ function bukaLaci(){
   var lanjut = tombol('Tutup lacinya', function(){ ST.laci = true; tutup(); cekTahap(); });
   if(sisa) lanjut.disabled = true;
   FOTO.forEach(function(f){
-    var k = el('div', 'fk');
+    var k = el('div', 'fk' + (f.bentuk === 'R' ? ' rebah' : ''));
     var bl = el('div', 'muka belakang', 'ketuk'), dp = el('div', 'muka depan');
-    var img = el('img'); img.alt = ''; img.src = f.src; dp.appendChild(img);
+    var img = el('img'); img.alt = ''; pas(img, f); dp.appendChild(img);
     if(f.caption) dp.appendChild(el('span', '', f.caption));
     k.appendChild(bl); k.appendChild(dp);
     k.addEventListener('click', function(){

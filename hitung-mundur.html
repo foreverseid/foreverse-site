@@ -161,6 +161,8 @@ img{-webkit-user-drag:none;pointer-events:none}
 .sumbu.terpakai{opacity:.3;pointer-events:none}
 .foto-ledak{position:absolute;width:calc(var(--u)*56);height:calc(var(--u)*56);margin:calc(var(--u)*-28) 0 0 calc(var(--u)*-28);border-radius:50%;overflow:hidden;box-shadow:0 0 0 calc(var(--u)*1.2) var(--emas),0 0 40px rgba(242,212,155,.7);transform:scale(0);opacity:0;transition:transform .6s cubic-bezier(.3,1.5,.5,1),opacity .4s;z-index:4}
 .foto-ledak.tampil{transform:scale(1);opacity:1}
+.foto-ledak:not(.rebah){width:calc(var(--u)*48);height:calc(var(--u)*64);margin:calc(var(--u)*-32) 0 0 calc(var(--u)*-24);border-radius:46%}
+.foto-ledak.rebah{width:calc(var(--u)*72);height:calc(var(--u)*54);margin:calc(var(--u)*-27) 0 0 calc(var(--u)*-36);border-radius:46%}
 .foto-ledak img{width:100%;height:100%;object-fit:cover}
 .ket-ledak{position:absolute;left:50%;transform:translateX(-50%);width:min(86vw,calc(var(--u)*80));text-align:center;font:600 calc(var(--u)*5.6)/1.15 var(--tangan);color:var(--emas2);opacity:0;transition:opacity .5s;z-index:4}
 .ket-ledak.tampil{opacity:1}
@@ -196,6 +198,10 @@ img{-webkit-user-drag:none;pointer-events:none}
 .t-utama{background:var(--malam2);color:#fff}.t-wa{background:#25D366;color:#073b1c}.ulang{background:transparent;color:var(--malam2);box-shadow:inset 0 0 0 1.5px var(--malam2)}
 .dibuat{font-size:12px;color:var(--muted);text-align:center;text-decoration:none}
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01s!important} }
+/* malam pergantian tahun berjalan sendiri: tombol jadi sumbu yang terbakar habis */
+#lanjut.otomatis{overflow:hidden}
+#lanjut.otomatis::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:currentColor;opacity:.7;transform-origin:0 50%;animation:isiOto var(--oto) linear forwards}
+@keyframes isiOto{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 
 .dibawa{position:fixed!important;z-index:80!important;margin:0!important;transition:none!important}
 .memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:#141A3A;transition:opacity .4s}
@@ -410,8 +416,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -456,6 +466,7 @@ var percik=(function(){
   };
 })();
 
+LANJUT_OTOMATIS=2400;
 var URUT=[0,1,2]; if(FOTO.length) URUT.push(3); URUT.push(4,5);
 var MASUK={}, kini=-1;
 function ke(no){
@@ -471,7 +482,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 (function(){
   var meja=$('#mejaKorek'), kr=$('#korek'), gs=$('#geseran'), met=$('#meteranIsi'), pos={x:0,y:0}, ox=0, oy=0, lalu=null, gesek=0, nyala=false;
   function kepala(){ var r=kr.getBoundingClientRect(); return { x:r.left+U()*3, y:r.top+r.height/2 }; }
-  MASUK[0]=function(){ pos.x=kr.offsetLeft; pos.y=kr.offsetTop; petunjuk('Malam terakhir tahun ini. <b>Gesek kepala koreknya</b> di sisi kotak — cepat, sekali tarik.'); };
+  MASUK[0]=function(){ pos.x=kr.offsetLeft; pos.y=kr.offsetTop; petunjuk('Malam terakhir tahun ini. <b>Gesek kepala koreknya</b> di sisi kotak, cepat, sekali tarik.'); };
   seret(kr,{
     boleh:function(){ return !nyala; },
     down:function(e){ ox=e.clientX-pos.x; oy=e.clientY-pos.y; lalu={x:e.clientX,t:performance.now()}; },
@@ -575,7 +586,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     SFX.siul(); var titik=el('div'); titik.style.cssText='position:fixed;z-index:61;width:6px;height:16px;border-radius:3px;background:#FFE9BD;box-shadow:0 0 10px #FFE9BD;left:'+a.x+'px;top:'+a.y+'px;transition:left .8s ease-out,top .8s cubic-bezier(.2,.6,.4,1)';
     document.body.appendChild(titik); requestAnimationFrame(function(){ requestAnimationFrame(function(){ titik.style.left=tx+'px'; titik.style.top=ty+'px'; }); });
     setTimeout(function(){ titik.remove(); SFX.dor(); buzz(20); percik.ledak(tx,ty,160,null,6.5);
-      $('#fotoLedakImg').src=FOTO[i].src; fl.style.left='50%'; fl.style.top='36%'; fl.classList.add('tampil');
+      pasFoto($('#fotoLedakImg'),FOTO[i]); fl.classList.toggle('rebah',FOTO[i].bentuk==='R'); fl.style.left='50%'; fl.style.top='36%'; fl.classList.add('tampil');
       ket.style.top='calc(36% + var(--u)*31)'; ket.textContent=FOTO[i].caption||''; ket.classList.add('tampil');
       petunjuk('<b>Ketuk di mana saja</b> untuk kembang api berikutnya.');
       setTimeout(function(){ lf.addEventListener('click',tutup,{once:true}); },300); },820);

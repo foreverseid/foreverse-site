@@ -174,7 +174,10 @@ body.hangat .cahaya-hangat{background:radial-gradient(60% 50% at 50% 60%,rgba(25
 .angkat.tampil{opacity:1;pointer-events:auto}
 .angkat .besar{width:min(78vw,calc(var(--u)*72));background:#fff;padding:3% 3% 14%;box-shadow:0 20px 50px rgba(0,0,0,.5);transform:rotate(-2deg);position:relative}
 @media (min-aspect-ratio:1/1){ .angkat .besar{width:min(46vh,calc(var(--u)*60))} }
-.angkat .besar img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.angkat .besar img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.angkat .besar.rebah{width:min(90vw,calc(var(--u)*90))}
+.angkat .besar.rebah img{aspect-ratio:4/3}
+@media (min-aspect-ratio:1/1){ .angkat .besar.rebah{width:min(76vh,calc(var(--u)*84))} }
 .angkat .besar p{position:absolute;left:4%;right:4%;bottom:2%;margin:0;font:600 clamp(18px,calc(var(--u)*5),30px)/1.1 var(--tangan);color:var(--ink);text-align:center}
 .angkat small{color:var(--salju);font-size:13px;opacity:.8}
 
@@ -474,8 +477,12 @@ var konfeti=(function(){
 var ptj=$('#petunjuk'), ptjT=null, tLanjut=$('#lanjut'), lanjutFn=null;
 function petunjuk(h){ ptj.classList.add('ganti'); clearTimeout(ptjT); ptjT=setTimeout(function(){ ptj.innerHTML=h; ptj.classList.remove('ganti'); },200); ptj.hidden=false; }
 function kedip(){ ptj.classList.remove('kedip'); void ptj.offsetWidth; ptj.classList.add('kedip'); }
-function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil'); }
-tLanjut.onclick=function(){ if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil'); SFX.klik(); f(); };
+/* LANJUT_OTOMATIS (ms): tema yang adegannya berjalan sendiri (kereta, lomba, hitung mundur)
+   tidak menunggu ketukan; tombolnya jadi penanda yang terisi lalu berpindah sendiri. */
+var LANJUT_OTOMATIS=0, tOto=null;
+function lanjut(fn,label){ lanjutFn=fn; tLanjut.textContent=label||'Lanjut'; ptj.hidden=true; tLanjut.classList.add('tampil');
+  if(LANJUT_OTOMATIS){ tLanjut.classList.remove('otomatis'); void tLanjut.offsetWidth; tLanjut.style.setProperty('--oto',LANJUT_OTOMATIS+'ms'); tLanjut.classList.add('otomatis'); clearTimeout(tOto); tOto=setTimeout(function(){ tLanjut.onclick(); },LANJUT_OTOMATIS); } }
+tLanjut.onclick=function(){ clearTimeout(tOto); if(!lanjutFn) return; var f=lanjutFn; lanjutFn=null; tLanjut.classList.remove('tampil','otomatis'); SFX.klik(); f(); };
 
 /* penutup: tombol balasan ke email pembeli (fvBalas), WhatsApp kedua */
 function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
@@ -501,7 +508,7 @@ SFX.lonceng=function(){ [1318,1760,2637].forEach(function(f,i){ tone(f,1.1-i*.2,
 SFX.ubin=function(){ tone(520,.05,{type:'triangle',vol:.08}); };
 SFX.kain=function(){ noise(.3,1600,.14); };
 
-/* salju — ringan, selalu turun; lebih lebat di penutup */
+/* salju, ringan, selalu turun; lebih lebat di penutup */
 var salju=(function(){
   var cv=$('#salju'), c=cv.getContext('2d'), P=[], W=0, H=0, lebat=40;
   function ukur(){ var d=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; cv.width=W*d; cv.height=H*d; c.setTransform(d,0,0,d,0,0); }
@@ -641,12 +648,12 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     });
   });
   function jatuhkan(i,k){
-    var pr=per.getBoundingClientRect(), kr=k.getBoundingClientRect(), p=el('div','polaroid'), im=el('img'); im.src=FOTO[i].src; p.appendChild(im);
+    var pr=per.getBoundingClientRect(), kr=k.getBoundingClientRect(), p=el('div','polaroid'), im=el('img'); pasFoto(im,FOTO[i]); p.appendChild(im);
     p.style.left=(kr.left-pr.left)+'px'; p.style.top=(kr.top-pr.top+kr.height*.5)+'px'; p.style.transform='rotate(0deg) scale(.4)'; per.appendChild(p);
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ var lebar=per.offsetWidth;
-      p.style.left=(lebar*(.06+i*.3)+rand(-8,8))+'px'; p.style.top=(per.offsetHeight-U()*30+rand(-6,6))+'px'; p.style.transform='rotate('+rand(-14,14).toFixed(0)+'deg) scale(1)'; }); });
+      p.style.left=(lebar*(.04+i*(.88/n))+rand(-6,6))+'px'; p.style.top=(per.offsetHeight-U()*30+rand(-6,6))+'px'; p.style.transform='rotate('+rand(-14,14).toFixed(0)+'deg) scale(1)'; }); });
     setTimeout(function(){ SFX.kertas(); },650);
-    p.addEventListener('click',function(){ $('#angkatImg').src=FOTO[i].src; $('#angkatKet').textContent=FOTO[i].caption||''; $('#angkat').classList.add('tampil'); ptj.style.visibility='hidden'; dilihat[i]=1; p.classList.add('dilihat'); });
+    p.addEventListener('click',function(){ pasFoto($('#angkatImg'),FOTO[i]); $('#angkat .besar').classList.toggle('rebah',FOTO[i].bentuk==='R'); $('#angkatKet').textContent=FOTO[i].caption||''; $('#angkat').classList.add('tampil'); ptj.style.visibility='hidden'; dilihat[i]=1; p.classList.add('dilihat'); });
     noMenu(p);
     petunjuk('Ada foto yang jatuh. <b>Ketuk fotonya</b>, lalu tarik kaus kaki yang lain.');
   }
