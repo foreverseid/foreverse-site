@@ -229,7 +229,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 <main class="wrap">
   <div class="kepala">
     <h1 id="judul">Tulis suratnya</h1>
-    <p id="subjudul">Tulis apa adanya — yang kamu ketik dipasang persis seperti itu. Isi dulu, lalu buka pratinjau penuhnya kapan saja untuk melihat hasilnya.</p>
+    <p id="subjudul">Tulis apa adanya. Yang kamu ketik dipasang persis seperti itu. Isi dulu, lalu buka pratinjau penuhnya kapan saja untuk melihat hasilnya.</p>
   </div>
 
   <div class="duo">
@@ -259,18 +259,18 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <h2><span class="n">2</span> Suratmu</h2>
         <p class="jelas">Tiga paragraf, muncul satu per satu setelah dua permainannya selesai. Enter untuk baris baru juga dipakai persis.</p>
         <div class="baris" data-f="surat1">
-          <label for="surat1">Paragraf 1 — pembuka</label>
+          <label for="surat1">Paragraf 1 (pembuka)</label>
           <textarea id="surat1" maxlength="220" placeholder="Selamat ulang tahun, …"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
           <p class="galat">Paragraf 1 belum diisi.</p>
         </div>
         <div class="baris" data-f="surat2">
-          <label for="surat2">Paragraf 2 — isi <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <label for="surat2">Paragraf 2 (isi) <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
           <textarea id="surat2" maxlength="220" placeholder="Tahun ini kamu banyak berjuang, dan aku lihat semuanya…"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
         <div class="baris" data-f="surat3">
-          <label for="surat3">Paragraf 3 — penutup <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <label for="surat3">Paragraf 3 (penutup) <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
           <textarea id="surat3" maxlength="220" placeholder="Di umur yang baru, semoga…"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
@@ -289,12 +289,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">6</span> Lagu <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
-        <p class="jelas">Kosongkan saja kalau tidak perlu — suratnya tetap bermusik, ada kotak musik lembut bawaan Foreverse yang bisa dimatikan kapan saja. Mau lagu kalian sendiri? Unggah berkasnya di sini.</p>
+        <p class="jelas">Kosongkan saja kalau tidak perlu. Suratnya tetap ada musiknya, yaitu kotak musik bawaan Foreverse, dan bisa dimatikan kapan saja. Mau lagu kalian sendiri? Unggah berkasnya di sini.</p>
         <div class="baris" data-f="lagu">
           <label for="laguBerkas">Berkas lagu</label>
           <input id="laguBerkas" type="file" accept="audio/mpeg,audio/mp4,audio/x-m4a,audio/aac,.mp3,.m4a">
           <p class="bantu" id="laguNama" hidden></p>
-          <p class="bantu">Format <b>MP3</b> atau <b>M4A</b>, maksimal <b>10 MB</b>. Pastikan lagunya boleh kamu pakai — kami tidak menyediakan lagu berlisensi.</p>
+          <p class="bantu">Format <b>MP3</b> atau <b>M4A</b>, maksimal <b>10 MB</b>. Pastikan lagunya boleh kamu pakai, karena kami tidak menyediakan lagu berlisensi.</p>
         </div>
         <div class="baris">
           <label for="laguMulai">Putar dari detik ke- <span style="font-weight:400;color:var(--ink-faint)">opsional</span></label>
@@ -310,17 +310,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok" id="blokKunci">
         <h2><span class="n">7</span> Kunci pembuka <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
-        <p class="jelas">Kunci kecil sebelum suratnya terbuka — dia harus menjawab dulu. Jawabannya dicek di server kami, jadi tidak bisa diintip lewat kode halaman.</p>
+        <p class="jelas">Dia harus menjawab dulu sebelum suratnya terbuka. Jawabannya dicek di server kami, jadi tidak bisa diintip lewat kode halaman.</p>
         <div class="pil-kunci" role="group" aria-label="Jenis kunci">
           <button type="button" data-kunci="" aria-pressed="true"><b>Tanpa kunci</b><span>langsung terbuka</span></button>
-          <button type="button" data-kunci="pin" aria-pressed="false"><b>PIN</b><span>4–6 angka</span></button>
+          <button type="button" data-kunci="pin" aria-pressed="false"><b>PIN</b><span>4 sampai 6 angka</span></button>
           <button type="button" data-kunci="tanya" aria-pressed="false"><b>Pertanyaan</b><span>rahasia kalian</span></button>
           <button type="button" data-kunci="tanggal" aria-pressed="false"><b>Tanggal</b><span>tanggal penting</span></button>
         </div>
         <div class="kunci-isi" data-isi-kunci="pin" hidden>
-          <div class="baris"><label for="kPin">PIN (4–6 angka)</label>
+          <div class="baris"><label for="kPin">PIN (4 sampai 6 angka)</label>
             <input id="kPin" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="mis. 2410">
-            <p class="galat">PIN harus 4–6 angka.</p></div>
+            <p class="galat">PIN harus 4 sampai 6 angka.</p></div>
         </div>
         <div class="kunci-isi" data-isi-kunci="tanya" hidden>
           <div class="baris"><label for="kTanya">Pertanyaannya</label>
@@ -333,7 +333,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <div class="kunci-isi" data-isi-kunci="tanggal" hidden>
           <div class="baris"><label for="kTanggal">Tanggal kuncinya</label>
             <input id="kTanggal" type="date">
-            <p class="bantu">Dia memilih tanggal ini di kalender untuk membuka suratnya — misalnya hari jadian atau kencan pertama.</p>
+            <p class="bantu">Dia memilih tanggal ini di kalender untuk membuka suratnya, misalnya hari jadian atau kencan pertama.</p>
             <p class="galat">Tanggalnya belum diisi.</p></div>
         </div>
         <div class="kunci-isi" data-isi-kunci="petunjuk" hidden>
@@ -341,7 +341,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
             <input id="kPetunjuk" type="text" maxlength="90" placeholder="mis. hari kita resmi"></div>
         </div>
         <label class="centang"><input type="checkbox" id="kWaktuNyala">
-          <span><b>Kunci waktu</b> — suratnya baru bisa dibuka mulai jam tertentu, misalnya tepat 00.00 di hari ulang tahunnya. Bisa digabung dengan kunci di atas.</span></label>
+          <span><b>Kunci waktu</b>: suratnya baru bisa dibuka mulai jam tertentu, misalnya tepat 00.00 di hari ulang tahunnya. Bisa digabung dengan kunci di atas.</span></label>
         <div class="baris" id="kWaktuBaris" hidden><label for="kWaktu">Bisa dibuka mulai (WIB)</label>
           <input id="kWaktu" type="datetime-local">
           <p class="bantu">Sebelum waktunya, dia hanya melihat hitung mundur. Tautannya boleh kamu kirim lebih dulu.</p>
@@ -389,7 +389,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         </div>
 
         <button class="tbl tbl-utama tbl-lebar" id="tblKirim" type="submit" style="margin-top:18px">Lanjut ke pembayaran</button>
-        <p class="catatan-kirim" id="catatanKirim">Pembayaran lewat QRIS — bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa pun. Jendelanya muncul di halaman ini juga.</p>
+        <p class="catatan-kirim" id="catatanKirim">Bayar pakai QRIS, bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa saja. Jendelanya muncul di halaman ini juga.</p>
       </section>
     </form>
 
@@ -397,7 +397,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     <aside class="sisi" id="sisi">
       <div class="sisi-in">
         <h2>Lihat hasilnya</h2>
-        <p class="jelas">Pratinjau di bawah ini otomatis memperbarui sesuai isianmu. Permainan dan animasinya tetap lebih nyaman dicoba di layar penuh.</p>
+        <p class="jelas">Pratinjau di bawah ini ikut berubah sesuai isianmu. Permainan dan animasinya tetap lebih nyaman dicoba di layar penuh.</p>
         <div class="pv-card">
           <div class="pv-frame-wrap">
             <iframe id="pvFrame" class="pv-frame" title="Pratinjau surat" loading="lazy" hidden></iframe>
@@ -406,7 +406,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           </div>
           <button class="tbl tbl-utama tbl-lebar" type="button" id="btnPratinjau">Buka layar penuh ↗</button>
         </div>
-        <p class="pv-kaki">Bagian yang belum kamu isi tidak ditampilkan di pratinjau — bukan diganti contoh.</p>
+        <p class="pv-kaki">Bagian yang belum kamu isi tidak muncul di pratinjau, dan tidak diganti teks contoh.</p>
       </div>
     </aside>
   </div>
@@ -639,7 +639,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var b = $("blokDasar"), html = "";
     if(momen === "getwell"){
       html = '<h2><span class="n">4</span> Mulai sakitnya kapan</h2>' +
-        '<p class="jelas">Dipakai untuk menghitung "hari ke-berapa" secara hidup di dalam suratnya.</p>' +
+        '<p class="jelas">Dipakai untuk menghitung "hari ke-berapa" di dalam suratnya, selalu sesuai hari dia membukanya.</p>' +
         '<div class="dua">' +
         '<div class="baris" data-f="sakit"><label for="sakit">Tanggal mulai sakit</label>' +
         '<input id="sakit" type="date">' +
@@ -647,7 +647,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
         '<div class="setuju" style="width:100%">' +
         '<input id="sembunyikanHari" type="checkbox">' +
-        '<label for="sembunyikanHari">Sembunyikan hitungan harinya — tampilkan suratnya saja.</label>' +
+        '<label for="sembunyikanHari">Sembunyikan hitungan harinya, tampilkan suratnya saja.</label>' +
         '</div></div></div>';
     } else if(momen === "apology" || momen === "congrats" || momen === "parting" || momen === "spesial"){
       html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
@@ -657,7 +657,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<p class="jelas">Lamaran ini tidak butuh tanggal atau angka apa pun. Lanjut ke foto dan janji di tiap ruangannya.</p>';
     } else if(momen === "lovenote"){
       html = '<h2><span class="n">4</span> Tidak perlu tanggal</h2>' +
-        '<p class="jelas">Love note bisa dikirim hari apa saja — tidak ada tanggal atau angka yang perlu diisi. Lanjut ke foto dan isinya.</p>';
+        '<p class="jelas">Love note bisa dikirim kapan saja, jadi tidak ada tanggal atau angka yang perlu diisi. Lanjut ke foto dan isinya.</p>';
     } else if(momen === "askout"){
       html = '<h2><span class="n">4</span> Malam yang kamu ajak</h2>' +
         '<p class="jelas">Tanggal dan jamnya jadi jam menara di puncak bianglala, dan jadi baris pertama di papan lampu tempat dia menjawab.</p>' +
@@ -674,10 +674,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(momen === "confess"){
       html = '<h2><span class="n">4</span> Tidak ada tanggal di sini</h2>' +
-        '<p class="jelas">Pengakuan cuma terjadi sekali — tidak ada angka berulang seperti umur atau tahun jadian. Lanjut ke foto dan suratnya saja.</p>';
+        '<p class="jelas">Pengakuan cuma terjadi sekali, jadi tidak ada angka seperti umur atau tahun jadian. Lanjut ke foto dan suratnya saja.</p>';
     } else if(momen === "ldr"){
       html = '<h2><span class="n">4</span> Kota kalian berdua</h2>' +
-        '<p class="jelas">Dipakai untuk menghitung jam kota kalian secara hidup dan jaraknya di tengah surat.</p>' +
+        '<p class="jelas">Dipakai untuk menampilkan jam asli di kota kalian masing-masing dan jaraknya di tengah surat.</p>' +
         '<div class="dua">' +
         '<div class="baris" data-f="kotaPengirim"><label for="kotaPengirim">Kotamu sekarang</label>' +
         '<select id="kotaPengirim"><option value="">Pilih kota</option>' + opsiKota() + '</select>' +
@@ -704,7 +704,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
         '<div class="setuju" style="width:100%">' +
         '<input id="sembunyikanTahun" type="checkbox">' +
-        '<label for="sembunyikanTahun">Sembunyikan jumlah tahunnya — tampilkan tanggalnya saja, bukan tahun ke berapa.</label>' +
+        '<label for="sembunyikanTahun">Sembunyikan jumlah tahunnya, tampilkan tanggalnya saja.</label>' +
         '</div></div></div>';
     } else if(momen === "anniversary"){
       html = '<h2><span class="n">4</span> Hari jadi dan tanggal</h2>' +
@@ -722,7 +722,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
         '<div class="setuju" style="width:100%">' +
         '<input id="sembunyikanTahun" type="checkbox">' +
-        '<label for="sembunyikanTahun">Sembunyikan jumlah tahunnya — tampilkan tanggalnya saja, bukan tahun ke berapa.</label>' +
+        '<label for="sembunyikanTahun">Sembunyikan jumlah tahunnya, tampilkan tanggalnya saja.</label>' +
         '</div></div></div>';
     } else {
       html = '<h2><span class="n">4</span> Ucapan dan tanggal</h2>' +
@@ -740,7 +740,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" style="display:flex;align-items:flex-end;padding-bottom:2px">' +
         '<div class="setuju" style="width:100%">' +
         '<input id="sembunyikanUmur" type="checkbox">' +
-        '<label for="sembunyikanUmur">Sembunyikan umurnya — tampilkan tahunnya saja, bukan angka umur.</label>' +
+        '<label for="sembunyikanUmur">Sembunyikan umurnya, tampilkan tahunnya saja.</label>' +
         '</div></div></div>';
     }
     b.innerHTML = html;
@@ -789,7 +789,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       }
     } else if(tema === "peta-perjalanan"){
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
-        '<p class="jelas">Tersembunyi di balik "kompas yang mengunci" — baru terbaca setelah jarumnya diputar pas ke utara.</p>' +
+        '<p class="jelas">Disembunyikan di "kompas yang mengunci", dan baru terbaca setelah jarumnya diputar pas ke utara.</p>' +
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Destinasi berikutnya, kamu yang pilih."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
@@ -821,13 +821,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "graduation-benih"){
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
-        '<p class="jelas">Tersembunyi di dalam "buah yang dipetik" — baru terbaca setelah buahnya ditarik lepas dari rantingnya.</p>' +
+        '<p class="jelas">Disembunyikan di "buah yang dipetik", dan baru terbaca setelah buahnya ditarik lepas dari rantingnya.</p>' +
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Bangga banget sama kamu. Lanjut terus, ya."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "getwell-365"){
       html = '<h2><span class="n">5</span> Tiga dosis</h2>' +
-        '<p class="jelas">Bukan obat sungguhan — tiap dosis muncul dari sekat kotak obat, lengkap dengan aturan pakainya.</p>';
+        '<p class="jelas">Ini bukan obat sungguhan. Tiap dosis muncul dari sekat kotak obat, lengkap dengan aturan pakainya.</p>';
       for(var g=0;g<3;g++){
         html += '<div class="baris" data-f="dosisA'+g+'"><label for="dosisA'+g+'">Aturan pakai dosis '+(g+1)+'</label>' +
           '<input id="dosisA'+g+'" type="text" maxlength="40" placeholder="3× sehari, setelah makan">' +
@@ -861,7 +861,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris"><label for="karB">Tampilan kamu</label><select id="karB"><option value="laki" selected>Laki-laki</option><option value="perempuan">Perempuan</option></select></div>' +
         '</div>' +
         '<h2 style="margin-top:28px"><span class="n">5</span> Empat kejadian di hari pertama</h2>' +
-        '<p class="jelas">Nama tempatnya jadi nama bangunan di sketsa, jamnya jadi teka-teki garis waktu. Urutannya bebas — dia yang menyusun ulang.</p>';
+        '<p class="jelas">Nama tempatnya jadi nama bangunan di sketsa, jamnya jadi teka-teki garis waktu. Urutannya bebas, nanti dia yang menyusun ulang.</p>';
       var contohKj = [["Toko buku","10:15","Kita rebutan buku terakhir di rak diskon."],["Kedai mi","12:40","Kamu bilang lapar. Aku pura-pura lapar juga."],["Halte","16:05","Hujan. Kita nunggu bis yang sama."],["Taman kota","19:30","Kamu minta nomorku."]];
       for(var kj=0;kj<4;kj++){
         html += '<div class="dua" style="margin-top:'+(kj?'18':'4')+'px">' +
@@ -889,15 +889,15 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<select id="karakter"><option value="perempuan" selected>Perempuan</option><option value="laki">Laki-laki</option></select></div>' +
         '<h2 style="margin-top:28px"><span class="n">5</span> Tiga bukti</h2>' +
         '<p class="jelas">Ini yang dia temukan selama menyelidiki. Inisial di pojok kertas diambil otomatis dari namamu.</p>' +
-        '<div class="baris" data-f="catatan"><label for="catatan">Bukti 1 — isi kertas tanpa nama di mejanya</label>' +
+        '<div class="baris" data-f="catatan"><label for="catatan">Bukti 1: isi kertas tanpa nama di mejanya</label>' +
         '<textarea id="catatan" maxlength="90" placeholder="Kamu selalu pilih kursi menghadap jendela. Aku selalu pilih kursi menghadap kamu."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div>' +
         '<p class="galat">Isi kertasnya belum diisi.</p></div>' +
-        '<div class="baris" data-f="pesanan"><label for="pesanan">Bukti 2 — pesanan langgananmu (diceritakan barista)</label>' +
+        '<div class="baris" data-f="pesanan"><label for="pesanan">Bukti 2: pesanan langgananmu (diceritakan barista)</label>' +
         '<input id="pesanan" type="text" maxlength="40" placeholder="es kopi susu, gulanya sedikit">' +
         '<div class="hitung"><span></span><span class="angka"></span></div>' +
         '<p class="galat">Pesananmu belum diisi.</p></div>' +
-        '<div class="baris" data-f="tahu"><label for="tahu">Bukti 3 — satu hal kecil yang cuma kamu tahu tentang dia</label>' +
+        '<div class="baris" data-f="tahu"><label for="tahu">Bukti 3: satu hal kecil yang cuma kamu tahu tentang dia</label>' +
         '<textarea id="tahu" maxlength="90" placeholder="Kamu selalu nyobek bungkus gula tapi nggak pernah dipakai."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div>' +
         '<p class="galat">Hal kecil ini belum diisi.</p></div>' +
@@ -908,13 +908,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "lewat-duluan"){
       html = '<h2><span class="n">5</span> Mug di rak dapur</h2>' +
-        '<p class="jelas">Perhentian pertama: mug kedua di rak sudah bersih. Tulis satu kebiasaan kecilmu yang selalu inget dia.</p>' +
+        '<p class="jelas">Perhentian pertama: mug kedua di rak sudah bersih. Tulis satu kebiasaan kecilmu yang selalu bikin kamu ingat dia.</p>' +
         '<div class="baris" data-f="kebiasaan"><label for="kebiasaan">Kebiasaan kecilnya</label>' +
         '<textarea id="kebiasaan" maxlength="90" placeholder="Tiap pagi aku masih nyiapin dua mug, padahal yang minum cuma aku."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div>' +
         '<p class="galat">Kebiasaan kecilnya belum diisi.</p></div>' +
         '<h2 style="margin-top:28px"><span class="n">5</span> Tiga hal yang kamu kangenin</h2>' +
-        '<p class="jelas">Ada di tas kecil yang nyisain kursi halte buat dia — muncul satu per satu sambil nunggu bis.</p>';
+        '<p class="jelas">Ada di tas kecil yang menyisakan kursi halte untuk dia, muncul satu per satu sambil menunggu bus.</p>';
       var contohKangen = ["Cara kamu ketawa duluan sebelum ceritanya selesai.", "Kamu yang selalu tahu jalan pintas.", "Diam-diam berdua tapi nggak canggung."];
       for(var kn=0;kn<3;kn++){
         html += '<div class="baris" data-f="kangen'+kn+'"><label for="kangen'+kn+'">Hal '+(kn+1)+'</label>' +
@@ -947,7 +947,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<p class="galat">Rencana '+(kg2+1)+' belum diisi.</p></div>';
       }
       html += '<h2 style="margin-top:28px"><span class="n">5</span> Tiga alasan kamu ngajak</h2>' +
-        '<p class="jelas">Digulung jadi tiga lapis gula kapas — muncul satu per satu sambil batangnya diputar.</p>';
+        '<p class="jelas">Digulung jadi tiga lapis gula kapas, muncul satu per satu sambil batangnya diputar.</p>';
       for(var al=0;al<3;al++){
         html += '<div class="baris" data-f="alasan'+al+'"><label for="alasan'+al+'">Alasan '+(al+1)+'</label>' +
           '<textarea id="alasan'+al+'" maxlength="90" placeholder="Soalnya ketemu kamu itu bagian paling nggak capek dari seminggu."></textarea>' +
@@ -955,12 +955,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<p class="galat">Alasan '+(al+1)+' belum diisi.</p></div>';
       }
       html += '<h2 style="margin-top:28px"><span class="n">5</span> Kalau dia belum bisa</h2>' +
-        '<p class="jelas">Di papan lampu ada pilihan ketiga, "kapan pun kamu siap". Ini kalimat yang muncul kalau dia memilih itu — boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
+        '<p class="jelas">Di papan lampu ada pilihan ketiga, "kapan pun kamu siap". Ini kalimat yang muncul kalau dia memilih itu. Boleh dikosongkan, nanti dipakai kalimat bawaan.</p>' +
         '<div class="baris" data-f="catatanTunda"><label for="catatanTunda">Kalimatnya (opsional)</label>' +
         '<textarea id="catatanTunda" maxlength="90" style="min-height:70px" placeholder="Nggak apa-apa. Aku nunggu sampai kamu siap."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else if(tema === "rumah-contoh"){
-      var ruangRc = ["Teras — diikat di kunci di bawah keset", "Ruang tamu — catatan di meja", "Dapur — tulisan di bawah cangkir teh", "Halaman belakang — diukir di sandaran bangku"];
+      var ruangRc = ["Teras: diikat di kunci di bawah keset", "Ruang tamu: catatan di meja", "Dapur: tulisan di bawah cangkir teh", "Halaman belakang: diukir di sandaran bangku"];
       var contohRc = ["Aku yang selalu inget naruh kunci di tempat yang sama.", "Dinding ini buat foto-foto kita, termasuk yang kamu bilang jelek.", "Teh pertama tiap pagi aku yang bikinin.", "Tiap sore yang capek, kita duduk di sini aja."];
       html = '<h2><span class="n">5</span> Satu janji per ruangan</h2>' +
         '<p class="jelas">Dia keliling rumah contoh. Di tiap ruangan ada satu janji kecil darimu. Foto-fotomu dipajang di dinding ruang tamu, suratnya di atas bantal kamar.</p>' +
@@ -1062,7 +1062,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     } else { // bait
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
-        '<p class="jelas">Ditulis di selembar kertas tipis yang kelihatan kosong — baru terbaca saat dia menerawangnya ke lampu. Boleh dikosongkan.</p>' +
+        '<p class="jelas">Ditulis di kertas tipis yang kelihatan kosong, dan baru terbaca waktu dia menerawangnya ke lampu. Boleh dikosongkan.</p>' +
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Kado aslinya aku kasih pas kita ketemu nanti."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
@@ -1139,7 +1139,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     buatFoto(NFOTO);
     renderBlokDasar(MOMEN_GRUP);
     renderBlokKhusus(TEMA);
-    $("labelSurat").textContent = "Surat digital — " + TEMA_INFO[TEMA].nama;
+    $("labelSurat").textContent = "Surat digital · " + TEMA_INFO[TEMA].nama;
   }
   if(!MODE_EDIT){
     siapkanTema(TEMA);
@@ -1582,8 +1582,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   function gambarCatatan(){
     var m = METODE_PILIH;
     if(m) $("catatanKirim").textContent = m.kode === "QRIS"
-      ? "Pembayaran lewat QRIS — bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa pun."
-      : "Pembayaran lewat " + m.nama + " — nanti diarahkan ke " + m.ket + "." + (METODE.length > 1 ? " Kalau gagal, pilih metode lain di atas." : "");
+      ? "Bayar pakai QRIS, bisa dari GoPay, OVO, DANA, ShopeePay, atau m-banking apa saja."
+      : "Bayar pakai " + m.nama + ", nanti diarahkan ke " + m.ket + "." + (METODE.length > 1 ? " Kalau gagal, pilih metode lain di atas." : "");
   }
   function rpTeks(n){ return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
   function gambarHarga(){
@@ -1598,7 +1598,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     $("pilihMetode").hidden = gratis || METODE.length < 2;
     $("rpBiaya").parentNode.hidden = gratis;
     if(!MODE_EDIT) $("tblKirim").textContent = gratis ? "Buat suratku" : "Lanjut ke pembayaran";
-    if(gratis) $("catatanKirim").textContent = "Surat ini gratis — tidak ada pembayaran. Tautannya langsung jadi.";
+    if(gratis) $("catatanKirim").textContent = "Surat ini gratis, jadi tidak perlu bayar. Tautannya langsung jadi.";
     else if(METODE_PILIH) gambarCatatan();
     $("cipHarga").textContent = rpTeks(HARGA_KINI - PROMO.potongan);
   }
@@ -1626,7 +1626,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         if(!j.ok && refKreator && k.toUpperCase() === refKreator){ PROMO = { kode:"", potongan:0 }; $("promo").value = ""; kabar.textContent = ""; }
         else if(!j.ok){ PROMO = { kode:"", potongan:0 }; kabar.className = "promo-kabar salah"; kabar.textContent = j.pesan || "Kode promo tidak berlaku."; }
         else { PROMO = { kode: j.kode, potongan: j.potongan }; HARGA_KINI = j.harga + j.potongan;
-               kabar.className = "promo-kabar ok"; kabar.textContent = j.potongan ? "Kode " + j.kode + " dipakai — hemat " + rpTeks(j.potongan) + "." : "Kode " + j.kode + " tercatat."; }
+               kabar.className = "promo-kabar ok"; kabar.textContent = j.potongan ? "Kode " + j.kode + " dipakai, hemat " + rpTeks(j.potongan) + "." : "Kode " + j.kode + " tercatat."; }
         gambarHarga();
       }).catch(function(){ $("tblPromo").disabled = false; });
   }
@@ -1681,7 +1681,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tirai(true, "Menyimpan perubahan…");
         var h = await kirimJson("/api/simpan", Object.assign({ token: TOKEN }, badan()));
         tirai(false);
-        pesanOke("Tersimpan. Suratnya sudah berubah — buka ulang tautannya untuk melihat hasilnya.");
+        pesanOke("Tersimpan. Suratnya sudah berubah, buka lagi tautannya untuk melihat hasilnya.");
         tbl.disabled = false;
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
@@ -1698,7 +1698,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       var bayar = await kirimJson("/api/bayar", { kode: draf.kode, metode: METODE_PILIH ? METODE_PILIH.kode : "" });
 
       if(bayar.sudah){ location.href = "/selesai?kode=" + draf.kode; return; }
-      if(!bayar.url) throw new Error("Halaman pembayaran tidak bisa dibuka. Pesananmu tersimpan — coba tekan tombolnya lagi.");
+      if(!bayar.url) throw new Error("Halaman pembayaran tidak bisa dibuka. Pesananmu tetap tersimpan, coba tekan tombolnya lagi.");
 
       /* Kode pesanan disimpan supaya pembeli yang menutup tab di
          halaman DOKU masih bisa melanjutkan nanti tanpa mengisi ulang. */
@@ -1852,7 +1852,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         LAGU_ADA = lagu.src || null;
         $("laguMulai").value = lagu.mulai || "";
         $("laguSelesai").value = lagu.selesai || "";
-        namaLagu(LAGU_ADA ? "Lagu tersimpan: " + (lagu.judul || "berkas kamu") + " — pilih berkas baru kalau mau mengganti."
+        namaLagu(LAGU_ADA ? "Lagu tersimpan: " + (lagu.judul || "berkas kamu") + ". Pilih berkas baru kalau mau mengganti."
                           : "");
         (i.foto||[]).forEach(function(f, n){
           if(n >= NFOTO || !f || !f.src) return;

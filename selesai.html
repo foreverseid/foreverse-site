@@ -152,14 +152,14 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
         </div>
         <canvas id="qrKanvas" width="1080" height="1080" aria-label="Kode QR menuju suratmu"></canvas>
         <div class="aksi"><button class="tbl" id="qrSimpan" type="button">Simpan gambar</button></div>
-        <p class="qr-cetak">Mau dikasih langsung? Gambarnya bisa kamu <b>cetak</b> sendiri — di kertas foto, kartu ucapan, atau stiker — lalu selipkan di kado. Cetak minimal 3×3 cm supaya mudah dipindai, dan pindai dulu sekali sebelum diberikan.</p>
+        <p class="qr-cetak">Mau dikasih langsung? Gambarnya bisa kamu <b>cetak</b> sendiri di kertas foto, kartu ucapan, atau stiker, lalu selipkan di kado. Cetak minimal 3×3 cm supaya mudah dipindai, dan pindai dulu sekali sebelum diberikan.</p>
         <p class="tip" style="margin-top:10px">Kirim gambarnya bersama tautan, atau cetak dan selipkan di kado. Dia tinggal memindainya dengan kamera HP.</p>
       </div>
     </div>
 
     <div class="kartu" id="kartuEdit">
       <h2>Kalau mau diubah</h2>
-      <p class="tip">Ada salah ketik atau mau ganti foto? Pakai tautan ini — khusus untukmu, berlaku 3 hari, boleh dipakai berkali-kali. Tautan suratnya tidak berubah.</p>
+      <p class="tip">Ada salah ketik atau mau ganti foto? Pakai tautan ini. Tautannya khusus untukmu, berlaku 3 hari, dan boleh dipakai berkali-kali. Tautan suratnya tidak berubah.</p>
       <p class="tip">Suratnya bisa dibuka selama 2 bulan, dan bisa diperpanjang kapan saja lewat tautan edit atau email pengingat (14 hari sebelum masanya habis).</p>
       <div class="tautan" style="margin-top:12px">
         <span id="editTeks"></span>
@@ -168,7 +168,7 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
       <div class="aksi">
         <a class="tbl tbl-garis" id="tblEdit">Ubah sekarang</a>
       </div>
-      <p class="tip" style="margin-top:14px"><strong>Jangan kirim tautan edit ini ke dia</strong> — nanti kejutannya ketahuan.</p>
+      <p class="tip" style="margin-top:14px"><strong>Jangan kirim tautan edit ini ke dia</strong>, nanti kejutannya ketahuan.</p>
     </div>
 
     <div class="kartu" id="kartuIngat" hidden>
@@ -180,7 +180,7 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
     <div class="kartu">
       <h2>Simpan juga</h2>
       <p class="tip">Kedua tautan tadi sudah kami kirim ke <strong id="emailTeks">emailmu</strong>. Cek folder spam kalau tidak ketemu.</p>
-      <p class="tip">Kode pesananmu <span class="kode" id="kodeTeks"></span> — sebutkan ini kalau menghubungi kami.</p>
+      <p class="tip">Kode pesananmu <span class="kode" id="kodeTeks"></span>. Sebutkan kode ini kalau menghubungi kami.</p>
     </div>
 
     <p class="kecil" style="text-align:center;margin-top:22px">Terima kasih sudah memercayakan momen ini ke Foreverse.</p>
@@ -440,7 +440,7 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
         if(!h.ok || !h.j.ok) throw new Error(h.j.pesan || "Pesanan tidak ditemukan.");
         if(h.j.status === "lunas"){ selesai(h.j); return; }
         if(h.j.status === "gagal"){
-          gagal("Pembayarannya tidak jadi atau kedaluwarsa. Isian kamu masih tersimpan — tinggal lanjutkan.", true);
+          gagal("Pembayarannya tidak jadi atau kedaluwarsa. Isianmu masih tersimpan, tinggal dilanjutkan.", true);
           return;
         }
         coba++;

@@ -94,8 +94,8 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
     $("memuat").hidden = true; $("isi").hidden = false;
     var dasar = Math.max(d.simpan_sampai || 0, Date.now());
     $("judul").textContent = "Perpanjang surat untuk " + (d.penerima || "dia");
-    $("ket").textContent = "Supaya suratnya masih bisa dibuka lebih lama — misalnya untuk dibuka lagi di hari spesial berikutnya.";
-    $("sampai").textContent = d.simpan_sampai ? tgl(d.simpan_sampai) : "—";
+    $("ket").textContent = "Supaya suratnya masih bisa dibuka lebih lama, misalnya supaya bisa dibuka lagi di hari spesial berikutnya.";
+    $("sampai").textContent = d.simpan_sampai ? tgl(d.simpan_sampai) : "-";
     $("baru").textContent = tgl(tambahBulan(dasar, d.bulan));
     $("lblPerpanjang").textContent = "Perpanjang " + d.bulan + " bulan";
     METODE = d.metode || []; if(!PILIH || !METODE.some(function(m){ return m.kode === PILIH.kode; })) PILIH = METODE[0] || null;
@@ -142,7 +142,7 @@ p{margin:0;color:var(--ink-soft);font-size:.95rem}
             : "Pembayarannya belum terkonfirmasi. Kalau uangmu sudah terpotong, hubungi kami di halo@foreverse.id.";
           return;
         }
-        if(++coba > 40){ $("oke").textContent = "Konfirmasinya agak lama. Kalau uangmu sudah terpotong, masa simpannya tetap kami tambahkan — atau hubungi halo@foreverse.id."; return; }
+        if(++coba > 40){ $("oke").textContent = "Konfirmasinya agak lama. Kalau uangmu sudah terpotong, masa simpannya tetap kami tambahkan. Kalau ragu, hubungi halo@foreverse.id."; return; }
         setTimeout(cek, coba < 8 ? 2500 : 5000);
       }).catch(function(e){ $("oke").textContent = e.message; });
     })();
