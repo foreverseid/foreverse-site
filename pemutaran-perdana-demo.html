@@ -68,9 +68,9 @@
     }
   ],
   "surat": [
-    "Amira, kalau hidupku film, kamu masuk di adegan yang paling tidak kusangka. Aku cuma mau beli kopi, ternyata dapat lawan main.",
-    "Dua tahun ini tidak selalu manis. Ada adegan yang ingin kuulang, ada juga yang ingin kupotong. Tapi kamu tetap di sana di tiap babaknya.",
-    "Terima kasih sudah mau main di film yang naskahnya kita tulis sambil jalan. Aku mau lanjut ke sekuelnya, sama kamu."
+    "Amira, masih ingat malam pertama kita nonton bareng? Filmnya aku sudah lupa, tapi muka kamu waktu ketawa di kursi sebelah masih aku ingat sampai sekarang.",
+    "Dua tahun ini tidak selalu mulus. Kita pernah ribut soal hal kecil, pernah juga saling diam berhari-hari. Tapi ujung-ujungnya kamu tetap duduk di sebelahku.",
+    "Terima kasih sudah bertahan sejauh ini. Semoga masih banyak film yang kita tonton berdua, dan masih banyak cerita yang kita jalani bareng."
   ],
   "jenisHariJadi": "pacaran",
   "tanggalMulai": "2024-11-09",
@@ -576,7 +576,7 @@ $('#mqJudul').textContent='STUDIO 1 · '+JUDUL.toUpperCase();
     kr.animate([{transform:'translateY(0)'},{transform:'translateY(-'+tinggi+'px)'}],{duration:dur*1000,easing:'linear',fill:'forwards'}).onfinish=akhir; };
   function akhir(){ $('#s4').classList.add('selesai'); $('#akhir').classList.add('tampil');
     $('#akhirJudul').textContent='Mau balas ke '+PENGIRIM+'?';
-    var t=$('#balasTeks'); t.value='Filmnya bagus. Aku mau nonton sekuelnya bareng kamu 🎬';
+    var t=$('#balasTeks'); t.value='Aku juga masih ingat malam itu. Nonton lagi yuk minggu ini 🎬';
     if(!$('#balasAksi').children.length&&!pasangBalasan($('#balasAksi'),t,'t-utama','t-wa')){ t.style.display='none'; $('#akhirJudul').textContent='Selamat hari jadi, '+PENERIMA+'.'; }
     konfeti(innerWidth/2,innerHeight*.25,80,['#E2B857','#F3D58A','#F6E7C8','#8E1F33']); }
   $('#ulang').onclick=function(){ location.reload(); };

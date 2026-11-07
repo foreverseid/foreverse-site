@@ -535,7 +535,7 @@ $('#mqJudul').textContent='STUDIO 1 · '+JUDUL.toUpperCase();
     kr.animate([{transform:'translateY(0)'},{transform:'translateY(-'+tinggi+'px)'}],{duration:dur*1000,easing:'linear',fill:'forwards'}).onfinish=akhir; };
   function akhir(){ $('#s4').classList.add('selesai'); $('#akhir').classList.add('tampil');
     $('#akhirJudul').textContent='Mau balas ke '+PENGIRIM+'?';
-    var t=$('#balasTeks'); t.value='Filmnya bagus. Aku mau nonton sekuelnya bareng kamu 🎬';
+    var t=$('#balasTeks'); t.value='Aku juga masih ingat malam itu. Nonton lagi yuk minggu ini 🎬';
     if(!$('#balasAksi').children.length&&!pasangBalasan($('#balasAksi'),t,'t-utama','t-wa')){ t.style.display='none'; $('#akhirJudul').textContent='Selamat hari jadi, '+PENERIMA+'.'; }
     konfeti(innerWidth/2,innerHeight*.25,80,['#E2B857','#F3D58A','#F6E7C8','#8E1F33']); }
   $('#ulang').onclick=function(){ location.reload(); };
