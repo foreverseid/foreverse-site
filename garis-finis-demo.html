@@ -236,7 +236,7 @@ img{-webkit-user-drag:none;pointer-events:none}
 .blok.b1{left:calc(var(--u)*29);height:calc(var(--u)*30);background:linear-gradient(180deg,#fff,#d9e3f5)}
 .blok.b2{left:calc(var(--u)*2);height:calc(var(--u)*20);background:linear-gradient(180deg,#e9eef7,#c3cfe6)}
 .blok.b3{left:calc(var(--u)*56);height:calc(var(--u)*14);background:linear-gradient(180deg,#e9eef7,#c3cfe6)}
-.di-podium{position:absolute;left:calc(var(--u)*27);bottom:calc(var(--u)*30);width:calc(var(--u)*30);height:calc(var(--u)*42)}
+.di-podium{position:absolute;left:calc(var(--u)*27);bottom:calc(var(--u)*27.6);width:calc(var(--u)*30);height:calc(var(--u)*42)}
 .di-podium .tangan-a,.di-podium .tangan-b{animation:none;transform:rotate(150deg)}.di-podium .tangan-b{transform:rotate(-150deg)}
 .leher{position:absolute;left:calc(var(--u)*36);bottom:calc(var(--u)*55);width:calc(var(--u)*12);height:calc(var(--u)*12);border-radius:50%;border:2px dashed rgba(255,255,255,.9);animation:denyut 1.2s infinite}
 .medali{position:absolute;right:calc(var(--u)*-2);top:calc(var(--u)*4);width:calc(var(--u)*18);height:calc(var(--u)*30);touch-action:none;cursor:grab;z-index:5}
@@ -271,6 +271,15 @@ img{-webkit-user-drag:none;pointer-events:none}
 .juara{font:800 calc(var(--u)*9)/1 var(--cond);color:#fff;text-transform:uppercase;text-align:center;text-shadow:4px 4px 0 var(--malam);letter-spacing:.02em}
 .juara small{display:block;font-size:.45em;color:var(--limau);letter-spacing:.2em;text-shadow:none}
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01s!important} }
+/* podium: berdiri tegak, kaki menapak */
+.di-podium .kaki-a,.di-podium .kaki-b{animation:none;transform:none}
+.di-podium .badan{animation:none}
+@media (orientation:landscape) and (max-height:560px){
+  #lanjut{left:auto;right:20px;transform:translate(0,14px) skewX(-8deg)}
+  #lanjut.tampil{transform:translate(0,0) skewX(-8deg)}
+  .akhir .juara{margin-top:calc(var(--u)*9)}
+}
+.juara small{text-shadow:0 1px 3px rgba(22,22,26,.55)}
 
 .dibawa{position:fixed!important;z-index:80!important;margin:0!important;transition:none!important}
 .memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:#1B2340;transition:opacity .4s}
