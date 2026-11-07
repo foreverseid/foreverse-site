@@ -52,7 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
-  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, maafLebaran: 70, sadar: 90, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
+  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, maafLebaran: 70, sadar: 90, judulFilm: 40, lokasiFilm: 30, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -100,7 +100,8 @@ const TEMA_SKEMA = {
   "rumah-menyala":     { nfoto: 4, foto: "TTTR", momen: "spesial" },
   "hitung-mundur":     { nfoto: 4, foto: "TRTR", momen: "spesial" },
   "pabrik-cokelat":    { nfoto: 4, foto: "TTTR", momen: "spesial" },
-  "malam-takbiran":    { nfoto: 4, foto: "TTRR", momen: "spesial" }
+  "malam-takbiran":    { nfoto: 4, foto: "TTRR", momen: "spesial" },
+  "pemutaran-perdana": { nfoto: 5, foto: "TRTRT", momen: "anniversary" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -830,6 +831,14 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.ucapan = ["idulfitri", "maaf", "minal"].includes(p.ucapan) ? p.ucapan : "idulfitri";
     isi.maaf = [0, 1, 2].map(i => teks((p.maaf || [])[i], BATAS.maafLebaran));
     if (isi.maaf.some(x => !x)) throw new Error("Ketiga maaf kecil belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "pemutaran-perdana") {
+    /* "Pemutaran Perdana" (Anniversary): `judulFilm` tercetak di tiket,
+       papan lampu, dan kredit; `lokasi` = tiga lokasi syuting di kredit. */
+    isi.judulFilm = teks(p.judulFilm, BATAS.judulFilm);
+    if (!isi.judulFilm) throw new Error("Judul filmnya belum diisi.");
+    isi.lokasi = [0, 1, 2].map(i => teks((p.lokasi || [])[i], BATAS.lokasiFilm));
+    if (isi.lokasi.some(x => !x)) throw new Error("Ketiga lokasi syuting belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "hitung-mundur") {
     /* "Hitung Mundur di Atap" (Hari Spesial · Tahun Baru): `janji` = tiga
