@@ -11,7 +11,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#13213F">
+<meta name="theme-color" content="#1B2340">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,14 +60,14 @@
     }
   ],
   "surat": [
-    "Amira, aku nonton kamu dari jauh selama ini. Kadang kamu ngerasa lambat, tapi kamu tidak pernah berhenti.",
-    "Hari ini semua capek itu kebayar. Aku tahu berapa banyak yang kamu korbankan buat sampai di sini.",
-    "Selamat, ya. Rayain yang besar, istirahat yang cukup, lalu kita lari lagi bareng."
+    "Amira, aku tahu beberapa bulan ini berat banget buat kamu. Begadang, revisi, bimbingan yang diundur terus. Tapi kamu tetap jalan.",
+    "Hari ini semua capeknya kebayar. Aku ikut lega, sumpah.",
+    "Selamat ya, Sayang. Sekarang istirahat dulu yang cukup, abis itu kita rayain berdua."
   ],
   "pencapaian": "Lulus sidang skripsi",
   "sorakan": [
-    "Revisi segitu banyak, kamu tetap jalan!",
-    "Belajar sambil kerja, tetap nyampe!",
+    "Revisi segitu banyak, tetap kamu kerjain!",
+    "Kuliah sambil kerja, tetap sampai juga!",
     "Aku bangga banget sama kamu!"
   ],
   "waPengirim": "081234567890",
@@ -86,10 +86,10 @@
   var mentah = sessionStorage.getItem("fv-pratinjau"); if(mentah) document.getElementById("foreverse-data").textContent = mentah; } }catch(e){} })();
 </script>
 <style>
-/* Palet: lintasan biru, garis putih, hijau limau, biru malam stadion,
-   jingga papan skor. Hari perlombaan — tidak dipakai tema lain. */
+/* Palet: lintasan bata, garis putih, langit cerah, kuning cerah,
+   koral & toska untuk pelari, navy stadion. */
 :root{
-  --lintas:#2D5DA8; --lintas2:#234C8C; --malam:#13213F; --limau:#C6E35B; --jingga:#FF9B3D; --putih:#F7FAFF; --ink:#101A30; --muted:#5D6B85;
+  --lintas:#C9573E; --lintas2:#A8442F; --malam:#1B2340; --limau:#FFC93C; --jingga:#FF7A59; --toska:#2BB3A3; --putih:#FFFBF4; --ink:#1B2340; --muted:#66708A;
   --cond:'Barlow Condensed','Arial Narrow',sans-serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif; --serif:'Fraunces',Georgia,serif;
   --u:min(1vw,.5vh);
 }
@@ -100,16 +100,17 @@ body{position:fixed;inset:0;touch-action:none;-webkit-user-select:none;user-sele
 img{-webkit-user-drag:none;pointer-events:none}
 
 /* stadion: langit sore, tribun penuh titik penonton, lintasan */
-.stadion{position:fixed;inset:0;background:linear-gradient(180deg,#6FA3E0 0%,#A9C9EE 30%,#F3D9B5 46%,transparent 46.2%)}
+.stadion{position:fixed;inset:0;background:radial-gradient(40% 22% at 80% 12%,#FFF3C4 0,transparent 70%),linear-gradient(180deg,#7EC4E8 0%,#B9E2F5 32%,#E9F6FB 46%,transparent 46.2%)}
 .tribun{position:absolute;left:0;right:0;top:34%;height:22%;background:
-  radial-gradient(circle,rgba(255,255,255,.55) 0 1.4px,transparent 1.8px) 0 0/9px 8px,
-  radial-gradient(circle,rgba(255,155,61,.6) 0 1.4px,transparent 1.8px) 4px 4px/13px 10px,
-  linear-gradient(180deg,#3a4d78,#24355c);background-position-x:var(--px,0px),var(--px,0px),0}
+  radial-gradient(circle,rgba(255,201,60,.8) 0 1.8px,transparent 2.2px) 0 0/11px 9px,
+  radial-gradient(circle,rgba(255,122,89,.75) 0 1.8px,transparent 2.2px) 5px 4px/14px 11px,
+  radial-gradient(circle,rgba(43,179,163,.75) 0 1.8px,transparent 2.2px) 2px 7px/17px 12px,
+  linear-gradient(180deg,#34406A,#232C4E);background-position-x:var(--px,0px),var(--px,0px),var(--px,0px),0}
 .tribun::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;background:#16233f}
 .lintasan{position:absolute;left:0;right:0;top:56%;bottom:0;background:
   repeating-linear-gradient(180deg,transparent 0 calc(var(--u)*9),rgba(255,255,255,.75) calc(var(--u)*9) calc(var(--u)*9.6)),
   repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 2px,transparent 2px 14px),var(--lintas);background-position-x:0,var(--px,0px),0}
-.rumput{position:absolute;left:0;right:0;bottom:0;height:6%;background:linear-gradient(180deg,#6aa84f,#4d8a39)}
+.rumput{position:absolute;left:0;right:0;bottom:0;height:6%;background:linear-gradient(180deg,#6CC070,#4E9E55)}
 
 /* papan skor di atas (kepala) */
 .skor{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 8px);transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:12px;
@@ -161,14 +162,41 @@ img{-webkit-user-drag:none;pointer-events:none}
 
 /* ═ 2 · lari ═ */
 .lari{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:calc(var(--u)*4)}
-.pelari{position:absolute;left:22%;bottom:calc(30% + var(--u)*2);width:calc(var(--u)*26);height:calc(var(--u)*40);transition:left .3s}
-.pelari svg{width:100%;height:100%;overflow:visible}
-.kaki-a,.kaki-b,.tangan-a,.tangan-b{transform-box:fill-box;transform-origin:50% 0;animation:ayun var(--lang,.6s) ease-in-out infinite alternate;animation-play-state:var(--main,paused)}
+.pelari{position:fixed;left:22%;bottom:34vh;width:calc(var(--u)*30);height:calc(var(--u)*42);transition:left .3s}
+.pelari svg,.avatar svg{width:100%;height:100%;overflow:visible}
+.kaki-a,.kaki-b{transform-box:view-box;transform-origin:40px 74px;animation:ayun var(--lang,.6s) ease-in-out infinite alternate;animation-play-state:var(--main,paused)}
+.tangan-a,.tangan-b{transform-box:view-box;transform-origin:40px 52px;animation:ayunT var(--lang,.6s) ease-in-out infinite alternate;animation-play-state:var(--main,paused)}
 .kaki-b,.tangan-a{animation-direction:alternate-reverse}
-@keyframes ayun{from{transform:rotate(-32deg)}to{transform:rotate(32deg)}}
+.pelari .badan{transform-box:view-box;transform-origin:40px 108px;animation:lompat calc(var(--lang,.6s)/1) ease-in-out infinite alternate;animation-play-state:var(--main,paused)}
+.pelari .kuncir{transform-box:view-box;transform-origin:56px 22px;animation:kuncir calc(var(--lang,.6s)/1) ease-in-out infinite alternate;animation-play-state:var(--main,paused)}
+@keyframes ayun{from{transform:rotate(-38deg)}to{transform:rotate(38deg)}}
+@keyframes ayunT{from{transform:rotate(-50deg)}to{transform:rotate(50deg)}}
+@keyframes lompat{from{transform:translateY(0) rotate(6deg)}to{transform:translateY(-4px) rotate(8deg)}}
+@keyframes kuncir{from{transform:rotate(-14deg)}to{transform:rotate(18deg)}}
+.mulut.kaget,.keringat{display:none}
+.pelari.cepat .keringat{display:block;animation:tetes .5s infinite}
+@keyframes tetes{from{transform:translate(0,0);opacity:1}to{transform:translate(4px,6px);opacity:0}}
+.pelari.jatuh .mulut.senang{display:none}.pelari.jatuh .mulut.kaget{display:block}
 .pelari.jatuh{animation:jatuh .45s}
 @keyframes jatuh{40%{transform:rotate(14deg) translateY(6px)}}
-.pita-finis{position:absolute;right:12%;bottom:calc(30% - var(--u)*2);width:calc(var(--u)*2);height:calc(var(--u)*30);opacity:0;transition:opacity .3s}
+.debu-wadah{position:absolute;inset:0;pointer-events:none}
+.debu{position:absolute;width:calc(var(--u)*5);height:calc(var(--u)*3);margin-left:calc(var(--u)*-2.5);border-radius:50%;background:rgba(255,236,214,.85);animation:debu .7s ease-out forwards}
+@keyframes debu{from{transform:scale(.4);opacity:.9}to{transform:translate(calc(var(--u)*-6),calc(var(--u)*-2)) scale(1.6);opacity:0}}
+
+/* pilih pelari */
+.pilih{display:none;flex-direction:column;align-items:center;gap:calc(var(--u)*4)}
+.memilih .pilih{display:flex}
+.memilih .dada,.memilih .peniti-wadah{display:none}
+.pilih h2{margin:0;font:800 calc(var(--u)*8)/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 var(--malam)}
+.pilih-baris{display:flex;gap:calc(var(--u)*5)}
+.calon{width:calc(var(--u)*38);padding:calc(var(--u)*3) calc(var(--u)*2) calc(var(--u)*3);border:0;border-radius:calc(var(--u)*4);background:var(--putih);box-shadow:0 calc(var(--u)*1.6) 0 #d8c7b2,0 10px 24px rgba(0,0,0,.25);display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*2);cursor:pointer;transition:transform .2s}
+.calon .avatar{display:block;width:calc(var(--u)*26);height:calc(var(--u)*36)}
+.calon b{font:800 calc(var(--u)*4.6) var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--malam)}
+.calon:active,.calon.dipilih{transform:translateY(calc(var(--u)*1)) scale(.97);outline:4px solid var(--limau);outline-offset:3px}
+.calon .avatar .badan{animation:goyang 1.2s ease-in-out infinite alternate;transform-box:view-box;transform-origin:40px 108px}
+@keyframes goyang{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+@media (min-aspect-ratio:1/1){ .calon{width:calc(var(--u)*30)} .calon .avatar{width:calc(var(--u)*22);height:calc(var(--u)*30)} }
+.pita-finis{position:fixed;right:12%;bottom:32vh;width:calc(var(--u)*2);height:calc(var(--u)*30);opacity:0;transition:opacity .3s}
 .pita-finis::before,.pita-finis::after{content:"";position:absolute;left:0;width:calc(var(--u)*1.4);height:100%;background:repeating-linear-gradient(180deg,#fff 0 8px,#111 8px 16px)}
 .pita-finis i{position:absolute;left:0;top:30%;width:calc(var(--u)*40);height:calc(var(--u)*1.6);margin-left:calc(var(--u)*-40);background:var(--jingga);transform-origin:100% 50%;transition:transform .4s}
 .pita-finis.putus i{transform:rotate(70deg)}
@@ -178,10 +206,10 @@ img{-webkit-user-drag:none;pointer-events:none}
 .meter .bar{flex:1;height:12px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden}
 .meter .bar i{display:block;height:100%;width:0;background:var(--limau)}
 .tombol-kaki{display:flex;gap:calc(var(--u)*6)}
-.tombol-kaki button{width:calc(var(--u)*34);height:calc(var(--u)*24);border:0;border-radius:calc(var(--u)*4);background:var(--putih);box-shadow:0 calc(var(--u)*1.6) 0 #9fb2d6;font:800 calc(var(--u)*5) var(--cond);letter-spacing:.1em;color:var(--malam);cursor:pointer;touch-action:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tombol-kaki button{width:calc(var(--u)*34);height:calc(var(--u)*24);border:0;border-radius:calc(var(--u)*4);background:var(--putih);box-shadow:0 calc(var(--u)*1.6) 0 #d8c7b2;font:800 calc(var(--u)*5) var(--cond);letter-spacing:.1em;color:var(--malam);cursor:pointer;touch-action:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
 .tombol-kaki button span{font-size:calc(var(--u)*7)}
-.tombol-kaki button.tekan{transform:translateY(calc(var(--u)*1.4));box-shadow:0 calc(var(--u)*.2) 0 #9fb2d6;background:var(--limau)}
-.tombol-kaki button.harap{outline:3px solid var(--limau);outline-offset:3px}
+.tombol-kaki button.tekan{transform:translateY(calc(var(--u)*1.4));box-shadow:0 calc(var(--u)*.2) 0 #d8c7b2;background:var(--limau)}
+.tombol-kaki button.harap{outline:3px solid var(--malam);outline-offset:3px}
 @media (min-aspect-ratio:1/1){ .tombol-kaki button{width:calc(var(--u)*24);height:calc(var(--u)*16)} }
 
 /* ═ 3 · foto finis ═ */
@@ -208,7 +236,8 @@ img{-webkit-user-drag:none;pointer-events:none}
 .blok.b1{left:calc(var(--u)*29);height:calc(var(--u)*30);background:linear-gradient(180deg,#fff,#d9e3f5)}
 .blok.b2{left:calc(var(--u)*2);height:calc(var(--u)*20);background:linear-gradient(180deg,#e9eef7,#c3cfe6)}
 .blok.b3{left:calc(var(--u)*56);height:calc(var(--u)*14);background:linear-gradient(180deg,#e9eef7,#c3cfe6)}
-.di-podium{position:absolute;left:calc(var(--u)*29);bottom:calc(var(--u)*30);width:calc(var(--u)*26);height:calc(var(--u)*40)}
+.di-podium{position:absolute;left:calc(var(--u)*27);bottom:calc(var(--u)*30);width:calc(var(--u)*30);height:calc(var(--u)*42)}
+.di-podium .tangan-a,.di-podium .tangan-b{animation:none;transform:rotate(150deg)}.di-podium .tangan-b{transform:rotate(-150deg)}
 .leher{position:absolute;left:calc(var(--u)*36);bottom:calc(var(--u)*55);width:calc(var(--u)*12);height:calc(var(--u)*12);border-radius:50%;border:2px dashed rgba(255,255,255,.9);animation:denyut 1.2s infinite}
 .medali{position:absolute;right:calc(var(--u)*-2);top:calc(var(--u)*4);width:calc(var(--u)*18);height:calc(var(--u)*30);touch-action:none;cursor:grab;z-index:5}
 .medali svg{width:100%;height:100%;overflow:visible}
@@ -244,9 +273,9 @@ img{-webkit-user-drag:none;pointer-events:none}
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01s!important} }
 
 .dibawa{position:fixed!important;z-index:80!important;margin:0!important;transition:none!important}
-.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:#13213F;transition:opacity .4s}
+.memuat{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:#1B2340;transition:opacity .4s}
 .memuat.pergi{opacity:0;pointer-events:none}
-.memuat p{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#F7FAFF;font-size:15px;text-align:center;padding:24px;max-width:22rem;line-height:1.6}
+.memuat p{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#FFFBF4;font-size:15px;text-align:center;padding:24px;max-width:22rem;line-height:1.6}
 </style>
 </head>
 <body>
@@ -259,7 +288,14 @@ img{-webkit-user-drag:none;pointer-events:none}
 <div class="sapu" id="sapu"></div>
 
 <!-- 1 · nomor dada -->
-<section class="sc tegak" id="s0" data-lbl="PERSIAPAN">
+<section class="sc tegak memilih" id="s0" data-lbl="PERSIAPAN">
+  <div class="pilih" id="pilih">
+    <h2>Pilih pelarimu</h2>
+    <div class="pilih-baris">
+      <button type="button" class="calon" data-g="p"><span class="avatar" id="avP"></span><b>Perempuan</b></button>
+      <button type="button" class="calon" data-g="l"><span class="avatar" id="avL"></span><b>Laki-laki</b></button>
+    </div>
+  </div>
   <div class="dada kartu-putih" id="dada">
     <div class="pita">LARI TERAKHIR</div>
     <div class="nomor">01</div>
@@ -273,7 +309,7 @@ img{-webkit-user-drag:none;pointer-events:none}
 <section class="sc" id="s1" data-lbl="100 METER">
   <div class="lari">
     <div class="spanduk" id="spanduk"></div>
-    <div class="pelari" id="pelari"></div>
+    <div class="pelari" id="pelari"></div><div class="debu-wadah" id="debuWadah"></div>
     <div class="pita-finis" id="pitaFinis"><i></i></div>
     <div class="meter"><span id="jarak">0 m</span><div class="bar"><i id="barJarak"></i></div><span id="waktu">00.0 s</span></div>
     <div class="tombol-kaki"><button type="button" id="kiri"><span>👟</span>KIRI</button><button type="button" id="kanan"><span>👟</span>KANAN</button></div>
@@ -296,7 +332,7 @@ img{-webkit-user-drag:none;pointer-events:none}
     <div class="blok b2">2</div><div class="blok b1">1</div><div class="blok b3">3</div>
     <div class="di-podium" id="diPodium"></div>
     <div class="leher" id="leher"></div>
-    <div class="medali" id="medali"><svg viewBox="0 0 60 100" aria-hidden="true"><path d="M14 0 L30 46 L46 0" fill="none" stroke="#2D5DA8" stroke-width="9"/><path d="M14 0 L30 46" fill="none" stroke="#C6E35B" stroke-width="3"/><circle cx="30" cy="68" r="22" fill="#e5b84a" stroke="#a9791f" stroke-width="3"/><circle cx="30" cy="68" r="15" fill="none" stroke="#fff3c4" stroke-width="2"/><text x="30" y="75" text-anchor="middle" font-size="20" font-weight="800" fill="#5a3c06" font-family="sans-serif">1</text></svg></div>
+    <div class="medali" id="medali"><svg viewBox="0 0 60 100" aria-hidden="true"><path d="M14 0 L30 46 L46 0" fill="none" stroke="#2D5DA8" stroke-width="9"/><path d="M14 0 L30 46" fill="none" stroke="#FFC93C" stroke-width="3"/><circle cx="30" cy="68" r="22" fill="#e5b84a" stroke="#a9791f" stroke-width="3"/><circle cx="30" cy="68" r="15" fill="none" stroke="#fff3c4" stroke-width="2"/><text x="30" y="75" text-anchor="middle" font-size="20" font-weight="800" fill="#5a3c06" font-family="sans-serif">1</text></svg></div>
   </div>
   <div class="ukiran kartu-putih" id="ukiran"><div class="koin">1</div><h2 id="ukiranTeks"></h2><p>atas nama <b data-f="penerima"></b></p></div>
 </section>
@@ -496,16 +532,34 @@ SFX.sorak=function(){ noise(1.1,1600,.12); noise(.8,3200,.06); };
 SFX.langkah=function(){ tone(160,.05,{type:'square',vol:.07}); };
 SFX.peluit=function(){ tone(2600,.32,{type:'sine',vol:.12,slide:2400}); };
 
-function orang(medali){
-  return '<svg viewBox="0 0 60 100" aria-hidden="true">'+
-    '<g class="tangan-b"><path d="M30 26 L30 48" stroke="#7a4b2e" stroke-width="6" stroke-linecap="round"/></g>'+
-    '<g class="kaki-b"><path d="M30 54 L30 94" stroke="#13213F" stroke-width="8" stroke-linecap="round"/></g>'+
-    '<rect x="21" y="20" width="18" height="36" rx="6" fill="#C6E35B"/><rect x="24" y="30" width="12" height="10" rx="1.5" fill="#fff"/><text x="30" y="38" text-anchor="middle" font-size="7" font-weight="800" fill="#13213F" font-family="sans-serif">01</text>'+
-    '<g class="kaki-a"><path d="M30 54 L30 94" stroke="#1d2f57" stroke-width="8" stroke-linecap="round"/></g>'+
-    '<g class="tangan-a"><path d="M30 26 L30 48" stroke="#8a5735" stroke-width="6" stroke-linecap="round"/></g>'+
-    '<circle cx="30" cy="11" r="9" fill="#8a5735"/><path d="M21 9 Q30 -1 39 9" fill="#13213F"/>'+
-    (medali?'<path d="M24 20 L30 32 L36 20" fill="none" stroke="#2D5DA8" stroke-width="2.6"/><circle cx="30" cy="36" r="5" fill="#e5b84a" stroke="#a9791f" stroke-width="1.2"/>':'')+
-    '</svg>';
+/* pelari chibi: dua pilihan, warna serasi dengan lintasan */
+var GENDER='p';
+var GAYA={
+  p:{baju:'#FF7A59',garis:'#FFC93C',celana:'#1B2340',kulit:'#F2C29B',kulit2:'#E3A77C',rambut:'#3A2418',sepatu:'#2BB3A3'},
+  l:{baju:'#2BB3A3',garis:'#FFC93C',celana:'#1B2340',kulit:'#E7B48A',kulit2:'#D39A6E',rambut:'#2A1D16',sepatu:'#FF7A59'}
+};
+function orang(medali,g){
+  g=g||GENDER; var c=GAYA[g];
+  function kaki(cls,warna){ return '<g class="'+cls+'"><path d="M40 74 L40 100" stroke="'+warna+'" stroke-width="9" stroke-linecap="round"/><path d="M40 92 L40 101" stroke="'+c.kulit2+'" stroke-width="7" stroke-linecap="round"/><path d="M34 104 Q34 99 40 99 L47 100 Q51 101 51 104 Q51 107 47 107 L37 107 Q34 107 34 104Z" fill="'+c.sepatu+'"/><path d="M35 105 L50 105" stroke="#fff" stroke-width="1.6"/></g>'; }
+  function tangan(cls){ return '<g class="'+cls+'"><path d="M40 52 L40 66" stroke="'+c.kulit+'" stroke-width="7" stroke-linecap="round"/><circle cx="40" cy="68" r="4.2" fill="'+c.kulit+'"/></g>'; }
+  var rambut = g==='p'
+    ? '<g class="kuncir"><path d="M55 20 Q70 18 70 32 Q66 28 60 30 Q63 24 55 24Z" fill="'+c.rambut+'"/><circle cx="56" cy="21" r="3" fill="'+c.garis+'"/></g>'+
+      '<path d="M21 28 Q20 9 40 8 Q60 9 59 28 Q56 18 46 17 Q36 22 24 24Z" fill="'+c.rambut+'"/><path d="M22 22 Q40 13 58 22" stroke="'+c.baju+'" stroke-width="3.4" fill="none" stroke-linecap="round"/>'
+    : '<path d="M21 27 Q19 8 40 7 Q61 8 59 27 Q57 19 52 18 L50 13 L46 17 L42 11 L38 17 L33 12 L31 18 Q25 19 21 27Z" fill="'+c.rambut+'"/><path d="M22 23 Q40 16 58 23" stroke="'+c.garis+'" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+  return '<svg viewBox="0 0 80 112" aria-hidden="true"><g class="badan">'+
+    kaki('kaki-b',c.celana)+tangan('tangan-b')+
+    '<rect x="28" y="44" width="24" height="28" rx="9" fill="'+c.baju+'"/><path d="M28 56 L52 56" stroke="'+c.garis+'" stroke-width="3"/>'+
+    '<rect x="33" y="58" width="14" height="10" rx="2" fill="#fff"/><text x="40" y="66" text-anchor="middle" font-size="7.5" font-weight="800" fill="#1B2340" font-family="sans-serif">01</text>'+
+    '<rect x="28" y="68" width="24" height="9" rx="3" fill="'+c.celana+'"/>'+
+    kaki('kaki-a',c.celana)+
+    '<g class="kepala-p"><circle cx="40" cy="28" r="19" fill="'+c.kulit+'"/>'+rambut+
+    '<g class="mata"><ellipse cx="33" cy="30" rx="2.6" ry="3.4" fill="#1B2340"/><ellipse cx="47" cy="30" rx="2.6" ry="3.4" fill="#1B2340"/><circle cx="34" cy="28.8" r="1" fill="#fff"/><circle cx="48" cy="28.8" r="1" fill="#fff"/></g>'+
+    '<circle cx="28" cy="36" r="3" fill="#FF8E8E" opacity=".55"/><circle cx="52" cy="36" r="3" fill="#FF8E8E" opacity=".55"/>'+
+    '<path class="mulut senang" d="M35 37 Q40 43 45 37 Q40 39.5 35 37Z" fill="#9B2C2C"/><ellipse class="mulut kaget" cx="40" cy="39" rx="2.4" ry="3" fill="#9B2C2C"/>'+
+    '<path class="keringat" d="M60 18 Q62 23 60 25 Q58 23 60 18Z" fill="#9FDcF5"/></g>'+
+    tangan('tangan-a')+
+    (medali?'<path d="M33 44 L40 56 L47 44" fill="none" stroke="#2D5DA8" stroke-width="2.8"/><circle cx="40" cy="60" r="5.5" fill="#e5b84a" stroke="#a9791f" stroke-width="1.2"/>':'')+
+    '</g></svg>';
 }
 
 LANJUT_OTOMATIS=2600;
@@ -535,11 +589,18 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
       var d=$('#dada'), r=d.getBoundingClientRect(), c=pusat(cocok);
       p.style.left=(c.x-r.left-p.offsetWidth/2)+'px'; p.style.top=(c.y-r.top-p.offsetHeight/2)+'px'; d.appendChild(p);
       SFX.klik(); buzz(15); terpasang++;
-      if(terpasang===2){ petunjuk('Nomor dadamu terpasang. Ke garis start.'); setTimeout(function(){ lanjut(berikut,'Ke garis start'); },800); }
-      else petunjuk('Satu lagi di <b>sudut satunya</b>.');
+      if(terpasang===2){ petunjuk('Nomor dada sudah terpasang. Yuk ke garis start.'); setTimeout(function(){ lanjut(berikut,'Ke garis start'); },800); }
+      else petunjuk('Satu lagi di <b>sudut yang satunya</b>.');
       return true; } }); })(p);
   }
-  MASUK[0]=function(){ petunjuk('Kamu peserta nomor 01 hari ini. <b>Pasang dua peniti</b> di sudut atas nomor dadamu.'); };
+  $('#avP').innerHTML=orang(false,'p'); $('#avL').innerHTML=orang(false,'l');
+  Array.prototype.forEach.call(document.querySelectorAll('.calon'),function(b){ noMenu(b); b.addEventListener('click',function(){
+    if(!$('#s0').classList.contains('memilih')) return; ac(); SFX.klik(); buzz(15);
+    GENDER=b.dataset.g; document.body.dataset.g=GENDER; b.classList.add('dipilih');
+    $('#pelari').innerHTML=orang(false); $('#diPodium').innerHTML=orang(false);
+    setTimeout(function(){ $('#s0').classList.remove('memilih'); petunjuk('Kamu peserta nomor 01 hari ini. <b>Pasang dua peniti</b> di sudut atas nomor dadamu.'); },450);
+  }); });
+  MASUK[0]=function(){ petunjuk('Sebelum lomba, <b>pilih pelarimu</b> dulu.'); };
 })();
 
 /* ═ 2 · lari 100 m ═ */
@@ -547,14 +608,16 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   var pel=$('#pelari'); pel.innerHTML=orang(false);
   var jarak=0, v=0, akhir=null, mulai=0, lalu=0, jalan=false, selesai=false, spIdx=0, spT=null;
   var batasSorak=SORAK.map(function(s,i){ return Math.round((i+1)*100/(SORAK.length+1)); });
-  var tk=$('#kiri'), tn=$('#kanan');
+  var tk=$('#kiri'), tn=$('#kanan'), dw=$('#debuWadah');
+  function debu(){ var d=el('i','debu'); var r=pel.getBoundingClientRect(), w=dw.getBoundingClientRect();
+    d.style.left=(r.left-w.left+r.width*(.25+Math.random()*.2))+'px'; d.style.top=(r.bottom-w.top-6)+'px'; dw.appendChild(d); setTimeout(function(){ d.remove(); },700); }
   function tampilSorak(t){ var s=$('#spanduk'); s.textContent=t; s.classList.add('tampil'); SFX.sorak(); clearTimeout(spT); spT=setTimeout(function(){ s.classList.remove('tampil'); },2600); }
   function langkah(sisi,btn){
     if(selesai) return; ac();
     btn.classList.add('tekan'); setTimeout(function(){ btn.classList.remove('tekan'); },90);
     if(!jalan){ jalan=true; mulai=performance.now(); lalu=mulai; requestAnimationFrame(loop); petunjuk('Gantian <b>kiri</b>, <b>kanan</b>, <b>kiri</b>… jangan sama dua kali.'); }
     if(akhir===sisi){ v*=.45; pel.classList.remove('jatuh'); void pel.offsetWidth; pel.classList.add('jatuh'); SFX.salah(); buzz(40); petunjuk('Kesandung! Kaki yang sama dua kali. <b>Gantian</b>, ya.'); }
-    else { v=Math.min(v+1.5,12); SFX.langkah(); }
+    else { v=Math.min(v+1.5,12); SFX.langkah(); debu(); }
     akhir=sisi; tk.classList.toggle('harap',sisi==='kanan'); tn.classList.toggle('harap',sisi==='kiri');
   }
   [[tk,'kiri'],[tn,'kanan']].forEach(function(p){ noMenu(p[0]); p[0].addEventListener('pointerdown',function(e){ e.preventDefault(); langkah(p[1],p[0]); }); });
@@ -562,7 +625,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
     var dt=Math.min(.05,(t-lalu)/1000); lalu=t;
     if(!selesai){ v=Math.max(0,v-2.4*dt); jarak=Math.min(100,jarak+v*dt); }
     geserStadion(v*dt*46);
-    pel.style.setProperty('--lang',Math.max(.14,.8-v*.055)+'s'); pel.style.setProperty('--main',v>.3?'running':'paused');
+    pel.style.setProperty('--lang',Math.max(.14,.8-v*.055)+'s'); pel.style.setProperty('--main',v>.3?'running':'paused'); pel.classList.toggle('cepat',v>7);
     $('#jarak').textContent=Math.floor(jarak)+' m'; $('#barJarak').style.width=jarak+'%';
     if(!selesai) $('#waktu').textContent=((t-mulai)/1000).toFixed(1)+' s';
     if(spIdx<batasSorak.length && jarak>=batasSorak[spIdx]){ tampilSorak(SORAK[spIdx]); spIdx++; }
@@ -573,7 +636,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   }
   function finis(){
     $('#pitaFinis').classList.add('putus'); pel.style.left='64%'; SFX.menang(); SFX.sorak(); buzz([30,40,30]);
-    var c=pusat($('#pitaFinis')); konfeti(c.x,c.y,120,['#C6E35B','#FF9B3D','#F7FAFF','#2D5DA8']);
+    var c=pusat($('#pitaFinis')); konfeti(c.x,c.y,120,['#FFC93C','#FF7A59','#FFFBF4','#2BB3A3']);
     petunjuk('FINIS! Waktumu <b>'+$('#waktu').textContent+'</b>.');
     setTimeout(function(){ lanjut(berikut,FOTO.length?'Lihat foto finisnya':'Ke podium'); },1600);
   }
@@ -585,7 +648,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   if(!FOTO.length) return;
   var b=$('#bingkai'), pd=$('#pindai'), idx=0, s=0, kunci=false;
   function muat(){ pasFoto($('#finisImg'),FOTO[idx]); b.classList.toggle('rebah',FOTO[idx].bentuk==='R'); s=0; b.style.setProperty('--s','0%'); $('#finisNo').textContent=(idx+1)+'/'+FOTO.length; $('#finisKet').classList.remove('tampil'); kunci=false; }
-  MASUK[2]=function(){ muat(); petunjuk('Kamera foto finis merekam garisnya. <b>Geser garis merah ke kanan</b> untuk memindai fotonya.'); };
+  MASUK[2]=function(){ muat(); petunjuk('Ini hasil kamera di garis finis. <b>Geser garis merah ke kanan</b> buat lihat fotonya.'); };
   seret(pd,{
     boleh:function(){ return !kunci; },
     move:function(e){ if(kunci) return; var r=b.getBoundingClientRect(); var n=klem((e.clientX-r.left)/r.width*100,0,100); if(n>s){ s=n; b.style.setProperty('--s',s+'%'); if(Math.random()<.3) tone(1800+s*8,.02,{type:'square',vol:.02}); }
@@ -595,7 +658,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   function selesai(){
     kunci=true; s=100; b.style.setProperty('--s','100%'); SFX.klik(); buzz(15);
     var k=$('#finisKet'); k.innerHTML=''; k.appendChild(el('small',null,'FRAME '+(idx+1)+' · '+(2.4+idx*3.1).toFixed(1)+' s')); k.appendChild(document.createTextNode(FOTO[idx].caption||' ')); k.classList.add('tampil');
-    if(idx<FOTO.length-1){ setTimeout(function(){ idx++; muat(); petunjuk('Frame berikutnya. <b>Geser lagi</b> garis merahnya.'); },2200); }
+    if(idx<FOTO.length-1){ setTimeout(function(){ idx++; muat(); petunjuk('Masih ada foto lagi. <b>Geser lagi</b> garis merahnya.'); },2200); }
     else setTimeout(function(){ lanjut(berikut,'Ke podium'); },1600);
   }
 })();
@@ -605,14 +668,14 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   var dp=$('#diPodium'); dp.innerHTML=orang(false);
   var med=$('#medali'), leher=$('#leher'), beres=false;
   $('#ukiranTeks').textContent=CAPAI;
-  MASUK[3]=function(){ petunjuk('Juara satu. <b>Kalungkan medalinya</b>, seret ke lehernya.'); };
+  MASUK[3]=function(){ petunjuk('Kamu juara satu! <b>Seret medalinya ke leher</b> buat dikalungkan.'); };
   bawa(med,{
     boleh:function(){ return !beres; },
     up:function(){
       if(!dekat(med,leher,U()*14)){ kedip(); return false; }
       beres=true; med.remove(); leher.remove(); dp.innerHTML=orang(true);
-      SFX.menang(); SFX.sorak(); buzz([30,40,30]); var c=pusat(dp); konfeti(c.x,c.y-40,140,['#e5b84a','#C6E35B','#F7FAFF','#FF9B3D']);
-      setTimeout(function(){ $('#ukiran').classList.add('tampil'); petunjuk('Ukiran di medalinya.'); },700);
+      SFX.menang(); SFX.sorak(); buzz([30,40,30]); var c=pusat(dp); konfeti(c.x,c.y-40,140,['#e5b84a','#FFC93C','#FFFBF4','#FF7A59']);
+      setTimeout(function(){ $('#ukiran').classList.add('tampil'); petunjuk('Ini tulisan di medalimu.'); },700);
       setTimeout(function(){ lanjut(berikut,'Lihat papan skor'); },2600);
       return true;
     }
@@ -626,7 +689,7 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
   function tampil(n){ i=n; $('#papanNo').textContent=(n+1)+'/'+daftar.length; var t=daftar[n], k=0; penuh=false; isi.textContent='';
     clearInterval(ketik); ketik=setInterval(function(){ k+=2; isi.textContent=t.slice(0,k); if(k>=t.length){ clearInterval(ketik); penuh=true; if(n===daftar.length-1) habis(); } },28); }
   function habis(){ var t=$('#papanTtd'); t.textContent=''+PENGIRIM; t.classList.add('tampil'); $('#papanBawah').textContent=' '; setTimeout(function(){ lanjut(berikut,'Penutup'); },1800); }
-  MASUK[4]=function(){ tampil(0); petunjuk('Papan skor stadion sedang menampilkan pesan untukmu. <b>Ketuk papannya</b> untuk pesan berikutnya.'); };
+  MASUK[4]=function(){ tampil(0); petunjuk('Ada pesan buat kamu di papan skor. <b>Ketuk papannya</b> buat lanjut baca.'); };
   pap.addEventListener('click',function(){ if(!penuh || i>=daftar.length-1) return; SFX.klik(); tampil(i+1); });
   noMenu(pap);
 })();
@@ -634,9 +697,9 @@ var px=0; function geserStadion(d){ px-=d; $('#stadion').style.setProperty('--px
 /* ═ 6 · penutup ═ */
 (function(){
   MASUK[5]=function(){
-    ptj.hidden=true; konfeti(innerWidth/2,innerHeight*.3,80,['#C6E35B','#FF9B3D','#F7FAFF']);
+    ptj.hidden=true; konfeti(innerWidth/2,innerHeight*.3,80,['#FFC93C','#FF7A59','#FFFBF4']);
     $('#balasJudul').textContent='Mau balas ke '+PENGIRIM+'?';
-    var t=$('#balasTeks'); t.value='Makasih udah jadi penonton paling berisik buat aku 🏅';
+    var t=$('#balasTeks'); t.value='Makasih ya, kamu yang paling heboh nyemangatin aku 🏅';
     if(!$('#balasAksi').children.length && !pasangBalasan($('#balasAksi'),t,'t-utama','t-wa')){ t.style.display='none'; $('#balasJudul').textContent='Selamat sekali lagi, '+PENERIMA+'.'; }
   };
   $('#ulang').onclick=function(){ location.reload(); };
