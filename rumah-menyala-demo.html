@@ -61,14 +61,14 @@
     }
   ],
   "surat": [
-    "Amira, Natal kali ini aku pengin kamu ngerasa rumah itu hangat, walau kita belum bisa kumpul bareng.",
-    "Makasih udah jadi orang yang paling sabar dengerin ceritaku sepanjang tahun ini, yang bagus maupun yang berantakan.",
-    "Semoga damai Natal ada di hatimu, dan tahun depan kita punya lebih banyak malam yang menyala kayak gini."
+    "Amira, Natal tahun ini kita belum bisa kumpul. Jadi aku bikin ini supaya kamu tetap ngerasa ada yang nemenin.",
+    "Makasih sudah sabar dengerin ceritaku setahun ini, yang seru maupun yang bikin pusing.",
+    "Selamat Natal, sayang. Semoga tahun depan kita lebih sering ketemu, dan Natal berikutnya bisa kita rayakan bareng."
   ],
   "harapan": [
-    "Semoga kamu selalu sehat dan kuat tahun depan.",
+    "Semoga kamu sehat terus tahun depan.",
     "Semoga kita lebih sering ketemu daripada video call.",
-    "Semoga semua doamu dijawab pelan-pelan."
+    "Semoga doa-doamu satu per satu terkabul."
   ],
   "waPengirim": "081234567890",
   "lagu": {
@@ -173,12 +173,17 @@ body.hangat .cahaya-hangat{background:radial-gradient(60% 50% at 50% 60%,rgba(25
 @keyframes denyut{50%{box-shadow:0 0 0 2px var(--emas),0 0 0 calc(var(--u)*2) rgba(232,182,76,.35)}}
 .ornamen.dibaca{box-shadow:0 0 0 2px var(--salju),0 0 calc(var(--u)*3) var(--emas2)}
 .papan-ubin{position:relative;display:grid;gap:3px;padding:calc(var(--u)*2.4);border-radius:calc(var(--u)*2);background:#2b1a10;box-shadow:inset 0 0 0 calc(var(--u)*.6) #4a2e1a,0 calc(var(--u)*2) calc(var(--u)*4) rgba(0,0,0,.4)}
-.ubin{width:calc(var(--u)*15);height:calc(var(--u)*15);border:0;padding:0;background:#3b2618;border-radius:4px;cursor:pointer;transition:transform .18s}
+.ubin{position:relative;width:calc(var(--u)*17);height:calc(var(--u)*17);border:0;padding:0;background:#3b2618;border-radius:4px;cursor:pointer;transition:transform .18s}
 .ubin svg{width:100%;height:100%;display:block;transition:transform .18s}
 .ubin .kabel{stroke:#5b5f55;stroke-width:9;fill:none;stroke-linecap:round}
 .ubin .bohlam{fill:#5b5f55}
 .ubin.nyala .kabel{stroke:#2f7a52}
 .ubin.nyala .bohlam{fill:var(--emas2);filter:drop-shadow(0 0 4px #ffd98a)}
+.ubin.kosong{cursor:default;background:#33200f;opacity:.55}
+.ubin .putar{position:absolute;right:4px;top:3px;width:calc(var(--u)*5);height:calc(var(--u)*5);border-radius:50%;display:none;place-items:center;font:800 calc(var(--u)*3.4)/1 var(--sans);color:#2b1a10;background:var(--emas);box-shadow:0 0 0 2px #2b1a10}
+.ubin.salah{box-shadow:inset 0 0 0 2px var(--emas)}
+.ubin.salah .putar{display:grid;animation:denyutPutar 1.2s infinite}
+@keyframes denyutPutar{50%{transform:scale(1.15)}}
 .colokan,.ujung{position:absolute;width:calc(var(--u)*7);height:calc(var(--u)*7);border-radius:calc(var(--u)*1.4);display:grid;place-items:center;font-size:calc(var(--u)*4)}
 .colokan{background:#e9e1d3}.ujung{background:var(--emas)}
 .baca-harapan{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);width:min(84vw,calc(var(--u)*80));background:var(--salju);border-radius:calc(var(--u)*2);padding:calc(var(--u)*6) calc(var(--u)*6) calc(var(--u)*5);text-align:center;box-shadow:0 0 0 4px var(--emas),0 20px 50px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.35s;z-index:70}
@@ -592,7 +597,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
       buka=true; MU.play();
       setTimeout(function(){ $('#depan').classList.add('buka'); document.body.classList.add('hangat'); SFX.kain(); },500);
       var u=$('#ucapAwal'); u.innerHTML=''; u.appendChild(document.createTextNode(UCAPAN+', '+PENERIMA)); u.appendChild(el('small',null,'pintunya sudah dibukakan '+PENGIRIM));
-      setTimeout(function(){ u.classList.add('tampil'); petunjuk('Rumahnya masih gelap. Ayo kita nyalakan pelan-pelan.'); },1300);
+      setTimeout(function(){ u.classList.add('tampil'); petunjuk('Rumahnya masih gelap. Yuk, kita nyalakan satu per satu.'); },1300);
       setTimeout(function(){ lanjut(berikut,'Masuk ke ruang tamu'); },2800);
     }
   });
@@ -600,53 +605,46 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 
 /* ═ 2 · merangkai lampu ═ */
 (function(){
-  var C=4, R=5, papan=$('#papanUbin'), pk=$('#pohonKecil'), DX=[0,1,0,-1], DY=[-1,0,1,0], sel=[], beres=false;
+  var C=3, R=3, papan=$('#papanUbin'), pk=$('#pohonKecil'), DX=[0,1,0,-1], DY=[-1,0,1,0], sel=[], beres=false;
   pk.innerHTML=pohonSvg();
-  papan.style.gridTemplateColumns='repeat('+C+',calc(var(--u)*15))';
-  /* jalur acak yang pasti bisa: dari kiri-bawah (masuk dari barat) ke kanan-atas (keluar ke utara) */
-  function cariJalur(){
-    var seen={}, jalur=[];
-    function dfs(x,y){ seen[x+','+y]=1; jalur.push([x,y]); if(x===C-1&&y===0) return true;
-      var d=[0,1,2,3].sort(function(){ return Math.random()-.5; });
-      for(var i=0;i<4;i++){ var nx=x+DX[d[i]], ny=y+DY[d[i]]; if(nx<0||ny<0||nx>=C||ny>=R||seen[nx+','+ny]) continue; if(dfs(nx,ny)) return true; }
-      jalur.pop(); return false; }
-    dfs(0,R-1); return jalur;
-  }
-  var jalur=cariJalur(), dalamJalur={};
-  jalur.forEach(function(p,i){
-    var masuk = i===0 ? 3 : arahDari(jalur[i-1],p), keluar = i===jalur.length-1 ? 0 : arahKe(p,jalur[i+1]);
-    dalamJalur[p[0]+','+p[1]]=[masuk,keluar];
-  });
+  papan.style.gridTemplateColumns='repeat('+C+',calc(var(--u)*17))';
+  /* satu jalur tetap dari colokan (kiri-bawah) ke pohon (kanan-atas); hanya 3 ubin yang perlu diputar */
+  var jalur=[[0,2],[1,2],[1,1],[2,1],[2,0]], dalamJalur={};
   function arahKe(a,b){ for(var d=0;d<4;d++) if(a[0]+DX[d]===b[0]&&a[1]+DY[d]===b[1]) return d; }
   function arahDari(a,b){ return (arahKe(a,b)+2)%4; }
+  jalur.forEach(function(p,i){
+    var masuk = i===0 ? 3 : arahDari(jalur[i-1],p), keluar = i===jalur.length-1 ? 0 : arahKe(p,jalur[i+1]);
+    dalamJalur[p[0]+','+p[1]]={j:[masuk,keluar],acak:i===0||i===2||i===4};
+  });
   function sambungan(t){ return t.jenis==='I'?[t.r%4,(t.r+2)%4]:[t.r%4,(t.r+1)%4]; }
+  function pas(t){ var s=sambungan(t); return s.indexOf(t.j[0])>-1 && s.indexOf(t.j[1])>-1; }
   for(var y=0;y<R;y++) for(var x=0;x<C;x++){
-    var j=dalamJalur[x+','+y], t={x:x,y:y};
-    if(j){ var lurus=(j[0]+2)%4===j[1]; t.jenis=lurus?'I':'L';
-      var benar; if(lurus) benar=Math.min(j[0],j[1])%2; else { var a=j[0],b=j[1]; benar=((a+1)%4===b)?a:b; }
-      t.r=(benar+1+Math.floor(Math.random()*3))%4; }
-    else { t.jenis=Math.random()<.5?'I':'L'; t.r=Math.floor(Math.random()*4); }
+    var d=dalamJalur[x+','+y], t={x:x,y:y};
+    if(!d){ var k=el('div','ubin kosong'); papan.appendChild(k); t.jenis='-'; t.r=0; t.el=k; sel.push(t); continue; }
+    var j=d.j, lurus=(j[0]+2)%4===j[1]; t.jenis=lurus?'I':'L'; t.j=j;
+    var benar; if(lurus) benar=Math.min(j[0],j[1])%2; else { var a=j[0],b2=j[1]; benar=((a+1)%4===b2)?a:b2; }
+    t.r=d.acak?(benar+1)%4:benar;
     var b=el('button','ubin'); b.type='button';
-    b.innerHTML=t.jenis==='I'
+    b.innerHTML=(t.jenis==='I'
       ?'<svg viewBox="0 0 100 100"><path class="kabel" d="M50 0 L50 100"/><circle class="bohlam" cx="50" cy="32" r="8"/><circle class="bohlam" cx="50" cy="68" r="8"/></svg>'
-      :'<svg viewBox="0 0 100 100"><path class="kabel" d="M50 0 L50 30 Q50 50 70 50 L100 50"/><circle class="bohlam" cx="56" cy="44" r="8"/></svg>';
+      :'<svg viewBox="0 0 100 100"><path class="kabel" d="M50 0 L50 30 Q50 50 70 50 L100 50"/><circle class="bohlam" cx="56" cy="44" r="8"/></svg>')+'<span class="putar" aria-hidden="true">↻</span>';
     t.el=b; t.rot=t.r*90; b.firstChild.style.transform='rotate('+t.rot+'deg)';
     (function(t){ b.addEventListener('click',function(){ if(beres) return; t.r=(t.r+1)%4; t.rot+=90; t.el.firstChild.style.transform='rotate('+t.rot+'deg)'; SFX.ubin(); cek(); }); })(t);
     noMenu(b); papan.appendChild(b); sel.push(t);
   }
-  var col=el('div','colokan','🔌'); col.style.left='calc(var(--u)*-6)'; col.style.top='calc(var(--u)*2.4 + '+(R-1)+' * (var(--u)*15 + 3px) + var(--u)*4)'; papan.appendChild(col);
-  var uj=el('div','ujung','🎄'); uj.style.left='calc(var(--u)*2.4 + '+(C-1)+' * (var(--u)*15 + 3px) + var(--u)*4)'; uj.style.top='calc(var(--u)*-6)'; papan.appendChild(uj);
+  var col=el('div','colokan','🔌'); col.style.left='calc(var(--u)*-6)'; col.style.top='calc(var(--u)*2.4 + '+(R-1)+' * (var(--u)*17 + 3px) + var(--u)*5)'; papan.appendChild(col);
+  var uj=el('div','ujung','🎄'); uj.style.left='calc(var(--u)*2.4 + '+(C-1)+' * (var(--u)*17 + 3px) + var(--u)*5)'; uj.style.top='calc(var(--u)*-6)'; papan.appendChild(uj);
   function ambil(x,y){ return sel[y*C+x]; }
   function cek(){
     var nyala={}, antri=[], awal=ambil(0,R-1);
     if(sambungan(awal).indexOf(3)>-1){ antri.push(awal); nyala['0,'+(R-1)]=1; }
     while(antri.length){ var t=antri.shift(); sambungan(t).forEach(function(d){ var nx=t.x+DX[d], ny=t.y+DY[d]; if(nx<0||ny<0||nx>=C||ny>=R) return; var n=ambil(nx,ny);
       if(!nyala[nx+','+ny] && sambungan(n).indexOf((d+2)%4)>-1){ nyala[nx+','+ny]=1; antri.push(n); } }); }
-    sel.forEach(function(t){ t.el.classList.toggle('nyala',!!nyala[t.x+','+t.y]); });
+    sel.forEach(function(t){ if(t.jenis==='-') return; t.el.classList.toggle('nyala',!!nyala[t.x+','+t.y]); t.el.classList.toggle('salah',!pas(t)); });
     var akhir=ambil(C-1,0);
     if(nyala[(C-1)+',0'] && sambungan(akhir).indexOf(0)>-1) selesai();
   }
-  MASUK[1]=function(){ cek(); petunjuk('Kabel lampunya kusut. <b>Ketuk ubin untuk memutarnya</b> sampai listrik dari colokan 🔌 sampai ke pohon 🎄.'); };
+  MASUK[1]=function(){ cek(); petunjuk('Ada 3 potongan kabel yang terbalik. <b>Ketuk yang bertanda ↻</b> sampai kabelnya tersambung ke pohon.'); };
   var dibaca=0, ornamen=[];
   function selesai(){
     beres=true; SFX.menang(); buzz([20,40,20]); pk.classList.add('nyala'); papan.style.transition='opacity .6s'; papan.style.opacity='.55';
@@ -693,7 +691,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   $('#angkat').addEventListener('click',function(){ this.classList.remove('tampil'); ptj.style.visibility='';
     var v=Object.keys(dilihat).length; if(v>=n) lanjut(berikut,'Lihat ke luar jendela'); });
   noMenu($('#angkat'));
-  MASUK[2]=function(){ petunjuk('Kaus kaki di perapian kelihatan berisi. <b>Tarik kaus kakinya ke bawah.</b>'); };
+  MASUK[2]=function(){ petunjuk('Kaus kaki di perapian kelihatannya ada isinya. <b>Tarik kaus kakinya ke bawah.</b>'); };
 })();
 
 /* ═ 4 · kereta rusa ═ */
