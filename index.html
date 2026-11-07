@@ -189,7 +189,7 @@ const FOREVERSE_SITE = {
       cover:   "/cover-rumah-menyala.jpg",
       ringkas: "Satu malam Natal di rumahnya. Lonceng pintu ditarik, kabel lampu dirangkai sampai pohonnya menyala, foto jatuh dari kaus kaki, dan bintang dipasang di puncak pohon.",
       isi:     ["4 foto", "Game rangkai lampu", "3 harapan di ornamen", "Ucapan bisa dipilih"],
-      alur:    ["Tali lonceng pintu ditarik dua kali, pintunya terbuka", "Ubin kabel diputar sampai listrik dari colokan sampai ke pohon, pohonnya menyala", "Tiga ornamen bersinar, tiap ornamen membuka satu harapanmu", "Kaus kaki di perapian ditarik, foto-fotonya jatuh ke karpet", "Kereta rusa digeser tepat di atas cerobong rumahnya, kadonya meluncur masuk", "Pita kado ditarik sampai lepas: di dalamnya kartu suratmu", "Bintang dipasang di puncak pohon, lalu dia membalas"]
+      alur:    ["Tali lonceng pintu ditarik dua kali, pintunya terbuka", "Tiga potongan kabel yang terbalik diketuk sampai listriknya sampai ke pohon, pohonnya menyala", "Tiga ornamen bersinar, tiap ornamen membuka satu harapanmu", "Kaus kaki di perapian ditarik, foto-fotonya jatuh ke karpet", "Kereta rusa digeser tepat di atas cerobong rumahnya, kadonya meluncur masuk", "Pita kado ditarik sampai lepas: di dalamnya kartu suratmu", "Bintang dipasang di puncak pohon, lalu dia membalas"]
     },
     "hitung-mundur": {
       nama:    "Hitung Mundur di Atap",
@@ -213,7 +213,7 @@ const FOREVERSE_SITE = {
       cover:   "/cover-malam-takbiran.jpg",
       ringkas: "Malam terakhir Ramadan sampai pagi Lebaran. Dia mencari hilal lewat teropong, menganyam ketupat yang membuka maaf-maafmu, membuka toples kue, memukul beduk, lalu bersalaman denganmu.",
       isi:     ["4 foto", "Game anyam ketupat", "3 maaf kecil", "Ucapan bisa dipilih"],
-      alur:    ["Teropong digeser di langit senja sampai hilal yang tipis ketemu", "Janur dianyam selang-seling (lewat atas, lewat bawah) baris demi baris sampai jadi ketupat", "Tiap baris anyaman yang rapi membuka satu maaf kecil darimu", "Tutup toples kue Lebaran diputar ke kiri, fotonya naik dari dalam toples", "Beduk dipukul tiga kali untuk tiap bagian surat, pelita menyala satu per satu", "Pagi Lebaran: tangannya digeser untuk bersalaman denganmu, lalu dia membalas"]
+      alur:    ["Teropong digeser di langit senja sampai hilal yang tipis ketemu", "Janur dianyam dengan mengetuk helai yang menyala, baris demi baris sampai jadi ketupat", "Tiap baris anyaman yang rapi membuka satu maaf kecil darimu", "Tutup toples kue Lebaran diputar ke kiri, fotonya naik dari dalam toples", "Beduk dipukul tiga kali untuk tiap bagian surat, pelita menyala satu per satu", "Pagi Lebaran: tangannya digeser untuk bersalaman denganmu, lalu dia membalas"]
     },
     "pemutaran-perdana": {
       nama:    "Pemutaran Perdana",
@@ -302,20 +302,7 @@ body:not([data-hal-aktif="beranda"]) .hal-atas{padding-top:clamp(40px,6vw,64px)}
 .pv-pilih button[aria-pressed="true"]{background:var(--violet);color:#fff;border-color:var(--violet)}
 
 /* hero: langkah mini & jaminan */
-.mini{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0;padding:0;list-style:none;counter-reset:m}
-.mini li{counter-increment:m;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-soft)}
-.mini li::before{content:counter(m);width:24px;height:24px;border-radius:50%;background:var(--violet-tint);color:var(--violet);font-weight:600;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
-.mini li+li::after{content:none}
 .jamin{margin-top:16px;font-size:13px;color:var(--ink-faint)}
-/* sorotan dunia tema */
-.sorot{display:grid;gap:16px;margin-top:36px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
-.sorot article{position:relative;border-radius:24px;overflow:hidden;min-height:380px;display:flex;align-items:flex-end;background:var(--ink) center/cover no-repeat;color:#fff;isolation:isolate}
-.sorot article::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(22,22,26,.05) 10%,rgba(22,22,26,.9) 72%)}
-.sorot .isi{padding:22px}
-.sorot .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
-.sorot h3{color:#fff;font-size:24px;margin-top:6px}
-.sorot p{margin-top:8px;font-size:14.5px;line-height:1.55;opacity:.92}
-.sorot .btn{margin-top:14px;padding:10px 18px;font-size:14px;background:#fff;color:var(--ink)}
 /* fitur */
 .fitur{display:grid;gap:14px;margin-top:36px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
 .fitur div{background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:22px}
@@ -391,14 +378,8 @@ header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdro
 .chip small{font-size:11px;color:var(--ink-faint);font-weight:500}
 .spark{position:absolute;width:8px;height:8px;border-radius:2px;opacity:.8;animation:twk 3s ease-in-out infinite}
 @keyframes twk{50%{transform:translateY(-8px) rotate(45deg);opacity:.35}}
-@media(prefers-reduced-motion:reduce){.giftbox .gb-float,.chip,.gb-shadow,.spark,.strip-track{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.giftbox .gb-float,.chip,.gb-shadow,.spark{animation:none!important}}
 
-/* strip momen */
-.strip{border-block:1px solid var(--stone);background:var(--cream-lift);overflow:hidden}
-.strip-track{display:flex;white-space:nowrap;padding:13px 0;width:max-content;animation:slide 52s linear infinite}
-@keyframes slide{to{transform:translateX(-50%)}}
-.strip-track span{font-size:14px;padding:0 20px;color:var(--ink-soft);display:inline-flex;align-items:center;gap:8px}
-.strip-track span::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--blush);margin-left:20px}
 
 /* momen → tema */
 .tabs{display:flex;gap:8px;margin-top:30px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;
@@ -419,6 +400,7 @@ header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdro
   transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s ease}
 .card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(22,22,26,.09)}
 .card .cov{aspect-ratio:1/1;background:var(--cream-lift) center/cover no-repeat;position:relative}
+.card a.cov{display:block}
 .card .badge{position:absolute;left:14px;top:14px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:100px;background:#fff;color:var(--violet);box-shadow:0 4px 10px rgba(22,22,26,.08)}
 .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
 .card .nm{font-family:var(--serif);font-size:24px;line-height:1.15}
@@ -461,13 +443,6 @@ header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.86);backdro
 .step h3{font-size:18px}
 .step p{margin-top:8px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
 
-/* kenapa */
-.why{background:var(--cream-lift);border-block:1px solid var(--stone)}
-.why-grid{display:grid;gap:14px;margin-top:40px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
-.why-it{background:var(--paper);border:1px solid var(--stone);border-radius:20px;padding:24px 22px}
-.why-it .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-.why-it .ic svg{width:21px;height:21px}
-.why-it p{margin-top:8px;font-size:14.5px;color:var(--ink-soft);line-height:1.6}
 
 /* harga */
 .price{margin-top:40px;display:grid;border:1px solid var(--stone);border-radius:24px;overflow:hidden;background:var(--paper);max-width:900px;box-shadow:0 20px 50px rgba(22,22,26,.05)}
@@ -512,15 +487,58 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 .foot a{text-decoration:none;color:var(--ink-soft)}
 .foot a:hover{color:var(--ink);text-decoration:underline}
 
+/* beranda: momen */
+.momen-grid{display:grid;gap:10px;margin-top:26px;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+.momen-grid a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--stone);border-radius:16px;padding:14px 16px;font-weight:600;font-size:15px;line-height:1.3;transition:border-color .2s,transform .2s}
+.momen-grid a:hover{border-color:var(--violet);transform:translateY(-2px)}
+.momen-grid a .em{font-size:22px}
+.momen-grid a small{display:block;font-weight:400;color:var(--ink-faint);font-size:12.5px}
+.sorot-semua{margin-top:22px}
+/* katalog */
+.katalog{padding-top:clamp(32px,6vw,64px)}
+.h-kat{font-size:clamp(32px,5vw,48px);margin-top:12px}
+.tabs-wrap{position:sticky;top:64px;z-index:40;background:rgba(251,250,247,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--stone);margin-top:22px}
+.tabs-wrap .tabs{margin-top:0;padding:10px 2px}
+.katalog .cards{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));max-width:none}
+.cards.sorot{grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));max-width:none;margin-top:30px}
+.card .momen-lbl{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.card .label-tema{font-size:13px;color:var(--ink-faint)}
+/* halaman tema */
+.hal-tema{padding-top:clamp(20px,4vw,40px);padding-bottom:120px}
+.remah{font-size:14px;color:var(--ink-faint);margin-bottom:18px}.remah a{color:var(--violet);text-decoration:none}
+.tm-grid{display:grid;gap:clamp(24px,5vw,64px);align-items:start}
+@media(min-width:900px){.tm-grid{grid-template-columns:380px 1fr}}
+.hal-tema .phone{width:min(380px,100%)}
+.tm-info h1{font-size:clamp(30px,4.4vw,46px);margin-top:10px}
+.tm-info .lede{margin-top:12px;color:var(--ink-soft);max-width:52ch}
+.tm-info .chips{margin-top:16px}
+.tm-info .lbl{font-size:14px;color:var(--ink-faint);margin-top:22px}
+.tm-info .btn{margin-top:20px}
+.tm-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(251,250,247,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--stone);padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px))}
+.tm-bar .wrap{display:flex;justify-content:center}
+.tm-bar .btn{width:min(420px,100%)}
+body[data-hal-aktif="tema"] footer{padding-bottom:110px}
+body[data-hal-aktif="tema"] .fv-wa{display:none}
+@media(max-width:699px){
+  .tabs-wrap{top:94px}.cards{grid-template-columns:1fr 1fr!important;gap:10px!important}.cards .card .acts{grid-template-columns:1fr;gap:6px}.cards .card .nm{font-size:17px}.cards .card .ds{font-size:12.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cards .card .body{padding:10px 10px 12px;gap:6px}.cards .card .acts .btn{padding:9px 8px;font-size:13px}.card .label-tema{font-size:11.5px}.card .momen-lbl{font-size:10.5px}
+}
+
+.pv-ringkas{margin-top:12px;color:var(--ink-soft);max-width:52ch}
+@media(max-width:699px){
+  .price{margin-top:18px}
+  body[data-hal-aktif="beranda"] .price .right{display:none}
+  .momen-grid{grid-template-columns:repeat(3,1fr);gap:6px}.momen-grid a{flex-direction:column;align-items:flex-start;gap:2px;padding:9px 10px;font-size:13px}.momen-grid a small{font-size:11px}.momen-grid a .em{font-size:18px}
+  .preview .pv-fine,.pv-ringkas{display:none}
+}
 [hidden]{display:none!important}
 
 /* ══════════ tampilan HP ══════════
    Patokan: semua bagian penting muat di satu layar HP (±375×700),
-   teks tidak melebar, dan deretan kartu digeser ke samping, bukan ditumpuk. */
+   teks tidak melebar, dan kartu tersusun rapi tanpa digeser ke samping. */
 .phone{width:min(330px,78vw)}
 @media(max-width:699px){
   body{font-size:15.5px;line-height:1.6}
-  section{padding:52px 0}
+  section{padding:40px 0}
   h1{font-size:clamp(31px,8.6vw,40px);line-height:1.08}
   h2{font-size:clamp(25px,6.9vw,32px);line-height:1.15}
   h3{font-size:17px}
@@ -533,19 +551,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   .nav-m{padding-bottom:8px}.nav-m a{font-size:12.5px;padding:6px 11px}
   .hero{padding-top:28px;padding-bottom:40px}
   .hero-cta{margin-top:22px}.hero-cta .btn{flex:1}
-  .scene{height:250px;margin-top:8px}
-  .mini{gap:6px 14px}.mini li{font-size:13px}
-  /* deretan geser */
-  .cards,.sorot{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-left:calc(var(--gut) * -1);margin-right:calc(var(--gut) * -1);
-    padding:4px var(--gut) 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;max-width:none}
-  .cards::-webkit-scrollbar,.sorot::-webkit-scrollbar{display:none}
-  .cards>.card{flex:0 0 80%;scroll-snap-align:center}
-  .sorot>article{flex:0 0 82%;scroll-snap-align:center;min-height:330px}
-  .card .cov{aspect-ratio:4/3}
-  .card .nm{font-size:21px}.card .ds{font-size:14px}
-  .card .body{padding:14px 14px 16px;gap:8px}
-  .sorot .isi{padding:18px}.sorot h3{font-size:21px}.sorot p{font-size:13.5px}
-  .geser-tanda{display:block}
+  .scene{height:200px;margin-top:4px}
   .tab{font-size:13.5px;padding:7px 13px}
   .moment-line strong{font-size:21px}.moment-line span{font-size:14px}
   /* contoh: pilihan tema satu baris geser, ponsel muat satu layar */
@@ -557,15 +563,12 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   .flow li{font-size:14px;padding:8px 0 8px 36px}
   .fitur{grid-template-columns:1fr 1fr;gap:10px}
   .fitur div{padding:14px}.fitur .e{font-size:20px}.fitur h3{font-size:15px;margin-top:6px}.fitur p{font-size:13px;line-height:1.5}
-  .why-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .why-it{padding:16px}.why-it h3{font-size:15px}.why-it p{font-size:13px;line-height:1.5}.why-it .ic{width:34px;height:34px;margin-bottom:10px}
-  .steps{gap:10px;margin-top:26px}.step{padding:16px}.step p{font-size:13.5px}
+  .steps{grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}.step{padding:14px}.step h3{font-size:15px}.step p{font-size:13px;line-height:1.5}
   .price .amt{font-size:42px}
   .privat{grid-template-columns:1fr}
   .ide h3{font-size:20px!important}
   .faq summary{font-size:15px}
 }
-.geser-tanda{display:none;font-size:12.5px;color:var(--ink-faint);margin-top:6px}
 /* footer lengkap */
 .kaki-grid{display:grid;gap:28px;grid-template-columns:1.3fr 1fr 1fr 1.2fr;padding-bottom:26px;border-bottom:1px solid var(--stone)}
 @media(max-width:899px){.kaki-grid{grid-template-columns:1fr 1fr}}
@@ -605,12 +608,9 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <p class="hero-sub">Suratnya tidak cuma dibaca, tapi dimainkan. Tulis pesanmu, pilih fotonya, bayar <span data-v="harga">Rp15.000</span>. Tautannya langsung jadi, tinggal kamu kirim ke dia.</p>
         <div class="hero-cta">
           <a href="/template" class="btn btn-main" data-rute>Pilih momen</a>
-          <a href="/template#contoh" class="btn btn-ghost" data-rute>Coba contohnya</a>
+          <a href="/#contoh" class="btn btn-ghost" data-rute>Lihat contohnya</a>
         </div>
-        <ol class="mini" aria-label="Tiga langkah">
-          <li>Pilih tema</li><li>Isi &amp; lihat pratinjau</li><li>Kirim tautan atau QR</li>
-        </ol>
-        <p class="jamin">Tanpa login · Pratinjau dulu sebelum bayar · Dia cukup buka tautannya</p>
+        <p class="jamin">Tanpa login · Pratinjau dulu · Bayar terakhir</p>
       </div>
 
       <div class="scene" aria-hidden="true">
@@ -634,56 +634,86 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     </div>
   </section>
 
-  <div class="strip" aria-hidden="true" data-hal="beranda"><div class="strip-track" id="strip"></div></div>
 
   <!-- ═════ SOROTAN: tiap tema adalah dunia kecil ═════ -->
   <section data-hal="beranda">
     <div class="wrap">
       <div class="head">
+        <span class="eyebrow">Pilih momen</span>
+        <h2>Suratnya untuk momen apa?</h2>
+      </div>
+      <div class="momen-grid" id="momenGrid"></div>
+    </div>
+  </section>
+
+  <section data-hal="beranda" class="sorotan">
+    <div class="wrap">
+      <div class="head">
         <span class="eyebrow">Bukan cuma dibaca</span>
         <h2>Tiap tema punya permainannya sendiri.</h2>
-        <p class="lede">Dia tidak cuma menggulir halaman sampai habis. Tulisanmu ikut masuk ke permainannya, lalu suratnya terbuka di akhir.</p>
+        <p class="lede">Tulisanmu ikut masuk ke permainannya, lalu suratnya terbuka di akhir.</p>
       </div>
-      <div class="sorot" id="sorot"></div>
-      <p class="geser-tanda">Geser ke samping →</p>
+      <div class="cards sorot" id="sorot"></div>
+      <a class="btn btn-ghost sorot-semua" href="/template" data-rute>Lihat semua tema</a>
     </div>
   </section>
 
   <!-- ═════ MOMEN → TEMA ═════ -->
-  <section id="momen" data-hal="beranda template" class="hal-atas">
+  <section id="momen" data-hal="template" class="katalog">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow">Pilih momen</span>
-        <h2>Suratnya untuk momen apa?</h2>
-        <p class="lede">Pilih momennya dulu. Tema yang cocok muncul di bawahnya, dan tiap tema bisa kamu coba sebelum pesan.</p>
+        <span class="eyebrow">Template</span>
+        <h1 class="h-kat">Semua tema surat</h1>
+        <p class="lede">Pilih momennya, lalu buka contohnya. Semua tema bisa kamu mainkan dulu sebelum pesan.</p>
       </div>
-      <div class="tabs" id="tabs" role="tablist" aria-label="Pilih momen"></div>
+    </div>
+    <div class="tabs-wrap"><div class="wrap"><div class="tabs" id="tabs" role="tablist" aria-label="Pilih momen"></div></div></div>
+    <div class="wrap">
       <div class="moment-line" id="momentLine"></div>
       <div class="cards" id="cards" role="tabpanel"></div>
-      <p class="geser-tanda">Geser ke samping untuk tema lainnya →</p>
     </div>
   </section>
 
+  <!-- ═════ HALAMAN TEMA ═════ -->
+  <section id="halTema" data-hal="tema" class="hal-tema">
+    <div class="wrap">
+      <nav class="remah" aria-label="Lokasi"><a href="/template" data-rute>Template</a> <span>/</span> <span id="tmMomen"></span></nav>
+      <div class="tm-grid">
+        <div class="phone"><div class="screen"><iframe id="tmFrame" title="Contoh tema"></iframe></div></div>
+        <div class="tm-info">
+          <span class="eyebrow" id="tmLabel"></span>
+          <h1 id="tmNama"></h1>
+          <p class="lede" id="tmRingkas"></p>
+          <div class="chips" id="tmIsi"></div>
+          <p class="lbl">Urutannya:</p>
+          <ol class="flow" id="tmAlur"></ol>
+          <a id="tmPenuh" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka contoh layar penuh</a>
+          <p class="pv-fine">Nama dan pesan di contoh ini cuma karangan (Amira &amp; Adriel). Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
+        </div>
+      </div>
+    </div>
+    <div class="tm-bar"><div class="wrap"><a id="tmPakai" class="btn btn-main" href="#">Pakai tema ini · <span data-v="harga">Rp15.000</span></a></div></div>
+  </section>
+
   <!-- ═════ CONTOH ═════ -->
-  <section class="preview hal-atas" id="contoh" data-hal="beranda template">
+  <section class="preview hal-atas" id="contoh" data-hal="beranda">
     <div class="wrap">
       <div class="head">
         <span class="eyebrow">Coba dulu</span>
-        <h2>Ini yang dia lihat waktu membuka tautannya.</h2>
-        <p class="lede">Pilih temanya, lalu mainkan contohnya langsung di sini.</p>
+        <h2>Begini dia membukanya.</h2>
+        <p class="lede">Mainkan contohnya langsung di sini.</p>
       </div>
       <div class="pv-pilih" id="pvPilih" role="group" aria-label="Pilih tema contoh"></div>
       <div class="pv-grid">
         <div class="phone"><div class="screen"><iframe id="pvFrame" title="Contoh tema" loading="lazy"></iframe></div></div>
         <div class="pv-info">
           <h3 id="pvName"></h3>
-          <p class="lbl">Urutannya:</p>
-          <ol class="flow" id="pvFlow"></ol>
+          <p class="pv-ringkas" id="pvRingkas"></p>
           <div class="pv-acts">
-            <a id="pvOrder" class="btn btn-main" href="#">Pesan tema ini</a>
+            <a id="pvOrder" class="btn btn-main" href="#">Pakai tema ini</a>
             <a id="pvFull" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka layar penuh</a>
           </div>
-          <p class="pv-fine">Nama dan pesan di contoh ini cuma karangan (Amira &amp; Adriel), dan fotonya diganti ilustrasi. Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
+          <p class="pv-fine">Nama dan pesan di contoh ini cuma karangan (Amira &amp; Adriel). Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
         </div>
       </div>
     </div>
@@ -693,9 +723,9 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   <section id="cara" data-hal="beranda cara" class="hal-atas">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow">Cara pesan</span>
+        <span class="eyebrow">Cara pesan &amp; harga</span>
         <h2>Isi dulu, bayar terakhir.</h2>
-        <p class="lede">Kamu baru bayar setelah semua isinya selesai kamu tulis.</p>
+        <p class="lede">Satu harga untuk semua tema. Kamu baru bayar setelah semua isinya selesai kamu tulis.</p>
       </div>
       <div class="steps">
         <div class="step"><span class="n">1</span><h3>Pilih momen dan tema</h3><p>Mainkan contohnya dulu sampai kamu yakin.</p></div>
@@ -703,69 +733,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
         <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS atau e-wallet, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya kelihatan sebelum kamu bayar.</p></div>
         <div class="step"><span class="n">4</span><h3>Tautannya langsung jadi</h3><p>Muncul di layar dan masuk ke emailmu, lengkap dengan kode QR berbentuk hati. Kamu yang mengirimnya ke dia, kapan pun kamu mau.</p></div>
       </div>
-    </div>
-  </section>
-
-  <!-- ═════ FITUR ═════ -->
-  <section data-hal="beranda cara">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">Yang kamu dapat</span>
-        <h2>Semua yang dibutuhkan, tanpa paket tambahan.</h2>
-      </div>
-      <div class="fitur">
-        <div><span class="e">👀</span><h3>Pratinjau langsung</h3><p>Suratnya berubah sambil kamu mengetik. Kamu tahu persis yang akan dia lihat sebelum membayar.</p></div>
-        <div><span class="e">🎮</span><h3>Tulisanmu jadi permainan</h3><p>Janji, alasan, dan hal-hal kecil yang kamu tulis ikut muncul di dalam game-nya, tidak hanya di surat akhir.</p></div>
-        <div><span class="e">🎵</span><h3>Lagu kalian sendiri</h3><p>Unggah MP3 atau M4A, lalu pilih bagian lagunya. Kalau tidak diisi, yang diputar kotak musik bawaan.</p></div>
-        <div><span class="e">💌</span><h3>Tautan + QR berbentuk hati</h3><p>Kirim lewat chat, atau cetak kode QR-nya dan selipkan di kado fisik.</p></div>
-        <div><span class="e">🔐</span><h3>Kunci pembuka</h3><p>PIN, pertanyaan rahasia, atau tanggal kalian. Bisa juga pakai kunci waktu supaya suratnya baru terbuka tepat jam 00.00.</p></div>
-        <div><span class="e">📅</span><h3>Ingetin aku</h3><p>Satu email 7 hari sebelum ulang tahun atau hari jadinya tahun depan.</p></div>
-        <div><span class="e">🔔</span><h3>Kabar saat dibuka</h3><p>Kamu dapat email begitu dia membuka suratnya untuk pertama kali.</p></div>
-        <div><span class="e">✏️</span><h3>Ubah sendiri <span data-v="masaEdit">3 hari</span></h3><p>Salah ketik atau mau ganti foto? Pakai tautan edit pribadimu, tanpa login, sebanyak yang kamu mau.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═════ KENAPA ═════ -->
-  <section class="why" data-hal="beranda cara">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">Janji kami</span>
-        <h2>Empat hal ini pasti.</h2>
-      </div>
-      <div class="why-grid">
-        <div class="why-it">
-          <span class="ic" style="background:var(--violet-tint);color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 13.5a4 4 0 005.7 0l3-3a4 4 0 10-5.7-5.7L12 6.3"/><path d="M13.5 10.5a4 4 0 00-5.7 0l-3 3a4 4 0 105.7 5.7L12 17.7"/></svg></span>
-          <h3>Bisa kamu ubah sendiri</h3>
-          <p>Salah ketik atau mau ganti foto? Pakai tautan edit pribadimu selama <span data-v="masaEdit">3 hari</span>, sebanyak yang kamu mau.</p>
-        </div>
-        <div class="why-it">
-          <span class="ic" style="background:var(--blush-tint);color:#C95A6B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h7M7 13h10M7 17h5"/></svg></span>
-          <h3>Pesanmu tidak diubah</h3>
-          <p>Kata-katamu dipasang persis seperti yang kamu tulis, termasuk ejaan dan tanda bacanya.</p>
-        </div>
-        <div class="why-it">
-          <span class="ic" style="background:#FDF3DC;color:#B8860B"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v1.5M12 16v1.5"/></svg></span>
-          <h3>Bayar <span data-v="harga">Rp15.000</span>, selesai</h3>
-          <p>Tidak ada paket tambahan dan tidak ada fitur yang dikunci. Satu-satunya tambahan adalah biaya transaksi QRIS.</p>
-        </div>
-        <div class="why-it">
-          <span class="ic" style="background:#E6F6EC;color:#1E8E4E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z"/></svg></span>
-          <h3>Kami bisa dihubungi</h3>
-          <p>Jawaban singkat ada di tombol "Ada pertanyaan?". Kalau masih ada kendala, chat kami lewat WhatsApp.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═════ HARGA ═════ -->
-  <section id="harga" data-hal="beranda cara" class="hal-atas">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">Harga</span>
-        <h2>Satu harga untuk semua tema.</h2>
-      </div>
-      <div class="price">
+      <div class="price" id="harga">
         <div class="left">
           <span class="lbl">Per surat</span>
           <div class="amt" data-v="harga">Rp15.000</div>
@@ -784,6 +752,26 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     </div>
   </section>
 
+  <!-- ═════ FITUR ═════ -->
+  <section data-hal="beranda cara">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Yang kamu dapat</span>
+        <h2>Semua yang dibutuhkan, tanpa paket tambahan.</h2>
+      </div>
+      <div class="fitur">
+        <div><span class="e">👀</span><h3>Pratinjau langsung</h3><p>Suratnya berubah sambil kamu mengetik. Kamu tahu persis yang akan dia lihat sebelum membayar.</p></div>
+        <div><span class="e">🎮</span><h3>Tulisanmu jadi permainan</h3><p>Janji, alasan, dan hal-hal kecil yang kamu tulis ikut muncul di dalam game-nya, tidak hanya di surat akhir.</p></div>
+        <div><span class="e">🎵</span><h3>Lagu kalian sendiri</h3><p>Unggah MP3 atau M4A, lalu pilih bagian lagunya. Kalau tidak diisi, yang diputar kotak musik bawaan.</p></div>
+        <div><span class="e">💌</span><h3>Tautan + QR berbentuk hati</h3><p>Kirim lewat chat, atau cetak kode QR-nya dan selipkan di kado fisik.</p></div>
+        <div><span class="e">🔐</span><h3>Kunci pembuka</h3><p>PIN, pertanyaan rahasia, atau tanggal kalian. Bisa juga pakai kunci waktu supaya suratnya baru terbuka tepat jam 00.00.</p></div>
+        <div><span class="e">✏️</span><h3>Ubah sendiri <span data-v="masaEdit">3 hari</span></h3><p>Salah ketik atau mau ganti foto? Pakai tautan edit pribadimu, tanpa login, sebanyak yang kamu mau.</p></div>
+      </div>
+    </div>
+  </section>
+
+
+
   <!-- ═════ PRIVAT ═════ -->
   <section data-hal="cara" style="padding-top:0">
     <div class="wrap">
@@ -801,7 +789,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   </section>
 
   <!-- ═════ IDE TEMA ═════ -->
-  <section data-hal="beranda template" style="padding-top:0">
+  <section data-hal="template" style="padding-top:0">
     <div class="wrap">
       <div class="ide">
         <div><h3 style="font-size:24px">Momenmu belum ada temanya?</h3>
@@ -824,7 +812,7 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
           <summary>Dia perlu install aplikasi?</summary>
           <p>Tidak. Tautannya dibuka langsung di browser HP, Android maupun iPhone, atau di laptop.</p>
         </details>
-        <details class="utama">
+        <details>
           <summary>Bisa lihat contohnya dulu?</summary>
           <p>Bisa. Setiap tema punya contoh lengkap yang bisa dimainkan gratis di halaman <a href="/template" data-rute>Template</a>. Saat mengisi formulir pun ada pratinjau yang berubah langsung.</p>
         </details>
@@ -1005,96 +993,121 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
   href("waFinal",wa("Halo Foreverse, saya mau tanya dulu.")); href("waIde",wa("Halo Foreverse, saya punya ide tema untuk momen: ")); href("fWa",wa(""));
   href("fIg",C.instagram); href("fTt",C.tiktok); href("fPrivasi",C.privasi); href("fSyarat",C.syarat);
 
-  /* strip momen */
-  var s=M.map(function(m){ return "<span>"+m.emoji+" "+esc(m.nama)+"</span>"; }).join("");
-  $("strip").innerHTML=s+s;
-
   /* hitungan minat tema untuk dasbor - hanya nama tema, tanpa data pengunjung */
   function catat(tema,jenis){
     try{ navigator.sendBeacon("/api/catat", new Blob([JSON.stringify({tema:tema,jenis:jenis})],{type:"application/json"})); }catch(e){}
   }
-  /* contoh */
-  var current=null, currentMomen=M[0]?M[0].nama:"";
   /* skala iframe mengikuti lebar layar ponsel - hanya dihitung ulang saat
      LEBAR berubah, bukan saat tinggi berubah karena bilah alamat */
-  var lebarTerakhir=0;
   function skalaPonsel(){
-    var sc=document.querySelector(".phone .screen"); if(!sc) return;
-    var w=sc.clientWidth; if(!w || w===lebarTerakhir) return;
-    lebarTerakhir=w; sc.style.setProperty("--skala",(w/390).toFixed(4));
+    document.querySelectorAll(".phone .screen").forEach(function(sc){
+      var w=sc.clientWidth; if(!w || +sc.dataset.w===w) return;
+      sc.dataset.w=w; sc.style.setProperty("--skala",(w/390).toFixed(4));
+    });
   }
-  addEventListener("resize",function(){ skalaPonsel(); });
-  function show(k,momen){
+  addEventListener("resize",skalaPonsel);
+  function momenDari(k){ for(var i=0;i<M.length;i++) if(M[i].tema.indexOf(k)>-1) return M[i].nama; return ""; }
+  function jumlahFoto(t){ for(var i=0;i<t.isi.length;i++){ var m=/(\d+)\s*foto/.exec(t.isi[i]); if(m) return +m[1]; } return 4; }
+  function labelTema(t){ return jumlahFoto(t)+" foto · "+t.alur.length+" adegan · ada game"; }
+  var semuaTema=[]; M.forEach(function(m){ m.tema.forEach(function(k){ if(semuaTema.indexOf(k)<0 && T[k]) semuaTema.push(k); }); });
+
+  /* beranda: momen */
+  function isiMomenGrid(){
+    $("momenGrid").innerHTML=M.filter(function(m){ return m.tema.length; }).map(function(m){
+      return '<a href="/template?momen='+encodeURIComponent(m.nama)+'" data-rute><span class="em" aria-hidden="true">'+m.emoji+'</span><span>'+esc(m.nama)+'<small>'+m.tema.length+' tema</small></span></a>';
+    }).join("");
+  }
+  isiMomenGrid();
+
+  /* beranda: sorotan */
+  var SOROT=[["kado-riang","Ulang tahun"],["pemutaran-perdana","Anniversary"],["kasus-pengirim","Nyatakan perasaan"],["rumah-contoh","Lamaran"]];
+  function isiSorot(){
+    $("sorot").innerHTML=SOROT.filter(function(x){ return T[x[0]] && semuaTema.indexOf(x[0])>-1; }).map(function(x){ return card(x[0],x[1]); }).join("");
+  }
+
+  /* beranda: satu contoh yang bisa dimainkan */
+  var current=null;
+  function show(k){
     var t=T[k]; if(!t) return;
-    if(momen) currentMomen=momen;
-    $("pvOrder").href=orderLink(k,currentMomen);
+    $("pvOrder").href=orderLink(k,momenDari(k));
     if(k===current) return; current=k;
     $("pvFrame").src=t.file; $("pvFrame").title="Contoh tema "+t.nama; skalaPonsel();
     $("pvFull").href=t.file; $("pvName").textContent=t.nama;
-    $("pvFlow").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
+    $("pvRingkas").textContent=t.ringkas;
     $("pvPilih").querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.t===k ? "true" : "false"); });
   }
-  /* momen pertama yang memuat sebuah tema - untuk tautan "Pesan tema ini" di halaman Contoh */
-  function momenDari(k){ for(var i=0;i<M.length;i++) if(M[i].tema.indexOf(k)>-1) return M[i].nama; return ""; }
-  var semuaTema=[]; M.forEach(function(m){ m.tema.forEach(function(k){ if(semuaTema.indexOf(k)<0 && T[k]) semuaTema.push(k); }); });
-  $("pvPilih").innerHTML=semuaTema.map(function(k){ return '<button type="button" data-t="'+esc(k)+'" aria-pressed="false">'+esc(T[k].nama)+'</button>'; }).join("");
+  function isiPvPilih(){
+    $("pvPilih").innerHTML=SOROT.map(function(x){ return x[0]; }).filter(function(k){ return semuaTema.indexOf(k)>-1; }).map(function(k){
+      return '<button type="button" data-t="'+esc(k)+'" aria-pressed="false">'+esc(T[k].nama)+'</button>'; }).join("");
+  }
+  isiPvPilih();
   $("pvPilih").addEventListener("click",function(e){
     var b=e.target.closest("[data-t]"); if(!b) return;
-    catat(b.dataset.t,"demo"); show(b.dataset.t,momenDari(b.dataset.t));
-
+    catat(b.dataset.t,"demo"); show(b.dataset.t);
   });
 
-  /* momen → tema */
+  /* template: katalog dengan filter momen */
   var tabs=$("tabs"), cards=$("cards"), line=$("momentLine");
   function card(k,momen){
     var t=T[k];
-    return '<article class="card"><div class="cov" style="background-image:url(\''+esc(t.cover)+'\')"><span class="badge">Siap dipesan</span></div>'+
-      '<div class="body"><span class="nm">'+esc(t.nama)+'</span><p class="ds">'+esc(t.ringkas)+'</p>'+
-      '<div class="chips">'+t.isi.map(function(i){ return "<span>"+esc(i)+"</span>"; }).join("")+'</div>'+
-      '<div class="acts"><button type="button" class="btn btn-ghost" data-try="'+k+'">Coba contoh</button>'+
-      '<a class="btn btn-main" href="'+esc(orderLink(k,momen))+'">Pesan</a></div></div></article>';
+    return '<article class="card"><a class="cov" href="/tema/'+encodeURIComponent(k)+'" data-rute aria-label="Contoh '+esc(t.nama)+'" style="background-image:url(\''+esc(t.cover)+'\')"></a>'+
+      '<div class="body"><span class="momen-lbl">'+esc(momen)+'</span><span class="nm">'+esc(t.nama)+'</span><p class="ds">'+esc(t.ringkas)+'</p>'+
+      '<span class="label-tema">'+esc(labelTema(t))+'</span>'+
+      '<div class="acts"><a class="btn btn-ghost" href="/tema/'+encodeURIComponent(k)+'" data-rute>Contoh</a>'+
+      '<a class="btn btn-main" href="'+esc(orderLink(k,momen))+'">Pakai</a></div></div></article>';
   }
-  var dipilih=0;
+  function kartuIde(nama){
+    return '<article class="card empty"><div class="cov">✨</div><div class="body"><span class="nm">Tema berikutnya</span>'+
+      '<p class="ds">'+(nama?'Tema lain untuk '+esc(nama)+' sedang disiapkan.':'Tema baru terus kami siapkan.')+' Punya ide? Ceritakan ke kami.</p>'+
+      '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
+      esc(wa("Halo Foreverse, saya punya ide tema"+(nama?" untuk momen "+nama:"")+"."))+'">Kirim ide</a></div></div></article>';
+  }
+  var dipilih=-1;
   function pick(i,focus){
-    var m=M[i]; dipilih=i;
-    tabs.querySelectorAll(".tab").forEach(function(b,j){ b.setAttribute("aria-selected",j===i?"true":"false"); b.tabIndex=j===i?0:-1; });
-    if(focus) tabs.children[i].focus();
-    var n=m.tema.length;
+    dipilih=i;
+    tabs.querySelectorAll(".tab").forEach(function(b,j){ var ya=(j-1)===i; b.setAttribute("aria-selected",ya?"true":"false"); b.tabIndex=ya?0:-1; });
+    if(focus) tabs.children[i+1].focus();
+    if(i<0){
+      line.innerHTML='<strong>Semua tema</strong><span>'+semuaTema.length+' tema, tiap tema bisa kamu coba dulu.</span>';
+      cards.innerHTML=semuaTema.map(function(k){ return card(k,momenDari(k)); }).join("")+kartuIde("");
+      return;
+    }
+    var m=M[i], n=m.tema.length;
     line.innerHTML='<strong>'+m.emoji+' '+esc(m.nama)+'</strong><span>'+esc(m.baris)+(n?' '+n+' tema tersedia.':'')+'</span>';
-    if(n){
-      cards.innerHTML=m.tema.map(function(k){ return card(k,m.nama); }).join("")+
-        '<article class="card empty"><div class="cov">✨</div><div class="body"><span class="nm">Tema berikutnya</span>'+
-        '<p class="ds">Tema lain untuk '+esc(m.nama)+' sedang disiapkan. Punya ide? Ceritakan ke kami.</p>'+
-        '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
-        esc(wa("Halo Foreverse, saya punya ide tema untuk momen "+m.nama+"."))+'">Kirim ide</a></div></div></article>';
-      cards.querySelectorAll("[data-try]").forEach(function(b){
-        b.addEventListener("click",function(){
-          var k=b.getAttribute("data-try"); catat(k,"demo"); show(k,m.nama);
-          $("contoh").scrollIntoView({behavior:"smooth",block:"start"});
-        });
-      });
-    } else {
-      cards.innerHTML='<article class="card empty"><div class="cov">'+m.emoji+'</div><div class="body">'+
+    if(n) cards.innerHTML=m.tema.map(function(k){ return card(k,m.nama); }).join("")+kartuIde(m.nama);
+    else cards.innerHTML='<article class="card empty"><div class="cov">'+m.emoji+'</div><div class="body">'+
         '<span class="nm">Segera hadir</span><p class="ds">Tema untuk '+esc(m.nama)+' sedang disiapkan. Kalau kamu butuh, kabari kami. Momen yang paling banyak diminta kami kerjakan duluan.</p>'+
         '<div class="acts" style="grid-template-columns:1fr"><a class="btn btn-ghost" target="_blank" rel="noopener" href="'+
         esc(wa("Halo Foreverse, saya butuh tema untuk momen "+m.nama+"."))+'">Kabari saya</a></div></div></article>';
-    }
   }
   function buatTab(m,i){
     var b=document.createElement("button");
     b.type="button"; b.className="tab"; b.setAttribute("role","tab");
-    b.innerHTML='<span aria-hidden="true">'+m.emoji+'</span>'+esc(m.nama)+(m.tema.length?'':'<span class="soon">· segera</span>');
+    b.innerHTML=m?'<span aria-hidden="true">'+m.emoji+'</span>'+esc(m.nama)+(m.tema.length?'':'<span class="soon">· segera</span>'):'Semua';
     b.addEventListener("click",function(){ pick(i); });
     b.addEventListener("keydown",function(e){
-      if(e.key==="ArrowRight"){ e.preventDefault(); pick((i+1)%M.length,true); }
-      if(e.key==="ArrowLeft"){ e.preventDefault(); pick((i-1+M.length)%M.length,true); }
+      var n=M.length+1, j=i+1;
+      if(e.key==="ArrowRight"){ e.preventDefault(); pick((j+1)%n-1,true); }
+      if(e.key==="ArrowLeft"){ e.preventDefault(); pick((j-1+n)%n-1,true); }
     });
     tabs.appendChild(b);
   }
-  M.forEach(buatTab);
-  var awalMomen=new URLSearchParams(location.search).get("momen"), iAwal=0;
-  M.forEach(function(m,i){ if(awalMomen && m.nama.toLowerCase()===awalMomen.toLowerCase()) iAwal=i; });
-  if(M.length) pick(iAwal);
+  function isiTabs(){ tabs.innerHTML=""; buatTab(null,-1); M.forEach(buatTab); }
+  isiTabs(); pick(-1); isiSorot();
+
+  /* halaman tema: /tema/<id> */
+  var temaAktif=null;
+  function isiHalTema(k){
+    var t=T[k]; if(!t) return false;
+    var momen=momenDari(k);
+    $("tmMomen").textContent=momen; $("tmLabel").textContent=momen+" · "+labelTema(t);
+    $("tmNama").textContent=t.nama; $("tmRingkas").textContent=t.ringkas;
+    $("tmIsi").innerHTML=t.isi.map(function(i){ return "<span>"+esc(i)+"</span>"; }).join("");
+    $("tmAlur").innerHTML=t.alur.map(function(a){ return "<li>"+esc(a)+"</li>"; }).join("");
+    $("tmPenuh").href=t.file; $("tmPakai").href=orderLink(k,momen);
+    if(temaAktif!==k){ temaAktif=k; $("tmFrame").src=t.file; $("tmFrame").title="Contoh tema "+t.nama; catat(k,"demo"); }
+    return true;
+  }
 
   /* harga & tema yang dibuka - diatur dari /developer tanpa deploy ulang */
   fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
@@ -1113,54 +1126,45 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
     if(!mati.length) return;
     M.forEach(function(m){ m.tema=m.tema.filter(function(t){ return mati.indexOf(t)<0; }); });
     semuaTema=semuaTema.filter(function(t){ return mati.indexOf(t)<0; });
-    $("pvPilih").querySelectorAll("[data-t]").forEach(function(btn){ if(mati.indexOf(btn.dataset.t)>-1) btn.remove(); });
-    $("sorot").querySelectorAll("article").forEach(function(a){ var l=a.querySelector("a"); if(l && mati.some(function(t){ return l.href.indexOf("tema="+t)>-1; })) a.remove(); });
-    tabs.innerHTML=""; M.forEach(buatTab);
-    pick(dipilih);
-    if(current && mati.indexOf(current)>-1 && semuaTema.length){ current=null; show(semuaTema[0],momenDari(semuaTema[0])); }
+    isiMomenGrid(); isiSorot(); isiPvPilih(); isiTabs(); pick(dipilih);
+    if(current && mati.indexOf(current)>-1){ current=null; var s0=$("pvPilih").querySelector("[data-t]"); if(s0) show(s0.dataset.t); }
   }).catch(function(){});
 
-  /* sorotan beranda: tiga tema dengan bentuk dunia yang paling berbeda */
-  var SOROT=[["rumah-contoh","Tur rumah orang pertama"],["kasus-pengirim","Misteri yang dijelajah"],["pasar-malam","Pasar malam yang digulir"]];
-  $("sorot").innerHTML=SOROT.filter(function(x){ return T[x[0]]; }).map(function(x){
-    var t=T[x[0]];
-    return '<article style="background-image:url(\''+esc(t.cover)+'\')"><div class="isi"><span class="lbl">'+esc(x[1])+'</span>'+
-      '<h3>'+esc(t.nama)+'</h3><p>'+esc(t.ringkas)+'</p>'+
-      '<a class="btn" href="/template?tema='+encodeURIComponent(x[0])+'#contoh" data-rute>Mainkan contohnya</a></div></article>';
-  }).join("");
-
   /* ── halaman terpisah ──
-     Satu berkas, enam alamat: /, /momen, /contoh, /cara-pesan, /harga, /faq
+     Satu berkas untuk /, /template, /tema/<id>, /cara-pesan, /faq
      (worker.js menyajikan index.html untuk semuanya). Tiap bagian punya
-     data-hal; hanya bagian milik halaman yang sedang dibuka yang tampil. */
-  /* Beranda memuat semuanya; tiga halaman lain berisi bagiannya masing-masing.
+     data-hal; hanya bagian milik halaman yang sedang dibuka yang tampil.
      Alamat lama (/momen, /contoh, /harga, #harga, …) tetap diarahkan. */
   var RUTE={ "/":"beranda", "/template":"template", "/cara-pesan":"cara", "/faq":"faq" };
-  var ALIAS={ "/momen":"/template", "/contoh":"/template#contoh", "/harga":"/cara-pesan#harga",
-    "#momen":"/template", "#contoh":"/template#contoh", "#cara":"/cara-pesan", "#harga":"/cara-pesan#harga", "#faq":"/faq" };
-  var JUDUL={ beranda:"Foreverse · Surat Digital untuk Orang yang Kamu Sayang", template:"Template & contoh · Foreverse",
+  var ALIAS={ "/momen":"/template", "/contoh":"/#contoh", "/harga":"/cara-pesan#harga",
+    "#momen":"/template", "#contoh":"/#contoh", "#cara":"/cara-pesan", "#harga":"/cara-pesan#harga", "#faq":"/faq" };
+  var JUDUL={ beranda:"Foreverse · Surat Digital untuk Orang yang Kamu Sayang", template:"Template surat digital · Foreverse",
     cara:"Cara pesan & harga · Foreverse", faq:"FAQ · Foreverse" };
   function tampilkan(){
     var jalur=location.pathname.replace(/\/+$/,"")||"/";
     if(jalur==="/index.html") jalur="/";
-    var hal=RUTE[jalur]||"beranda";
+    var mt=/^\/tema\/([a-z0-9-]+)$/.exec(jalur);
+    var hal=mt ? "tema" : (RUTE[jalur]||"beranda");
+    if(mt && !isiHalTema(mt[1])){ history.replaceState(null,"","/template"); jalur="/template"; hal="template"; mt=null; }
     document.body.setAttribute("data-hal-aktif",hal);
     document.querySelectorAll("[data-hal]").forEach(function(el){
       el.hidden=(" "+el.getAttribute("data-hal")+" ").indexOf(" "+hal+" ")<0;
     });
-    document.querySelectorAll("a[data-rute]").forEach(function(a){
-      var ya=a.getAttribute("href").split("#")[0]===jalur && !a.classList.contains("btn") && !a.classList.contains("brand");
-      if(ya) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+    document.querySelectorAll("nav a[data-rute]").forEach(function(a){
+      var tuju=a.getAttribute("href").split(/[?#]/)[0];
+      if(tuju===jalur || (hal==="tema" && tuju==="/template")) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
     });
-    document.title=JUDUL[hal];
-    var qm=new URLSearchParams(location.search).get("momen");
-    if(qm) M.forEach(function(m,i){ if(m.nama.toLowerCase()===qm.toLowerCase()) pick(i); });
-    var k=new URLSearchParams(location.search).get("tema");
-    if(k && T[k]) show(k,momenDari(k));
-    else if(!current && semuaTema.length) show(semuaTema[0],momenDari(semuaTema[0]));
+    document.title=mt ? T[mt[1]].nama+" · Template surat digital · Foreverse" : JUDUL[hal];
+    if(hal==="template"){
+      var qm=new URLSearchParams(location.search).get("momen"), ix=-1;
+      if(qm) M.forEach(function(m,i){ if(m.nama.toLowerCase()===qm.toLowerCase()) ix=i; });
+      pick(ix);
+    }
+    if(hal==="beranda" && !current){ var k=new URLSearchParams(location.search).get("tema"), s0=$("pvPilih").querySelector("[data-t]");
+      if(k && T[k]) show(k); else if(s0) show(s0.dataset.t); }
     var aktif=document.querySelector('.nav-m a[aria-current="page"]');
     if(aktif && aktif.scrollIntoView) aktif.scrollIntoView({block:"nearest",inline:"center"});
-    lebarTerakhir=0; skalaPonsel();
+    skalaPonsel();
   }
   function pergi(url){
     history.pushState(null,"",url);

@@ -2141,6 +2141,22 @@ await uji("halaman momen untuk Google: teks lengkap dari server, FAQ terstruktur
   harus(sm.includes("https://foreverse.id/lamaran"), "sitemap");
 });
 
+await uji("tata letak: /tema/<id> disajikan, katalog & halaman tema ada, formulir 4 langkah", async () => {
+  const L = await buatLingkungan();
+  const idx = await readFile(new URL("./index.html", import.meta.url), "utf8");
+  harus(/data-hal="tema"/.test(idx) && /id="tmPakai"/.test(idx) && /id="momenGrid"/.test(idx), "bagian beranda & tema");
+  harus(!/class="strip"|class="why"/.test(idx), "bagian ganda sudah dihapus");
+  const sm = await readFile(new URL("./sitemap.xml", import.meta.url), "utf8");
+  harus(sm.includes("https://foreverse.id/tema/kado-riang") && sm.includes("https://foreverse.id/tema/pemutaran-perdana"), "sitemap tema");
+  const ps = await readFile(new URL("./pesan.html", import.meta.url), "utf8");
+  harus(/id="wizard"/.test(ps) && (ps.match(/data-ke="[1-4]"><span class="wn">/g) || []).length === 4, "4 langkah");
+  harus(/keLangkahDari\(pertama\)/.test(ps), "galat membuka langkahnya");
+  sama((await L.panggil("/tema/kado-riang")).status, 200, "/tema/<id> disajikan");
+  sama((await L.panggil("/template")).status, 200, "/template");
+  const mo = await (await L.panggil("/ulang-tahun")).text();
+  harus(mo.includes('class="nav"') && mo.includes('href="/tema/kado-riang"') && mo.includes("/bantuan.js"), "halaman momen pakai menu yang sama");
+});
+
 /* ═══════════ audit keamanan pra-Production (03-11-2026) ═══════════ */
 judul("Audit keamanan");
 
