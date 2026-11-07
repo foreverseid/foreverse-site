@@ -217,7 +217,7 @@ var GAMBAR=D.foto.map(function(f){ var i=new Image(); i.src=f.src; return i; });
 /* ── status tur ── */
 var RUANG=['teras','tamu','dapur','halaman','kamar'], NAMA={teras:'Teras',tamu:'Ruang tamu',dapur:'Dapur',halaman:'Halaman belakang',kamar:'Kamar'};
 var ri=0, tugas=0, game=0, panelSejak=0;
-var keset=0, kunciAmbil=false;            // teras
+var keset=0, kesetArah=1, kunciAmbil=false;            // teras
 var bingkai=[false,false,false];          // ruang tamu
 var air=0, tuang=false, tumpah=0;         // dapur
 var LAMPU_KAIT=[{u:.18,v:.3},{u:.38,v:.36},{u:.6,v:.3},{u:.82,v:.36}], lampuJejak=[], lampuNyala=false;   // halaman
@@ -226,18 +226,18 @@ var suratDibaca=false, tutupKotak=0, cincin=false;   // kamar
 /* sasaran (hotspot) tiap tugas: u,v = pusat; r = jari-jari sentuh relatif S() */
 function sasaran(){
   var r=RUANG[ri];
-  if(r==='teras') return tugas===0?{u:.55,v:.86,r:.1,kata:'Ada yang ganjil di <b>keset depan pintu</b>. Seret kesetnya ke samping.'}
+  if(r==='teras') return tugas===0?{u:.55,v:.86,r:.1,kata:'Kuncinya disembunyikan di bawah <b>keset</b>. Geser kesetnya ke kiri atau ke kanan.'}
     : tugas===1?{u:.6,v:.88,r:.06,kata:'<b>Ketuk kuncinya</b>.'}
     : {u:.55,v:.52,r:.14,kata:'Pintunya terbuka. <b>Ketuk pintunya</b> untuk masuk.',pintu:1};
   if(r==='tamu'){ var n=jumlahFoto(); var sisa=[0,1,2,3].filter(function(i){ return i<n&&!bingkai[i]; });
-    if(sisa.length) return {u:FRAME[sisa[0]].u,v:FRAME[sisa[0]].v+.12,r:.1,kata:'Bingkai di dinding miring semua. <b>Ketuk tiap bingkai</b> untuk meluruskannya.',semua:sisa.map(function(i){ return {u:FRAME[i].u,v:FRAME[i].v+.12}; })};
+    if(sisa.length) return {u:FRAME[sisa[0]].u,v:FRAME[sisa[0]].v+.12,r:.1,kata:'Bingkai fotonya miring semua. <b>Ketuk satu per satu</b> supaya lurus.',semua:sisa.map(function(i){ return {u:FRAME[i].u,v:FRAME[i].v+.12}; })};
     return tugas===0?{u:.3,v:.7,r:.1,kata:'Ada catatan di meja. <b>Ketuk catatannya</b>.'}:{u:.9,v:.5,r:.13,kata:'<b>Ketuk pintu dapur</b> di ujung ruangan.',pintu:1}; }
-  if(r==='dapur') return tugas===0?{u:.42,v:.48,r:.1,kata:'<b>Tekan dan tahan teko</b> untuk menuang. Lepas tepat di garis cangkir.'}
+  if(r==='dapur') return tugas===0?{u:.42,v:.48,r:.1,kata:'<b>Tekan dan tahan tekonya</b> untuk menuang. Lepas pas tehnya sampai garis.'}
     : tugas===1?{u:.58,v:.6,r:.08,kata:'<b>Ketuk cangkirnya</b>.'}:{u:.86,v:.5,r:.13,kata:'<b>Ketuk pintu belakang</b>.',pintu:1};
-  if(r==='halaman') return tugas===0?{u:LAMPU_KAIT[0].u,v:LAMPU_KAIT[0].v,r:.07,kata:'<b>Seret lampu tali</b> dari kait pertama, lewati kait-kait berikutnya tanpa diangkat.'}
+  if(r==='halaman') return tugas===0?{u:LAMPU_KAIT[0].u,v:LAMPU_KAIT[0].v,r:.07,kata:'Pasang lampunya. <b>Seret dari kait pertama</b> ke kait-kait berikutnya tanpa melepas jari.'}
     : tugas===1?{u:.5,v:.76,r:.1,kata:'Ada yang tertulis di bangku. <b>Ketuk bangkunya</b>.'}:{u:.08,v:.5,r:.12,kata:'<b>Ketuk pintu kamar</b> di sisi rumah.',pintu:1};
   if(r==='kamar') return tugas===0?{u:.35,v:.56,r:.1,kata:'Ada surat di atas bantal. <b>Ketuk suratnya</b>.'}
-    : tugas===1?{u:.72,v:.6,r:.07,kata:'Di meja ada kotak kecil. <b>Seret tutupnya ke atas</b>.'}:null;
+    : tugas===1?{u:.72,v:.6,r:.07,kata:'Ada kotak kecil di meja. <b>Geser tutupnya ke atas</b>.'}:null;
   return null;
 }
 function jumlahFoto(){ return Math.min(4,D.foto.length); }
@@ -275,8 +275,15 @@ function gambarTeras(t){
   /* kunci di bawah keset */
   if(!kunciAmbil){ var kx=X(.6), ky=Y(.885); cx.strokeStyle='#D9A55B'; cx.lineWidth=5; cx.beginPath(); cx.arc(kx-12,ky,7,0,7); cx.moveTo(kx-5,ky); cx.lineTo(kx+16,ky); cx.lineTo(kx+16,ky+6); cx.stroke(); }
   /* keset: bergeser ke kiri sejauh "keset" */
-  var mx=.55-keset*.17; kotak(mx-.08,.83,.16,.1,'#B3864E',GARIS,6);
+  var mx=.55-keset*.17*kesetArah; kotak(mx-.08,.83,.16,.1,'#B3864E',GARIS,6);
   cx.fillStyle='rgba(43,36,32,.35)'; cx.font='700 '+Math.round(H*.026)+'px Nunito, sans-serif'; cx.textAlign='center'; cx.fillText('selamat datang',X(mx),Y(.893));
+  if(tugas===0&&keset<.05&&!(tekan&&tekan.jenis==='keset')){ /* petunjuk: panah dua arah + jari yang bergeser */
+    var tt=performance.now()/1000, gs=Math.sin(tt*2.4), ay=Y(.80), aw=.13*PW;
+    cx.save(); cx.strokeStyle='#C2502B'; cx.fillStyle='#C2502B'; cx.lineWidth=4; cx.lineCap='round';
+    cx.beginPath(); cx.moveTo(X(.55)-aw,ay); cx.lineTo(X(.55)+aw,ay); cx.stroke();
+    [-1,1].forEach(function(d){ var ex=X(.55)+d*aw; cx.beginPath(); cx.moveTo(ex+d*8,ay); cx.lineTo(ex-d*4,ay-8); cx.lineTo(ex-d*4,ay+8); cx.closePath(); cx.fill(); });
+    var hx=X(.55)+gs*aw*.7, hy=Y(.885); cx.globalAlpha=.9; cx.fillStyle='#fff'; cx.strokeStyle=GARIS; cx.lineWidth=2;
+    cx.beginPath(); cx.arc(hx,hy,H*.022,0,7); cx.fill(); cx.stroke(); cx.restore(); }
 }
 function gambarTamu(){
   dinding('#E8D9C9','#B78E66',true);
@@ -381,7 +388,7 @@ cv.addEventListener('pointerdown',function(e){
   var s=sasaran(), r=RUANG[ri];
   tekan={x0:q.x,y0:q.y,pan0:panTuju,jenis:'lihat',t:performance.now()};
   if(!s) return;
-  if(r==='teras'&&tugas===0&&kena(q,{u:.55-keset*.17,v:.88})) tekan.jenis='keset', tekan.k0=keset;
+  if(r==='teras'&&tugas===0&&kena(q,{u:.55-keset*.17*kesetArah,v:.88})) tekan.jenis='keset', tekan.k0=keset;
   else if(r==='dapur'&&tugas===0&&kena(q,s)){ tekan.jenis='teko'; tuang=true; }
   else if(r==='halaman'&&tugas===0&&kena(q,s)){ tekan.jenis='lampu'; lampuJejak=[{u:LAMPU_KAIT[0].u,v:LAMPU_KAIT[0].v}]; tekan.kait=1; }
   else if(r==='kamar'&&tugas===1&&kena(q,s)) tekan.jenis='tutup';
@@ -389,7 +396,7 @@ cv.addEventListener('pointerdown',function(e){
 cv.addEventListener('pointermove',function(e){
   if(!tekan) return; var q=pos(e), dx=q.x-tekan.x0, dy=q.y-tekan.y0;
   if(tekan.jenis==='lihat'){ if(Math.abs(dx)>8) tekan.geser=true; panTuju=klem(tekan.pan0-dx,0,PW-W); }
-  else if(tekan.jenis==='keset'){ keset=klem(tekan.k0-dx/(.17*PW),0,1); if(Math.random()<.2) SFX.geser(); if(keset>=.95) kesetSelesai(); }
+  else if(tekan.jenis==='keset'){ if(Math.abs(dx)>4) kesetArah=dx<0?1:-1; keset=klem(tekan.k0+Math.abs(dx)/Math.min(.17*PW,130),0,1); if(Math.random()<.2) SFX.geser(); if(keset>=.95) kesetSelesai(); }
   else if(tekan.jenis==='lampu'){ var uv=keUV(q.x,q.y); lampuJejak.push(uv);
     var k=LAMPU_KAIT[tekan.kait]; if(k&&Math.hypot(q.x-X(k.u),q.y-Y(k.v))<S()*.07){ tekan.kait++; tone(500+tekan.kait*110,.12,{type:'sine',vol:.1}); buzz(8);
       if(tekan.kait>=LAMPU_KAIT.length) lampuSelesai(); } }
@@ -494,7 +501,7 @@ $('#tblMulai').addEventListener('click',function(){ ac(); MU.play(); SFX.ketuk()
 /* jembatan uji (baca saja). Tanpa foto, ruang tamu langsung ke catatan. */
 window.__fv=function(){ var s=sasaran(); return { ruang:RUANG[ri], tugas:tugas, game:game, pan:pan, panTuju:panTuju, PW:PW, W:W, H:H, S:S(),
   sasaran:s?{x:s.u*PW-pan,y:s.v*H,r:s.r*S(),pintu:!!s.pintu,semua:(s.semua||[]).map(function(p){ return {x:p.u*PW-pan,y:p.v*H}; })}:null,
-  keset:{x:(.55-keset*.17)*PW-pan,y:.88*H}, kait:LAMPU_KAIT.map(function(k){ return {x:k.u*PW-pan,y:k.v*H}; }), air:air,
+  keset:{x:(.55-keset*.17*kesetArah)*PW-pan,y:.88*H}, kait:LAMPU_KAIT.map(function(k){ return {x:k.u*PW-pan,y:k.v*H}; }), air:air,
   kotak:{x:.72*PW-pan,y:.6*H}, panel:!$('#tirai').hidden, pindah:pindah, cincin:cincin }; };
 }
 </script>

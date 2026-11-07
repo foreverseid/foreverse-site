@@ -132,6 +132,14 @@ img{-webkit-user-drag:none;pointer-events:none}
 .peta svg{position:absolute;inset:0;width:100%;height:100%}
 .tuas{position:absolute;width:calc(var(--u)*11);height:calc(var(--u)*11);margin:calc(var(--u)*-5.5) 0 0 calc(var(--u)*-5.5);border:0;border-radius:50%;background:var(--sinyal);color:var(--ink);font:700 calc(var(--u)*5) var(--sans);box-shadow:0 3px 0 #9a7616,0 0 0 calc(var(--u)*1.2) rgba(242,193,78,.25);cursor:pointer;transition:transform .2s;display:grid;place-items:center;z-index:3}
 .tuas:active{transform:translateY(2px)}
+.tuas{overflow:visible}
+.tuas .tuas-gagang{position:absolute;left:50%;bottom:50%;width:calc(var(--u)*1.4);height:calc(var(--u)*7);margin-left:calc(var(--u)*-.7);background:#3a2f22;border-radius:9px;transform-origin:50% 100%;transition:transform .25s}
+.tuas .tuas-gagang i{position:absolute;top:calc(var(--u)*-1.6);left:50%;width:calc(var(--u)*3.4);height:calc(var(--u)*3.4);margin-left:calc(var(--u)*-1.7);border-radius:50%;background:#d9534f;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}
+.tuas .tuas-arah{position:relative;z-index:1;font-size:calc(var(--u)*4.4)}
+.tuas small{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:calc(var(--u)*1.4);white-space:nowrap;font:700 calc(var(--u)*2.9) var(--sans);padding:calc(var(--u)*.5) calc(var(--u)*1.6);border-radius:99px;letter-spacing:.02em}
+.tuas.ke-st small{background:#5cb85c;color:#fff}
+.tuas.ke-bu small{background:#d9534f;color:#fff}
+.tuas.ke-st .tuas-gagang i{background:#5cb85c}
 .tuas.kunci{opacity:.35;pointer-events:none}
 .kartu-kenang{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);width:min(84%,calc(var(--u)*80));background:var(--krem);border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*4);box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.35s;z-index:5}
 .kartu-kenang.tampil{opacity:1;transform:translate(-50%,-50%) scale(1)}
@@ -453,7 +461,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 /* ═ 1 · gerbang tiket ═ */
 (function(){
   var k=$('#karcis'), celah=$('#celah'), beres=false;
-  MASUK[0]=function(){ petunjuk('Kereta terakhir malam ini. <b>Masukkan karcisnya ke celah gerbang.</b>'); };
+  MASUK[0]=function(){ petunjuk('Ini kereta terakhir malam ini. <b>Masukkan karcisnya ke gerbang.</b>'); };
   bawa(k,{
     boleh:function(){ return !beres; },
     move:function(){ k.style.transform='rotate(-8deg) scale(.8)'; },
@@ -487,8 +495,9 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     var bump=pt(p+W*.5,-Q*.8*s); var bp=document.createElementNS(NS,'circle'); bp.setAttribute('cx',bump[0]); bp.setAttribute('cy',bump[1]); bp.setAttribute('r',2.2); bp.setAttribute('fill','#d9534f'); svg.appendChild(bp);
     teks(p+W*.5,-Q*.8*s+(lebar?(s>0?-4:7):0)+(lebar?0:-0),'buntu',3.6,'#d9534f',lebar?'middle':(s>0?'end':'start')).setAttribute('dx',lebar?0:(s>0?-4:4));
     var stasiunPos=pt(p+W*.5,Q*s); var kot=document.createElementNS(NS,'rect'); kot.setAttribute('x',stasiunPos[0]-5); kot.setAttribute('y',stasiunPos[1]-5); kot.setAttribute('width',10); kot.setAttribute('height',10); kot.setAttribute('rx',2); kot.setAttribute('fill','#F2C14E'); svg.appendChild(kot);
-    var lbl=teks(p+W*.5,Q*s+(lebar?(s>0?13:-9):0),ST[k].nama.toUpperCase(),4.2,'#F2E7C9',lebar?'middle':(s>0?'end':'start'));
-    if(!lebar){ lbl.setAttribute('dx',s>0?-8:8); lbl.setAttribute('dy',1.5); }
+    var lbl=teks(p+W*.5,Q*s+(lebar?(s>0?13:-9):0),ST[k].nama.toUpperCase(),4.2,'#F2E7C9','middle');
+    if(!lebar) lbl.setAttribute('dy',11);
+    lbl.setAttribute('stroke','#232640'); lbl.setAttribute('stroke-width',2.4); lbl.setAttribute('paint-order','stroke'); lbl.setAttribute('stroke-linejoin','round');
     var tu=el('button','tuas'); tu.type='button'; var tp=pt(p-5,11); tu.style.left=(tp[0]/(lebar?150:92)*100)+'%'; tu.style.top=(tp[1]/(lebar?92:150)*100)+'%'; peta.appendChild(tu); noMenu(tu);
     var j={p:p,s:s,st:eSt,bu:eBu,tuas:tu,arah:'bu',kunci:false,lewat:false};
     (function(j){ tu.addEventListener('click',function(){ if(j.kunci) return; j.arah=j.arah==='st'?'bu':'st'; SFX.klik(); gambar(j); }); })(j);
@@ -497,7 +506,9 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   teks(lebar?AKHIR+2:AKHIR,lebar?-SISI*(n%2?1:-1)*12:0,'TERAKHIR',4,'#F2C14E',lebar?'end':'middle').setAttribute('dy',lebar?0:6);
   function gambar(j){ var aktif=j.arah==='st'?j.st:j.bu, mati=j.arah==='st'?j.bu:j.st;
     aktif.setAttribute('stroke','#F2C14E'); aktif.setAttribute('stroke-width',2.8); mati.setAttribute('stroke','#5d6078'); mati.setAttribute('stroke-width',1.6);
-    var q=j.arah==='st'?j.s:-j.s; j.tuas.textContent=lebar?(q>0?'↓':'↑'):(q>0?'→':'←'); }
+    var q=j.arah==='st'?j.s:-j.s, ke=j.arah==='st';
+    j.tuas.classList.toggle('ke-st',ke); j.tuas.classList.toggle('ke-bu',!ke);
+    j.tuas.innerHTML='<span class="tuas-gagang" style="transform:rotate('+(lebar?(q>0?150:30):(q>0?40:-40))+'deg)"><i></i></span><span class="tuas-arah">'+(lebar?(q>0?'↓':'↑'):(q>0?'→':'←'))+'</span><small>'+(ke?'ke stasiun':'ke buntu')+'</small>'; }
   var kereta=document.createElementNS(NS,'g'); kereta.innerHTML='<rect x="-6" y="-2.6" width="12" height="5.2" rx="2.2" fill="#EFE6D2" stroke="#7A2E3A" stroke-width="1.2"/><circle cx="4.4" cy="0" r="1" fill="#F2C14E"/>'; svg.appendChild(kereta);
   function taruh(path,l){ var a=path.getPointAtLength(l), b=path.getPointAtLength(Math.min(path.getTotalLength(),l+.5)), c=path.getPointAtLength(Math.max(0,l-.5)); var ang=Math.atan2(b.y-c.y,b.x-c.x)*180/Math.PI; kereta.setAttribute('transform','translate('+a.x+' '+a.y+') rotate('+ang+')'); }
   var V=16, seg=null, len=0, pos=0, arahJalan=1, k=-1, berhenti=0, mode='jalan', diSinggah=false;
@@ -510,7 +521,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     else if(seg){
       pos+=V*dt*arahJalan;
       if(mode==='jalan' && arahJalan>0 && pos>=len){ pos=len; ujungSeg(); }
-      else if(mode==='mundur' && pos<=0){ pos=0; mode='tunggu'; berhenti=2.6; petunjuk('Kereta mundur ke wesel. <b>Pindahkan tuasnya</b> ke jalur yang menyala ke stasiun.'); J[k].kunci=false; J[k].tuas.classList.remove('kunci'); }
+      else if(mode==='mundur' && pos<=0){ pos=0; mode='tunggu'; berhenti=2.6; petunjuk('Keretanya mundur lagi. <b>Ketuk tuasnya</b> sampai tulisannya <b>ke stasiun</b>.'); J[k].kunci=false; J[k].tuas.classList.remove('kunci'); }
       else if(mode==='jalan' && seg===(J[k]&&J[k].st) && !diSinggah && pos>=len*.5){ diSinggah=true; berhenti=3.4; kenang(k); mode='singgah'; }
       if(seg) taruh(seg,Math.max(0,Math.min(len,pos)));
     }
@@ -518,16 +529,16 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   }
   function ujungSeg(){
     if(seg===awal || (J[k] && seg===J[k].st)){ k++; if(k>=n){ seg=null; tiba(); return; } masukWesel(); return; }
-    if(J[k] && seg===J[k].bu){ SFX.klakson(); buzz(60); petunjuk('Buntu! Jalurnya salah.'); mode='mundur'; arahJalan=-1; berhenti=.8; }
+    if(J[k] && seg===J[k].bu){ SFX.klakson(); buzz(60); petunjuk('Yah, jalurnya buntu.'); mode='mundur'; arahJalan=-1; berhenti=.8; }
   }
   function masukWesel(){ var j=J[k]; j.kunci=true; j.tuas.classList.add('kunci'); mulaiSeg(j.arah==='st'?j.st:j.bu); mode='jalan'; SFX.rel(); }
   function lanjutkan(){
-    if(mode==='singgah'){ $('#kenang').classList.remove('tampil'); mode='jalan'; var sisa=n-k-1; petunjuk(sisa?'Kereta jalan lagi. <b>Atur wesel berikutnya</b> sebelum keretanya sampai.':'Lanjut ke stasiun terakhir…'); return; }
+    if(mode==='singgah'){ $('#kenang').classList.remove('tampil'); mode='jalan'; var sisa=n-k-1; petunjuk(sisa?'Keretanya jalan lagi. <b>Atur tuas berikutnya</b> sebelum keretanya sampai.':'Lanjut ke stasiun terakhir…'); return; }
     if(mode==='mundur'){ return; }
     if(mode==='tunggu'){ masukWesel(); return; }
   }
   function tiba(){ SFX.menang(); petunjuk('Sampai di Stasiun Terakhir.'); setTimeout(function(){ lanjut(berikut,'Duduk di dekat jendela'); },1400); }
-  MASUK[1]=function(){ taruh(awal,0); petunjuk('Kereta singgah di tempat-tempat kita. <b>Ketuk tuas kuning</b> supaya jalurnya mengarah ke stasiun, bukan ke buntu.');
+  MASUK[1]=function(){ taruh(awal,0); petunjuk('Keretanya akan mampir ke tempat-tempat kita. <b>Ketuk tuas kuning</b> sampai tulisannya <b>ke stasiun</b>. Jalur yang menyala itulah yang dilewati kereta.');
     setTimeout(function(){ mulaiSeg(awal); mode='jalan'; if(!jalanLoop){ jalanLoop=true; lalu=performance.now(); requestAnimationFrame(loop); } },2600); };
 })();
 
@@ -536,7 +547,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   if(!FOTO.length) return;
   var krey=$('#krey'), jen=$('#jendela'), img=$('#jendelaImg'), idx=0, h=100, h0=100, buka=false;
   function muat(){ img.classList.remove('tampil'); pasFoto(img,FOTO[idx]); jen.classList.toggle('rebah',FOTO[idx].bentuk==='R'); $('#stiker').classList.remove('tampil'); buka=false; krey.classList.add('jalan'); krey.style.setProperty('--h','100%'); h=100; }
-  MASUK[2]=function(){ muat(); petunjuk('Di luar jendela ada yang ingin kutunjukkan. <b>Tarik kreynya ke atas.</b>'); };
+  MASUK[2]=function(){ muat(); petunjuk('Coba lihat ke luar jendela. <b>Tarik kerainya ke atas.</b>'); };
   seret(krey,{
     boleh:function(){ return !buka; },
     down:function(){ krey.classList.remove('jalan'); h0=h; },
@@ -544,7 +555,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     up:function(){ krey.classList.add('jalan');
       if(h<35){ buka=true; h=4; krey.style.setProperty('--h','4%'); img.classList.add('tampil'); SFX.kertas();
         var st=$('#stiker'); st.innerHTML=''; st.appendChild(el('small',null,'DI LUAR JENDELA · '+(idx+1)+'/'+FOTO.length)); st.appendChild(document.createTextNode(FOTO[idx].caption||' ')); st.classList.add('tampil');
-        if(idx<FOTO.length-1) setTimeout(function(){ idx++; laju=5; SFX.rel(); setTimeout(function(){ laju=.25; },1200); muat(); petunjuk('Kereta melaju. <b>Tarik lagi kreynya.</b>'); },3000);
+        if(idx<FOTO.length-1) setTimeout(function(){ idx++; laju=5; SFX.rel(); setTimeout(function(){ laju=.25; },1200); muat(); petunjuk('<b>Tarik lagi kerainya.</b>'); },3000);
         else setTimeout(function(){ lanjut(berikut,'Dengarkan pengumuman'); },2000);
       } else { h=100; krey.style.setProperty('--h','100%'); img.classList.remove('tampil'); if(h0-h<4) kedip(); } }
   });
@@ -558,7 +569,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   daftar.forEach(function(t){ peng.appendChild(el('p',null,t)); });
   var ttd=el('div','ttd',''+PENGIRIM+', dari peron sebelah'); peng.appendChild(ttd);
   function balik(){ $$('i',flap).forEach(function(e,n){ if(e.dataset.c===' ') return; var putar=0; var t=setInterval(function(){ putar++; e.textContent=HURUF[Math.floor(Math.random()*26)]; if(putar>6+n){ clearInterval(t); e.textContent=e.dataset.c; tone(2400,.015,{type:'square',vol:.03}); } },55); }); }
-  MASUK[3]=function(){ setTimeout(balik,500); petunjuk('Ada pengumuman untukmu. <b>Ketuk pengeras suaranya.</b>'); };
+  MASUK[3]=function(){ setTimeout(balik,500); petunjuk('Ada pengumuman buat kamu. <b>Ketuk pengeras suaranya.</b>'); };
   sp.addEventListener('click',function(){
     if(sp.disabled) return; sp.disabled=true; sp.classList.add('bunyi'); SFX.dingdong(); duck(true);
     setTimeout(function(){ duck(false); sp.classList.remove('bunyi'); $$('p',peng)[i].classList.add('tampil'); i++;
@@ -574,7 +585,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   var area=$('#lambai'), tangan=$('#tangan'), hit=0, arah=0, ujung=0, beres=false;
   $('#penutupTeks').textContent=String(D.penutup||'').trim()||'Semoga perjalananmu baik, ke mana pun arahnya.';
   function tulis(){ $('#lambaiHitung').textContent=beres?'':'lambaian '+hit+' / 3'; }
-  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang berbeda. <b>Lambaikan tangan</b>, geser ke kiri dan kanan.'); };
+  MASUK[4]=function(){ tulis(); petunjuk('Kereta kita berangkat ke arah yang beda. <b>Lambaikan tangan</b> dengan menggeser ke kiri dan kanan.'); };
   seret(area,{
     boleh:function(){ return !beres; },
     down:function(e){ ujung=e.clientX; arah=0; },
