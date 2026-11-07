@@ -17,6 +17,7 @@ const TEMA = {
   "langit-harapan": { nama: "Langit Harapan", demo: "/langit-harapan-demo.html", ringkas: "Hangat dan lembut: galeri kenangan, kuis seberapa kenal, bintang harapan, lalu ditutup surat senja." },
   "peta-perjalanan": { nama: "Peta Perjalanan", demo: "/peta-perjalanan-demo.html", ringkas: "Peta yang digulung dibuka, rute kalian disusun, dan foto disingkap lewat teropong. Rutenya bertambah panjang tiap tahun." },
   "rekonstruksi": { nama: "Rekonstruksi Hari Pertama", demo: "/rekonstruksi-demo.html", ringkas: "Hari pertama kalian tinggal sketsa pensil. Dia mengumpulkan bukti dan menyusun jamnya sampai harinya berwarna lagi." },
+  "pemutaran-perdana": { nama: "Pemutaran Perdana", demo: "/pemutaran-perdana-demo.html", ringkas: "Kisah kalian diputar sebagai film untuk satu penonton: tiket disobek, kursi dicari dengan senter, gulungan film diputar sampai foto-foto tayang, lalu kredit film bergulir." },
   "zona-waktu": { nama: "Dua Jendela", demo: "/zona-waktu-demo.html", ringkas: "Layar terbelah dua kota dengan jam aslinya masing-masing, sampai dua kamar itu jadi satu." },
   "graduation-benih": { nama: "Benih & Pohon Cita-Cita", demo: "/graduation-benih-demo.html", ringkas: "Kelulusan sebagai benih yang baru ditanam: disiram, dirawat, tumbuh satu lingkar tahun." },
   "lewat-duluan": { nama: "Dia Lewat Sini Duluan", demo: "/lewat-duluan-demo.html", ringkas: "Satu hari biasa yang dijalani pakai joystick, dan di tiap tempat ternyata kamu sudah lewat duluan." },
@@ -57,7 +58,7 @@ export const MOMEN = {
     deskripsi: "Kado anniversary digital: surat interaktif tentang perjalanan kalian, lengkap dengan foto, tanggal jadian, dan pesan pribadi.",
     h1: "Untuk hari jadi kalian, ceritakan ulang perjalanannya.",
     lede: "Tanggal jadian, tempat-tempat yang pernah kalian datangi, foto-foto yang cuma kalian yang paham. Semuanya dirangkai jadi satu surat yang dia jelajahi sendiri.",
-    tema: ["peta-perjalanan", "rekonstruksi"],
+    tema: ["peta-perjalanan", "rekonstruksi", "pemutaran-perdana"],
     ide: [
       "Sudah sekian hari, dan aku masih memilih kamu setiap paginya.",
       "Terima kasih sudah bertahan di hari-hari yang tidak gampang. Ayo lanjut jalan.",
