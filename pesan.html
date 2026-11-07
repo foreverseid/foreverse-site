@@ -453,9 +453,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "bait":              { nama:"Bait",              nfoto:4, foto:"TTRR", mesin:"/surat.html",             momen:"birthday" },
     "kado-riang":        { nama:"Kado Riang",        nfoto:5, foto:"TTTTR", mesin:"/kado-riang.html",        momen:"birthday" },
     "langit-harapan":    { nama:"Langit Harapan",    nfoto:4, foto:"TTTR", mesin:"/langit-harapan.html",    momen:"birthday" },
-    "peta-perjalanan":   { nama:"Peta Perjalanan",   nfoto:3, mesin:"/peta-perjalanan.html",   momen:"anniversary" },
+    "kapal-botol":       { nama:"Kapal dalam Botol", nfoto:4, foto:"RTRT", mesin:"/kapal-botol.html", momen:"anniversary" },
     "zona-waktu":        { nama:"Dua Jendela",       nfoto:4, foto:"TTRR", mesin:"/zona-waktu.html",        momen:"ldr" },
-    "graduation-benih":  { nama:"Benih & Pohon Cita-Cita", nfoto:3, mesin:"/graduation-benih.html", momen:"graduation" },
+    "loker-terakhir":    { nama:"Loker Terakhir", nfoto:4, foto:"TRTR", mesin:"/loker-terakhir.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:4, foto:"TTRR", mesin:"/confess-kunang.html",  momen:"confess" },
     "getwell-365":       { nama:"36,5",                  nfoto:4, foto:"TTRR", mesin:"/getwell-365.html",     momen:"getwell" },
     "pasar-malam":       { nama:"Pasar Malam",           nfoto:4, foto:"TRTR", mesin:"/pasar-malam.html",     momen:"askout" },
@@ -488,6 +488,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     return KOTA_LDR.map(function(k){ return '<option value="'+k[0]+'"'+(k[0]===selected?' selected':'')+'>'+k[1]+'</option>'; }).join('');
   }
   var TEMA = (new URLSearchParams(location.search).get("tema")) || "bait";
+  TEMA = { "peta-perjalanan": "kapal-botol", "graduation-benih": "loker-terakhir" }[TEMA] || TEMA; /* tema lama yang berganti nama */
   if(!TEMA_INFO[TEMA]) TEMA = "bait";
   var NFOTO = (TEMA_INFO[TEMA].foto || "").length || TEMA_INFO[TEMA].nfoto;
   var MOMEN_GRUP = TEMA_INFO[TEMA].momen;
@@ -813,9 +814,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<div class="hitung"><span></span><span class="angka"></span></div>' +
           '<p class="galat">Harapan '+(h+1)+' belum diisi.</p></div>';
       }
-    } else if(tema === "peta-perjalanan"){
+    } else if(tema === "kapal-botol"){
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
-        '<p class="jelas">Disembunyikan di "kompas yang mengunci", dan baru terbaca setelah jarumnya diputar pas ke utara.</p>' +
+        '<p class="jelas">Ditulis dengan "tinta jeruk nipis", dan baru terbaca setelah dia menghangatkannya dengan lentera.</p>' +
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Destinasi berikutnya, kamu yang pilih."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
@@ -845,9 +846,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<div class="baris" data-f="penutup"><label for="penutup">Kalimat terakhir (opsional)</label>' +
         '<textarea id="penutup" maxlength="120" style="min-height:70px" placeholder="Jarak ini sementara. Aku di sini, nungguin."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
-    } else if(tema === "graduation-benih"){
+    } else if(tema === "loker-terakhir"){
       html = '<h2><span class="n">5</span> Pesan rahasia</h2>' +
-        '<p class="jelas">Disembunyikan di "buah yang dipetik", dan baru terbaca setelah buahnya ditarik lepas dari rantingnya.</p>' +
+        '<p class="jelas">Tertulis di balik toga, dan baru terbaca setelah dia memindahkan kuncirnya dari kanan ke kiri.</p>' +
         '<div class="baris" data-f="rahasia"><label for="rahasia">Pesan rahasianya</label>' +
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Bangga banget sama kamu. Lanjut terus, ya."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';

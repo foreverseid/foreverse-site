@@ -84,9 +84,9 @@ const TEMA_SKEMA = {
   "bait":              { nfoto: 4, foto: "TTRR", momen: "birthday" },
   "kado-riang":        { nfoto: 5, foto: "TTTTR", momen: "birthday" },
   "langit-harapan":    { nfoto: 4, foto: "TTTR", momen: "birthday" },
-  "peta-perjalanan":   { nfoto: 3, momen: "anniversary" },
+  "kapal-botol":       { nfoto: 4, foto: "RTRT", momen: "anniversary" },
   "zona-waktu":        { nfoto: 4, foto: "TTRR", momen: "ldr" },
-  "graduation-benih":  { nfoto: 3, momen: "graduation" },
+  "loker-terakhir":    { nfoto: 4, foto: "TRTR", momen: "graduation" },
   "confess-kunang":    { nfoto: 4, foto: "TTRR", momen: "confess" },
   "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
   "pasar-malam":       { nfoto: 4, foto: "TRTR", momen: "askout" },
@@ -907,7 +907,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.penutup = teks(p.penutup, BATAS.penutup);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else {
-    /* bait, peta-perjalanan & graduation-benih: satu pesan rahasia,
+    /* bait, kapal-botol & loker-terakhir: satu pesan rahasia,
        diungkap di balik lapisan interaktif tema masing-masing. */
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);

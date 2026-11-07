@@ -157,6 +157,12 @@ async function tangani(request, env, ctx) {
         return Response.redirect(url.toString(), 301);
       }
 
+      /* ── tema yang dirombak & berganti nama: alamat lama dialihkan ── */
+      const PINDAH_TEMA = { "peta-perjalanan": "kapal-botol", "graduation-benih": "loker-terakhir" };
+      const lamaBerkas = p.match(/^\/(peta-perjalanan|graduation-benih)(-demo)?(\.html)?$/);
+      if (lamaBerkas)
+        return Response.redirect(url.origin + "/" + PINDAH_TEMA[lamaBerkas[1]] + (lamaBerkas[2] || "") + ".html", 301);
+
       /* ── halaman beranda yang terpisah: satu berkas index.html ── */
       if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "index", request);
@@ -192,8 +198,8 @@ async function tangani(request, env, ctx) {
 
       /* ── alamat pendek: /s/<kode> ──
          Semua mesin tema (surat.html = Bait, kado-riang.html,
-         langit-harapan.html, peta-perjalanan.html, zona-waktu.html,
-         graduation-benih.html, confess-kunang.html, getwell-365.html,
+         langit-harapan.html, kapal-botol.html, zona-waktu.html,
+         loker-terakhir.html, confess-kunang.html, getwell-365.html,
          pasar-malam.html, lewat-duluan.html, kasus-pengirim.html, rumah-contoh.html,
          kotak-musik.html, garis-finis.html, stasiun-terakhir.html, rumah-menyala.html, hitung-mundur.html, pabrik-cokelat.html, malam-takbiran.html, pemutaran-perdana.html,
          rekonstruksi.html)
@@ -235,9 +241,9 @@ async function tangani(request, env, ctx) {
         const tema = baris.tema;
         const nama = tema === "kado-riang" ? "kado-riang"
           : tema === "langit-harapan" ? "langit-harapan"
-          : tema === "peta-perjalanan" ? "peta-perjalanan"
+          : (tema === "kapal-botol" || tema === "peta-perjalanan") ? "kapal-botol"
           : tema === "zona-waktu" ? "zona-waktu"
-          : tema === "graduation-benih" ? "graduation-benih"
+          : (tema === "loker-terakhir" || tema === "graduation-benih") ? "loker-terakhir"
           : tema === "confess-kunang" ? "confess-kunang"
           : tema === "getwell-365" ? "getwell-365"
           : tema === "pasar-malam" ? "pasar-malam"
