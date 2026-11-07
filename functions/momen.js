@@ -12,27 +12,27 @@
    ══════════════════════════════════════════════════════════════════ */
 
 const TEMA = {
-  "bait": { nama: "Bait", demo: "/bait-demo.html", ringkas: "Satu hari menerima pos: kotak pos dibuka, amplop dirobek pisau surat, perangko umur baru ditempel, kertas tipis diterawang, dan paket balasan ditimbang pas umurnya." },
-  "kado-riang": { nama: "Kado Riang", demo: "/kado-riang-demo.html", ringkas: "Riang dan ramai: tiket disobek, lilin umur baru dinyalakan, dan kupon ulang tahun bisa ditukar langsung." },
-  "langit-harapan": { nama: "Langit Harapan", demo: "/langit-harapan-demo.html", ringkas: "Hangat dan lembut: galeri kenangan, kuis seberapa kenal, bintang harapan, lalu ditutup surat senja." },
-  "kapal-botol": { nama: "Kapal dalam Botol", demo: "/kapal-botol-demo.html", ringkas: "Kapal kecil yang belum selesai dirakit: cabut gabusnya, masukkan kapal lewat leher botol, tarik benang sampai layar-layarnya terbuka jadi foto kalian, ikat satu simpul untuk tiap tahun bersama." },
-  "rekonstruksi": { nama: "Rekonstruksi Hari Pertama", demo: "/rekonstruksi-demo.html", ringkas: "Hari pertama kalian tinggal sketsa pensil. Dia mengumpulkan bukti dan menyusun jamnya sampai harinya berwarna lagi." },
-  "pemutaran-perdana": { nama: "Pemutaran Perdana", demo: "/pemutaran-perdana-demo.html", ringkas: "Kisah kalian diputar sebagai film untuk satu penonton: tiket disobek, kursi dicari dengan senter, gulungan film diputar sampai foto-foto tayang, lalu kredit film bergulir." },
-  "zona-waktu": { nama: "Dua Jendela", demo: "/zona-waktu-demo.html", ringkas: "Layar terbelah dua kota dengan jam aslinya masing-masing, sampai dua kamar itu jadi satu." },
-  "loker-terakhir": { nama: "Loker Terakhir", demo: "/loker-terakhir-demo.html", ringkas: "Hari terakhir sebelum loker dikembalikan: kode gemboknya tanggal wisudanya, foto-foto tertempel di balik pintu, barang dikemasi sambil menemukan suratmu, kuncir toga dipindah, lalu toganya dilempar." },
-  "lewat-duluan": { nama: "Dia Lewat Sini Duluan", demo: "/lewat-duluan-demo.html", ringkas: "Satu hari biasa yang dijalani pakai joystick, dan di tiap tempat ternyata kamu sudah lewat duluan." },
-  "pasar-malam": { nama: "Pasar Malam", demo: "/pasar-malam-demo.html", ringkas: "Ajakan jalan berbentuk pasar malam satu malam: lempar gelang, gula kapas, bianglala, dan papan lampu untuk menjawab." },
-  "confess-kunang": { nama: "Toples Kunang-Kunang", demo: "/confess-kunang-demo.html", ringkas: "Kunang-kunang di toples membawa hal-hal kecil yang kamu simpan tentang dia, sampai pengakuannya terbang jadi hati." },
-  "kasus-pengirim": { nama: "Kasus Pengirim Tanpa Nama", demo: "/kasus-pengirim-demo.html", ringkas: "Dia jadi detektif di kafe langganannya, mengumpulkan bukti sampai ketahuan siapa pengirim kertas tanpa nama itu." },
-  "getwell-365": { nama: "36,5", demo: "/getwell-365-demo.html", ringkas: "Satu kamar yang panas dan buram. Tiap hal kecil yang kamu lakukan menurunkan suhunya sampai 36,5." },
-  "rumah-contoh": { nama: "Rumah Contoh", demo: "/rumah-contoh-demo.html", ringkas: "Tur rumah dari sudut pandang orang pertama. Tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin." },
-  "kotak-musik": { nama: "Kotak Musik Diservis", demo: "/kotak-musik-demo.html", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya: tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu lagunya bunyi lagi." },
-  "garis-finis": { nama: "Garis Finis", demo: "/garis-finis-demo.html", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
-  "stasiun-terakhir": { nama: "Stasiun Terakhir", demo: "/stasiun-terakhir-demo.html", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
-  "rumah-menyala": { nama: "Rumah yang Menyala", demo: "/rumah-menyala-demo.html", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
-  "hitung-mundur": { nama: "Hitung Mundur di Atap", demo: "/hitung-mundur-demo.html", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
-  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", demo: "/pabrik-cokelat-demo.html", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." },
-  "malam-takbiran": { nama: "Malam Takbiran", demo: "/malam-takbiran-demo.html", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
+  "bait": { nama: "Bait", ringkas: "Satu hari menerima pos: kotak pos dibuka, amplop dirobek pisau surat, perangko umur baru ditempel, kertas tipis diterawang, dan paket balasan ditimbang pas umurnya." },
+  "kado-riang": { nama: "Kado Riang", ringkas: "Riang dan ramai: tiket disobek, lilin umur baru dinyalakan, dan kupon ulang tahun bisa ditukar langsung." },
+  "langit-harapan": { nama: "Langit Harapan", ringkas: "Hangat dan lembut: galeri kenangan, kuis seberapa kenal, bintang harapan, lalu ditutup surat senja." },
+  "kapal-botol": { nama: "Kapal dalam Botol", ringkas: "Kapal kecil yang belum selesai dirakit: cabut gabusnya, masukkan kapal lewat leher botol, tarik benang sampai layar-layarnya terbuka jadi foto kalian, ikat satu simpul untuk tiap tahun bersama." },
+  "rekonstruksi": { nama: "Rekonstruksi Hari Pertama", ringkas: "Hari pertama kalian tinggal sketsa pensil. Dia mengumpulkan bukti dan menyusun jamnya sampai harinya berwarna lagi." },
+  "pemutaran-perdana": { nama: "Pemutaran Perdana", ringkas: "Kisah kalian diputar sebagai film untuk satu penonton: tiket disobek, kursi dicari dengan senter, gulungan film diputar sampai foto-foto tayang, lalu kredit film bergulir." },
+  "zona-waktu": { nama: "Dua Jendela", ringkas: "Layar terbelah dua kota dengan jam aslinya masing-masing, sampai dua kamar itu jadi satu." },
+  "loker-terakhir": { nama: "Loker Terakhir", ringkas: "Hari terakhir sebelum loker dikembalikan: kode gemboknya tanggal wisudanya, foto-foto tertempel di balik pintu, barang dikemasi sambil menemukan suratmu, kuncir toga dipindah, lalu toganya dilempar." },
+  "lewat-duluan": { nama: "Dia Lewat Sini Duluan", ringkas: "Satu hari biasa yang dijalani pakai joystick, dan di tiap tempat ternyata kamu sudah lewat duluan." },
+  "pasar-malam": { nama: "Pasar Malam", ringkas: "Ajakan jalan berbentuk pasar malam satu malam: lempar gelang, gula kapas, bianglala, dan papan lampu untuk menjawab." },
+  "confess-kunang": { nama: "Toples Kunang-Kunang", ringkas: "Kunang-kunang di toples membawa hal-hal kecil yang kamu simpan tentang dia, sampai pengakuannya terbang jadi hati." },
+  "kasus-pengirim": { nama: "Kasus Pengirim Tanpa Nama", ringkas: "Dia jadi detektif di kafe langganannya, mengumpulkan bukti sampai ketahuan siapa pengirim kertas tanpa nama itu." },
+  "getwell-365": { nama: "36,5", ringkas: "Satu kamar yang panas dan buram. Tiap hal kecil yang kamu lakukan menurunkan suhunya sampai 36,5." },
+  "rumah-contoh": { nama: "Rumah Contoh", ringkas: "Tur rumah dari sudut pandang orang pertama. Tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin." },
+  "kotak-musik": { nama: "Kotak Musik Diservis", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya: tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu lagunya bunyi lagi." },
+  "garis-finis": { nama: "Garis Finis", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
+  "stasiun-terakhir": { nama: "Stasiun Terakhir", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
+  "rumah-menyala": { nama: "Rumah yang Menyala", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
+  "hitung-mundur": { nama: "Hitung Mundur di Atap", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
+  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." },
+  "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
 };
 
 export const MOMEN = {
@@ -351,9 +351,15 @@ export function halamanMomen(slug, temaMati) {
 body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,5vw,40px)}
-header{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
-.merk{display:flex;align-items:center;gap:9px;text-decoration:none;font-weight:600}
-.merk img{width:24px;height:24px}
+header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--stone)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:18px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--serif);font-size:22px;letter-spacing:-.01em}
+.brand img{height:26px;width:auto}
+.nav{display:none;gap:26px}.nav a{font-size:14.5px;text-decoration:none;color:var(--soft);font-weight:500}.nav a:hover{color:var(--ink)}
+.nav-m{display:flex;gap:6px;overflow-x:auto;padding:0 clamp(16px,5vw,40px) 10px;scrollbar-width:none}.nav-m::-webkit-scrollbar{display:none}
+.nav-m a{flex:none;font-size:12.5px;text-decoration:none;color:var(--soft);padding:6px 11px;border-radius:100px;border:1px solid var(--stone);background:var(--paper)}
+@media(min-width:900px){.nav{display:flex}.nav-m{display:none}}
+@media(max-width:699px){.bar{height:56px}.brand{font-size:19px}.brand img{height:22px}}
 .btn{display:inline-flex;align-items:center;justify-content:center;font-weight:600;text-decoration:none;padding:13px 22px;border-radius:999px;background:var(--violet);color:#fff}
 .btn.garis{background:var(--paper);color:var(--ink);border:1px solid var(--stone)}
 .btn.kecil{padding:9px 16px;font-size:.9rem}
@@ -366,7 +372,10 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,4vw,2.1rem);l
 section{padding:clamp(32px,6vw,56px) 0}
 .segera{background:#fff;border:1.5px dashed #3B3168;border-radius:18px;padding:22px}.segera .lbl{display:inline-block;background:#3B3168;color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;margin-bottom:10px}.segera p{margin:.4em 0 1em}
 .tema{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.kartu{background:var(--paper);border:1px solid var(--stone);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.kartu{background:var(--paper);border:1px solid var(--stone);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.kartu .cov{display:block;aspect-ratio:1/1;background:#F5F3EE center/cover no-repeat}
+@media(max-width:699px){.kartu .cov{aspect-ratio:4/3}}
+.kartu .isi{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
 .kartu h3{font-family:var(--serif);font-weight:500;font-size:1.25rem;margin:0}
 .kartu p{margin:0;color:var(--soft);font-size:.95rem;flex:1}
 .kartu .aksi{margin-top:4px}
@@ -389,20 +398,27 @@ details p{margin:8px 0 0;color:var(--soft)}
 footer{padding:32px 0 48px;color:var(--faint);font-size:.88rem;display:flex;gap:16px;flex-wrap:wrap}
 footer a{text-decoration:none}
 </style></head><body>
+<header>
+  <div class="wrap bar">
+    <a href="/" class="brand"><img src="/foreverse-logo.png" alt=""><span>foreverse</span></a>
+    <nav class="nav" aria-label="Navigasi utama"><a href="/">Beranda</a><a href="/template">Template</a><a href="/cara-pesan">Cara pesan &amp; harga</a><a href="/faq">FAQ</a></nav>
+    <a class="btn kecil" href="/template">Pilih momen</a>
+  </div>
+  <nav class="nav-m" aria-label="Navigasi utama (HP)"><a href="/">Beranda</a><a href="/template">Template</a><a href="/cara-pesan">Cara pesan &amp; harga</a><a href="/faq">FAQ</a></nav>
+</header>
 <div class="wrap">
-<header><a class="merk" href="/"><img src="/favicon.svg" alt="">Foreverse</a><a class="btn kecil" href="/template">Lihat semua tema</a></header>
 
 <section class="hero">
   <div class="label">Surat digital yang bisa dimainkan</div>
   <h1>${esc(m.h1)}</h1>
   <p class="lede">${tema.length ? esc(m.lede) : "Temanya sedang disiapkan dan segera hadir."}</p>
-  <div class="aksi">${tema[0] ? `<a class="btn" href="/pesan?tema=${esc(tema[0])}">Buat sekarang</a><a class="btn garis" href="${esc(TEMA[tema[0]].demo)}">Coba contohnya</a>` : `<a class="btn" href="/template">Lihat tema lain</a>`}</div>
+  <div class="aksi">${tema[0] ? `<a class="btn" href="/pesan?tema=${esc(tema[0])}">Buat sekarang</a><a class="btn garis" href="/tema/${esc(tema[0])}">Lihat contohnya</a>` : `<a class="btn" href="/template">Lihat tema lain</a>`}</div>
 </section>
 
 ${tema.length ? `<section>
   <h2>${tema.length > 1 ? "Pilihan tema" : "Temanya"}</h2>
-  <div class="tema">${tema.map(t => `<article class="kartu"><h3>${esc(TEMA[t].nama)}</h3><p>${esc(TEMA[t].ringkas)}</p>
-    <div class="aksi"><a class="btn kecil" href="/pesan?tema=${esc(t)}">Pakai tema ini</a><a class="btn kecil garis" href="${esc(TEMA[t].demo)}">Coba contoh</a></div></article>`).join("")}</div>
+  <div class="tema">${tema.map(t => `<article class="kartu"><a class="cov" href="/tema/${esc(t)}" aria-label="Contoh ${esc(TEMA[t].nama)}" style="background-image:url('/cover-${esc(t)}.jpg')"></a><div class="isi"><h3>${esc(TEMA[t].nama)}</h3><p>${esc(TEMA[t].ringkas)}</p>
+    <div class="aksi"><a class="btn kecil" href="/pesan?tema=${esc(t)}">Pakai tema ini</a><a class="btn kecil garis" href="/tema/${esc(t)}">Lihat contoh</a></div></div></article>`).join("")}</div>
 </section>` : `<section>
   <div class="segera" role="status"><span class="lbl">Segera hadir</span>
   <h2>Tema untuk momen ini sedang kami siapkan</h2>
@@ -452,5 +468,6 @@ fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
   document.querySelectorAll('[data-v="harga"]').forEach(function(el){ el.textContent = h; });
 }).catch(function(){});
 </script>
+<script src="/bantuan.js" defer></script>
 </body></html>`;
 }

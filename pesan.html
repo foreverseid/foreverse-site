@@ -57,6 +57,17 @@ body{
 .duo{display:grid;grid-template-columns:1fr;gap:clamp(20px,4vw,40px)}
 @media (min-width:1000px){ .duo{grid-template-columns:minmax(0,1fr) 400px} }
 
+/* ══ wizard 4 langkah ══ */
+.wizard{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:57px;z-index:20;background:var(--cream);padding:8px 0}
+.wizard button{width:100%;display:flex;align-items:center;gap:8px;justify-content:center;font:inherit;font-size:.86rem;font-weight:600;color:var(--ink-faint);background:var(--paper);border:1px solid var(--stone);border-radius:999px;padding:8px 6px;cursor:pointer}
+.wizard .wn{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;background:var(--stone);color:var(--ink)}
+.wizard button.aktif{color:var(--ink);border-color:var(--violet)}
+.wizard button.aktif .wn,.wizard button.lewat .wn{background:var(--violet);color:#fff}
+@media (max-width:620px){ .wizard .wl{display:none} .wizard button.aktif .wl{display:inline} .wizard{grid-template-columns:auto auto auto auto;justify-content:space-between} .wizard button.aktif{padding:8px 12px} }
+form[data-langkah] [data-wz]:not(.wz-aktif){display:none!important}
+.wz-nav{display:flex;gap:10px;justify-content:space-between;margin:4px 0 16px}
+.wz-nav .tbl{flex:1}
+
 /* ══ kartu ══ */
 .blok{
   background:var(--paper);border:1px solid var(--stone);border-radius:var(--r);
@@ -239,6 +250,13 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   <div class="duo">
     <!-- ════════ kolom formulir ════════ -->
     <form id="form" novalidate>
+
+      <ol class="wizard" id="wizard" aria-label="Langkah mengisi">
+        <li><button type="button" data-ke="1"><span class="wn">1</span><span class="wl">Nama &amp; surat</span></button></li>
+        <li><button type="button" data-ke="2"><span class="wn">2</span><span class="wl">Foto</span></button></li>
+        <li><button type="button" data-ke="3"><span class="wn">3</span><span class="wl">Detail &amp; lagu</span></button></li>
+        <li><button type="button" data-ke="4"><span class="wn">4</span><span class="wl">Kunci &amp; bayar</span></button></li>
+      </ol>
 
       <section class="blok">
         <h2><span class="n">1</span> Nama kalian berdua</h2>
@@ -1554,6 +1572,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
     if(kurang.length){
       var pertama = document.querySelector(".baris.salah") || (kurang[0]==="foto" ? $("fotos") : $("blokSetuju"));
+      if(pertama) keLangkahDari(pertama);
       if(pertama) pertama.scrollIntoView({ behavior:"smooth", block:"center" });
       pesanGalat(kurang.indexOf("setuju") > -1 && kurang.length === 1
         ? "Centang dulu persetujuannya di atas, ya."
@@ -1933,6 +1952,38 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         }
       });
   }
+
+  /* ══ wizard: formulir dibagi 4 langkah (data & validasi tetap sama) ══ */
+  var WZ_NAMA = ["Nama & surat","Foto","Detail & lagu","Kunci & bayar"];
+  var bagian = Array.prototype.slice.call(document.querySelectorAll("#form > section"));
+  var PETA = [1,1,2,3,3,3,4,4,4,4];
+  bagian.forEach(function(sec, i){ sec.setAttribute("data-wz", PETA[i] || 4); });
+  function navLangkah(n){
+    var d = document.createElement("div"); d.className = "wz-nav"; d.setAttribute("data-wz", n);
+    if(n > 1) d.innerHTML += '<button type="button" class="tbl" data-ke="'+(n-1)+'">Kembali</button>';
+    d.innerHTML += '<button type="button" class="tbl tbl-utama" data-ke="'+(n+1)+'">Lanjut: '+WZ_NAMA[n]+'</button>';
+    var akhir = bagian.filter(function(s){ return +s.getAttribute("data-wz") === n; }).pop();
+    akhir.parentNode.insertBefore(d, akhir.nextSibling);
+  }
+  [1,2,3].forEach(navLangkah);
+  (function(){ var d = document.createElement("div"); d.className = "wz-nav"; d.setAttribute("data-wz", 4);
+    d.innerHTML = '<button type="button" class="tbl" data-ke="3">Kembali</button>';
+    var k = document.querySelector("#form > section.kirim"); k.parentNode.insertBefore(d, k); })();
+  var langkahIni = 1;
+  function keLangkah(n, gulir){
+    langkahIni = n; $("form").setAttribute("data-langkah", n);
+    document.querySelectorAll("#form [data-wz]").forEach(function(el){ el.classList.toggle("wz-aktif", +el.getAttribute("data-wz") === n); });
+    document.querySelectorAll("#wizard button").forEach(function(b){ var k = +b.getAttribute("data-ke");
+      b.classList.toggle("aktif", k === n); b.classList.toggle("lewat", k < n);
+      if(k === n) b.setAttribute("aria-current","step"); else b.removeAttribute("aria-current"); });
+    if(gulir) $("wizard").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+  function keLangkahDari(el){ var s = el.closest("[data-wz]"); if(s) keLangkah(+s.getAttribute("data-wz"), false); }
+  $("form").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-ke]"); if(!b) return;
+    keLangkah(+b.getAttribute("data-ke"), true);
+  });
+  keLangkah(1, false);
 })();
 </script>
 <script src="/bantuan.js" defer></script>

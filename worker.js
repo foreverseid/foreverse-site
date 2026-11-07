@@ -164,7 +164,7 @@ async function tangani(request, env, ctx) {
         return Response.redirect(url.origin + "/" + PINDAH_TEMA[lamaBerkas[1]] + (lamaBerkas[2] || "") + ".html", 301);
 
       /* ── halaman beranda yang terpisah: satu berkas index.html ── */
-      if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p))
+      if (/^\/(template|momen|contoh|cara-pesan|harga|faq)\/?$/.test(p) || /^\/tema\/[a-z0-9-]+\/?$/.test(p))
         return await ambilHalaman(env, url.origin, "index", request);
 
       /* ── halaman per momen untuk mesin pencari: /ulang-tahun, /anniversary, … ── */
