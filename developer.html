@@ -1020,12 +1020,12 @@ a.tautan:hover{text-decoration:underline}
       ? Object.keys(lagu).map(function(k){ return alur(namaLagu[k], lagu[k], totL); }).join("")
       : '<p class="catatan" style="margin:0">Belum ada surat lunas.</p>';
 
-    var f3 = lunas.filter(function(b){ return b.foto_n >= 3; }).length;
+    var f3 = lunas.filter(function(b){ return b.foto_n >= 5; }).length;
     var s3 = lunas.filter(function(b){ return b.surat_n >= 3; }).length;
     var rhs = lunas.filter(function(b){ return b.punya_rahasia; }).length;
     var smb = lunas.filter(function(b){ return b.sembunyikan_umur; }).length;
     $("rIsi").innerHTML = totL
-      ? alur("Pakai 3 foto (maksimal)", f3, totL) +
+      ? alur("Pakai 5 foto (Kado Riang)", f3, totL) +
         alur("Isi 3 paragraf surat", s3, totL) +
         alur("Menulis pesan rahasia", rhs, totL) +
         alur("Menyembunyikan umur", smb, totL)

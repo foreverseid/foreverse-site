@@ -146,6 +146,7 @@ img{display:block;max-width:100%;-webkit-user-drag:none;pointer-events:none}
 #kartu .foto{max-width:260px}
 #kartu .foto.rebah{max-width:340px}
 #kartu .foto.rebah img{aspect-ratio:4/3}
+@media (max-height:560px){ #kartu .foto{max-width:36vh} #kartu .foto.rebah{max-width:62vh} }
 #kartu .cap{font-family:var(--hand);font-size:1.4rem;text-align:center;color:#FCE6A3}
 #kartu p.par{font-family:var(--disp);font-size:1.02rem;line-height:1.6;margin:0 0 12px;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s}
 #kartu p.par.tampil{opacity:1;transform:none}
@@ -206,7 +207,7 @@ img{display:block;max-width:100%;-webkit-user-drag:none;pointer-events:none}
 /* ═══════════════════════════════════════════════════════════════
    Mesin tema Toples Kunang-Kunang × Confess.
    Urutan: 1 label segel (pembuka) · 2 tampung yang turun (game) ·
-   3 foto di tali jemuran (interaktif) · 4 pasangan nyala (game) ·
+   4 foto di tali jemuran (interaktif) · 4 pasangan nyala (game) ·
    5 surat dari cahaya (interaktif) · 6 tahan & lepas (momen khas) ·
    7 jawaban (penutup). Satu kanvas, menyesuaikan potret & mendatar.
    ═══════════════════════════════════════════════════════════════ */
@@ -286,9 +287,11 @@ function ukur(){
   L.mulut=L.dasar-L.jh;                                     // garis bibir toples
   if(!TOPLES.x||!langkahPakaiGeser()) TOPLES.x=TOPLES.tx=W/2;
   TOPLES.x=TOPLES.tx=klem(TOPLES.tx,js/2+8,W-js/2-8);
-  /* tali jemuran & tiga foto */
+  /* tali jemuran & foto */
   var pw=klem(Math.min(W*.17,H*(mendatar?.26:.15)),48,120);
-  L.pw=pw; L.tali={x0:W*.06,x1:W*.94,y:Math.max(30,H*.1)};
+  L.tali={x0:W*.06,x1:W*.94,y:Math.max(30,H*.1)};
+  pw=Math.min(pw,Math.max(48,(L.mulut-L.tali.y-62)/1.5));   // foto tidak tertutup toples
+  L.pw=pw;
   L.fotoPos=[.16,.39,.61,.84].map(function(t){ var x=W*t; return {x:x,y:taliY(x)+8}; });
   /* enam kunang-kunang pasangan */
   var kol=3, bar=2, gx=Math.min(W*.68,mendatar?W*.5:W*.8), gy=Math.min(H*.3,mendatar?H*.36:H*.26);
@@ -400,7 +403,7 @@ function langkahPakaiGeser(){ return langkah===2; }
 var TEKS={
   1:'Toplesnya masih bersegel. <b>Seret tab oranye</b> menyusuri labelnya sampai terkelupas.',
   2:'Kunang-kunangnya keluar. <b>Geser toplesnya ke kiri-kanan</b> untuk menampung yang turun.',
-  3:'Ada tiga foto di tali jemuran. <b>Ketuk tiap foto</b>, toplesnya akan meneranginya.',
+  3:'Ada foto-foto di tali jemuran. <b>Ketuk tiap foto</b>, toplesnya akan meneranginya.',
   4:'Enam kunang-kunang berkedip berpasangan. <b>Ketuk dua yang warnanya sama.</b>',
   5:'Kunang-kunangnya menulis sesuatu. <b>Ketuk toplesnya</b> untuk membaca.',
   6:'<b>Tekan dan tahan toplesnya</b> sebentar, lalu biarkan mereka terbang.',
