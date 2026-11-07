@@ -61,14 +61,14 @@
     }
   ],
   "surat": [
-    "Amira, Ramadan tahun ini terasa lebih ringan karena ada kamu yang selalu ngingetin sahur, walau kadang kamu sendiri yang telat bangun.",
-    "Kalau selama ini ada kata-kataku yang nyakitin, janji yang belum aku tepati, atau sabar yang kurang, aku minta maaf dari hati yang paling dalam.",
-    "Selamat Hari Raya Idulfitri. Semoga kita dipertemukan lagi dengan Ramadan berikutnya, dan Lebaran berikutnya kita rayakan bareng."
+    "Amira, makasih ya sudah nemenin aku sebulan ini. Yang bangunin sahur selalu kamu, padahal kamu sendiri sering hampir telat.",
+    "Kalau selama ini ada omonganku yang bikin kamu sakit hati, atau janji yang belum aku tepati, aku minta maaf ya. Aku serius.",
+    "Selamat Idulfitri, sayang. Mohon maaf lahir dan batin. Semoga tahun depan kita bisa Lebaran bareng."
   ],
   "maaf": [
-    "Maaf ya, sering telat balas chat.",
-    "Maaf kalau aku suka ngambek tidak jelas.",
-    "Maaf janji ke pantai belum juga ditepati."
+    "Maaf ya, aku sering telat balas chat.",
+    "Maaf aku suka ngambek tanpa alasan.",
+    "Maaf, janji ke pantai belum juga aku tepati."
   ],
   "waPengirim": "081234567890",
   "lagu": {
@@ -158,23 +158,20 @@ body.pagi .judul small{color:#b07a12}
 
 /* ═ 2 · menganyam ketupat (game) ═ */
 .meja-anyam{position:relative;width:calc(var(--u)*76);height:calc(var(--u)*76);display:grid;place-items:center}
-.anyaman{position:relative;width:calc(var(--u)*62);height:calc(var(--u)*62);touch-action:none;cursor:grab;transition:transform 1.4s cubic-bezier(.4,0,.2,1)}
+.anyaman{position:relative;width:calc(var(--u)*62);height:calc(var(--u)*62);touch-action:manipulation;transition:transform 1.4s cubic-bezier(.4,0,.2,1)}
 .lungsin,.tambal{position:absolute;background:linear-gradient(90deg,var(--janur2),var(--janur) 45%,var(--janur2));border-radius:3px}
 .lungsin{top:-8%;bottom:-8%;width:19%;z-index:1;box-shadow:inset 0 0 0 1px rgba(111,138,42,.5)}
-.lungsin.naik{box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 0 0 2px rgba(255,246,224,.0)}
-.tambal{height:20%;z-index:3;box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 3px 4px rgba(0,0,0,.25)}
-.pakan{position:absolute;left:-8%;height:20%;z-index:2;border-radius:3px;background:linear-gradient(180deg,#d8e48a,#b8cc58 50%,#d8e48a);box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 3px 4px rgba(0,0,0,.25);transition:width .5s}
-.pakan.seret{transition:none}
-.pakan.kusut{animation:kusut .35s}
+.lungsin{cursor:pointer;transition:transform .25s,box-shadow .25s}
+.lungsin::after{content:'';position:absolute;inset:-6px -10px}
+.lungsin.nyala{box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 0 0 3px var(--emas),0 0 18px rgba(233,185,73,.8);animation:nyalaJanur 1.2s infinite}
+@keyframes nyalaJanur{50%{box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 0 0 3px var(--emas),0 0 4px rgba(233,185,73,.3)}}
+.lungsin.naik{z-index:4;transform:translateY(calc(var(--u)*-2.2)) scaleX(1.06);box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 8px 10px rgba(0,0,0,.35)}
+.lungsin.geleng{animation:kusut .35s}
+.tambal{height:20%;z-index:3;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 3px 4px rgba(0,0,0,.25)}
+.pakan{position:absolute;pointer-events:none;left:-8%;height:20%;z-index:2;border-radius:3px;background:linear-gradient(180deg,#d8e48a,#b8cc58 50%,#d8e48a);box-shadow:inset 0 0 0 1px rgba(111,138,42,.5),0 3px 4px rgba(0,0,0,.25);transition:width .7s ease-out}
 @keyframes kusut{25%{transform:translateY(-4px)}75%{transform:translateY(4px)}}
-.ujung{position:absolute;z-index:4;width:calc(var(--u)*9);height:calc(var(--u)*9);margin:calc(var(--u)*-4.5) 0 0 calc(var(--u)*-4.5);border-radius:50%;border:2px dashed var(--emas);background:rgba(233,185,73,.15);pointer-events:none;transition:transform .15s;animation:denyut 1.3s infinite}
-.ujung.atas{transform:translateY(calc(var(--u)*-2.5))}
-.ujung.bawah{transform:translateY(calc(var(--u)*2.5))}
-.ujung b{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:800 calc(var(--u)*2.6) var(--sans);color:var(--emas);white-space:nowrap}
-.ujung.atas b{top:-70%}.ujung.bawah b{top:170%}
 @keyframes denyut{50%{border-color:#fff4cf}}
 .anyaman.jadi{transform:rotate(45deg) scale(.78)}
-.anyaman.jadi .ujung{display:none}
 .anyaman .ekor{position:absolute;width:6%;height:34%;right:-14%;top:-14%;transform-origin:0 100%;background:linear-gradient(90deg,var(--janur2),var(--janur));border-radius:3px;opacity:0;transition:opacity .8s 1s}
 .anyaman .ekor.e2{right:-8%;top:-18%;transform:rotate(-20deg)}
 .anyaman.jadi .ekor{opacity:1}
@@ -493,7 +490,7 @@ function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
 /* ═══════════════════════════════════════════════════════════════
    Malam Takbiran (Hari Spesial · Idulfitri; tampil juga di Apology).
    Malam terakhir Ramadan sampai pagi Lebaran: penerima mencari hilal
-   lewat teropong, menganyam ketupat selang-seling (tiap baris yang rapi
+   lewat teropong, menganyam ketupat dengan mengangkat helai yang menyala (tiap baris
    membuka satu `maaf` kecil), memutar tutup toples kue (foto), memukul
    beduk takbiran sampai pelita menyala dan surat terbaca, lalu
    bersalaman. `ucapan` = ucapan pilihan pembeli.
@@ -544,57 +541,50 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     jr.style.clipPath='circle('+R+'px at '+hx+'px '+hy+'px)';
     setTimeout(function(){ jr.classList.add('terang'); jr.style.clipPath='circle('+(r.width*1.3)+'px at '+hx+'px '+hy+'px)'; ls.classList.add('pergi'); hl.classList.add('terlihat'); },650);
     var j=$('#judulAwal'); j.innerHTML=''; j.appendChild(document.createTextNode('Hilalnya sudah terlihat.')); j.appendChild(el('small',null,'Besok Lebaran, '+PENERIMA+'.'));
-    setTimeout(function(){ j.classList.add('tampil'); petunjuk('Takbir mulai terdengar dari masjid. Sebelum besok, <b>ada ketupat yang harus dianyam</b>.'); },900);
+    setTimeout(function(){ j.classList.add('tampil'); petunjuk('Takbir sudah terdengar dari masjid. Sebelum besok pagi, <b>ketupatnya harus dianyam dulu</b>.'); },900);
     setTimeout(function(){ lanjut(berikut,'Anyam ketupatnya'); },2600);
   }
 })();
 
-/* ═ 2 · menganyam ketupat (game): selang-seling atas–bawah ═ */
+/* ═ 2 · menganyam ketupat (game): angkat helai yang menyala, janur menyelip sendiri ═ */
 (function(){
-  var an=$('#anyaman'), dm=$('#daftarMaaf'), N=4, BARIS=3, r=0, c=0, tip=0, mode=null, pegang=false, beres=false, pakan=null, tambal=[], uj=el('div','ujung');
-  for(var i=0;i<N;i++){ var l=el('div','lungsin'); l.style.left=((i+.5)/N*100-9.5)+'%'; an.appendChild(l); }
-  an.appendChild(el('div','ekor')); an.appendChild(el('div','ekor e2')); uj.appendChild(el('b')); an.appendChild(uj);
-  function S(){ return an.offsetWidth; }
+  var an=$('#anyaman'), dm=$('#daftarMaaf'), N=4, BARIS=3, r=0, beres=false, sibuk=false, pakan=null, L=[], perluAngkat=[];
+  for(var i=0;i<N;i++){ var l=el('div','lungsin'); l.style.left=((i+.5)/N*100-9.5)+'%'; an.appendChild(l); L.push(l); }
+  an.appendChild(el('div','ekor')); an.appendChild(el('div','ekor e2'));
   function yBaris(){ return (.2+r*.3); }
-  function perlu(k){ return (r+k)%2===0?'atas':'bawah'; }
-  function xLungsin(k){ return (k+.5)/N*S(); }
-  function baruBaris(){ pakan=el('div','pakan'); pakan.style.top=(yBaris()*100-10)+'%'; pakan.style.width='0px'; an.appendChild(pakan); tip=0; c=0; mode=null; tambal=[]; gambar(); }
-  function gambar(){ pakan.style.width=(tip+S()*.08)+'px'; uj.style.left=tip+'px'; uj.style.top=(yBaris()*100)+'%';
-    uj.className='ujung'+(mode?' '+mode:''); $('b',uj).textContent=mode==='atas'?'lewat atas':mode==='bawah'?'lewat bawah':''; }
-  function aturan(){ return 'Lembar janur pertama di baris ini lewat <b>'+perlu(0)+'</b>, lalu bergantian.'; }
+  function angkat(k){ return (r+k)%2===1; }   // helai yang dilewati dari bawah, jadi diangkat
+  function baruBaris(){
+    pakan=el('div','pakan'); pakan.style.top=(yBaris()*100-10)+'%'; pakan.style.width='0'; an.appendChild(pakan);
+    perluAngkat=[]; L.forEach(function(l,k){ l.classList.remove('naik','nyala'); if(angkat(k)){ l.classList.add('nyala'); perluAngkat.push(k); } });
+    sibuk=false;
+  }
   MASUK[1]=function(){ baruBaris();
-    petunjuk('Tarik ujung janur ke kanan. <b>Naikkan jari</b> untuk lewat atas, <b>turunkan</b> untuk lewat bawah, selang-seling, mulai dari <b>atas</b>.'); };
-  addEventListener('resize',function(){ if(kini===1 && pakan) gambar(); });
-  seret(an,{
-    boleh:function(){ return !beres; },
-    down:function(e){ var b=an.getBoundingClientRect(); pegang=Math.abs(e.clientX-b.left-tip)<S()*.22; pakan.classList.add('seret'); if(!pegang) kedip(); },
-    move:function(e){ if(!pegang || beres) return;
-      var b=an.getBoundingClientRect(), fx=e.clientX-b.left, dy=e.clientY-b.top-yBaris()*S(), batas=S()*.06;
-      if(dy<-batas) mode='atas'; else if(dy>batas) mode='bawah';
-      var t=klem(fx,tip,Math.min(tip+S()*.3,S()));
-      while(c<N && t>=xLungsin(c)){
-        if(mode!==perlu(c)){ kusut(c); return; }
-        if(perlu(c)==='bawah'){ var p=el('div','tambal'); p.style.left=((c+.5)/N*100-9.5)+'%'; p.style.width='19%'; p.style.top=(yBaris()*100-10)+'%'; an.appendChild(p); tambal.push(p); }
-        SFX.janur(); buzz(8); c++;
-      }
-      tip=t; gambar();
-      if(c>=N && tip>=S()*.97) barisBeres();
-    },
-    up:function(){ pegang=false; if(pakan) pakan.classList.remove('seret'); }
+    petunjuk('<b>Ketuk helai janur yang menyala</b> untuk mengangkatnya. Janur barunya akan menyelip sendiri.'); };
+  L.forEach(function(l,k){
+    l.addEventListener('click',function(){
+      if(beres||sibuk||!pakan) return;
+      if(!l.classList.contains('nyala')){ l.classList.remove('geleng'); void l.offsetWidth; l.classList.add('geleng'); SFX.salah(); buzz(20);
+        petunjuk('Yang itu biarkan dulu. Ketuk helai yang <b>menyala</b>.'); return; }
+      l.classList.remove('nyala'); l.classList.add('naik'); SFX.janur(); buzz(8);
+      perluAngkat.splice(perluAngkat.indexOf(k),1);
+      if(!perluAngkat.length) selip();
+    });
   });
-  function kusut(k){
-    pegang=false; SFX.salah(); buzz(40); pakan.classList.remove('seret'); pakan.classList.add('kusut');
-    petunjuk('Kusut! Di lembar ke-'+(k+1)+' seharusnya lewat <b>'+perlu(k)+'</b>. '+aturan());
-    tambal.forEach(function(p){ p.remove(); }); tambal=[];
-    setTimeout(function(){ pakan.classList.remove('kusut'); tip=0; c=0; mode=null; gambar(); },380);
+  function selip(){
+    sibuk=true;
+    setTimeout(function(){ pakan.style.width='116%'; SFX.janur(); },150);
+    setTimeout(function(){
+      L.forEach(function(l,k){ if(angkat(k)){ var p=el('div','tambal'); p.style.left=((k+.5)/N*100-9.5)+'%'; p.style.width='19%'; p.style.top=(yBaris()*100-10)+'%'; an.appendChild(p); } l.classList.remove('naik'); });
+      barisBeres();
+    },800);
   }
   function barisBeres(){
-    pegang=false; pakan.classList.remove('seret'); tip=S()*1.0; mode=null; gambar(); SFX.benar(); buzz(20);
+    SFX.benar(); buzz(20);
     if(MAAF[r]){ var li=el('li'); li.appendChild(el('small',null,'maaf '+(r+1))); li.appendChild(document.createTextNode(MAAF[r])); dm.appendChild(li); }
     r++;
     if(r>=BARIS){ beres=true; an.classList.add('jadi'); SFX.menang(); var p=pusat(an); konfeti(p.x,p.y,80,['#C9D86A','#9DB23F','#E9B949','#FFF6E0']);
-      petunjuk('Ketupatnya jadi. Rapi sekali.'); setTimeout(function(){ lanjut(berikut,FOTO.length?'Buka toples kuenya':'Lanjut'); },2600); return; }
-    setTimeout(function(){ baruBaris(); petunjuk('Rapi! Baris berikutnya <b>kebalikannya</b>: mulai lewat <b>'+perlu(0)+'</b>.'); },900);
+      petunjuk('Ketupatnya jadi, rapi sekali.'); setTimeout(function(){ lanjut(berikut,FOTO.length?'Buka toples kuenya':'Lanjut'); },2600); return; }
+    setTimeout(function(){ baruBaris(); petunjuk('Rapi! Sekarang <b>ketuk helai yang menyala</b> di baris berikutnya.'); },700);
   }
 })();
 
