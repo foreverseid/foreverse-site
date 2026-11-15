@@ -6,6 +6,7 @@ functions/
 _redirects
 sim.mjs
 uji.mjs
+uji-hp.mjs
 rekam/
 rekaman/
 AGENTS.md

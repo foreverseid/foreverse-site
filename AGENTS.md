@@ -20,6 +20,10 @@ pengelola. Konteks lengkap: Google Drive "Foreverse — Arsip Project".
 - `worker.js` — Cloudflare Worker (rute, sisip data surat).
 - `functions/api/[[jalur]].js` — API: pesanan, DOKU QRIS, email Resend, D1, R2.
 - `<tema>.html` — mesin tiap tema; `<tema>-demo.html` — demo Amira & Adriel.
+- `tema-dasar.js` — dimuat SEMUA berkas tema (mesin & demo) sebelum skrip tema: kunci zoom,
+  aturan suara iPhone (lagu yang ditolak diputar saat ketukan berikutnya, jeda saat halaman
+  ditinggal), dan pengaman seretan. Tema baru wajib memuatnya (`<script src="/tema-dasar.js?v=N">`);
+  naikkan `v` di semua tema kalau isinya berubah. Jangan menulis ulang hal-hal itu di dalam tema.
 - `pesan.html` formulir · `index.html` katalog · `developer.html` panel pemilik.
 - `uji.mjs` + `sim.mjs` — uji otomatis dengan simulator (tanpa kunci sungguhan).
 - `rekam/` — perekam video 9:16 untuk konten (tidak ikut tayang).
@@ -29,6 +33,11 @@ pengelola. Konteks lengkap: Google Drive "Foreverse — Arsip Project".
 
 ## Uji
 - `node uji.mjs` wajib lulus sebelum PR (Node 22+). Tambah uji untuk perilaku baru.
+- `node uji-hp.mjs` (butuh Playwright) wajib lulus kalau yang diubah tema, `tema-dasar.js`,
+  `pesan.html`, atau tata letak HP: seretan, zoom, suara, formulir 5 langkah, dengan sentuhan sungguhan.
+- Tema baru: benda yang dipindah ke `<body>` saat diseret harus memanggil `setPointerCapture` lagi,
+  musik harus dimulai (`MU.play()`), dan kotak musik bawaan harus ada. Aturan iPhone: suara baru
+  boleh berbunyi setelah KETUKAN, bukan setelah seretan; `tema-dasar.js` yang mengurusnya.
 - Perubahan tampilan: ambil tangkapan layar di 412×900 dan 1280×800, lalu periksa.
 - `node_modules/` dan `rekaman/` tidak pernah di-commit.
 

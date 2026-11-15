@@ -2141,7 +2141,7 @@ await uji("halaman momen untuk Google: teks lengkap dari server, FAQ terstruktur
   harus(sm.includes("https://foreverse.id/lamaran"), "sitemap");
 });
 
-await uji("tata letak: /tema/<id> disajikan, katalog & halaman tema ada, formulir 4 langkah", async () => {
+await uji("tata letak: /tema/<id> disajikan, katalog & halaman tema ada, formulir 5 langkah", async () => {
   const L = await buatLingkungan();
   const idx = await readFile(new URL("./index.html", import.meta.url), "utf8");
   harus(/data-hal="tema"/.test(idx) && /id="tmPakai"/.test(idx) && /id="momenGrid"/.test(idx), "bagian beranda & tema");
@@ -2149,12 +2149,83 @@ await uji("tata letak: /tema/<id> disajikan, katalog & halaman tema ada, formuli
   const sm = await readFile(new URL("./sitemap.xml", import.meta.url), "utf8");
   harus(sm.includes("https://foreverse.id/tema/kado-riang") && sm.includes("https://foreverse.id/tema/pemutaran-perdana"), "sitemap tema");
   const ps = await readFile(new URL("./pesan.html", import.meta.url), "utf8");
-  harus(/id="wizard"/.test(ps) && (ps.match(/data-ke="[1-4]"><span class="wn">/g) || []).length === 4, "4 langkah");
+  harus(/id="wizard"/.test(ps) && (ps.match(/data-ke="[1-5]"><span class="wn">/g) || []).length === 5, "5 langkah");
+  harus(!/buka-pv|bukaPv/.test(ps), "tombol pratinjau mengambang sudah dihapus");
+  harus(/#form\[data-langkah="5"\] ~ \.sisi\{display:block/.test(ps), "layar sempit: pratinjau hanya di langkah terakhir");
+  harus(!/scrollIntoView\(\{ behavior:"smooth", block:"start" \}\)/.test(ps) && /window\.scrollTo\(0, Math\.max\(0, y\)\)/.test(ps), "pindah langkah selalu mulai dari atas");
+  harus(/\.hal-tema \.phone\{width:clamp\(/.test(idx), "ponsel contoh mengikuti tinggi layar");
   harus(/keLangkahDari\(pertama\)/.test(ps), "galat membuka langkahnya");
   sama((await L.panggil("/tema/kado-riang")).status, 200, "/tema/<id> disajikan");
   sama((await L.panggil("/template")).status, 200, "/template");
   const mo = await (await L.panggil("/ulang-tahun")).text();
   harus(mo.includes('class="nav"') && mo.includes('href="/tema/kado-riang"') && mo.includes("/bantuan.js"), "halaman momen pakai menu yang sama");
+});
+
+/* ═══════════ uji coba HP 15-11-2026: suara, seretan, zoom, email ═══════════ */
+judul("Dasar tema, musik, dan email surat jadi");
+
+const MESIN_TEMA = ["surat", "kado-riang", "langit-harapan", "kapal-botol", "zona-waktu", "loker-terakhir", "confess-kunang",
+  "getwell-365", "pasar-malam", "lewat-duluan", "kasus-pengirim", "rekonstruksi", "rumah-contoh", "kotak-musik", "garis-finis",
+  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "pemutaran-perdana"];
+const berkasTema = m => [m + ".html", (m === "surat" ? "bait" : m) + "-demo.html"];
+
+await uji("semua tema (mesin & demo) memuat tema-dasar.js sebelum skripnya sendiri, layar terkunci dari zoom", async () => {
+  for (const m of MESIN_TEMA) for (const b of berkasTema(m)) {
+    const h = await readFile(new URL("./" + b, import.meta.url), "utf8");
+    const dasar = h.indexOf('<script src="/tema-dasar.js'), skrip = h.indexOf("<script>");
+    harus(dasar > -1 && dasar < skrip, b + ": tema-dasar.js harus dimuat sebelum skrip tema");
+    harus(/<meta name="viewport" content="[^"]*maximum-scale=1, user-scalable=no[^"]*">/.test(h), b + ": viewport belum terkunci");
+    harus(!/AC\.state\s*===\s*'suspended'\)\s*AC\.resume/.test(h), b + ": ac() menghidupkan suara walau sedang dibisukan");
+  }
+  const d = await readFile(new URL("./tema-dasar.js", import.meta.url), "utf8");
+  harus(/touch-action:pan-x pan-y/.test(d) && /NotAllowedError/.test(d) && /pointercancel/.test(d) && /visibilitychange/.test(d), "tema-dasar.js: zoom, suara, seretan, jeda");
+});
+
+await uji("tidak ada tema yang diam: setiap mesin memulai musiknya, dan punya kotak musik bawaan", async () => {
+  for (const m of MESIN_TEMA) for (const b of berkasTema(m)) {
+    const h = await readFile(new URL("./" + b, import.meta.url), "utf8");
+    harus(/\b(MU\.play|MU\.main|F\.music\.play)\(\)/.test(h), b + ": musik tidak pernah dimulai");
+    harus(/function (musicBox|kotakMusik)\(/.test(h), b + ": tidak ada kotak musik bawaan");
+  }
+});
+
+await uji("Bait: benda yang dipindah ke <body> saat diseret menangkap pointer lagi", async () => {
+  for (const b of ["surat.html", "bait-demo.html"]) {
+    const h = await readFile(new URL("./" + b, import.meta.url), "utf8");
+    harus(/document\.body\.appendChild\(x\); try\{ x\.setPointerCapture\(e\.pointerId\)/.test(h), b + ": timbangan");
+    harus(/document\.body\.appendChild\(p\); try\{ p\.setPointerCapture\(e\.pointerId\)/.test(h), b + ": perangko");
+  }
+});
+
+await uji("formulir: contoh musik bawaan memakai nada & tempo yang sama dengan mesin tiap tema", async () => {
+  const ps = await readFile(new URL("./pesan.html", import.meta.url), "utf8");
+  const blok = ps.slice(ps.indexOf("var KOTAK_MUSIK = {"), ps.indexOf("};", ps.indexOf("var KOTAK_MUSIK = {")) + 1).replace("var KOTAK_MUSIK = ", "");
+  const K = new Function("return " + blok)();
+  const angka = s => s.split(",").map(x => +x.trim());
+  for (const m of MESIN_TEMA) {
+    const id = m === "surat" ? "bait" : m, h = await readFile(new URL("./" + m + ".html", import.meta.url), "utf8");
+    const f = h.slice(h.search(/function (musicBox|kotakMusik)\(/)); const k = K[id] || K._;
+    let nada, jeda;
+    const pola = f.match(/pola = \[([-\d, ]+)\]/);
+    if (pola) { const dasar = +f.match(/ping\((\d+) \+ pola/)[1]; nada = angka(pola[1]).map(x => x + dasar); jeda = +f.match(/tNext \+= ([.\d]+)/)[1]; }
+    else { nada = angka(f.match(/(?:notes|not) ?= ?\[([\d, ]+)\]/)[1]); jeda = +f.match(/\b(?:step|st) ?= ?([.\d]+)/)[1]; }
+    sama(JSON.stringify(k.nada), JSON.stringify(nada), id + ": nada");
+    sama(k.jeda, jeda, id + ": tempo");
+  }
+  harus(/id="cobaMusik"/.test(ps), "tombol dengarkan musik bawaan");
+});
+
+await uji("email surat jadi: empat tautan berlabel (untuk dia / hanya untuk kamu), tanggal, dan versi teks", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const e = L.catatan.email[0];
+  const b = { token: p.token };
+  for (const u of ["/s/" + p.kode, "/selesai?kode=" + p.kode + "#qr", "/edit/" + b.token, "/perpanjang/" + b.token])
+    harus(e.html.includes(u) && e.text.includes(u), "tautan " + u);
+  harus(/1 · Untuk dikirim ke /.test(e.html) && /2 · Pelengkap kiriman/.test(e.html) && (e.html.match(/Hanya untuk kamu/g) || []).length === 2, "label tiap tautan");
+  harus(e.html.indexOf("/s/" + p.kode) < e.html.indexOf("/edit/" + b.token), "tautan surat lebih dulu daripada tautan edit");
+  harus(/sampai <strong>\d+ \w+ \d{4}<\/strong>/.test(e.html), "tanggal batas tertulis");
+  harus(!/—|nggak|\bgak\b/.test(e.html + e.text), "aturan teks Foreverse");
 });
 
 /* ═══════════ audit keamanan pra-Production (03-11-2026) ═══════════ */
