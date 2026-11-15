@@ -58,15 +58,16 @@ body{
 @media (min-width:1000px){ .duo{grid-template-columns:minmax(0,1fr) 400px} }
 
 /* ══ wizard 4 langkah ══ */
-.wizard{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:57px;z-index:20;background:var(--cream);padding:8px 0}
+.wizard{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:sticky;top:57px;z-index:20;background:var(--cream);padding:8px 0}
 .wizard button{width:100%;display:flex;align-items:center;gap:8px;justify-content:center;font:inherit;font-size:.86rem;font-weight:600;color:var(--ink-faint);background:var(--paper);border:1px solid var(--stone);border-radius:999px;padding:8px 6px;cursor:pointer}
 .wizard .wn{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;background:var(--stone);color:var(--ink)}
 .wizard button.aktif{color:var(--ink);border-color:var(--violet)}
 .wizard button.aktif .wn,.wizard button.lewat .wn{background:var(--violet);color:#fff}
-@media (max-width:620px){ .wizard .wl{display:none} .wizard button.aktif .wl{display:inline} .wizard{grid-template-columns:auto auto auto auto;justify-content:space-between} .wizard button.aktif{padding:8px 12px} }
+@media (max-width:620px){ .wizard .wl{display:none} .wizard button.aktif .wl{display:inline} .wizard{grid-template-columns:repeat(5,auto);justify-content:space-between} .wizard button{padding:7px} .wizard button.aktif{padding:7px 11px} }
 form[data-langkah] [data-wz]:not(.wz-aktif){display:none!important}
 .wz-nav{display:flex;gap:10px;justify-content:space-between;margin:4px 0 16px}
 .wz-nav .tbl{flex:1}
+.wz-nav.akhir{margin-top:14px}
 
 /* ══ kartu ══ */
 .blok{
@@ -101,12 +102,19 @@ form[data-langkah] [data-wz]:not(.wz-aktif){display:none!important}
 @media (max-width:520px){ .dua{grid-template-columns:1fr} }
 label{display:block;font-size:.87rem;font-weight:600;margin-bottom:5px}
 .bantu{font-size:.8rem;color:var(--ink-faint);margin:4px 0 0;line-height:1.5}
-input[type=text],input[type=email],input[type=tel],input[type=date],input[type=datetime-local],input[type=url],textarea{
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=datetime-local],input[type=url],input[type=number],select,textarea{
   width:100%;font:inherit;font-size:1rem;color:var(--ink);background:var(--cream);
   border:1.5px solid var(--stone);border-radius:11px;padding:11px 13px;
   transition:border-color .16s,background .16s;
 }
-input:focus,textarea:focus{outline:none;border-color:var(--violet-soft);background:var(--paper)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--violet-soft);background:var(--paper)}
+input[type=number]{max-width:9rem}
+.berkas{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.berkas input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.berkas .tbl{padding:10px 16px;font-size:.92rem}
+.musik-coba{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 18px;padding:12px 14px;border-radius:12px;background:var(--violet-tint)}
+.musik-coba .tbl{padding:10px 16px;font-size:.92rem;background:#fff}
+.musik-coba p{margin:0;flex:1;min-width:12rem;font-size:.84rem;color:var(--ink-soft);line-height:1.5}
 textarea{resize:vertical;min-height:88px;line-height:1.6}
 .hitung{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:5px}
 .hitung .angka{font-size:.78rem;color:var(--ink-faint);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -117,8 +125,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .salah .galat{display:block}
 
 /* ══ foto ══ */
-.fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media (max-width:520px){ .fotos{grid-template-columns:1fr} }
+/* kartu foto ringkas: dua per baris di HP, lebih banyak di layar lebar, tidak pernah selebar layar */
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));align-items:start;gap:10px}
+@media (max-width:520px){ .fotos{grid-template-columns:1fr 1fr;gap:8px} .fotokartu{padding:7px} .jendela .ajak{padding:6px;font-size:.74rem} .jendela .ajak b{font-size:.8rem} }
 .fotokartu{border:1.5px dashed var(--stone);border-radius:13px;padding:10px;background:var(--cream)}
 .fotokartu.kosong{border-color:var(--merah)}
 .fotokartu.isi{border-style:solid;border-color:var(--violet-soft);background:var(--paper)}
@@ -138,7 +147,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 }
 .fotokartu input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .fotokartu .ket{margin-top:8px}
-.fotokartu .ket input{padding:8px 10px;font-size:.88rem}
+/* 16px: di bawah itu iPhone membesarkan layar sendiri saat kolomnya diketuk */
+.fotokartu .ket input{padding:8px 10px;font-size:1rem}
 .sibuk{position:absolute;inset:0;background:rgba(255,255,255,.82);display:grid;place-items:center;font-size:.8rem;color:var(--violet)}
 
 /* ══ setuju ══ */
@@ -150,7 +160,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 /* ══ tombol ══ */
 .tbl{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;
-  border:0;border-radius:12px;padding:14px 22px;cursor:pointer;text-decoration:none;
+  color:var(--ink);background:var(--cream-lift);border:0;border-radius:12px;padding:14px 22px;cursor:pointer;text-decoration:none;
   transition:transform .12s,background .16s,box-shadow .16s;
 }
 .tbl:active{transform:translateY(1px)}
@@ -203,15 +213,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .pv-frame-memuat.tampil{display:flex}
 .pv-kaki{margin:0;text-align:center;font-size:.78rem;color:var(--ink-faint);line-height:1.5}
 
-/* tombol pratinjau mengambang, muncul juga di HP supaya tidak perlu
-   gulir sampai bawah untuk membukanya */
-.buka-pv{
-  display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:45;
-  background:var(--violet);color:#fff;border:0;font:inherit;font-weight:600;font-size:.9rem;
-  padding:13px 22px;border-radius:999px;box-shadow:0 10px 26px -8px rgba(59,49,104,.7);cursor:pointer;white-space:nowrap;
-}
+/* layar sempit: pratinjau hanya muncul di langkah terakhir, tepat sebelum bayar */
 @media (max-width:999px){
-  .buka-pv{display:inline-flex;align-items:center;gap:8px}
+  .sisi{display:none}
+  #form[data-langkah="5"] ~ .sisi{display:block;order:-1}
+  .pv-frame-wrap{height:min(520px,68vh)}
 }
 
 /* ══ tirai memuat ══ */
@@ -244,19 +250,20 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 <main class="wrap">
   <div class="kepala">
     <h1 id="judul">Tulis suratnya</h1>
-    <p id="subjudul">Tulis apa adanya. Yang kamu ketik dipasang persis seperti itu. Isi dulu, lalu buka pratinjau penuhnya kapan saja untuk melihat hasilnya.</p>
+    <p id="subjudul">Tulis apa adanya. Yang kamu ketik dipasang persis seperti itu. Sebelum bayar, kamu melihat hasilnya dulu.</p>
   </div>
 
-  <div class="duo">
+  <ol class="wizard" id="wizard" aria-label="Langkah mengisi">
+    <li><button type="button" data-ke="1"><span class="wn">1</span><span class="wl">Nama &amp; surat</span></button></li>
+    <li><button type="button" data-ke="2"><span class="wn">2</span><span class="wl">Foto</span></button></li>
+    <li><button type="button" data-ke="3"><span class="wn">3</span><span class="wl">Detail &amp; lagu</span></button></li>
+    <li><button type="button" data-ke="4"><span class="wn">4</span><span class="wl">Kunci &amp; kontak</span></button></li>
+    <li><button type="button" data-ke="5"><span class="wn">5</span><span class="wl">Lihat &amp; bayar</span></button></li>
+  </ol>
+
+  <div class="duo" id="duo">
     <!-- ════════ kolom formulir ════════ -->
     <form id="form" novalidate>
-
-      <ol class="wizard" id="wizard" aria-label="Langkah mengisi">
-        <li><button type="button" data-ke="1"><span class="wn">1</span><span class="wl">Nama &amp; surat</span></button></li>
-        <li><button type="button" data-ke="2"><span class="wn">2</span><span class="wl">Foto</span></button></li>
-        <li><button type="button" data-ke="3"><span class="wn">3</span><span class="wl">Detail &amp; lagu</span></button></li>
-        <li><button type="button" data-ke="4"><span class="wn">4</span><span class="wl">Kunci &amp; bayar</span></button></li>
-      </ol>
 
       <section class="blok">
         <h2><span class="n">1</span> Nama kalian berdua</h2>
@@ -300,7 +307,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">3</span> <span id="judulFoto">Foto</span></h2>
-        <p class="jelas">Foto tegak paling bagus. Fotonya dikecilkan otomatis di HP-mu sebelum dikirim, jadi tidak boros kuota. Minimal satu foto.</p>
+        <p class="jelas">Semua kotak foto wajib diisi. Tiap kotak sudah ditandai tegak atau mendatar. Setelah dipilih, geser fotonya untuk mengatur bagian yang tampil. Fotonya dikecilkan otomatis di HP-mu, jadi tidak boros kuota.</p>
         <div class="fotos" id="fotos"></div>
         <p class="galat" id="galatFoto" style="display:none">Semua foto harus dipilih dulu.</p>
       </section>
@@ -311,10 +318,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">6</span> Lagu <span style="font-family:var(--sans);font-size:.78rem;font-weight:400;color:var(--ink-faint)">opsional</span></h2>
-        <p class="jelas">Kosongkan saja kalau tidak perlu. Suratnya tetap ada musiknya, yaitu kotak musik bawaan Foreverse, dan bisa dimatikan kapan saja. Mau lagu kalian sendiri? Unggah berkasnya di sini.</p>
+        <p class="jelas">Suratnya selalu ada musiknya: kotak musik bawaan Foreverse, atau lagu kalian sendiri kalau kamu mengunggahnya. Penerima bisa mematikan suaranya kapan saja.</p>
+        <div class="musik-coba">
+          <button type="button" class="tbl" id="cobaMusik" aria-pressed="false">▶ Dengarkan musik bawaan</button>
+          <p>Ini yang terdengar di suratmu kalau kamu tidak mengunggah lagu.</p>
+        </div>
         <div class="baris" data-f="lagu">
-          <label for="laguBerkas">Berkas lagu</label>
-          <input id="laguBerkas" type="file" accept="audio/mpeg,audio/mp4,audio/x-m4a,audio/aac,.mp3,.m4a">
+          <label for="laguBerkas">Lagu kalian sendiri</label>
+          <div class="berkas">
+            <input id="laguBerkas" type="file" accept="audio/mpeg,audio/mp4,audio/x-m4a,audio/aac,.mp3,.m4a">
+            <label class="tbl" for="laguBerkas" style="margin:0">Pilih berkas lagu</label>
+          </div>
           <p class="bantu" id="laguNama" hidden></p>
           <p class="bantu">Format <b>MP3</b> atau <b>M4A</b>, maksimal <b>10 MB</b>. Pastikan lagunya boleh kamu pakai, karena kami tidak menyediakan lagu berlisensi.</p>
         </div>
@@ -419,11 +433,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     <aside class="sisi" id="sisi">
       <div class="sisi-in">
         <h2>Lihat hasilnya</h2>
-        <p class="jelas">Pratinjau di bawah ini ikut berubah sesuai isianmu. Permainan dan animasinya tetap lebih nyaman dicoba di layar penuh.</p>
+        <p class="jelas">Ini suratmu dengan isian yang sekarang. Permainan dan animasinya lebih nyaman dicoba di layar penuh.</p>
         <div class="pv-card">
           <div class="pv-frame-wrap">
             <iframe id="pvFrame" class="pv-frame" title="Pratinjau surat" loading="lazy" hidden></iframe>
-            <div class="pv-frame-kosong" id="pvKosong">Mulai isi di sebelah kiri, pratinjaunya langsung muncul di sini.</div>
+            <div class="pv-frame-kosong" id="pvKosong">Isi dulu nama dan suratnya. Pratinjaunya muncul di sini.</div>
             <div class="pv-frame-memuat" id="pvMemuat">memuat…</div>
           </div>
           <button class="tbl tbl-utama tbl-lebar" type="button" id="btnPratinjau">Buka layar penuh ↗</button>
@@ -433,11 +447,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     </aside>
   </div>
 </main>
-
-<button class="buka-pv" id="bukaPv" type="button">
-  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-  Lihat pratinjau penuh
-</button>
 
 <div class="tirai" id="tirai">
   <div>
@@ -522,7 +531,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   function isiJendela(i, src, f){
     var jend = kartu(i).querySelector(".jendela");
     jend.removeAttribute("data-buka");
-    jend.innerHTML = '<img src="'+src+'" alt=""><span class="geser">geser untuk atur posisi</span><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
+    jend.innerHTML = '<img src="'+src+'" alt=""><span class="geser">geser fotonya</span><button class="ganti" type="button" data-buka="'+i+'">Ganti</button>';
     var img = jend.querySelector("img"); posisiFoto(img, f);
     var mulai = null;
     img.addEventListener("pointerdown", function(e){ e.preventDefault(); img.setPointerCapture(e.pointerId); mulai = { x:e.clientX, y:e.clientY, fx:f.fx == null ? 50 : f.fx, fy:f.fy == null ? 50 : f.fy }; });
@@ -549,7 +558,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<div class="ajak"><b>Foto '+(SLOT[i]==="R"?"mendatar":"tegak")+'</b>Ketuk untuk pilih</div>'+
         '</div>'+
         '<input type="file" accept="image/*" data-file="'+i+'">'+
-        '<div class="ket"><input type="text" maxlength="40" placeholder="Keterangan (opsional)" data-caption="'+i+'"></div>';
+        '<div class="ket"><input type="text" maxlength="40" placeholder="Keterangan" aria-label="Keterangan foto (boleh kosong)" data-caption="'+i+'"></div>';
       bungkus.appendChild(d);
     }
     bungkus.addEventListener("click", function(e){
@@ -616,6 +625,52 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     if(LAGU_ADA) return { pakaiLama: true, mulai: mulai, selesai: selesai };
     return { mulai: 0, selesai: 0 };
   }
+
+  /* ── coba dengar musik bawaan ──
+     Nada dan temponya sama dengan kotak musik di mesin tiap tema (uji.mjs
+     menjaga keduanya tetap cocok). Sebagian besar tema memakai melodi "_". */
+  var KOTAK_MUSIK = {
+    "_":              { nada:[72,76,79,84,79,76,74,77,81,86,81,77,72,76,79,83,79,76,71,74,79,83,86,83], jeda:.34, gema:1.4 },
+    "zona-waktu":     { nada:[60,67,72,67,64,67,71,67,62,69,74,69,65,69,72,69], jeda:.44, gema:.9 },
+    "confess-kunang": { nada:[64,67,71,74,71,67,62,66,69,74,69,66,60,64,67,72,67,64,59,62,67,71,74,71], jeda:.4, gema:1.5 },
+    "pasar-malam":    { nada:[60,64,67,72,67,64,69,67,65,64,60,64,67,69,67,64], jeda:.42, gema:.9 },
+    "lewat-duluan":   { nada:[64,68,71,75,76,71,68,66,64,68,71,73,71,68,66,63], jeda:.45, gema:.85 },
+    "kasus-pengirim": { nada:[62,65,69,72,69,65,67,70,74,70,67,65,64,67,69,60], jeda:.42, gema:.8 },
+    "rekonstruksi":   { nada:[60,64,67,72,71,67,64,62,60,65,69,72,69,65,64,62], jeda:.46, gema:.85 },
+    "rumah-contoh":   { nada:[67,71,74,79,74,71,69,72,76,81,76,72,65,69,72,77,72,69,67,71,74,79,78,74], jeda:.42, gema:1.5 }
+  };
+  var cobaAC = null, cobaHenti = null;
+  function hentikanMusikCoba(){
+    if(!cobaHenti) return;
+    cobaHenti(); cobaHenti = null;
+    var b = $("cobaMusik"); b.textContent = "▶ Dengarkan musik bawaan"; b.setAttribute("aria-pressed", "false");
+  }
+  $("cobaMusik").addEventListener("click", function(){
+    if(cobaHenti){ hentikanMusikCoba(); return; }
+    var C = window.AudioContext || window.webkitAudioContext;
+    if(!C){ pesanGalat("Browser ini tidak bisa memutar contoh musiknya."); return; }
+    /* iPhone: tanpa ini suara buatan browser ikut bisu saat tombol senyap HP menyala */
+    try{ if(navigator.audioSession) navigator.audioSession.type = "playback"; }catch(_){}
+    if(!cobaAC) cobaAC = new C();
+    if(cobaAC.state !== "running") cobaAC.resume();
+    var k = KOTAK_MUSIK[TEMA] || KOTAK_MUSIK._, a = cobaAC;
+    var keluar = a.createGain(); keluar.gain.value = .16; keluar.connect(a.destination);
+    var t0 = a.currentTime + .08, n = 0, jam = null, habis = setTimeout(hentikanMusikCoba, 20000);
+    (function putar(){
+      if(t0 < a.currentTime) t0 = a.currentTime + .05;
+      while(t0 < a.currentTime + 1.5){
+        var o = a.createOscillator(), g = a.createGain();
+        o.type = "sine"; o.frequency.value = 440 * Math.pow(2, (k.nada[n % k.nada.length] - 69) / 12);
+        g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.9, t0 + .01); g.gain.exponentialRampToValueAtTime(.001, t0 + k.gema);
+        o.connect(g); g.connect(keluar); o.start(t0); o.stop(t0 + k.gema + .1);
+        t0 += k.jeda; n++;
+      }
+      jam = setTimeout(putar, 250);
+    })();
+    cobaHenti = function(){ clearTimeout(jam); clearTimeout(habis); keluar.gain.setTargetAtTime(0, a.currentTime, .05); setTimeout(function(){ keluar.disconnect(); }, 400); };
+    this.textContent = "■ Hentikan"; this.setAttribute("aria-pressed", "true");
+  });
+  document.addEventListener("visibilitychange", function(){ if(document.hidden) hentikanMusikCoba(); });
 
   function ambilFoto(i, berkas){
     if(!/^image\//.test(berkas.type)){ pesanGalat("File itu bukan gambar. Pilih foto, ya."); return; }
@@ -1383,11 +1438,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     window.open(TEMA_INFO[TEMA].mesin + "#pratinjau", "_blank");
   }
   $("btnPratinjau").addEventListener("click", previewPenuh);
-  $("bukaPv").addEventListener("click", previewPenuh);
 
-  /* ── pratinjau hidup di panel kanan ── */
-  var pvTimer = null;
+  /* ── pratinjau hidup ──
+     Layar lebar: panel kanan, selalu terlihat. Layar sempit: hanya di langkah
+     terakhir. Bingkainya baru dimuat saat terlihat, supaya HP tidak memuat
+     ulang satu tema penuh di balik layar setiap kali ada huruf diketik. */
+  var pvTimer = null, pvBasi = true, langkahIni = 1;
+  var layarLebar = window.matchMedia("(min-width:1000px)");
+  function pratinjauTerlihat(){ return layarLebar.matches || langkahIni === 5; }
   function muatPratinjauLive(){
+    if(!pratinjauTerlihat()){ pvBasi = true; return; }
+    pvBasi = false;
     var ada = simpanPratinjauKeStorage();
     var frame = $("pvFrame"), kosong = $("pvKosong"), memuat = $("pvMemuat");
     if(!ada){
@@ -1400,14 +1461,17 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     frame.src = TEMA_INFO[TEMA].mesin + "?pv=" + Date.now() + "#pratinjau";
   }
   $("pvFrame").addEventListener("load", function(){ $("pvMemuat").classList.remove("tampil"); });
-  function jadwalkanPratinjauLive(){
+  function jadwalkanPratinjauLive(e){
+    /* persetujuan, kode promo, dan pilihan bayar tidak mengubah isi surat */
+    if(e && e.target && e.target.closest && e.target.closest("#blokSetuju, .kirim")) return;
     clearTimeout(pvTimer);
+    if(!pratinjauTerlihat()){ pvBasi = true; return; }
     if(!$("pvFrame").hidden) $("pvMemuat").classList.add("tampil");
     pvTimer = setTimeout(muatPratinjauLive, 700);
   }
   $("form").addEventListener("input", jadwalkanPratinjauLive);
   $("form").addEventListener("change", jadwalkanPratinjauLive);
-  muatPratinjauLive();
+  layarLebar.addEventListener("change", function(){ if(pvBasi) muatPratinjauLive(); });
 
   /* ══ 4 · kabar ══ */
   function pesanGalat(t){
@@ -1953,11 +2017,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       });
   }
 
-  /* ══ wizard: formulir dibagi 4 langkah (data & validasi tetap sama) ══ */
-  var WZ_NAMA = ["Nama & surat","Foto","Detail & lagu","Kunci & bayar"];
+  /* ══ wizard: formulir dibagi 5 langkah (data & validasi tetap sama) ══
+     Langkah 5 = lihat hasilnya, setuju, lalu bayar. */
+  var WZ_NAMA = MODE_EDIT ? ["Nama & surat","Foto","Detail & lagu","Kunci","Lihat & simpan"]
+                          : ["Nama & surat","Foto","Detail & lagu","Kunci & kontak","Lihat & bayar"];
+  document.querySelectorAll("#wizard .wl").forEach(function(s, i){ s.textContent = WZ_NAMA[i]; });
   var bagian = Array.prototype.slice.call(document.querySelectorAll("#form > section"));
-  var PETA = [1,1,2,3,3,3,4,4,4,4];
-  bagian.forEach(function(sec, i){ sec.setAttribute("data-wz", PETA[i] || 4); });
+  var PETA = [1,1,2,3,3,3,4,4,5,5];
+  bagian.forEach(function(sec, i){ sec.setAttribute("data-wz", PETA[i] || 5); });
   function navLangkah(n){
     var d = document.createElement("div"); d.className = "wz-nav"; d.setAttribute("data-wz", n);
     if(n > 1) d.innerHTML += '<button type="button" class="tbl" data-ke="'+(n-1)+'">Kembali</button>';
@@ -1965,25 +2032,35 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     var akhir = bagian.filter(function(s){ return +s.getAttribute("data-wz") === n; }).pop();
     akhir.parentNode.insertBefore(d, akhir.nextSibling);
   }
-  [1,2,3].forEach(navLangkah);
-  (function(){ var d = document.createElement("div"); d.className = "wz-nav"; d.setAttribute("data-wz", 4);
-    d.innerHTML = '<button type="button" class="tbl" data-ke="3">Kembali</button>';
-    var k = document.querySelector("#form > section.kirim"); k.parentNode.insertBefore(d, k); })();
-  var langkahIni = 1;
+  [1,2,3,4].forEach(navLangkah);
+  (function(){ var d = document.createElement("div"); d.className = "wz-nav akhir"; d.setAttribute("data-wz", 5);
+    d.innerHTML = '<button type="button" class="tbl" data-ke="4">Kembali</button>';
+    $("form").appendChild(d); })();
   function keLangkah(n, gulir){
     langkahIni = n; $("form").setAttribute("data-langkah", n);
     document.querySelectorAll("#form [data-wz]").forEach(function(el){ el.classList.toggle("wz-aktif", +el.getAttribute("data-wz") === n); });
     document.querySelectorAll("#wizard button").forEach(function(b){ var k = +b.getAttribute("data-ke");
       b.classList.toggle("aktif", k === n); b.classList.toggle("lewat", k < n);
       if(k === n) b.setAttribute("aria-current","step"); else b.removeAttribute("aria-current"); });
-    if(gulir) $("wizard").scrollIntoView({ behavior:"smooth", block:"start" });
+    if(n !== 3) hentikanMusikCoba();
+    if(n === 5 && pvBasi) muatPratinjauLive();
+    /* selalu mulai dari atas langkah yang baru: bilah langkah menempel di atas,
+       jadi isi langkah digulirkan tepat ke bawahnya */
+    if(gulir){
+      var bilah = $("wizard"), kepalaTinggi = parseFloat(getComputedStyle(bilah).top) || 0;
+      var y = $("duo").getBoundingClientRect().top + window.pageYOffset - kepalaTinggi - bilah.offsetHeight - 4;
+      window.scrollTo(0, Math.max(0, y));
+    }
   }
   function keLangkahDari(el){ var s = el.closest("[data-wz]"); if(s) keLangkah(+s.getAttribute("data-wz"), false); }
-  $("form").addEventListener("click", function(e){
+  function klikLangkah(e){
     var b = e.target.closest("button[data-ke]"); if(!b) return;
     keLangkah(+b.getAttribute("data-ke"), true);
-  });
+  }
+  $("form").addEventListener("click", klikLangkah);
+  $("wizard").addEventListener("click", klikLangkah);
   keLangkah(1, false);
+  muatPratinjauLive();
 })();
 </script>
 <script src="/bantuan.js" defer></script>
