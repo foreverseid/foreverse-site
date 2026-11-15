@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script src="/tema-dasar.js?v=1"></script>
 
 <title>Film kita tayang malam ini</title>
 <meta property="og:title" content="Film kita tayang malam ini">
@@ -325,7 +326,7 @@ var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
 
 var AC=null, muted=false;
-function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } } if(AC && AC.state !== 'running' && !muted) AC.resume(); return AC; }
 function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||muted) return;
   var t=a.currentTime+(o.when||0), v=o.vol||.14, osc=a.createOscillator(), g=a.createGain();
   osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
@@ -496,7 +497,7 @@ $('#mqJudul').textContent='STUDIO 1 · '+JUDUL.toUpperCase();
     move:function(e,dx,dy){ var y=Math.max(0,dy); sb.style.transform='translateY('+y+'px) rotate('+(y*.12)+'deg)'; if(Math.random()<.2) noise(.04,5000,.05); },
     up:function(e,dx,dy){ sb.style.transition='';
       if(dy<U()*16){ sb.style.transform=''; kedip(); return; }
-      beres=true; SFX.sobek(); buzz(25); sb.classList.add('lepas'); sb.style.transform='translateY(70vh) rotate(28deg)';
+      beres=true; MU.play(); SFX.sobek(); buzz(25); sb.classList.add('lepas'); sb.style.transform='translateY(70vh) rotate(28deg)';
       petunjuk('Tiketnya sah. Kursimu <b>E7</b>. Lampu studio sudah dimatikan.');
       setTimeout(function(){ lanjut(berikut,'Masuk studio'); },1100);
     } });

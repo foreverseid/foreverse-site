@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script src="/tema-dasar.js?v=1"></script>
 
 <title>Karcis kereta terakhir untukmu</title>
 <meta property="og:title" content="Karcis kereta terakhir untukmu">
@@ -331,7 +332,7 @@ var PENERIMA=D.penerima||'kamu', PENGIRIM=D.pengirim||'aku';
 $$('[data-f]').forEach(function(n){ var v=D[n.dataset.f]; if(v!=null) n.textContent=v; });
 
 var AC=null, muted=false;
-function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } } if(AC&&AC.state==='suspended') AC.resume(); return AC; }
+function ac(){ if(!AC){ var C=window.AudioContext||window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } } if(AC && AC.state !== 'running' && !muted) AC.resume(); return AC; }
 function tone(f,dur,o){ o=o||{}; var a=ac(); if(!a||muted) return;
   var t=a.currentTime+(o.when||0), v=o.vol||.14, osc=a.createOscillator(), g=a.createGain();
   osc.type=o.type||'triangle'; osc.frequency.setValueAtTime(f,t);
@@ -500,7 +501,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     move:function(){ k.style.transform='rotate(-8deg) scale(.8)'; },
     up:function(){ k.style.transform='';
       if(!dekat(k,celah,U()*22)){ kedip(); return false; }
-      beres=true; var c=pusat(celah), r=k.getBoundingClientRect();
+      beres=true; MU.play(); var c=pusat(celah), r=k.getBoundingClientRect();
       k.style.transition='left .3s,top .3s,transform .3s'; k.style.left=(c.x-r.width/2)+'px'; k.style.top=(c.y-r.height*.9)+'px'; k.style.transform='scale(.35)';
       setTimeout(function(){ k.style.opacity='0'; SFX.bip(); buzz(20); var ly=$('#layar'); ly.textContent='SILAKAN'; ly.classList.add('ok'); celah.classList.remove('denyut'); $('#gerbang').classList.add('buka');
         petunjuk('Gerbangnya terbuka.'); setTimeout(function(){ lanjut(berikut,'Naik ke kereta'); },900); },320);

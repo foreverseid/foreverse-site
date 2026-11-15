@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script src="/tema-dasar.js?v=1"></script>
 <meta name="theme-color" content="#7B6AD8">
 <meta name="robots" content="noindex, nofollow">
 <title>Ada pesan untukmu 💌</title>
@@ -641,7 +642,7 @@ let AC = null;
 F.muted = false;
 F.ac = () => {
   if(!AC){ const C = window.AudioContext || window.webkitAudioContext; if(C){ try{ AC=new C({latencyHint:'playback'}); }catch(e){ AC=new C(); } (function(c){ try{ var k=c.createDynamicsCompressor(); k.threshold.value=-12; k.knee.value=8; k.ratio.value=12; k.attack.value=.003; k.release.value=.2; var m=c.createGain(); m.gain.value=.85; m.connect(k); k.connect(c.__out||c.destination); c.__out=m; }catch(e){} })(AC); } }
-  if(AC && AC.state === 'suspended') AC.resume();
+  if(AC && AC.state !== 'running' && !F.muted) AC.resume();
   return AC;
 };
 const tone = F.tone = (freq, dur, o={}) => {
@@ -687,12 +688,31 @@ F.playBirthday = () => {
 
 /* ---------- lagu latar ----------
    F.data.lagu = { src, judul, artis, mulai, selesai }  (detik; selesai 0 = sampai habis) */
+/* kotak musik bawaan: dipakai kalau pembeli tidak mengunggah lagu, supaya surat tidak pernah diam */
+function kotakMusik(){
+  const a = F.ac(); if(!a) return null;
+  const gain = a.createGain(); gain.gain.value = .11; gain.connect(a.__out||a.destination);
+  const notes = [72,76,79,84,79,76, 74,77,81,86,81,77, 72,76,79,83,79,76, 71,74,79,83,86,83];
+  const step = .34; let t0 = a.currentTime + .1, n = 0;
+  const ping = (midi, t) => {
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine'; o.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.9, t + .01); g.gain.exponentialRampToValueAtTime(.001, t + 1.4);
+    o.connect(g); g.connect(gain); o.start(t); o.stop(t + 1.5);
+  };
+  (function loop(){
+    if(t0 < a.currentTime) t0 = a.currentTime + .05;
+    while(t0 < a.currentTime + 2){ ping(notes[n % notes.length], t0); t0 += step; n++; }
+    setTimeout(loop, 300);
+  })();
+  return gain;
+}
 F.music = (() => {
   const L = F.data.lagu || {};
   const has = !!(L.src && String(L.src).trim());
   const audio = has ? new Audio() : null;
   const start = +L.mulai || 0, end = +L.selesai || 0;
-  let target = .75, playing = false;
+  let target = .75, playing = false, kotak = null;
   if(audio){
     audio.src = L.src; audio.preload = 'auto'; audio.loop = !end;
     audio.addEventListener('timeupdate', () => { if(end > start && audio.currentTime >= end) audio.currentTime = start; });
@@ -701,7 +721,7 @@ F.music = (() => {
   const api = {
     has, info: L,
     play(){
-      if(!audio) return;
+      if(!audio){ if(!kotak) kotak = kotakMusik(); return; }
       try{ if(navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}
       if(!playing && audio.currentTime < start) { try{ audio.currentTime = start; }catch(e){} }
       audio.volume = 0; audio.muted = F.muted;
@@ -714,7 +734,7 @@ F.music = (() => {
     pause(){ if(audio){ audio.pause(); playing = false; document.dispatchEvent(new Event('f:music')); } },
     toggle(){ playing ? api.pause() : api.play(); },
     get playing(){ return playing; },
-    duck(on){ if(audio) audio.volume = on ? .15 : target; },
+    duck(on){ if(audio) audio.volume = on ? .15 : target; else if(kotak && AC) kotak.gain.setTargetAtTime(on ? .03 : .11, AC.currentTime, .08); },
     mute(m){ if(audio) audio.muted = m; }
   };
   return api;
