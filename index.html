@@ -508,12 +508,21 @@ footer{background:var(--cream);border-top:1px solid var(--stone);color:var(--ink
 .remah{font-size:14px;color:var(--ink-faint);margin-bottom:18px}.remah a{color:var(--violet);text-decoration:none}
 .tm-grid{display:grid;gap:clamp(24px,5vw,64px);align-items:start}
 @media(min-width:900px){.tm-grid{grid-template-columns:380px 1fr}}
-.hal-tema .phone{width:min(380px,100%)}
+.hal-tema .phone{width:clamp(220px,calc((100vh - 252px) / 2 + 22px),380px);max-width:100%}
+.tm-hp{display:grid;justify-items:center;gap:14px}
+/* HP: ponsel contoh harus muat utuh di antara kepala halaman dan tombol "Pakai tema ini".
+   Tinggi layar ponsel = 2 × lebarnya, jadi lebarnya dihitung dari sisa tinggi layar
+   (dikurangi juga ruang untuk tombol "Coba di layar penuh" di bawahnya). */
+@media(max-width:899px){
+  .hal-tema{padding-top:14px}
+  .hal-tema .remah{margin-bottom:10px}
+  .hal-tema .phone{width:clamp(180px,calc((100vh - 292px) / 2 + 16px),min(380px,100%));width:clamp(180px,calc((100svh - 292px) / 2 + 16px),min(380px,100%))}
+  .tm-hp .btn{padding:9px 16px;font-size:13.5px}
+}
 .tm-info h1{font-size:clamp(30px,4.4vw,46px);margin-top:10px}
 .tm-info .lede{margin-top:12px;color:var(--ink-soft);max-width:52ch}
 .tm-info .chips{margin-top:16px}
 .tm-info .lbl{font-size:14px;color:var(--ink-faint);margin-top:22px}
-.tm-info .btn{margin-top:20px}
 .tm-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(251,250,247,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--stone);padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px))}
 .tm-bar .wrap{display:flex;justify-content:center}
 .tm-bar .btn{width:min(420px,100%)}
@@ -535,7 +544,8 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
 /* ══════════ tampilan HP ══════════
    Patokan: semua bagian penting muat di satu layar HP (±375×700),
    teks tidak melebar, dan kartu tersusun rapi tanpa digeser ke samping. */
-.phone{width:min(330px,78vw)}
+/* ponsel contoh di beranda: tidak pernah lebih tinggi dari layar yang terlihat */
+.phone{width:min(330px,78vw,calc((100vh - 128px) / 2 + 16px));width:min(330px,78vw,calc((100svh - 128px) / 2 + 16px))}
 @media(max-width:699px){
   body{font-size:15.5px;line-height:1.6}
   section{padding:40px 0}
@@ -551,7 +561,13 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
   .nav-m{padding-bottom:8px}.nav-m a{font-size:12.5px;padding:6px 11px}
   .hero{padding-top:28px;padding-bottom:40px}
   .hero-cta{margin-top:22px}.hero-cta .btn{flex:1}
-  .scene{height:200px;margin-top:4px}
+  /* ilustrasi kado di HP: kadonya dikecilkan dan keempat label momen dipindah ke
+     sudut, supaya tidak ada yang saling menimpa di lebar layar berapa pun */
+  .scene{height:236px;margin-top:8px}
+  .giftbox{transform:translate(-50%,-50%) scale(.6)}
+  .chip{font-size:12px;padding:5px 10px;gap:5px}
+  .chip.c1{left:0;top:15%} .chip.c2{right:0;top:0} .chip.c3{left:0;bottom:13%} .chip.c4{right:0;bottom:0}
+  .spark{display:none}
   .tab{font-size:13.5px;padding:7px 13px}
   .moment-line strong{font-size:21px}.moment-line span{font-size:14px}
   /* contoh: pilihan tema satu baris geser, ponsel muat satu layar */
@@ -679,7 +695,10 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
     <div class="wrap">
       <nav class="remah" aria-label="Lokasi"><a href="/template" data-rute>Template</a> <span>/</span> <span id="tmMomen"></span></nav>
       <div class="tm-grid">
-        <div class="phone"><div class="screen"><iframe id="tmFrame" title="Contoh tema"></iframe></div></div>
+        <div class="tm-hp">
+          <div class="phone"><div class="screen"><iframe id="tmFrame" title="Contoh tema"></iframe></div></div>
+          <a id="tmPenuh" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Coba di layar penuh ↗</a>
+        </div>
         <div class="tm-info">
           <span class="eyebrow" id="tmLabel"></span>
           <h1 id="tmNama"></h1>
@@ -687,7 +706,6 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
           <div class="chips" id="tmIsi"></div>
           <p class="lbl">Urutannya:</p>
           <ol class="flow" id="tmAlur"></ol>
-          <a id="tmPenuh" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Buka contoh layar penuh</a>
           <p class="pv-fine">Nama dan pesan di contoh ini cuma karangan (Amira &amp; Adriel). Punyamu nanti berisi foto dan cerita kalian sendiri.</p>
         </div>
       </div>
@@ -729,7 +747,7 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
       </div>
       <div class="steps">
         <div class="step"><span class="n">1</span><h3>Pilih momen dan tema</h3><p>Mainkan contohnya dulu sampai kamu yakin.</p></div>
-        <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, foto, dan lagu, dengan pratinjau yang berubah langsung. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
+        <div class="step"><span class="n">2</span><h3>Isi formulir</h3><p>Nama, pesan, foto, dan lagu. Sebelum bayar, kamu melihat hasilnya dulu. Pesanmu dipakai persis seperti yang kamu tulis.</p></div>
         <div class="step"><span class="n">3</span><h3>Bayar <span data-v="harga">Rp15.000</span></h3><p>Lewat QRIS atau e-wallet, ditambah biaya transaksi <span data-v="biaya">Rp560</span>. Rinciannya kelihatan sebelum kamu bayar.</p></div>
         <div class="step"><span class="n">4</span><h3>Tautannya langsung jadi</h3><p>Muncul di layar dan masuk ke emailmu, lengkap dengan kode QR berbentuk hati. Kamu yang mengirimnya ke dia, kapan pun kamu mau.</p></div>
       </div>
@@ -760,7 +778,7 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
         <h2>Semua yang dibutuhkan, tanpa paket tambahan.</h2>
       </div>
       <div class="fitur">
-        <div><span class="e">👀</span><h3>Pratinjau langsung</h3><p>Suratnya berubah sambil kamu mengetik. Kamu tahu persis yang akan dia lihat sebelum membayar.</p></div>
+        <div><span class="e">👀</span><h3>Lihat dulu, baru bayar</h3><p>Suratmu tampil utuh dengan isianmu sendiri. Kamu tahu persis yang akan dia lihat sebelum membayar.</p></div>
         <div><span class="e">🎮</span><h3>Tulisanmu jadi permainan</h3><p>Janji, alasan, dan hal-hal kecil yang kamu tulis ikut muncul di dalam game-nya, tidak hanya di surat akhir.</p></div>
         <div><span class="e">🎵</span><h3>Lagu kalian sendiri</h3><p>Unggah MP3 atau M4A, lalu pilih bagian lagunya. Kalau tidak diisi, yang diputar kotak musik bawaan.</p></div>
         <div><span class="e">💌</span><h3>Tautan + QR berbentuk hati</h3><p>Kirim lewat chat, atau cetak kode QR-nya dan selipkan di kado fisik.</p></div>
@@ -814,7 +832,7 @@ body[data-hal-aktif="tema"] .fv-wa{display:none}
         </details>
         <details>
           <summary>Bisa lihat contohnya dulu?</summary>
-          <p>Bisa. Setiap tema punya contoh lengkap yang bisa dimainkan gratis di halaman <a href="/template" data-rute>Template</a>. Saat mengisi formulir pun ada pratinjau yang berubah langsung.</p>
+          <p>Bisa. Setiap tema punya contoh lengkap yang bisa dimainkan gratis di halaman <a href="/template" data-rute>Template</a>. Suratmu sendiri juga bisa kamu lihat dulu di formulir, sebelum membayar.</p>
         </details>
         <details>
           <summary>Bedanya tiap tema apa?</summary>
