@@ -947,37 +947,60 @@ function esc(s) {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
+/* Email "surat jadi". Empat tautan di dalamnya punya tujuan berbeda, jadi tiap
+   tautan diberi kotak sendiri dengan label: mana yang dikirim ke penerima, mana
+   yang hanya untuk pembeli. Urutannya mengikuti yang paling dulu dibutuhkan. */
+function tautanEmail(o) {
+  return {
+    surat: o.asal + "/s/" + o.kode,
+    qr: o.asal + "/selesai?kode=" + o.kode + "#qr",
+    edit: o.asal + "/edit/" + o.token,
+    perpanjang: o.asal + "/perpanjang/" + o.token
+  };
+}
+function kotakEmail(k) {
+  return `<div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:22px 24px;margin-top:14px">
+    <div style="font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:${k.warna};margin-bottom:6px">${k.label}</div>
+    <h2 style="margin:0 0 6px;font-size:17px;font-weight:600;line-height:1.35;color:#1B1B2F">${k.judul}</h2>
+    <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#4E4A5E">${k.isi}</p>
+    <a href="${esc(k.url)}" style="display:block;background:${k.utama ? "#E8734A" : "#FFFDF8"};color:${k.utama ? "#ffffff" : "#3B3168"};border:1.5px solid ${k.utama ? "#E8734A" : "#3B3168"};text-decoration:none;text-align:center;padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px">${k.tombol}</a>
+    ${k.tampilUrl ? `<p style="margin:10px 0 0;font-size:12.5px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(k.url)}</p>` : ""}
+  </div>`;
+}
 function badanEmail(o) {
-  const tautan = o.asal + "/s/" + o.kode;
-  const edit = o.asal + "/edit/" + o.token;
+  const t = tautanEmail(o), dia = esc(o.penerima || "dia");
+  const sampai = o.simpanSampai ? "sampai <strong>" + tglPanjang(o.simpanSampai) + "</strong>" : "selama " + BULAN_SIMPAN + " bulan";
+  const batasEdit = o.batasEdit ? "sampai <strong>" + tglPanjang(o.batasEdit) + "</strong>" : "selama " + HARI_EDIT + " hari";
   return `<!doctype html><html lang="id"><body style="margin:0;background:#FAF3E8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1B1B2F">
 <div style="max-width:520px;margin:0 auto;padding:32px 20px">
   <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:24px">Foreverse</div>
-  <p style="margin:0 0 14px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
-  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
-    <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah jadi.</h1>
-    <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4E4A5E">
-      Surat untuk <strong>${esc(o.penerima)}</strong> sudah aktif. Tinggal kirim tautan di bawah ini ke dia.
-      Suratnya bisa dibuka selama ${BULAN_SIMPAN} bulan. Kami ingatkan lewat email ${HARI_PENGINGAT} hari sebelum masanya habis, dan kamu bisa <a href="${esc(o.asal + "/perpanjang/" + o.token)}" style="color:#3B3168">memperpanjangnya kapan saja</a>.
-    </p>
-    <a href="${esc(tautan)}" style="display:block;background:#E8734A;color:#fff;text-decoration:none;text-align:center;padding:14px 18px;border-radius:12px;font-weight:600;font-size:15px">Buka suratnya</a>
-    <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:#8A8598;word-break:break-all">${esc(tautan)}</p>
-    <p style="margin:12px 0 0;font-size:14px;line-height:1.6"><a href="${esc(o.asal + "/selesai?kode=" + o.kode + "#qr")}" style="color:#3B3168">Buat kode QR berbentuk hati atau amplop</a> untuk dikirim bersama tautannya. Gambarnya juga bisa kamu cetak dan selipkan di kado.</p>
-  </div>
-
-  <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:22px 24px;margin-top:14px">
-    <h2 style="margin:0 0 8px;font-size:15px;font-weight:600">Mau mengubah isinya?</h2>
-    <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#4E4A5E">
-      Tautan di bawah ini khusus untukmu, berlaku ${HARI_EDIT} hari dan boleh dipakai berkali-kali.
-      Jangan dikirim ke dia, ya.
-    </p>
-    <p style="margin:0;font-size:13px;line-height:1.6;word-break:break-all"><a href="${esc(edit)}" style="color:#3B3168">${esc(edit)}</a></p>
-  </div>
-
+  <p style="margin:0 0 6px;font-size:15px;color:#4E4A5E">Hai, Forevers!</p>
+  <h1 style="margin:0 0 8px;font-size:22px;font-weight:600;line-height:1.3">Suratmu untuk ${dia} sudah jadi.</h1>
+  <p style="margin:0 0 6px;font-size:15px;line-height:1.6;color:#4E4A5E">Ada empat tautan di email ini. Yang pertama untuk dikirim ke ${dia}, sisanya untukmu sendiri.</p>
+  ${kotakEmail({ warna: "#C95A33", label: "1 · Untuk dikirim ke " + dia, judul: "Tautan surat", utama: true, tampilUrl: true,
+    isi: "Ini suratnya. Salin tautannya atau teruskan lewat chat ke " + dia + ".", url: t.surat, tombol: "Buka suratnya" })}
+  ${kotakEmail({ warna: "#C95A33", label: "2 · Pelengkap kiriman", judul: "Kode QR berbentuk hati atau amplop",
+    isi: "Gambar kode QR yang membuka surat yang sama. Bisa dikirim bersama tautannya, atau dicetak lalu diselipkan di kado.", url: t.qr, tombol: "Buat kode QR" })}
+  ${kotakEmail({ warna: "#3B3168", label: "3 · Hanya untuk kamu", judul: "Ubah isi surat",
+    isi: "Salah ketik atau mau ganti foto? Tautan ini bisa dipakai berkali-kali " + batasEdit + ". Alamat suratnya tidak berubah. Jangan dikirim ke " + dia + ", ya.", url: t.edit, tombol: "Ubah isi surat" })}
+  ${kotakEmail({ warna: "#3B3168", label: "4 · Hanya untuk kamu", judul: "Masa simpan",
+    isi: "Suratnya bisa dibuka " + sampai + ". Kami kirim pengingat " + HARI_PENGINGAT + " hari sebelum masanya habis, dan kamu bisa menambah masa simpannya kapan saja.", url: t.perpanjang, tombol: "Perpanjang masa simpan" })}
   <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">
     Kode pesanan <strong>${esc(o.kode)}</strong>. Ada kendala? Balas email ini atau hubungi kami lewat WhatsApp.
   </p>
 </div></body></html>`;
+}
+/* versi teks polos: dipakai aplikasi email yang tidak menampilkan HTML, dan membantu email tidak dianggap spam */
+function teksEmail(o) {
+  const t = tautanEmail(o), dia = o.penerima || "dia";
+  return [
+    "Hai, Forevers!", "", "Suratmu untuk " + dia + " sudah jadi.", "",
+    "1. TAUTAN SURAT (untuk dikirim ke " + dia + ")", t.surat, "",
+    "2. KODE QR berbentuk hati atau amplop (pelengkap kiriman)", t.qr, "",
+    "3. UBAH ISI SURAT (hanya untuk kamu, berlaku " + HARI_EDIT + " hari, jangan dikirim ke " + dia + ")", t.edit, "",
+    "4. MASA SIMPAN (hanya untuk kamu): surat bisa dibuka " + (o.simpanSampai ? "sampai " + tglPanjang(o.simpanSampai) : "selama " + BULAN_SIMPAN + " bulan") + ". Perpanjang di sini:", t.perpanjang, "",
+    "Kode pesanan " + o.kode + ". Ada kendala? Balas email ini."
+  ].join("\n");
 }
 
 async function kirimEmail(env, o) {
@@ -991,7 +1014,8 @@ async function kirimEmail(env, o) {
       to: [o.email],
       reply_to: dari,
       subject: "Suratmu untuk " + o.penerima + " sudah jadi",
-      html: badanEmail(o)
+      html: badanEmail(o),
+      text: teksEmail(o)
     })
   });
   if (!r.ok) return { ok: false, pesan: "Resend menolak: " + (await r.text()).slice(0, 200) };
@@ -1003,7 +1027,8 @@ async function kirimEmailKode(env, db, kode, asal) {
   if (!b) return { ok: false, pesan: "Pesanan tidak ditemukan." };
   const isi = JSON.parse(b.isi || "{}");
   const hasil = await kirimEmail(env, {
-    email: b.email, kode: b.kode, token: b.token, penerima: isi.penerima || "", asal
+    email: b.email, kode: b.kode, token: b.token, penerima: isi.penerima || "", asal,
+    batasEdit: b.batas_edit, simpanSampai: b.simpan_sampai
   });
   if (hasil.ok) await db.prepare(`UPDATE pesanan SET email_terkirim=1 WHERE kode=?`).bind(kode).run();
   else if (b.email) await catatKejadian(env, db, "email gagal", hasil.pesan, kode);
