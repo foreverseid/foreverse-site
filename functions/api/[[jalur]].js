@@ -2110,7 +2110,7 @@ export async function onRequest(ctx) {
         const dari = Number(badan.dari) > 0 ? Number(badan.dari) : 0;
         const panjang = sampai - dari;
         const cari = teks(badan.cari, 60).toLowerCase();
-        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,n_balas,isi FROM pesanan`;
+        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,total,metode,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,n_balas,isi FROM pesanan`;
         const pola = "%" + cari.replace(/[%_\\]/g, "\\$&") + "%";
         const syaratCari = cari
           ? ` AND (lower(kode) LIKE ?3 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?3 ESCAPE '\\'
@@ -2169,6 +2169,12 @@ export async function onRequest(ctx) {
             OR (status='lunas' AND aktif=1 AND simpan_sampai IS NOT NULL AND simpan_sampai < ?1 + ?2)
           ORDER BY dibuat DESC LIMIT 200`).bind(skr, HARI_PENGINGAT * 86400000).all();
         const draf = await db.prepare(`SELECT COUNT(*) n FROM pesanan WHERE status!='lunas'`).first();
+        /* perpanjangan masa simpan yang dibayar dalam periode: pendapatan tambahan di luar surat baru */
+        const pj = await db.prepare(`SELECT COUNT(*) n, COALESCE(SUM(jumlah),0) rp, COALESCE(SUM(total),0) kotor FROM perpanjangan
+          WHERE status='lunas' AND jumlah > 0 AND dibayar BETWEEN ? AND ?`).bind(dari, sampai).first();
+        /* uang yang benar-benar dibayar pembeli (termasuk biaya transaksi) untuk surat lunas dalam periode */
+        const kotor = await db.prepare(`SELECT COALESCE(SUM(COALESCE(total,jumlah)),0) rp FROM pesanan
+          WHERE status='lunas' AND COALESCE(dibayar,dibuat) BETWEEN ? AND ?`).bind(dari, sampai).first();
 
         return jwb({
           ok: true, cari, dari, sampai, baris,
@@ -2177,6 +2183,7 @@ export async function onRequest(ctx) {
           semua: { total: semua.n, lunas: semua.lunas || 0, pendapatan: semua.rp },
           per_tema: perTema.results || [], per_momen: perMomen.results || [],
           minat, perlu: (perlu.results || []).map(ringkas), draf: draf.n,
+          perpanjang: { n: pj.n || 0, rp: pj.rp || 0, kotor: pj.kotor || 0 }, kotor: kotor.rp || 0,
           sekarang: skr
         });
       }

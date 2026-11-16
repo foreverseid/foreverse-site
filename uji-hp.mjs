@@ -194,6 +194,25 @@ judul("Formulir pemesanan (390×700)");
   await ctx.close();
 }
 
+/* ───────── 5 · Developer Control ───────── */
+judul("Developer Control");
+for (const [w, h] of [[390, 800], [1280, 800]]) {
+  const { ctx, p, buka } = await hp({ w, h });
+  await buka("/developer");
+  await p.fill("#sandi", "sandi-simulasi"); await p.locator("#fMasuk button").click(); await p.waitForTimeout(1200);
+  const halaman = ["dasbor", "pesanan", "analitik", "harga", "bayar", "promo", "sistem", "data"], salah = [];
+  for (const x of halaman) {
+    await p.evaluate(v => location.hash = v, x); await p.waitForTimeout(350);
+    const ok = await p.evaluate(v => !document.getElementById("h-" + v).hidden && document.documentElement.scrollWidth <= innerWidth, x);
+    if (!ok) salah.push(x);
+  }
+  cek(`${w}px: delapan halaman panel terbuka tanpa melebar`, !salah.length, salah.join(", "));
+  await p.evaluate(() => location.hash = "promo"); await p.waitForTimeout(300);
+  await p.fill("#prKode", "UJIHP"); await p.fill("#prNilai", "10"); await p.locator("#prSimpan").click(); await p.waitForTimeout(800);
+  cek(`${w}px: kode promo dibuat dan tampil sebagai kartu`, (await p.locator("#prDaftar .promo").count()) >= 1);
+  await ctx.close();
+}
+
 await b.close();
 console.log("\n" + "─".repeat(58));
 console.log(gagal.length ? `${lulus} lulus, ${gagal.length} GAGAL:\n  - ` + gagal.join("\n  - ") : `SEMUA LULUS — ${lulus} uji HP.`);
