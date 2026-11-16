@@ -10,7 +10,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -25,7 +25,9 @@
 body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6}
 .wrap{max-width:38rem;margin:0 auto;padding:clamp(28px,7vw,64px) clamp(18px,5vw,28px) 80px}
 
-.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600;margin-bottom:clamp(24px,6vw,44px)}
+/* tanda merek: sama dengan beranda (logo resmi + "foreverse" Fraunces) */
+.merk{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-family:"Fraunces",Georgia,serif;font-weight:400;font-size:20px;letter-spacing:-.01em;margin-bottom:clamp(24px,6vw,44px)}
+.merk img{display:block;height:21px;width:auto}
 
 /* ══ menunggu ══ */
 .tahap{display:none}
@@ -103,12 +105,7 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
 <body>
 <div class="wrap">
   <a class="merk" href="/">
-    <svg viewBox="0 0 64 48" width="26" height="20" aria-hidden="true">
-      <rect x="2" y="6" width="60" height="40" rx="6" fill="none" stroke="#3B3168" stroke-width="3.4"/>
-      <path d="M2 10l30 22 30-22" fill="none" stroke="#3B3168" stroke-width="3.4" stroke-linejoin="round"/>
-      <path d="M32 30c-5-5-11-8-11-14 0-4 3-6 6-6 2.4 0 4 1.3 5 3 1-1.7 2.6-3 5-3 3 0 6 2 6 6 0 6-6 9-11 14z" fill="#E8734A"/>
-    </svg>
-    Foreverse
+    <img src="/foreverse-logo.png" alt="" width="46" height="21"><span>foreverse</span>
   </a>
 
   <!-- ════ menunggu pembayaran ════ -->

@@ -2228,6 +2228,42 @@ await uji("email surat jadi: empat tautan berlabel (untuk dia / hanya untuk kamu
   harus(!/—|nggak|\bgak\b/.test(e.html + e.text), "aturan teks Foreverse");
 });
 
+await uji("pembayaran berhasil: pemilik dapat satu email (nominal, tema, faktur), walau notifikasi DOKU dobel", async () => {
+  const L = await buatLingkungan({ EMAIL_PEMILIK: "pemilik@foreverse.id" });
+  const p = await buatPesanan(L);
+  await L.notifikasi(notifSukses(p.faktur)); await L.tunggu();
+  await L.notifikasi(notifSukses(p.faktur)); await L.tunggu();
+  const ke = L.catatan.kasir;
+  sama(ke.length, 1, "email ke pemilik");
+  sama(ke[0].to[0], "pemilik@foreverse.id", "alamat pemilik");
+  harus(/^Pembayaran masuk Rp/.test(ke[0].subject), "subjek: " + ke[0].subject);
+  harus(ke[0].html.includes(p.kode) && ke[0].html.includes(p.faktur) && /Pembayaran berhasil/.test(ke[0].html), "isi");
+  harus(!ke[0].html.includes("pembeli@contoh.id") && !ke[0].text.includes("pembeli@contoh.id"), "tidak memuat email pembeli");
+  sama(L.catatan.email.length, 1, "email surat jadi ke pembeli tetap satu");
+});
+
+await uji("perpanjangan berhasil juga dikabarkan ke pemilik, sekali", async () => {
+  const L = await buatLingkungan();
+  const p = await lunaskan(L);
+  const r = await (await L.panggil("/api/perpanjang", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token: p.token }) })).json();
+  harus(r.ok && r.order_id.startsWith("FP-"), "perpanjang: " + JSON.stringify(r).slice(0, 120));
+  const pj = await L.env.DB.prepare("SELECT total FROM perpanjangan WHERE order_id=?").bind(r.order_id).first();
+  await L.notifikasi(notifSukses(r.order_id, pj.total)); await L.tunggu();
+  await L.notifikasi(notifSukses(r.order_id, pj.total)); await L.tunggu();
+  sama(L.catatan.kasir.length, 2, "satu untuk surat, satu untuk perpanjangan");
+  harus(/Perpanjangan masa simpan/.test(L.catatan.kasir[1].subject), "subjek perpanjangan");
+});
+
+await uji("situs seragam: semua halaman memuat huruf yang sama dan tanda merek resmi (logo + foreverse)", async () => {
+  const STD = "family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700";
+  for (const f of ["index.html", "pesan.html", "selesai.html", "perpanjang.html", "developer.html", "kreator.html", "syarat-ketentuan.html", "kebijakan-privasi.html", "functions/momen.js"]) {
+    const h = await readFile(new URL("./" + f, import.meta.url), "utf8");
+    harus(h.includes(STD), f + ": set huruf berbeda");
+    if (!f.startsWith("functions")) harus(/foreverse-logo\.png/.test(h), f + ": logo resmi tidak dipakai");
+    harus(!/M32 30c-5-5-11-8-11-14/.test(h), f + ": masih memakai tanda lama berhati coral");
+  }
+});
+
 /* ═══════════ audit keamanan pra-Production (03-11-2026) ═══════════ */
 judul("Audit keamanan");
 

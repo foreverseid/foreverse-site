@@ -80,6 +80,21 @@ judul("Seretan dan zoom");
   await ctx.close();
 }
 {
+  /* dua jari menyobek dua perangko sekaligus (temuan uji HP 16-11) */
+  const { ctx, p, tengah, buka } = await hp({ bait: true });
+  await buka("/bait-demo.html");
+  await p.evaluate(() => { document.body.classList.add("di-meja"); window.__ke(2); }); await p.waitForTimeout(1400);
+  const cdp = await ctx.newCDPSession(p);
+  const kotak = await p.evaluate(() => [...document.querySelectorAll("#lembar .prk")].slice(0, 2).map(e => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }));
+  const s = await tengah("#slotBaru");
+  const dua = (type, k) => cdp.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : kotak.map((a, i) => ({ id: i + 1, x: a.x + (s.x - a.x) * k + i * 6, y: a.y + (s.y - a.y) * k })) });
+  await dua("touchStart", 0); for (let i = 1; i <= 16; i++) { await dua("touchMove", i / 16); await p.waitForTimeout(16); } await dua("touchEnd");
+  await p.waitForTimeout(3400);
+  const r = await p.evaluate(() => ({ melayang: document.querySelectorAll("body > .prk").length, terpasang: document.querySelectorAll("#slotBaru .prk").length, adegan: document.querySelector(".adegan.aktif, .scene.aktif, [data-adegan].aktif")?.id || "" }));
+  cek("Bait · perangko: dua jari sekaligus, satu terpasang dan tidak ada yang melayang", r.melayang === 0 && r.terpasang === 1, JSON.stringify(r));
+  await ctx.close();
+}
+{
   const { ctx, p, jari, buka } = await hp();
   await buka("/kado-riang-demo.html");
   for (let i = 0; i < 2; i++) { await jari("touchStart", 195, 420); await p.waitForTimeout(30); await jari("touchEnd"); await p.waitForTimeout(80); }

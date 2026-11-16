@@ -342,7 +342,7 @@ export function halamanMomen(slug, temaMati) {
 <meta name="theme-color" content="#FBFAF7">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>
 <style>
 :root{--ink:#16161A;--soft:#4A4852;--faint:#83808C;--cream:#FBFAF7;--paper:#fff;--stone:#E4E2DC;--violet:#3B3168;--violet-tint:#EEEBF7;--coral:#E8734A;--blush:#E8A5B0;
@@ -364,7 +364,7 @@ header{position:sticky;top:0;z-index:60;background:rgba(251,250,247,.9);backdrop
 .btn.garis{background:var(--paper);color:var(--ink);border:1px solid var(--stone)}
 .btn.kecil{padding:9px 16px;font-size:.9rem}
 .hero{padding:clamp(28px,6vw,64px) 0 clamp(24px,4vw,40px)}
-.label{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:600}
+.label{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);font-weight:600}
 h1{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,6vw,3.4rem);line-height:1.08;margin:10px 0 16px;max-width:18ch;letter-spacing:-.015em}
 h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.15;margin:0 0 16px}
 .lede{color:var(--soft);font-size:1.06rem;max-width:56ch;margin:0 0 22px}
