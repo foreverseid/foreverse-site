@@ -397,16 +397,19 @@ var SFX={
 function noMenu(n){ n.addEventListener('contextmenu',function(e){ e.preventDefault(); }); }
 document.addEventListener('contextmenu',function(e){ if(!e.target.closest('textarea')) e.preventDefault(); });
 /* satu gestur seret: down / move(dx,dy) / up(dx,dy); boleh() mengunci */
+/* satu seretan sekaligus di seluruh halaman: jari kedua yang menyentuh benda lain
+   diabaikan, supaya tidak ada benda yang tertinggal melayang */
+var seretAktif=null;
 function seret(node,o){
   var pid=null,sx=0,sy=0; noMenu(node);
   node.addEventListener('pointerdown',function(e){
-    if(pid!==null || (o.boleh && !o.boleh())) return;
-    pid=e.pointerId; sx=e.clientX; sy=e.clientY;
+    if(pid!==null || (seretAktif && seretAktif!==node && seretAktif.isConnected) || (o.boleh && !o.boleh())) return;
+    pid=e.pointerId; seretAktif=node; sx=e.clientX; sy=e.clientY;
     try{ node.setPointerCapture(pid); }catch(_){}
     e.preventDefault(); ac(); if(o.down) o.down(e);
   });
   node.addEventListener('pointermove',function(e){ if(e.pointerId===pid && o.move) o.move(e,e.clientX-sx,e.clientY-sy); });
-  function lepas(e){ if(e.pointerId!==pid) return; pid=null; if(o.up) o.up(e,e.clientX-sx,e.clientY-sy); }
+  function lepas(e){ if(e.pointerId!==pid) return; pid=null; if(seretAktif===node) seretAktif=null; if(o.up) o.up(e,e.clientX-sx,e.clientY-sy); }
   node.addEventListener('pointerup',lepas); node.addEventListener('pointercancel',lepas);
 }
 /* benda dibawa jari ke mana saja (pindah ke lapisan atas selama diseret) */
