@@ -158,8 +158,10 @@ export function buatDoku(catatan) {
 
     /* ── Resend ── */
     if (u.hostname === "api.resend.com") {
-      catatan.email.push(JSON.parse(badan));
-      return new Response(JSON.stringify({ id: "email-" + catatan.email.length }), { status: 200 });
+      const e = JSON.parse(badan);
+      /* kabar pembayaran ke pemilik dicatat terpisah, supaya hitungan email pembeli tidak berubah */
+      (/^Foreverse Kasir/.test(e.from) ? catatan.kasir : catatan.email).push(e);
+      return new Response(JSON.stringify({ id: "email-" + (catatan.email.length + catatan.kasir.length) }), { status: 200 });
     }
 
     if (!/^api(-sandbox)?\.doku\.com$/.test(u.hostname)) {
@@ -218,7 +220,7 @@ export function buatDoku(catatan) {
 /* ══════════════ rakit lingkungan ══════════════ */
 
 export async function buatLingkungan(ubah = {}) {
-  const catatan = { panggilan: [], email: [], status: {}, jumlah: {}, faktur: null, sandbox: null };
+  const catatan = { panggilan: [], email: [], kasir: [], status: {}, jumlah: {}, faktur: null, sandbox: null };
   const env = { ...KUNCI, ...ubah, DB: await buatD1(), FOTO: buatR2(), ASSETS: buatAssets() };
   globalThis.fetch = buatDoku(catatan);
 

@@ -1105,6 +1105,67 @@ async function lunasi(env, db, kode, asal) {
   if (!u || !u.meta || !u.meta.changes) return;
   if (b.promo) await db.prepare(`UPDATE promo SET terpakai=terpakai+1 WHERE kode=?`).bind(b.promo).run();
   await kirimEmailKode(env, db, kode, asal);
+  const isi = (() => { try { return JSON.parse(b.isi || "{}"); } catch (_) { return {}; } })();
+  await kabarPemilik(env, { jenis: "surat", kode, tema: b.tema, total: b.total, harga: b.jumlah, metode: b.metode,
+    promo: b.promo, potongan: b.potongan, faktur: b.order_id, waktu: skr, penerima: isi.penerima, pengirim: isi.pengirim });
+}
+
+/* Email ke pemilik setiap kali ada pembayaran masuk (surat baru atau perpanjangan).
+   Sekali per pembayaran: dipanggil hanya oleh pemanggil yang lolos UPDATE atomik
+   status!='lunas', jadi notifikasi DOKU dobel dan cek ulang 15 menit tidak
+   membuat email kedua. Tidak memuat isi surat, email, atau nomor pembeli. */
+const NAMA_TEMA = {
+  "bait": "Bait", "kado-riang": "Kado Riang", "langit-harapan": "Langit Harapan", "kapal-botol": "Kapal dalam Botol",
+  "rekonstruksi": "Rekonstruksi Hari Pertama", "pemutaran-perdana": "Pemutaran Perdana", "zona-waktu": "Zona Waktu",
+  "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
+  "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
+  "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap",
+  "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
+};
+const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
+async function kabarPemilik(env, o) {
+  try {
+    if (!env.RESEND_API_KEY) return;
+    const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
+    const total = Number(o.total) || 0, gratis = total === 0;
+    const judul = o.jenis === "perpanjang" ? "Perpanjangan masa simpan" : "Surat baru";
+    const waktu = new Date(o.waktu || Date.now()).toLocaleString("id-ID", { dateStyle: "long", timeStyle: "short", timeZone: "Asia/Jakarta" }) + " WIB";
+    const baris = [
+      ["Jenis", judul],
+      ["Tema", NAMA_TEMA[o.tema] || o.tema || "-"],
+      o.harga !== undefined && o.harga !== null ? ["Harga surat", rupiah(o.harga)] : null,
+      o.promo ? ["Promo", o.promo + (o.potongan ? " (potongan " + rupiah(o.potongan) + ")" : "")] : null,
+      ["Total dibayar", gratis ? "Rp0 (gratis, tanpa DOKU)" : rupiah(total)],
+      ["Metode", gratis ? "-" : (o.metode || "QRIS")],
+      ["Kode pesanan", o.kode],
+      o.faktur ? ["Nomor faktur DOKU", o.faktur] : null,
+      ["Waktu", waktu]
+    ].filter(Boolean);
+    const html = `<!doctype html><html lang="id"><body style="margin:0;background:#FBFAF7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#16161A">
+<div style="max-width:480px;margin:0 auto;padding:28px 20px">
+  <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8A8598;margin-bottom:18px">Foreverse · untuk pemilik</div>
+  <div style="background:#fff;border:1px solid #E4E2DC;border-radius:18px;padding:22px 24px">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${gratis ? "#3B3168" : "#1E7A4F"}">${gratis ? "Pesanan gratis" : "Pembayaran berhasil"}</div>
+    <div style="font-size:30px;font-weight:700;margin:6px 0 2px">${gratis ? "Rp0" : rupiah(total)}</div>
+    <div style="font-size:14px;color:#4E4A5E;margin-bottom:16px">${esc(judul)} · ${esc(NAMA_TEMA[o.tema] || o.tema || "")}</div>
+    <table style="width:100%;border-collapse:collapse;font-size:14px">${baris.map(([k, v]) =>
+      `<tr><td style="padding:7px 0;color:#8A8598;border-top:1px solid #F0EEE9;width:42%">${esc(k)}</td><td style="padding:7px 0;border-top:1px solid #F0EEE9;font-weight:600">${esc(String(v))}</td></tr>`).join("")}</table>
+  </div>
+  <p style="font-size:12.5px;line-height:1.6;color:#8A8598;margin:16px 2px 0">${gratis ? "" : "Dana masuk ke saldo DOKU sesuai jadwal pencairan DOKU. "}Rinciannya ada di /developer → Pesanan.</p>
+</div></body></html>`;
+    await kirimResend(env, {
+      method: "POST",
+      headers: { authorization: "Bearer " + env.RESEND_API_KEY, "content-type": "application/json" },
+      body: JSON.stringify({
+        from: "Foreverse Kasir <" + dari + ">",
+        to: [env.EMAIL_PEMILIK || dari],
+        subject: (gratis ? "Pesanan gratis" : "Pembayaran masuk " + rupiah(total)) + " · " + judul + " · " + (NAMA_TEMA[o.tema] || o.tema || ""),
+        html,
+        text: baris.map(([k, v]) => k + ": " + v).join("\n")
+      })
+    });
+  } catch (_) { /* kabar ke pemilik tidak boleh menggagalkan alur pembeli */ }
 }
 
 /* ══════════════════ masa simpan ══════════════════ */
@@ -1449,6 +1510,9 @@ async function lunasiPerpanjangan(env, db, orderId) {
   const dasar = Math.max(Number(b.simpan_sampai) || 0, Date.now());
   const baru = tambahBulan(dasar, BULAN_PERPANJANG);
   await db.prepare(`UPDATE pesanan SET simpan_sampai=?, pengingat=NULL, n_panjang=COALESCE(n_panjang,0)+1, aktif=1 WHERE kode=?`).bind(baru, row.kode).run();
+  const tm = await db.prepare(`SELECT tema FROM pesanan WHERE kode=?`).bind(row.kode).first();
+  await kabarPemilik(env, { jenis: "perpanjang", kode: row.kode, tema: tm && tm.tema, total: row.total, harga: row.jumlah,
+    metode: row.metode, faktur: row.order_id, waktu: Date.now() });
   if (env.RESEND_API_KEY && b.email) {
     const isi = JSON.parse(b.isi || "{}");
     const dari = env.EMAIL_PENGIRIM || "halo@foreverse.id";
