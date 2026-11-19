@@ -461,7 +461,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 kegiatan:24, alasan:90, titikTemu:40, catatanTunda:90,
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
                 catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50, janji:90,
-                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , harapanNatal:70, janjiTahun:60, alasanSayang:60, kagum:60, maafLebaran:70, sadar:90, judulFilm:40, lokasiFilm:30, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
+                tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , harapanNatal:70, janjiTahun:60, alasanSayang:60, kagum:60, rencanaKetemu:50, barangBawa:50, maafLebaran:70, sadar:90, judulFilm:40, lokasiFilm:30, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -478,6 +478,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "langit-harapan":    { nama:"Langit Harapan",    nfoto:4, foto:"TTTR", mesin:"/langit-harapan.html",    momen:"birthday" },
     "kapal-botol":       { nama:"Kapal dalam Botol", nfoto:4, foto:"RTRT", mesin:"/kapal-botol.html", momen:"anniversary" },
     "zona-waktu":        { nama:"Dua Jendela",       nfoto:4, foto:"TTRR", mesin:"/zona-waktu.html",        momen:"ldr" },
+    "celengan":          { nama:"Celengan Ketemu",   nfoto:4, foto:"TTRR", mesin:"/celengan.html",          momen:"ldr" },
+    "koper":             { nama:"Koper ke Kotamu",   nfoto:4, foto:"TRRT", mesin:"/koper.html",             momen:"ldr" },
     "loker-terakhir":    { nama:"Loker Terakhir", nfoto:4, foto:"TRTR", mesin:"/loker-terakhir.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:4, foto:"TTRR", mesin:"/confess-kunang.html",  momen:"confess" },
     "getwell-365":       { nama:"36,5",                  nfoto:4, foto:"TTRR", mesin:"/getwell-365.html",     momen:"getwell" },
@@ -635,6 +637,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "kasus-pengirim": { nada:[62,65,69,72,69,65,67,70,74,70,67,65,64,67,69,60], jeda:.42, gema:.8 },
     "rekonstruksi":   { nada:[60,64,67,72,71,67,64,62,60,65,69,72,69,65,64,62], jeda:.46, gema:.85 },
     "rumah-contoh":   { nada:[67,71,74,79,74,71,69,72,76,81,76,72,65,69,72,77,72,69,67,71,74,79,78,74], jeda:.42, gema:1.5 },
+    "celengan":       { nada:[67,72,76,72,69,74,77,74,65,69,72,69,67,71,74,79], jeda:.32, gema:1.4 },
+    "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
   var cobaAC = null, cobaHenti = null;
@@ -1113,6 +1117,20 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         [0,1,2].map(function(i){ return '<div class="baris" data-f="alasanS'+i+'"><label for="alasanS'+i+'">Alasan '+(i+1)+'</label>' +
           '<input id="alasanS'+i+'" type="text" maxlength="60" placeholder="'+contohAs[i]+'">' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Alasan ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "celengan"){
+      var contohRc = ["Makan ramen di kedai yang kamu ceritain", "Nonton bioskop, kursi paling belakang", "Foto berdua yang banyak"];
+      html = '<h2><span class="n">5</span> Tiga rencana waktu ketemu nanti</h2>' +
+        '<p class="jelas">Tiap rencana jadi satu koin terakhir yang dia masukkan ke celengan, lalu tercetak di buku tabungan kalian.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="rencanaC'+i+'"><label for="rencanaC'+i+'">Rencana '+(i+1)+'</label>' +
+          '<input id="rencanaC'+i+'" type="text" maxlength="50" placeholder="'+contohRc[i]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Rencana ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "koper"){
+      var contohBr = ["Payung, di sini lagi sering hujan", "Sendal jepit kesayanganmu", "Kamera, kita foto yang banyak"];
+      html = '<h2><span class="n">5</span> Tiga barang yang wajib dia bawa</h2>' +
+        '<p class="jelas">Dia berkemas untuk terbang ke kotamu. Tiga barang ini dia masukkan ke koper, sementara "ragu-ragu" dan "overthinking" mental keluar.</p>' +
+        [0,1,2].map(function(i){ return '<div class="baris" data-f="barangK'+i+'"><label for="barangK'+i+'">Barang '+(i+1)+'</label>' +
+          '<input id="barangK'+i+'" type="text" maxlength="50" placeholder="'+contohBr[i]+'">' +
+          '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Barang ini belum diisi.</p></div>'; }).join("");
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1236,6 +1254,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       for(var as=0;as<3;as++) pasangHitung("alasanS"+as, BATAS.alasanSayang);
     } else if(tema === "herbarium"){
       for(var kg=0;kg<3;kg++) pasangHitung("kagumH"+kg, BATAS.kagum);
+    } else if(tema === "celengan"){
+      for(var rc=0;rc<3;rc++) pasangHitung("rencanaC"+rc, BATAS.rencanaKetemu);
+    } else if(tema === "koper"){
+      for(var br=0;br<3;br++) pasangHitung("barangK"+br, BATAS.barangBawa);
     } else if(tema === "pemutaran-perdana"){
       pasangHitung("judulFilm", BATAS.judulFilm);
       for(var lk=0;lk<3;lk++) pasangHitung("lokasiF"+lk, BATAS.lokasiFilm);
@@ -1350,6 +1372,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     if(TEMA === "garis-finis") return { pencapaian: $("pencapaian").value, sorakan: [0,1,2].map(function(i){ return $("sorakan"+i).value; }) };
     if(TEMA === "pabrik-cokelat") return { alasan: [0,1,2].map(function(i){ return $("alasanS"+i).value; }) };
     if(TEMA === "herbarium") return { kagum: [0,1,2].map(function(i){ return $("kagumH"+i).value; }) };
+    if(TEMA === "celengan") return { rencana: [0,1,2].map(function(i){ return $("rencanaC"+i).value; }) };
+    if(TEMA === "koper") return { barang: [0,1,2].map(function(i){ return $("barangK"+i).value; }) };
     if(TEMA === "pemutaran-perdana") return { judulFilm: $("judulFilm").value, lokasi: [0,1,2].map(function(i){ return $("lokasiF"+i).value; }) };
     if(TEMA === "malam-takbiran") return { ucapan: $("ucapanLebaran").value, maaf: [0,1,2].map(function(i){ return $("maafL"+i).value; }) };
     if(TEMA === "hitung-mundur") return { janji: [0,1,2].map(function(i){ return $("janjiT"+i).value; }) };
@@ -1609,13 +1633,15 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         tandai("alasan"+i, kosongA);
         if(kosongA) kurang.push("alasan"+i);
       });
-    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir" || TEMA === "rumah-menyala" || TEMA === "hitung-mundur" || TEMA === "pabrik-cokelat" || TEMA === "malam-takbiran" || TEMA === "pemutaran-perdana" || TEMA === "herbarium"){
+    } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir" || TEMA === "rumah-menyala" || TEMA === "hitung-mundur" || TEMA === "pabrik-cokelat" || TEMA === "malam-takbiran" || TEMA === "pemutaran-perdana" || TEMA === "herbarium" || TEMA === "celengan" || TEMA === "koper"){
       (TEMA === "kotak-musik" ? ["sadar0","sadar1","sadar2"]
         : TEMA === "garis-finis" ? ["pencapaian","sorakan0","sorakan1","sorakan2"]
         : TEMA === "rumah-menyala" ? ["harapanN0","harapanN1","harapanN2"]
         : TEMA === "hitung-mundur" ? ["janjiT0","janjiT1","janjiT2"]
         : TEMA === "pabrik-cokelat" ? ["alasanS0","alasanS1","alasanS2"]
         : TEMA === "herbarium" ? ["kagumH0","kagumH1","kagumH2"]
+        : TEMA === "celengan" ? ["rencanaC0","rencanaC1","rencanaC2"]
+        : TEMA === "koper" ? ["barangK0","barangK1","barangK2"]
         : TEMA === "malam-takbiran" ? ["maafL0","maafL1","maafL2"]
         : TEMA === "pemutaran-perdana" ? ["judulFilm","lokasiF0","lokasiF1","lokasiF2"]
         : ["stNama0","stKenang0","stNama1","stKenang1","stNama2","stKenang2"]).forEach(function(nm){
@@ -1979,6 +2005,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           (i.alasan||[]).forEach(function(v,n){ if($("alasanS"+n)) $("alasanS"+n).value = v || ""; });
         } else if(TEMA === "herbarium"){
           (i.kagum||[]).forEach(function(v,n){ if($("kagumH"+n)) $("kagumH"+n).value = v || ""; });
+        } else if(TEMA === "celengan"){
+          (i.rencana||[]).forEach(function(v,n){ if($("rencanaC"+n)) $("rencanaC"+n).value = v || ""; });
+        } else if(TEMA === "koper"){
+          (i.barang||[]).forEach(function(v,n){ if($("barangK"+n)) $("barangK"+n).value = v || ""; });
         } else if(TEMA === "pemutaran-perdana"){
           if($("judulFilm")) $("judulFilm").value = i.judulFilm || "";
           (i.lokasi||[]).forEach(function(v,n){ if($("lokasiF"+n)) $("lokasiF"+n).value = v || ""; });

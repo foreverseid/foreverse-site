@@ -52,7 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
-  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, kagum: 60, maafLebaran: 70, sadar: 90, judulFilm: 40, lokasiFilm: 30, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
+  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, kagum: 60, rencanaKetemu: 50, barangBawa: 50, maafLebaran: 70, sadar: 90, judulFilm: 40, lokasiFilm: 30, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -86,6 +86,8 @@ const TEMA_SKEMA = {
   "langit-harapan":    { nfoto: 4, foto: "TTTR", momen: "birthday" },
   "kapal-botol":       { nfoto: 4, foto: "RTRT", momen: "anniversary" },
   "zona-waktu":        { nfoto: 4, foto: "TTRR", momen: "ldr" },
+  "celengan":          { nfoto: 4, foto: "TTRR", momen: "ldr" },
+  "koper":             { nfoto: 4, foto: "TRRT", momen: "ldr" },
   "loker-terakhir":    { nfoto: 4, foto: "TRTR", momen: "graduation" },
   "confess-kunang":    { nfoto: 4, foto: "TTRR", momen: "confess" },
   "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
@@ -853,6 +855,18 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.lokasi = [0, 1, 2].map(i => teks((p.lokasi || [])[i], BATAS.lokasiFilm));
     if (isi.lokasi.some(x => !x)) throw new Error("Ketiga lokasi syuting belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "celengan") {
+    /* "Celengan Ketemu" (LDR): `rencana` = tiga hal yang mau dilakukan
+       waktu ketemu; tiap rencana jadi satu koin terakhir di celengan. */
+    isi.rencana = [0, 1, 2].map(i => teks((p.rencana || [])[i], BATAS.rencanaKetemu));
+    if (isi.rencana.some(x => !x)) throw new Error("Ketiga rencana waktu ketemu belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "koper") {
+    /* "Koper ke Kotamu" (LDR): `barang` = tiga barang yang wajib dibawa
+       penerima saat terbang ke kota pengirim. */
+    isi.barang = [0, 1, 2].map(i => teks((p.barang || [])[i], BATAS.barangBawa));
+    if (isi.barang.some(x => !x)) throw new Error("Ketiga barang yang wajib dibawa belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "herbarium") {
     /* "Herbarium Kecil" (Hari Spesial · Hari Perempuan): `kagum` = tiga hal
        yang dikagumi pengirim, terbuka saat tiap bunga kering dicocokkan. */
@@ -1139,7 +1153,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Ketemu", "koper": "Koper ke Kotamu",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
