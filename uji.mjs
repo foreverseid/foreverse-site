@@ -40,7 +40,7 @@ function fotoPenuh(n) { return Array.from({ length: n }, (_, i) => ({ data: FOTO
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  const JUMLAH_FOTO = { "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
+  const JUMLAH_FOTO = { "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
   d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
@@ -134,8 +134,8 @@ function isiDrafTema(tema) {
     delete d.isi.rahasia;
     d.isi.janji = ["Janji teras.", "Janji tamu.", "Janji dapur.", "Janji halaman."];
     d.isi.penutup = "";
-  } else if (tema === "kotak-musik" || tema === "garis-finis" || tema === "stasiun-terakhir" || tema === "rumah-menyala" || tema === "hitung-mundur" || tema === "pabrik-cokelat" || tema === "malam-takbiran") {
-    d.momen = tema === "kotak-musik" ? "apology" : tema === "garis-finis" ? "congrats" : (tema === "rumah-menyala" || tema === "hitung-mundur" || tema === "pabrik-cokelat" || tema === "malam-takbiran") ? "spesial" : "parting";
+  } else if (tema === "kotak-musik" || tema === "garis-finis" || tema === "stasiun-terakhir" || tema === "rumah-menyala" || tema === "hitung-mundur" || tema === "pabrik-cokelat" || tema === "malam-takbiran" || tema === "herbarium") {
+    d.momen = tema === "kotak-musik" ? "apology" : tema === "garis-finis" ? "congrats" : (tema === "rumah-menyala" || tema === "hitung-mundur" || tema === "pabrik-cokelat" || tema === "malam-takbiran" || tema === "herbarium") ? "spesial" : "parting";
     delete d.isi.ucapan;
     delete d.isi.tanggalLahir;
     delete d.isi.sembunyikanUmur;
@@ -143,6 +143,7 @@ function isiDrafTema(tema) {
     if (tema === "kotak-musik") d.isi.sadar = ["Sadar satu.", "Sadar dua.", "Sadar tiga."];
     if (tema === "garis-finis") { d.isi.pencapaian = "Lulus sidang"; d.isi.sorakan = ["Sorak satu", "Sorak dua", "Sorak tiga"]; }
     if (tema === "pabrik-cokelat") d.isi.alasan = ["Alasan satu.", "Alasan dua.", "Alasan tiga."];
+    if (tema === "herbarium") d.isi.kagum = ["Kagum satu.", "Kagum dua.", "Kagum tiga."];
     if (tema === "malam-takbiran") { d.isi.ucapan = "minal"; d.isi.maaf = ["Maaf satu.", "Maaf dua.", "Maaf tiga."]; }
     if (tema === "hitung-mundur") d.isi.janji = ["Janji satu.", "Janji dua.", "Janji tiga."];
     if (tema === "rumah-menyala") { d.isi.ucapan = "merry"; d.isi.harapan = ["Harap satu.", "Harap dua.", "Harap tiga."]; }
@@ -615,7 +616,7 @@ await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", asy
   sama(j.minat["pasar-malam"].demo, 3, "dibuka");
   sama(j.minat["pasar-malam"].form, 1, "mulai isi");
   sama(j.minat["bait"].lunas, 1, "terbayar");
-  sama(Object.keys(j.minat).length, 21, "semua tema terdaftar");
+  sama(Object.keys(j.minat).length, 22, "semua tema terdaftar");
 });
 
 await uji("rumah-contoh · pesanan lengkap diterima, momen proposal, empat janji tersimpan", async () => {
@@ -700,7 +701,7 @@ for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.htm
                       "rumah-contoh.html", "rumah-contoh-demo.html",
                       "kotak-musik.html", "kotak-musik-demo.html", "garis-finis.html", "garis-finis-demo.html",
                       "stasiun-terakhir.html", "stasiun-terakhir-demo.html", "bait-demo.html",
-                      "rumah-menyala.html", "rumah-menyala-demo.html", "hitung-mundur.html", "hitung-mundur-demo.html", "pabrik-cokelat.html", "pabrik-cokelat-demo.html", "malam-takbiran.html", "malam-takbiran-demo.html", "pemutaran-perdana.html", "pemutaran-perdana-demo.html",
+                      "rumah-menyala.html", "rumah-menyala-demo.html", "hitung-mundur.html", "hitung-mundur-demo.html", "pabrik-cokelat.html", "pabrik-cokelat-demo.html", "malam-takbiran.html", "malam-takbiran-demo.html", "herbarium.html", "herbarium-demo.html", "pemutaran-perdana.html", "pemutaran-perdana-demo.html",
                       "index.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
@@ -761,7 +762,7 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
    "match" — tapi mencaplok sampai </script> SKRIP BERIKUTNYA, menghapus
    skrip bootstrap pratinjau. Uji ini memastikan match-nya selalu pas
    satu skrip saja. */
-for (const berkas of ["kado-riang.html", "langit-harapan.html", "kapal-botol.html", "zona-waktu.html", "loker-terakhir.html", "confess-kunang.html", "getwell-365.html", "pasar-malam.html", "lewat-duluan.html", "kasus-pengirim.html", "rekonstruksi.html", "rumah-contoh.html", "kotak-musik.html", "garis-finis.html", "stasiun-terakhir.html", "rumah-menyala.html", "hitung-mundur.html", "pabrik-cokelat.html", "malam-takbiran.html", "pemutaran-perdana.html"]) {
+for (const berkas of ["kado-riang.html", "langit-harapan.html", "kapal-botol.html", "zona-waktu.html", "loker-terakhir.html", "confess-kunang.html", "getwell-365.html", "pasar-malam.html", "lewat-duluan.html", "kasus-pengirim.html", "rekonstruksi.html", "rumah-contoh.html", "kotak-musik.html", "garis-finis.html", "stasiun-terakhir.html", "rumah-menyala.html", "hitung-mundur.html", "pabrik-cokelat.html", "malam-takbiran.html", "herbarium.html", "pemutaran-perdana.html"]) {
   await uji(berkas + " · pola sisip data worker.js pas satu skrip, tidak mencaplok skrip berikutnya", async () => {
     const t = await readFile("./" + berkas, "utf8");
     const re = /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/;
@@ -2209,7 +2210,7 @@ judul("Dasar tema, musik, dan email surat jadi");
 
 const MESIN_TEMA = ["surat", "kado-riang", "langit-harapan", "kapal-botol", "zona-waktu", "loker-terakhir", "confess-kunang",
   "getwell-365", "pasar-malam", "lewat-duluan", "kasus-pengirim", "rekonstruksi", "rumah-contoh", "kotak-musik", "garis-finis",
-  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "pemutaran-perdana"];
+  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "pemutaran-perdana"];
 const berkasTema = m => [m + ".html", (m === "surat" ? "bait" : m) + "-demo.html"];
 
 await uji("semua tema (mesin & demo) memuat tema-dasar.js sebelum skripnya sendiri, layar terkunci dari zoom", async () => {
@@ -2528,6 +2529,7 @@ for (const [tema, momen, kosongkan, pesan] of [
   ["hitung-mundur", "spesial", d => { d.isi.janji[1] = ""; }, "rencana"],
   ["pabrik-cokelat", "spesial", d => { d.isi.alasan[2] = ""; }, "alasan"],
   ["malam-takbiran", "spesial", d => { d.isi.maaf[1] = ""; }, "maaf"],
+  ["herbarium", "spesial", d => { d.isi.kagum[0] = ""; }, "kagumi"],
   ["pemutaran-perdana", "anniversary", d => { d.isi.lokasi[2] = ""; }, "lokasi"]]) {
   await uji(tema + " · pesanan lengkap diterima dengan momen " + momen + ", isian khas tersimpan", async () => {
     const L = await buatLingkungan();
@@ -2541,6 +2543,7 @@ for (const [tema, momen, kosongkan, pesan] of [
     harus(tema !== "stasiun-terakhir" || isi.stasiun.every(x => x.nama && x.kenangan), "stasiun");
     harus(tema !== "hitung-mundur" || isi.janji.length === 3, "janji tahun baru");
     harus(tema !== "pabrik-cokelat" || isi.alasan.length === 3, "alasan valentine");
+    harus(tema !== "herbarium" || (isi.kagum.length === 3 && isi.kagum[1] === "Kagum dua."), "hal yang dikagumi");
     harus(tema !== "malam-takbiran" || (isi.ucapan === "minal" && isi.maaf.length === 3), "ucapan/maaf lebaran");
     harus(tema !== "pemutaran-perdana" || (isi.judulFilm === "Dua Kopi, Satu Meja" && isi.lokasi.length === 3), "judul/lokasi film");
     harus(tema !== "rumah-menyala" || (isi.ucapan === "merry" && isi.harapan.length === 3), "ucapan/harapan natal");
@@ -2573,6 +2576,9 @@ await uji("momen spesial terpasang di katalog, formulir, API, dan dasbor", async
   harus(halamanMomen("lebaran", []).includes("tema=malam-takbiran"), "halaman /lebaran menawarkan temanya");
   const tempatL = (katalog.match(/"malam-takbiran"/g) || []).length;
   harus(tempatL >= 1 && tempatL <= 2, "Lebaran tampil di 1–2 momen, dapat " + tempatL);
+  harus(halamanMomen("hari-perempuan", []).includes("tema=herbarium"), "halaman /hari-perempuan menawarkan temanya");
+  const tempatP = (katalog.match(/"herbarium"/g) || []).length;
+  harus(tempatP >= 1 && tempatP <= 2, "Hari Perempuan tampil di 1–2 momen, dapat " + tempatP);
 });
 
 /* ═══════════ halaman momen: semua tema dimatikan → "Segera hadir" ═══════════ */

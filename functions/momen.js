@@ -32,6 +32,7 @@ const TEMA = {
   "rumah-menyala": { nama: "Rumah yang Menyala", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
   "hitung-mundur": { nama: "Hitung Mundur di Atap", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
   "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." },
+  "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
 };
 
@@ -305,6 +306,23 @@ export const MOMEN = {
     faq: [
       ["Ucapannya bisa diganti?", "Bisa. Pilih \"Selamat Hari Raya Idulfitri\", \"Mohon Maaf Lahir dan Batin\", atau \"Minal ’Aidin wal Faizin\" di formulir."],
       ["Kapan sebaiknya dikirim?", "Malam takbiran atau pagi Idulfitri. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
+      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+    ]
+  },
+  "hari-perempuan": {
+    judul: "Ucapan Hari Perempuan untuk Pacar · Kado Hari Perempuan Digital",
+    deskripsi: "Ucapan Hari Perempuan yang bisa dimainkan: buku herbarium kecil berisi hal-hal yang kamu kagumi darinya, foto kalian, dan suratmu yang dipres supaya awet.",
+    h1: "Bilang ke dia, apa yang kamu kagumi darinya.",
+    lede: "Buku herbarium kecil yang masih terikat pita. Tiap bunga kering yang dia cocokkan membuka satu hal yang kamu kagumi darinya, dan suratmu keluar dari alat pres bunga.",
+    tema: ["herbarium"],
+    ide: [
+      "Aku bangga sama kamu, dan aku jarang bilang langsung.",
+      "Kamu kuat dengan caramu sendiri.",
+      "Hari ini hari kamu. Sisanya biar aku yang urus."
+    ],
+    faq: [
+      ["Kapan sebaiknya dikirim?", "Menjelang 8 Maret, Hari Perempuan Internasional. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
+      ["Harus untuk pacar?", "Tidak. Cocok juga untuk istri, ibu, kakak, sahabat, atau perempuan mana pun yang kamu kagumi."],
       ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
     ]
   }

@@ -52,7 +52,7 @@ const BATAS = {
   kunangKu: 70, sejak: 50, janji: 90,
   tempatKj: 24, ceritaKj: 90,
   kegiatanRut: 50, oleh: 50,
-  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, maafLebaran: 70, sadar: 90, judulFilm: 40, lokasiFilm: 30, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
+  harapanNatal: 70, janjiTahun: 60, alasanSayang: 60, kagum: 60, maafLebaran: 70, sadar: 90, judulFilm: 40, lokasiFilm: 30, pencapaian: 60, sorakan: 60, namaStasiun: 24, kenangan: 90,
   email: 120, whatsapp: 24, judulLagu: 80, artisLagu: 80
 };
 
@@ -101,6 +101,7 @@ const TEMA_SKEMA = {
   "hitung-mundur":     { nfoto: 4, foto: "TRTR", momen: "spesial" },
   "pabrik-cokelat":    { nfoto: 4, foto: "TTTR", momen: "spesial" },
   "malam-takbiran":    { nfoto: 4, foto: "TTRR", momen: "spesial" },
+  "herbarium":         { nfoto: 4, foto: "TRTR", momen: "spesial" },
   "pemutaran-perdana": { nfoto: 5, foto: "TRTRT", momen: "anniversary" }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
@@ -852,6 +853,12 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     isi.lokasi = [0, 1, 2].map(i => teks((p.lokasi || [])[i], BATAS.lokasiFilm));
     if (isi.lokasi.some(x => !x)) throw new Error("Ketiga lokasi syuting belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "herbarium") {
+    /* "Herbarium Kecil" (Hari Spesial · Hari Perempuan): `kagum` = tiga hal
+       yang dikagumi pengirim, terbuka saat tiap bunga kering dicocokkan. */
+    isi.kagum = [0, 1, 2].map(i => teks((p.kagum || [])[i], BATAS.kagum));
+    if (isi.kagum.some(x => !x)) throw new Error("Ketiga hal yang kamu kagumi belum diisi.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "hitung-mundur") {
     /* "Hitung Mundur di Atap" (Hari Spesial · Tahun Baru): `janji` = tiga
        rencana bersama untuk tahun depan, muncul saat tahunnya berganti. */
@@ -1132,7 +1139,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
