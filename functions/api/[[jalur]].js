@@ -432,6 +432,7 @@ async function lewatBatas(db, request, nama) {
    per IP per 10 menit → berhenti. Kode lama 6 huruf yang ruangnya kecil
    jadi tidak bisa disapu bot. */
 const MAKS_KODE_MELESET = 20;
+const MAKS_SALAH_ADMIN = 5, KUNCI_ADMIN_MS = 15 * 60000;   // login /developer
 export async function kodeDitahan(env, request, catatMeleset) {
   if (!env.DB) return false;
   const sidik = await sidikIp(request);
@@ -2093,10 +2094,29 @@ export async function onRequest(ctx) {
     /* ── halaman pengawasan (/developer) ─────────────────────── */
     if ((jalur === "developer" || jalur === "admin") && request.method === "POST") {
       if (!env.ADMIN_PASSWORD) return salah("ADMIN_PASSWORD belum dipasang di Cloudflare.", 500);
+      /* Batas tebakan: 5 kali salah dari satu alamat → dikunci 15 menit.
+         Berhasil masuk menghapus hitungan. Hanya sidik IP yang disimpan. */
+      const sidikMasuk = await sidikIp(request);
+      const kunciMasuk = sidikMasuk ? "admin:" + sidikMasuk : null;
+      if (kunciMasuk) {
+        await siapkan(db);
+        const t = await db.prepare(`SELECT sampai,n FROM laju WHERE kunci=?`).bind(kunciMasuk).first();
+        if (t && t.sampai > Date.now() && t.n >= MAKS_SALAH_ADMIN) {
+          const menit = Math.max(1, Math.ceil((t.sampai - Date.now()) / 60000));
+          return salah("Terlalu banyak percobaan. Coba lagi " + menit + " menit lagi.", 429);
+        }
+      }
       if (!samaAman(teks(badan.sandi, 200), env.ADMIN_PASSWORD)) {   // waktu-konstan
+        if (kunciMasuk) {
+          const skr = Date.now();
+          const t = await db.prepare(`SELECT sampai FROM laju WHERE kunci=?`).bind(kunciMasuk).first();
+          if (t && t.sampai > skr) await db.prepare(`UPDATE laju SET n=n+1 WHERE kunci=?`).bind(kunciMasuk).run();
+          else await db.prepare(`INSERT OR REPLACE INTO laju(kunci,sampai,n) VALUES(?,?,1)`).bind(kunciMasuk, skr + KUNCI_ADMIN_MS).run();
+        }
         await new Promise(r => setTimeout(r, 1200));   // perlambat tebakan beruntun
         return salah("Password salah.", 401);
       }
+      if (kunciMasuk) await db.prepare(`DELETE FROM laju WHERE kunci=?`).bind(kunciMasuk).run();
 
       const aksi = teks(badan.aksi, 20);
 

@@ -2303,6 +2303,22 @@ await uji("M2: menebak kode surat dihentikan setelah 20 kali meleset, penerima s
   for (let i = 0; i < 40; i++) sama((await L.panggil("/s/" + p.kode, lain)).status, 200, "buka ke-" + (i + 1));
 });
 
+await uji("login /developer: 5 kali salah dari satu IP dikunci 15 menit, IP lain tetap bisa", async () => {
+  const L = await buatLingkungan();
+  const masuk = (sandi, ip) => L.panggil("/api/developer", { method: "POST",
+    headers: { "content-type": "application/json", "cf-connecting-ip": ip },
+    body: JSON.stringify({ sandi, aksi: "periksa" }) });
+  for (let i = 0; i < 5; i++) sama((await masuk("tebak" + i, "10.7.7.7")).status, 401, "salah ke-" + (i + 1));
+  const r = await masuk(KUNCI.ADMIN_PASSWORD, "10.7.7.7");
+  sama(r.status, 429, "password benar pun ditahan selama terkunci");
+  harus(/menit lagi/.test((await r.json()).pesan || ""), "pesan menyebut berapa menit");
+  sama((await masuk(KUNCI.ADMIN_PASSWORD, "10.7.7.8")).status, 200, "IP lain tidak ikut terkunci");
+  await L.env.DB.prepare("UPDATE laju SET sampai=0 WHERE kunci LIKE 'admin:%'").run();
+  sama((await masuk(KUNCI.ADMIN_PASSWORD, "10.7.7.7")).status, 200, "terbuka lagi setelah 15 menit");
+  const sisa = await L.env.DB.prepare("SELECT kunci FROM laju WHERE kunci LIKE 'admin:%' AND sampai>0").all();
+  sama(sisa.results.length, 0, "berhasil masuk menghapus hitungan");
+});
+
 await uji("L1: notifikasi DOKU serentak hanya melunasi sekali — satu email, promo terpakai sekali", async () => {
   const L = await buatLingkungan();
   await admin(L, { aksi: "promo_simpan", kode: "SERENTAK", jenis: "rupiah", nilai: 1000, kuota: 5 });
