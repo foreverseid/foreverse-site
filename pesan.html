@@ -1770,6 +1770,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       email: $("email").value.trim(),
       whatsapp: $("wa").value.trim(),
       promo: PROMO.kode,
+      sumber: (function(){ try{ return JSON.parse(localStorage.getItem("fv-sumber") || "null") || {}; }catch(_){ return {}; } })(),
       isi: Object.assign({
         penerima: $("penerima").value.trim(),
         pengirim: $("pengirim").value.trim(),
@@ -2059,6 +2060,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   muatPratinjauLive();
 })();
 </script>
+<script src="/sumber.js"></script>
 <script src="/bantuan.js" defer></script>
 </body>
 </html>

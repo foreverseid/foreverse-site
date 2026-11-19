@@ -313,7 +313,7 @@ async function siapkan(db) {
       dibuat INTEGER, dibayar INTEGER, batas_edit INTEGER,
       aktif INTEGER DEFAULT 1, email_terkirim INTEGER DEFAULT 0,
       dibuka INTEGER, n_buka INTEGER DEFAULT 0, simpan_sampai INTEGER, pengingat INTEGER,
-      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0, n_balas INTEGER DEFAULT 0, metode TEXT, total INTEGER)`),
+      promo TEXT, potongan INTEGER DEFAULT 0, n_panjang INTEGER DEFAULT 0, n_balas INTEGER DEFAULT 0, metode TEXT, total INTEGER, sumber TEXT, sumber_rinci TEXT)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_order ON pesanan(order_id)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS i_token ON pesanan(token)`),
     /* hitungan kunjungan per tema per hari: "demo" = contohnya dibuka di
@@ -352,7 +352,7 @@ async function siapkan(db) {
   ]);
   /* tabel pesanan yang sudah ada di produksi dibuat sebelum kolom ini ada */
   for (const kolom of ["dibuka INTEGER", "n_buka INTEGER DEFAULT 0", "simpan_sampai INTEGER", "pengingat INTEGER",
-                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0", "n_balas INTEGER DEFAULT 0", "metode TEXT", "total INTEGER"]) {
+                       "promo TEXT", "potongan INTEGER DEFAULT 0", "n_panjang INTEGER DEFAULT 0", "n_balas INTEGER DEFAULT 0", "metode TEXT", "total INTEGER", "sumber TEXT", "sumber_rinci TEXT"]) {
     try { await db.prepare("ALTER TABLE pesanan ADD COLUMN " + kolom).run(); } catch (_) { /* sudah ada */ }
   }
   for (const [t, kolom] of [["promo", "kreator TEXT"], ["promo", "komisi INTEGER DEFAULT 0"],
@@ -403,6 +403,17 @@ async function kirimResend(env, opsi) {
 /* ══════════════════ batas laju ══════════════════
    Di Cloudflare, header cf-connecting-ip selalu ada. Tanpa header itu
    (simulator lokal) pembatasan dilewati. */
+/* asal pengunjung dari sumber.js: hanya jenis yang dikenal + rincian pendek */
+const JENIS_SUMBER = ["instagram", "tiktok", "whatsapp", "facebook", "google", "x", "yt",
+  "threads", "pinterest", "kreator", "surat", "email", "lain", "langsung"];
+function sumberSah(s) {
+  s = s && typeof s === "object" ? s : {};
+  if (!s.s) return [null, null];
+  const jenis = JENIS_SUMBER.includes(s.s) ? s.s : "lain";
+  const rinci = String(s.r || "").toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 40);
+  return [jenis, rinci || null];
+}
+
 async function sidikIp(request) {
   const ip = request.headers.get("cf-connecting-ip");
   if (!ip) return null;
@@ -1852,14 +1863,15 @@ export async function onRequest(ctx) {
       if (!pr.ok) return salah(pr.pesan, 400);
       const isi = await rapikanIsi(env, kode, badan, null, tema);
       await db.prepare(`INSERT INTO pesanan
-        (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif,promo,potongan)
-        VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1,?,?)`).bind(
+        (kode,token,tema,momen,email,whatsapp,isi,status,jumlah,dibuat,aktif,promo,potongan,sumber,sumber_rinci)
+        VALUES(?,?,?,?,?,?,?, 'draf', ?,?,1,?,?,?,?)`).bind(
         kode, token,
         tema,
         teks(badan.momen, 40),
         teks(badan.email, BATAS.email),
         teks(badan.whatsapp, BATAS.whatsapp),
-        JSON.stringify(isi), pr.harga, skr, pr.kode || null, pr.potongan
+        JSON.stringify(isi), pr.harga, skr, pr.kode || null, pr.potongan,
+        ...sumberSah(badan.sumber)
       ).run();
       return jwb({ ok: true, kode, token, jumlah: pr.harga, potongan: pr.potongan });
     }
@@ -2130,7 +2142,7 @@ export async function onRequest(ctx) {
         const dari = Number(badan.dari) > 0 ? Number(badan.dari) : 0;
         const panjang = sampai - dari;
         const cari = teks(badan.cari, 60).toLowerCase();
-        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,total,metode,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,n_balas,isi FROM pesanan`;
+        const kolom = `SELECT kode,token,tema,momen,email,whatsapp,status,jumlah,total,metode,dibuat,dibayar,batas_edit,aktif,email_terkirim,dibuka,n_buka,simpan_sampai,promo,potongan,n_panjang,n_balas,sumber,sumber_rinci,isi FROM pesanan`;
         const pola = "%" + cari.replace(/[%_\\]/g, "\\$&") + "%";
         const syaratCari = cari
           ? ` AND (lower(kode) LIKE ?3 ESCAPE '\\' OR lower(COALESCE(email,'')) LIKE ?3 ESCAPE '\\'
@@ -2181,6 +2193,15 @@ export async function onRequest(ctx) {
         for (const x of (kj.results || [])) if (minat[x.tema]) minat[x.tema][x.jenis] = x.n;
         for (const x of (perTema.results || [])) if (minat[x.tema]) minat[x.tema].lunas = x.n;
 
+        /* asal pembeli dalam periode: draf dibuat menurut tanggal dibuat, terbayar menurut tanggal dibayar */
+        const asalMasuk = await db.prepare(`SELECT COALESCE(sumber,'tidak diketahui') s, COUNT(*) n FROM pesanan
+          WHERE dibuat BETWEEN ? AND ? GROUP BY s`).bind(dari, sampai).all();
+        const asalLunas = await db.prepare(`SELECT COALESCE(sumber,'tidak diketahui') s, COUNT(*) n, COALESCE(SUM(jumlah),0) rp FROM pesanan
+          WHERE status='lunas' AND COALESCE(dibayar,dibuat) BETWEEN ? AND ? GROUP BY s`).bind(dari, sampai).all();
+        const asal = {};
+        for (const x of (asalMasuk.results || [])) asal[x.s] = { masuk: x.n, lunas: 0, rp: 0 };
+        for (const x of (asalLunas.results || [])) asal[x.s] = Object.assign(asal[x.s] || { masuk: 0 }, { lunas: x.n, rp: x.rp });
+
         /* hal yang perlu tindakan - selalu dari SEMUA pesanan, tidak ikut periode */
         const perlu = await db.prepare(kolom + ` WHERE
             (status='lunas' AND email_terkirim=0 AND COALESCE(email,'')!='')
@@ -2202,7 +2223,7 @@ export async function onRequest(ctx) {
           lalu: lalu ? { lunas: lalu.n, pendapatan: lalu.rp, masuk: masukLalu.n } : null,
           semua: { total: semua.n, lunas: semua.lunas || 0, pendapatan: semua.rp },
           per_tema: perTema.results || [], per_momen: perMomen.results || [],
-          minat, perlu: (perlu.results || []).map(ringkas), draf: draf.n,
+          minat, asal, perlu: (perlu.results || []).map(ringkas), draf: draf.n,
           perpanjang: { n: pj.n || 0, rp: pj.rp || 0, kotor: pj.kotor || 0 }, kotor: kotor.rp || 0,
           sekarang: skr
         });

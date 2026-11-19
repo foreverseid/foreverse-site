@@ -1861,6 +1861,49 @@ async function bayarDraf(L, kode) {
   return (await L.panggil("/api/bayar", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kode }) })).json();
 }
 
+await uji("asal pembeli: sumber.js menebak sumber kunjungan pertama, tanpa bertanya", async () => {
+  const vm = await import("node:vm");
+  const kode = await readFile(new URL("./sumber.js", import.meta.url), "utf8");
+  const jalan = ({ cari = "", ref = "", ua = "Mozilla/5.0", simpan = {} } = {}) => {
+    const ls = { getItem: k => simpan[k] ?? null, setItem: (k, v) => { simpan[k] = v; } };
+    vm.runInNewContext(kode, { location: { search: cari, host: "foreverse.id" }, document: { referrer: ref },
+      navigator: { userAgent: ua }, localStorage: ls, URL, URLSearchParams, JSON, Date });
+    return simpan["fv-sumber"] ? JSON.parse(simpan["fv-sumber"]) : null;
+  };
+  sama(jalan({ cari: "?utm_source=ig&utm_campaign=bio" }).s, "instagram", "utm ig");
+  sama(jalan({ cari: "?utm_source=ig&utm_campaign=bio" }).r, "bio", "kampanye ikut");
+  sama(jalan({ cari: "?kreator=AMIRA" }).s, "kreator", "tautan kreator");
+  sama(jalan({ ref: "https://foreverse.id/?ref=surat", cari: "?ref=surat" }).s, "surat", "dari penutup surat");
+  sama(jalan({ ua: "Mozilla/5.0 Instagram 300.0" }).s, "instagram", "peramban Instagram");
+  sama(jalan({ ua: "Mozilla/5.0 musical_ly_2023" }).s, "tiktok", "peramban TikTok");
+  sama(jalan({ ref: "https://www.google.co.id/" }).s, "google", "Google");
+  sama(jalan({ ref: "android-app://com.whatsapp/" }).s, "whatsapp", "WhatsApp Android");
+  sama(jalan({ ref: "https://blog.contoh.com/a" }).r, "blog.contoh.com", "situs lain dicatat namanya");
+  sama(jalan({}).s, "langsung", "tanpa perujuk");
+  sama(jalan({ ref: "https://foreverse.id/template" }), null, "pindah halaman di dalam situs tidak dihitung");
+  const simpan = { "fv-sumber": JSON.stringify({ s: "tiktok", r: "", w: Date.now() }) };
+  sama(jalan({ cari: "?utm_source=google", simpan }).s, "tiktok", "kunjungan pertama yang diingat (30 hari)");
+  const tua = { "fv-sumber": JSON.stringify({ s: "tiktok", r: "", w: Date.now() - 31 * 86400000 }) };
+  sama(jalan({ cari: "?utm_source=google", simpan: tua }).s, "google", "lewat 30 hari diganti");
+  const src = await readFile(new URL("./pesan.html", import.meta.url), "utf8");
+  harus(/fv-sumber/.test(src), "formulir mengirim sumber bersama draf");
+  for (const f of ["index.html", "pesan.html", "selesai.html", "kreator.html", "syarat-ketentuan.html", "kebijakan-privasi.html", "functions/momen.js"])
+    harus((await readFile(new URL("./" + f, import.meta.url), "utf8")).includes('src="/sumber.js"'), f + " memuat sumber.js");
+});
+
+await uji("asal pembeli: tersimpan di pesanan (hanya jenis dikenal) dan muncul di /developer", async () => {
+  const L = await buatLingkungan();
+  const a = await buatDrafDengan(L, { sumber: { s: "instagram", r: "bio<script>" } });
+  await buatDrafDengan(L, { sumber: { s: "hacker'; DROP", r: "" } });
+  await buatDrafDengan(L, {});
+  const b = await L.env.DB.prepare("SELECT sumber, sumber_rinci FROM pesanan WHERE kode=?").bind(a.kode).first();
+  sama(b.sumber, "instagram", "jenis"); sama(b.sumber_rinci, "bioscript", "rincian dibersihkan");
+  const d = await admin(L, { aksi: "daftar" });
+  sama(d.asal.instagram.masuk, 1, "instagram dihitung"); sama(d.asal.lain.masuk, 1, "jenis asing jadi 'lain'");
+  sama(d.asal["tidak diketahui"].masuk, 1, "tanpa sumber");
+  harus("sumber" in d.baris[0], "kolom sumber ikut di daftar pesanan");
+});
+
 await uji("harga diubah dari /developer: draf baru & DOKU memakai harga baru, notifikasi dicek ke harga itu", async () => {
   const L = await buatLingkungan();
   harus((await admin(L, { aksi: "atur", harga: 20000 })).harga === 20000, "harga tersimpan");

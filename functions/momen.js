@@ -468,6 +468,7 @@ fetch("/api/info").then(function(r){ return r.json(); }).then(function(i){
   document.querySelectorAll('[data-v="harga"]').forEach(function(el){ el.textContent = h; });
 }).catch(function(){});
 </script>
+<script src="/sumber.js"></script>
 <script src="/bantuan.js" defer></script>
 </body></html>`;
 }

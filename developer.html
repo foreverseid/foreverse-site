@@ -567,6 +567,10 @@ label.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--ink-soft);m
         <div class="kartu"><h3>Penjualan per momen</h3><p class="ket">Momen mana yang paling banyak dibeli.</p><div class="peringkat" id="jualMomen"></div></div>
       </div>
 
+      <div class="subjudul"><h2>Asal pembeli</h2><span>dicatat otomatis dari kunjungan pertama</span></div>
+      <div class="kartu jarak"><div class="gulung"><table class="tabel" id="asal"></table></div>
+        <p class="ket">Dari tautan berlabel (?utm_source=instagram, ?ref=…), aplikasi tempat tautan dibuka, atau situs perujuk. Pesanan sebelum 20 Nov 2026 tercatat "Tidak diketahui".</p></div>
+
       <div class="subjudul"><h2>Minat per tema</h2><span>contoh dibuka → formulir dibuka → terbayar</span></div>
       <div class="kartu"><div class="gulung"><table class="tabel" id="minat"></table></div></div>
 
@@ -884,7 +888,7 @@ label.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--ink-soft);m
                sekarang: d.sekarang || Date.now(), dari: d.dari || 0, sampai: d.sampai || d.sekarang };
       gambarPeriode();
       gambarMode(p); gambarKpi(d); gambarTindakan(); gambarToko(p); gambarTopTema(d); gambarTerbaru();
-      gambarJual(d); gambarMinat(d.minat || {}); gambarCorong(); gambarPilihan();
+      gambarJual(d); gambarMinat(d.minat || {}); gambarAsal(d.asal || {}); gambarCorong(); gambarPilihan();
       gambarSaring(); gambarDaftar(); gambarSistem(p);
       gambarGrafikSemua();
       $("jamDraf").textContent = p.jam_draf || 24;
@@ -1077,7 +1081,8 @@ label.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--ink-soft);m
       dd("Tema", esc(nmTema(b.tema))) + dd("Momen", esc(NAMA_MOMEN[b.momen] || b.momen || "-")) +
       dd("Dibuat", esc(tgl(b.dibuat))) + (b.dibayar ? dd("Dibayar", esc(tgl(b.dibayar))) : "") +
       dd("Harga surat", rp(b.jumlah)) + (b.total ? dd("Dibayar pembeli", rp(b.total) + (b.metode ? ' <span class="redup">· ' + esc(b.metode) + '</span>' : "")) : "") +
-      (b.promo ? dd("Promo", esc(b.promo) + (b.potongan ? " · potongan " + rp(b.potongan) : "")) : "") + '</dl></div>';
+      (b.promo ? dd("Promo", esc(b.promo) + (b.potongan ? " · potongan " + rp(b.potongan) : "")) : "") +
+      dd("Asal", esc(nmAsal(b.sumber)) + (b.sumber_rinci ? ' <span class="redup">· ' + esc(b.sumber_rinci) + '</span>' : "")) + '</dl></div>';
     if(lunas) h += '<div class="blok"><h4>Surat</h4><dl class="dl">' +
       dd("Dibuka penerima", b.dibuka ? (b.n_buka || 1) + "× · pertama " + esc(tgl(b.dibuka)) : '<span class="redup">belum</span>') +
       dd("Masa edit", sisaEdit > 0 ? jedaKata(sisaEdit) + " lagi" : '<span class="redup">habis</span>') +
@@ -1231,6 +1236,17 @@ label.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--ink-soft);m
       (k.length ? k.map(function(t){ var x = m[t]; return '<tr><td>' + esc(nmTema(t)) + '</td><td class="k">' + x.demo + '</td><td class="k">' + x.form + pr(x.form, x.demo) + '</td><td class="k"><b>' + x.lunas + '</b>' + pr(x.lunas, x.form) + '</td></tr>'; }).join("")
         : '<tr><td colspan="4" class="redup">Belum ada kunjungan di periode ini.</td></tr>') + '</tbody>';
   }
+  var NAMA_ASAL = { instagram:"Instagram", tiktok:"TikTok", whatsapp:"WhatsApp", facebook:"Facebook", google:"Google", x:"X (Twitter)",
+    yt:"YouTube", threads:"Threads", pinterest:"Pinterest", kreator:"Tautan kreator", surat:"Dari surat orang lain", email:"Email",
+    lain:"Situs lain", langsung:"Langsung (ketik alamat / tanpa perujuk)" };
+  function nmAsal(s){ return NAMA_ASAL[s] || "Tidak diketahui"; }
+  function gambarAsal(a){
+    var k = Object.keys(a).sort(function(x,y){ return (a[y].lunas*1000 + a[y].masuk) - (a[x].lunas*1000 + a[x].masuk); });
+    $("asal").innerHTML = '<thead><tr><th>Asal</th><th class="k">Pesanan dibuat</th><th class="k">Terbayar</th><th class="k">Pendapatan</th></tr></thead><tbody>' +
+      (k.length ? k.map(function(s){ var x = a[s]; return '<tr><td>' + esc(nmAsal(s)) + '</td><td class="k">' + x.masuk + '</td><td class="k"><b>' + x.lunas + '</b>' +
+        (x.masuk ? '<em>' + Math.round(x.lunas / x.masuk * 100) + '%</em>' : '') + '</td><td class="k">' + rp(x.rp) + '</td></tr>'; }).join("")
+        : '<tr><td colspan="4" class="redup">Belum ada pesanan di periode ini.</td></tr>') + '</tbody>';
+  }
   function gambarPilihan(){
     var l = DATA.baris.filter(function(b){ return b.status==="lunas"; }), n = l.length;
     var hit = function(f){ return l.filter(f).length; };
@@ -1243,7 +1259,7 @@ label.lbl{display:block;font-size:.76rem;font-weight:600;color:var(--ink-soft);m
 
   /* ══ CSV ══ */
   $("unduhCsv").addEventListener("click", function(){
-    var kol = ["kode","status","tema","momen","penerima","pengirim","email","whatsapp","jumlah","total","metode","promo","dibuat","dibayar","dibuka","n_buka","email_terkirim","aktif","simpan_sampai"];
+    var kol = ["kode","status","tema","momen","penerima","pengirim","email","whatsapp","jumlah","total","metode","promo","sumber","sumber_rinci","dibuat","dibayar","dibuka","n_buka","email_terkirim","aktif","simpan_sampai"];
     var waktu = { dibuat:1, dibayar:1, dibuka:1, simpan_sampai:1 };
     var sel = function(v){ v = v == null ? "" : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; };
     var isi = [kol.join(",")].concat(DATA.baris.filter(SARING[saringKini]).map(function(b){ return kol.map(function(k){ var v = b[k]; if(waktu[k] && v) v = new Date(+v).toLocaleString("sv-SE"); return sel(v); }).join(","); })).join("\n");
