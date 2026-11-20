@@ -35,6 +35,22 @@ export async function main(a){
   await a.baca("#passTulis");
   await a.lanjut();
 
-  a.bagian("jendela-pesawat");
+  a.bagian("terbang");
+  await a.lanjut();
+
+  a.bagian("ban-bagasi");
+  await jeda(1500);
+  for (let i = 0; i < 3; i++){
+    const p = await page.evaluate(() => { const vw = innerWidth;
+      const t = [...document.querySelectorAll("#banBagasi .tas.milik:not(.ambil)")].map(e => e.getBoundingClientRect()).filter(r => r.left > 10 && r.right < vw - 10).sort((a, b) => b.left - a.left)[0];
+      return t ? { x:t.x + t.width/2, y:t.y + t.height*0.6 } : null; });
+    if (!p){ await jeda(400); i--; continue; }
+    a.stat.aksi++; await page.mouse.click(p.x, p.y); await jeda(700);
+    await a.baca(`#daftarSiap li >> nth=${i}`);
+  }
+  await a.jepret("ban-bagasi-isi");
+  await a.lanjut();
+
+  a.bagian("kedatangan");
   await page.locator("#akhir.tampil").waitFor({ timeout:8000 });
 }
