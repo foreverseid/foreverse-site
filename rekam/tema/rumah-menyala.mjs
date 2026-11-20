@@ -23,6 +23,7 @@ export async function main(a){
     await a.ketuk(page.locator("#pohonKecil .ornamen").nth(i), { tunggu:500 });
     await a.baca("#bacaHarapan"); await a.ketuk("#bacaHarapan", { tunggu:500 });
   }
+  await a.jepret("pohon-isi");
   await lanjut();
 
   a.bagian("perapian");

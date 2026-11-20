@@ -161,7 +161,7 @@ function isiDrafTema(tema) {
     if (tema === "herbarium") d.isi.kagum = ["Kagum satu.", "Kagum dua.", "Kagum tiga."];
     if (tema === "malam-takbiran") { d.isi.ucapan = "minal"; d.isi.maaf = ["Maaf satu.", "Maaf dua.", "Maaf tiga."]; }
     if (tema === "hitung-mundur") d.isi.janji = ["Janji satu.", "Janji dua.", "Janji tiga."];
-    if (tema === "rumah-menyala") { d.isi.ucapan = "merry"; d.isi.harapan = ["Harap satu.", "Harap dua.", "Harap tiga."]; }
+    if (tema === "rumah-menyala") { d.isi.ucapan = "merry"; d.isi.harapan = ["Harap satu.", "Harap dua.", "Harap tiga.", "Harap empat."]; }
     if (tema === "stasiun-terakhir") { d.isi.stasiun = [{ nama: "Kafe", kenangan: "Satu." }, { nama: "Pantai", kenangan: "Dua." }, { nama: "Stasiun", kenangan: "Tiga." }]; d.isi.penutup = ""; }
   } else if (tema === "kasus-pengirim") {
     d.momen = "confess";
@@ -2567,7 +2567,7 @@ for (const [tema, momen, kosongkan, pesan] of [
     harus(tema !== "koper" || (isi.barang.length === 3 && isi.kotaPenerima === "tokyo"), "barang & kota koper");
     harus(tema !== "malam-takbiran" || (isi.ucapan === "minal" && isi.maaf.length === 3), "ucapan/maaf lebaran");
     harus(tema !== "pemutaran-perdana" || (isi.judulFilm === "Dua Kopi, Satu Meja" && isi.lokasi.length === 3), "judul/lokasi film");
-    harus(tema !== "rumah-menyala" || (isi.ucapan === "merry" && isi.harapan.length === 3), "ucapan/harapan natal");
+    harus(tema !== "rumah-menyala" || (isi.ucapan === "merry" && isi.harapan.length === 4), "ucapan/harapan natal");
   });
   await uji(tema + " · isian khas kosong ditolak", async () => {
     const L = await buatLingkungan();

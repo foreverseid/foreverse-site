@@ -621,7 +621,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     beres=true; SFX.menang(); buzz([20,40,20]); pk.classList.add('nyala'); papan.style.transition='opacity .6s'; papan.style.opacity='.55';
     var c=pusat(pk); konfeti(c.x,c.y,70,['#FFD98A','#E8B64C','#F6F3EC','#A8323E']);
     if(!HARAPAN.length){ petunjuk('Pohonnya menyala!'); setTimeout(function(){ lanjut(berikut); },1400); return; }
-    var POS=[[38,48],[62,70],[42,90]], W=['#A8323E','#E8B64C','#2E7FBF'];
+    var POS=[[38,48],[62,66],[34,80],[64,90]], W=['#A8323E','#E8B64C','#2E7FBF','#2c6b4a'];
     HARAPAN.forEach(function(h,i){ var o=el('button','ornamen'); o.type='button'; o.style.left=POS[i][0]+'%'; o.style.top=POS[i][1]+'%'; o.style.setProperty('--w',W[i]); pk.appendChild(o); ornamen.push(o);
       setTimeout(function(){ o.classList.add('muncul'); tone(880+i*220,.3,{type:'sine',vol:.1}); },500+i*350);
       o.addEventListener('click',function(){ $('#bhNo').textContent='HARAPAN '+(i+1)+' DARI '+HARAPAN.length; $('#bhTeks').textContent=h; $('#bacaHarapan').classList.add('tampil'); ptj.style.visibility='hidden'; SFX.lonceng();

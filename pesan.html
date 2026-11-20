@@ -1239,14 +1239,14 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
           '<input id="janjiT'+i+'" type="text" maxlength="60" placeholder="'+contohJt[i]+'">' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Rencana ini belum diisi.</p></div>'; }).join("");
     } else if(tema === "rumah-menyala"){
-      var contohHn = ["Semoga kamu selalu sehat dan kuat tahun depan.", "Semoga kita lebih sering ketemu daripada video call.", "Semoga semua doamu dijawab pelan-pelan."];
+      var contohHn = ["Semoga kamu selalu sehat dan kuat tahun depan.", "Semoga kita lebih sering ketemu daripada video call.", "Semoga semua doamu dijawab pelan-pelan.", "Semoga Natal tahun depan kita rayakan berdua."];
       html = '<h2><span class="n">5</span> Ucapan pembuka</h2>' +
         '<p class="jelas">Muncul saat pintu rumahnya terbuka, dan jadi judul kartu suratnya.</p>' +
         '<div class="baris" data-f="ucapanNatal"><label for="ucapanNatal">Ucapan</label>' +
         '<select id="ucapanNatal"><option value="selamat">Selamat Natal</option><option value="merry">Merry Christmas</option></select></div>' +
-        '<h2 style="margin-top:28px"><span class="n">5</span> Tiga harapan di pohon</h2>' +
-        '<p class="jelas">Setelah dia merangkai kabel lampunya, pohon menyala dan tiga ornamen bersinar. Tiap ornamen yang diketuk membuka satu harapanmu.</p>' +
-        [0,1,2].map(function(i){ return '<div class="baris" data-f="harapanN'+i+'"><label for="harapanN'+i+'">Ornamen '+(i+1)+'</label>' +
+        '<h2 style="margin-top:28px"><span class="n">5</span> Empat harapan di pohon</h2>' +
+        '<p class="jelas">Setelah dia merangkai kabel lampunya, pohon menyala dan empat ornamen bersinar. Tiap ornamen yang diketuk membuka satu harapanmu.</p>' +
+        [0,1,2,3].map(function(i){ return '<div class="baris" data-f="harapanN'+i+'"><label for="harapanN'+i+'">Ornamen '+(i+1)+'</label>' +
           '<textarea id="harapanN'+i+'" maxlength="70" style="min-height:62px" placeholder="'+contohHn[i]+'"></textarea>' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Harapan ini belum diisi.</p></div>'; }).join("");
     } else if(tema === "stasiun-terakhir"){
@@ -1338,7 +1338,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     } else if(tema === "hitung-mundur"){
       for(var jt=0;jt<3;jt++) pasangHitung("janjiT"+jt, BATAS.janjiTahun);
     } else if(tema === "rumah-menyala"){
-      for(var hn=0;hn<3;hn++) pasangHitung("harapanN"+hn, BATAS.harapanNatal);
+      for(var hn=0;hn<4;hn++) pasangHitung("harapanN"+hn, BATAS.harapanNatal);
     } else if(tema === "stasiun-terakhir"){
       for(var sn=0;sn<3;sn++){ pasangHitung("stNama"+sn, BATAS.namaStasiun); pasangHitung("stKenang"+sn, BATAS.kenangan); }
       pasangHitung("penutup", BATAS.penutup);
@@ -1450,7 +1450,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     if(TEMA === "pemutaran-perdana") return { judulFilm: $("judulFilm").value, lokasi: [0,1,2].map(function(i){ return $("lokasiF"+i).value; }) };
     if(TEMA === "malam-takbiran") return { ucapan: $("ucapanLebaran").value, maaf: [0,1,2].map(function(i){ return $("maafL"+i).value; }) };
     if(TEMA === "hitung-mundur") return { janji: [0,1,2].map(function(i){ return $("janjiT"+i).value; }) };
-    if(TEMA === "rumah-menyala") return { ucapan: $("ucapanNatal").value, harapan: [0,1,2].map(function(i){ return $("harapanN"+i).value; }) };
+    if(TEMA === "rumah-menyala") return { ucapan: $("ucapanNatal").value, harapan: [0,1,2,3].map(function(i){ return $("harapanN"+i).value; }) };
     if(TEMA === "stasiun-terakhir") return {
       stasiun: [0,1,2].map(function(i){ return { nama: $("stNama"+i).value, kenangan: $("stKenang"+i).value }; }),
       penutup: $("penutup").value };
@@ -1709,7 +1709,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     } else if(TEMA === "kotak-musik" || TEMA === "garis-finis" || TEMA === "stasiun-terakhir" || TEMA === "rumah-menyala" || TEMA === "hitung-mundur" || TEMA === "pabrik-cokelat" || TEMA === "malam-takbiran" || TEMA === "pemutaran-perdana" || TEMA === "herbarium" || TEMA === "celengan" || TEMA === "koper"){
       (TEMA === "kotak-musik" ? ["sadar0","sadar1","sadar2"]
         : TEMA === "garis-finis" ? ["pencapaian","sorakan0","sorakan1","sorakan2"]
-        : TEMA === "rumah-menyala" ? ["harapanN0","harapanN1","harapanN2"]
+        : TEMA === "rumah-menyala" ? ["harapanN0","harapanN1","harapanN2","harapanN3"]
         : TEMA === "hitung-mundur" ? ["janjiT0","janjiT1","janjiT2"]
         : TEMA === "pabrik-cokelat" ? ["alasanS0","alasanS1","alasanS2"]
         : TEMA === "herbarium" ? ["kagumH0","kagumH1","kagumH2"]

@@ -899,8 +899,8 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
        pembuka pilihan pembeli; `harapan` = tiga ornamen di pohon yang
        menyala setelah kabel lampunya dirangkai. */
     isi.ucapan = ["selamat", "merry"].includes(p.ucapan) ? p.ucapan : "selamat";
-    isi.harapan = [0, 1, 2].map(i => teks((p.harapan || [])[i], BATAS.harapanNatal));
-    if (isi.harapan.some(x => !x)) throw new Error("Ketiga harapan untuk ornamen pohonnya belum diisi.");
+    isi.harapan = [0, 1, 2, 3].map(i => teks((p.harapan || [])[i], BATAS.harapanNatal));
+    if (isi.harapan.some(x => !x)) throw new Error("Keempat harapan untuk ornamen pohonnya belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "stasiun-terakhir") {
     /* "Stasiun Terakhir" (Parting Ways): `stasiun` = tiga tempat kenangan
