@@ -34,7 +34,8 @@ export async function main(a){
   await a.ketuk("#toCredits", { tunggu:1200 });
 
   a.bagian("kartu-kado");
-  await a.ketuk("#crSkip", { tunggu:1500 });
+  await page.locator("#crEnd.show").waitFor({ timeout:40000 });   // kredit diputar sampai habis, seperti penonton pertama kali
+  await jeda(1500);
   await a.seretEl("#wax", { dx:0, dy:90 }, { tunggu:2600 });
   await page.locator("#crBtns.show").waitFor({ timeout:8000 });
 }

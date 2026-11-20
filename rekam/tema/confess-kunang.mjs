@@ -46,16 +46,27 @@ export async function main(a){
 
   a.bagian("pasangan-nyala");
   await tunggu(s => s.langkah === 4);
-  s = await fv(); const w = s.orbWarna, sudah = new Set();
-  for (let i = 0; i < w.length; i++){
-    if (sudah.has(i)) continue; const k = w.findIndex((c, x) => x !== i && c === w[i] && !sudah.has(x)); sudah.add(i); sudah.add(k);
-    for (const o of [i, k]){ a.stat.aksi++; await page.mouse.click(X(s.orb[o].x), Y(s.orb[o].y)); await jeda(400); }
-    await jeda(400);
+  /* dimainkan seperti orang: warna sebuah kunang baru diketahui setelah diketuk
+     (sama dengan cara memori() di Kado Riang), bukan dibaca langsung semuanya */
+  s = await fv();
+  { const w = s.orbWarna, dilihat = new Map(), cocok = new Set();
+    const ketukO = async i => { a.stat.aksi++; await page.mouse.click(X(s.orb[i].x), Y(s.orb[i].y)); await jeda(450); dilihat.set(i, w[i]); };
+    const pasanganDikenal = () => { for (const [i, c] of dilihat) for (const [j, d] of dilihat) if (i < j && c === d && !cocok.has(i) && !cocok.has(j)) return [i, j]; return null; };
+    while (cocok.size < w.length && (await fv()).langkah === 4){
+      const p = pasanganDikenal();
+      if (p){ await ketukO(p[0]); await ketukO(p[1]); p.forEach(x => cocok.add(x)); await jeda(400); continue; }
+      const i = w.findIndex((_, x) => !dilihat.has(x) && !cocok.has(x)); await ketukO(i);
+      const kenal = [...dilihat].find(([j, c]) => j !== i && c === w[i] && !cocok.has(j));
+      if (kenal){ await ketukO(kenal[0]); cocok.add(i); cocok.add(kenal[0]); await jeda(400); continue; }
+      const j = w.findIndex((_, x) => !dilihat.has(x) && !cocok.has(x)); await ketukO(j);
+      if (w[i] === w[j]){ cocok.add(i); cocok.add(j); await jeda(400); } else await jeda(900);
+    }
+    await a.jepret("pasangan-isi");
   }
 
   a.bagian("surat-cahaya");
   await tunggu(s => s.langkah === 5);
-  s = await fv(); a.stat.aksi++;
+  await jeda(1500); s = await fv(); a.stat.aksi++;
   await page.mouse.click(X(s.toples.x), Y((s.toples.mulut + s.toples.dasar) / 2)); await jeda(900);
   for (let i = 0; i < 6; i++){
     const b = page.locator("#kartu .tbl").first(); await jeda(450);
@@ -63,6 +74,7 @@ export async function main(a){
     await a.ketuk(b, { tunggu:300 });
   }
   await a.baca("#kartu");
+  await page.evaluate(() => { const k = document.getElementById("kartu"); k.scrollTop = k.scrollHeight; }); await jeda(500);
   await a.ketuk(tbl("Tutup suratnya"), { tunggu:800 });
 
   a.bagian("tahan-lepas");

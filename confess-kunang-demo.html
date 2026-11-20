@@ -294,10 +294,10 @@ function ukur(){
   pw=Math.min(pw,Math.max(48,(L.mulut-L.tali.y-62)/1.5));   // foto tidak tertutup toples
   L.pw=pw;
   L.fotoPos=[.16,.39,.61,.84].map(function(t){ var x=W*t; return {x:x,y:taliY(x)+8}; });
-  /* enam kunang-kunang pasangan */
-  var kol=3, bar=2, gx=Math.min(W*.68,mendatar?W*.5:W*.8), gy=Math.min(H*.3,mendatar?H*.36:H*.26);
-  L.orb=[]; for(var r=0;r<bar;r++) for(var c=0;c<kol;c++) L.orb.push({x:W/2+(c-1)*gx/2, y:H*.16+r*gy});
-  L.orbR=klem(Math.min(gx,gy)*.17,22,40);
+  /* delapan kunang-kunang pasangan */
+  var kol=4, bar=2, gx=Math.min(W*.68,mendatar?W*.5:W*.8), gy=Math.min(H*.3,mendatar?H*.36:H*.26);
+  L.orb=[]; for(var r=0;r<bar;r++) for(var c=0;c<kol;c++) L.orb.push({x:W/2+(c-1.5)*gx/3, y:H*.16+r*gy});
+  L.orbR=klem(Math.min(gx*.75,gy)*.17,20,38);
   susunBisik();
 }
 function taliY(x){ var t=(x-L.tali.x0)/(L.tali.x1-L.tali.x0); return L.tali.y+Math.sin(Math.PI*klem(t,0,1))*Math.min(H*.05,28); }
@@ -405,7 +405,7 @@ var TEKS={
   1:'Toplesnya masih bersegel. <b>Seret tab oranye</b> menyusuri labelnya sampai terkelupas.',
   2:'Kunang-kunangnya keluar. <b>Geser toplesnya ke kiri-kanan</b> untuk menampung yang turun.',
   3:'Ada foto-foto di tali jemuran. <b>Ketuk tiap foto</b>, toplesnya akan meneranginya.',
-  4:'Enam kunang-kunang berkedip berpasangan. <b>Ketuk dua yang warnanya sama.</b>',
+  4:'Delapan kunang-kunang berkedip berpasangan. <b>Ketuk dua yang warnanya sama.</b>',
   5:'Kunang-kunangnya menulis sesuatu. <b>Ketuk toplesnya</b> untuk membaca.',
   6:'<b>Tekan dan tahan toplesnya</b> sebentar, lalu biarkan mereka terbang.',
   7:'Jawabanmu ditunggu.'
@@ -520,25 +520,25 @@ function lihatFoto(i){
 }
 
 /* ══════ 4 · pasangan nyala (game) ══════ */
-var WARNA=['rgba(240,180,41,1)','rgba(231,159,176,1)','rgba(140,210,200,1)'];
+var WARNA=['rgba(240,180,41,1)','rgba(231,159,176,1)','rgba(140,210,200,1)','rgba(186,166,240,1)'];
 function siapkanOrb(){
-  var w=[0,0,1,1,2,2]; for(var i=w.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var x=w[i]; w[i]=w[j]; w[j]=x; }
+  var w=[0,0,1,1,2,2,3,3]; for(var i=w.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var x=w[i]; w[i]=w[j]; w[j]=x; }
   ORB=w.map(function(c){ return {c:c,nyala:false,tetap:false}; });
-  /* tiga potong kalimat "sejak …" */
-  var kata=(SEJAK?('sejak '+SEJAK):'aku suka kamu').split(/\s+/), n=kata.length;
-  var a=Math.ceil(n/3), b=Math.ceil((n-a)/2);
-  potong=[kata.slice(0,a).join(' '),kata.slice(a,a+b).join(' '),kata.slice(a+b).join(' ')].filter(function(s){ return s; });
+  /* empat potong kalimat "sejak …" */
+  var kata=(SEJAK?('sejak '+SEJAK):'aku suka kamu').split(/\s+/), n=kata.length, k=0;
+  potong=[]; for(var p=0;p<4;p++){ var ambil=Math.ceil((n-k)/(4-p)); potong.push(kata.slice(k,k+ambil).join(' ')); k+=ambil; }
+  potong=potong.filter(function(s){ return s; });
 }
 function orbDi(q){ for(var i=0;i<L.orb.length;i++) if(Math.hypot(q.x-L.orb[i].x,q.y-L.orb[i].y)<L.orbR*1.5) return i; return -1; }
 function ketukOrb(i){
   var o=ORB[i]; if(kunciOrb||o.tetap||o.nyala) return;
-  o.nyala=true; buka.push(i); SFX.nyala([523,659,784][o.c]);
+  o.nyala=true; buka.push(i); SFX.nyala([523,659,784,880][o.c]);
   if(buka.length<2) return;
   var a=ORB[buka[0]], b=ORB[buka[1]];
   if(a.c===b.c){ a.tetap=b.tetap=true; buka=[]; pasangan++; buzz(14);
-    var teks=potong.slice(0,Math.ceil(pasangan*potong.length/3)).join(' ');
-    var bt=$('#bisikTetap'); bt.textContent=teks+(pasangan>=3?'.':' …'); bt.classList.add('tampil');
-    if(pasangan>=3){ game++; SFX.chime(); setTimeout(function(){ bt.classList.remove('tampil'); maju(); },2600); }
+    var teks=potong.slice(0,Math.ceil(pasangan*potong.length/4)).join(' ');
+    var bt=$('#bisikTetap'); bt.textContent=teks+(pasangan>=4?'.':' …'); bt.classList.add('tampil');
+    if(pasangan>=4){ game++; SFX.chime(); setTimeout(function(){ bt.classList.remove('tampil'); maju(); },2600); }
   } else { kunciOrb=true; SFX.salah();
     setTimeout(function(){ a.nyala=b.nyala=false; buka=[]; kunciOrb=false; },700); }
 }
@@ -605,11 +605,16 @@ function bukaPenutup(){
   panel(function(k){
     k.appendChild(el('h3',null,'Jadi, gimana?'));
     if(D.rahasia) k.appendChild(el('div','rahasia','“'+D.rahasia+'”'));
-    if(nomor.length>=10){
-      [['Aku juga',"Aku udah buka toplesnya. Aku juga."],['Boleh aku jawab langsung?',"Aku udah buka toplesnya. Boleh aku jawab langsung pas ketemu?"]].forEach(function(j,i){
+    [['Aku juga',"Aku udah buka toplesnya. Aku juga."],['Boleh aku jawab langsung?',"Aku udah buka toplesnya. Boleh aku jawab langsung pas ketemu?"]].forEach(function(j,i){
+      if(nomor.length>=10){
         var a=el('a','tbl'+(i?' putih':''),j[0]); a.target='_blank'; a.rel='noopener';
-        a.href='https://wa.me/'+nomor+'?text='+encodeURIComponent(j[1]); k.appendChild(a); });
-    }
+        a.href='https://wa.me/'+nomor+'?text='+encodeURIComponent(j[1]);
+        if(window.fvBalas) a.addEventListener('click',function(){ fvBalas.kirim(j[1]).catch(function(){}); });
+        k.appendChild(a);
+      } else if(window.fvBalas){
+        k.appendChild(fvBalas.tombol(j[1],{tagName:'A',className:'tbl'+(i?' putih':'')},j[0]));
+      }
+    });
     k.appendChild(tombol('Lihat langitnya lagi',function(){ tutupPanel(); },'putih'));
     var m=el('a','dibuat','dibuat di foreverse.id'); m.href=D.foreverseUrl||'https://foreverse.id'; m.target='_blank'; m.rel='noopener'; k.appendChild(m);
   });
@@ -624,7 +629,7 @@ function tutupPanel(){ $('#tirai').hidden=true; }
 /* ══════ lewati game ══════ */
 $('#lewati').addEventListener('click',function(){
   if(langkah===2){ while(tertangkap<3){ isiToples.push(1); $('#kumpulan').children[tertangkap++].classList.add('isi'); } JATUH=[]; game++; maju(); }
-  else if(langkah===4){ ORB.forEach(function(o){ o.tetap=true; }); pasangan=3; game++; maju(); }
+  else if(langkah===4){ ORB.forEach(function(o){ o.tetap=true; }); pasangan=4; game++; maju(); }
 });
 
 /* ══════ putaran gambar ══════ */
