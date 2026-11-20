@@ -29,7 +29,8 @@ function isiDraf() {
       penerima: "Amira", pengirim: "Adriel", ucapan: "selamat",
       surat: ["Selamat ulang tahun.", "Semoga sehat selalu.", "Sampai jumpa."],
       tanggalLahir: "2001-05-14", sembunyikanUmur: false,
-      rahasia: "Aku menunggu di halaman terakhir."
+      rahasia: "Aku menunggu di halaman terakhir.",
+      telegram: ["Semoga sehat.", "Semoga lancar.", "Semoga senang."]
     },
     foto: fotoPenuh(4)
   };
