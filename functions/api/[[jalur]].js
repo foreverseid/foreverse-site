@@ -109,7 +109,8 @@ const TEMA_SKEMA = {
 /* Isian tambahan per tema (Standar Tema v1): daftar teks wajib berbatas
    di luar isian khas lama tema. Harus sama dengan TAMBAHAN di pesan.html. */
 const TAMBAHAN = {
-  "loker-terakhir": { kunci: "bangga", n: 4, batas: 60, galat: "Keempat hal yang bikin kamu bangga belum diisi." }
+  "loker-terakhir": { kunci: "bangga", n: 4, batas: 60, galat: "Keempat hal yang bikin kamu bangga belum diisi." },
+  "garis-finis": { kunci: "perjuangan", n: 3, batas: 70, galat: "Ketiga momen perjuangannya belum diisi." }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 

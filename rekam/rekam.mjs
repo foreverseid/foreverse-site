@@ -162,6 +162,7 @@ export function alat(page, t0, bagian, stat = { aksi:0, huruf:0 }){
       await jeda(tunggu);
     },
     /* tandai awal bagian untuk dipotong nanti */
+    async jepret(nama){ if (process.env.JEPRET) await page.screenshot({ path: join(KELUAR, "jepret", `${stat.tema}-${process.env.LAYAR || "hp"}-${String(bagian.length).padStart(2,"0")}-${nama}.png`) }); },
     bagian(nama){ const d = (Date.now() - t0) / 1000; if (bagian.length){ bagian.at(-1).selesai = d; jepret(page, stat, bagian.length, bagian.at(-1).nama); } bagian.push({ nama, mulai:d }); if (process.env.JEPRET){ const n = bagian.length; setTimeout(() => jepret(page, stat, n, nama + "-awal"), 1800); } },
     /* ketuk elemen yang terlihat, dengan kursor bergerak dulu seperti jari */
     async ketuk(sel, { tunggu = 700 } = {}){

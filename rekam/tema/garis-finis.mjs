@@ -1,5 +1,5 @@
 /* Garis Finis (Congrats) — pilih pelari, peniti nomor dada, lari 100 m
-   (sorakan pembeli), foto finis, medali (pencapaian), papan skor (surat). */
+   (sorakan pembeli), foto finis, tayangan ulang (perjuangan), medali (pencapaian), papan skor (surat). */
 export const berkas = "garis-finis-demo.html";
 
 export async function main(a){
@@ -32,6 +32,14 @@ export async function main(a){
     await page.locator("#finisKet.tampil").waitFor({ timeout:5000 }); await a.baca("#finisKet");
     if (k >= n) break;
     await page.waitForFunction(x => document.getElementById("finisNo").textContent !== x, no, { timeout:8000 });
+  }
+
+  a.bagian("tayangan-ulang");
+  await aktif(6); await jeda(900);
+  for (let i = 0; i < 4; i++){
+    const j = await pusat("#jarum"), r = await page.locator("#relUlang").boundingBox();
+    await a.seret(j.x, j.y, Math.min(r.x + r.width + 20, j.x + r.width*0.45), j.y, { langkah:30 }); await jeda(500);
+    if (i < 3){ await page.locator(`#ulangKet li >> nth=${i}`).waitFor({ timeout:4000 }); await a.baca(`#ulangKet li >> nth=${i}`); if (i === 2) await a.jepret("tayangan-ulang-isi"); }
   }
 
   a.bagian("podium");
