@@ -22,6 +22,7 @@
      Data Amira & Adriel dipatok untuk demo publik. Pesanan sungguhan memakai pemutaran-perdana.html.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">{
+  "dialog": ["Kamu yakin mau duduk paling depan? Nanti lehermu pegal", "Aku tidak suka film horor, tapi kalau sama kamu boleh deh", "Popcornnya buat kamu aja, aku cukup lihat kamu makan"],
   "tema": "pemutaran-perdana",
   "penerima": "Amira",
   "pengirim": "Adriel",
@@ -212,6 +213,26 @@ body.redup .beludru{filter:brightness(.45)}
 .surat-layar .ttd.tampil{opacity:1}
 .surat-layar .ketuk{font-size:12px;color:#8b7363}
 
+/* ═ 4b · di balik layar: papan klep ditepuk, tiap take satu dialog ═ */
+.klep{position:relative;width:calc(var(--u)*72);flex:none;touch-action:none}
+.klep .tongkat{position:relative;height:calc(var(--u)*10);border-radius:3px;transform-origin:4% 100%;transform:rotate(var(--k,-28deg));transition:transform .12s;cursor:grab;
+  background:repeating-linear-gradient(115deg,#1C0D12 0 calc(var(--u)*6),#F6E7C8 calc(var(--u)*6) calc(var(--u)*12));box-shadow:0 2px 0 #000}
+.klep .tongkat::after{content:"";position:absolute;inset:calc(var(--u)*-8) calc(var(--u)*-2)}
+.klep.ajak .tongkat{animation:ajakK 1.4s infinite}
+@keyframes ajakK{50%{transform:rotate(calc(var(--k,-28deg) - 4deg))}}
+.klep .papan-k{margin-top:2px;background:#1C0D12;border-radius:4px;padding:calc(var(--u)*3) calc(var(--u)*4);display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1.6) calc(var(--u)*3);box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.klep .papan-k::before{content:"";grid-column:1/-1;height:calc(var(--u)*5);background:repeating-linear-gradient(115deg,#1C0D12 0 calc(var(--u)*6),#F6E7C8 calc(var(--u)*6) calc(var(--u)*12))}
+.klep .papan-k div{font:400 calc(var(--u)*3) var(--bebas);letter-spacing:.14em;color:var(--redup);border-bottom:1px solid #F6E7C855;padding-bottom:2px}
+.klep .papan-k b{display:block;font:400 calc(var(--u)*5) var(--bebas);letter-spacing:.06em;color:var(--layar)}
+.klep .papan-k .lebar{grid-column:1/-1}
+.klep .panah-k{position:absolute;right:calc(var(--u)*-2);top:calc(var(--u)*-8);font:700 13px var(--sans);color:var(--emas2)}
+.dialog-l{list-style:none;margin:0;padding:0;width:min(90vw,calc(var(--u)*88));display:flex;flex-direction:column;gap:calc(var(--u)*2)}
+.dialog-l li{background:var(--layar);color:var(--ink);padding:calc(var(--u)*2.2) calc(var(--u)*3.2);border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.35);animation:munculD .5s ease}
+.dialog-l li small{display:block;font:400 calc(var(--u)*3.2) var(--bebas);letter-spacing:.2em;color:var(--beludru)}
+.dialog-l li span{font:italic 500 clamp(16px,calc(var(--u)*4.6),22px)/1.35 var(--serif)}
+@keyframes munculD{from{opacity:0;transform:translateY(10px)}}
+@media (min-aspect-ratio:1/1){ #s5{flex-direction:row;gap:calc(var(--u)*6)} .klep{width:calc(var(--u)*52);margin-top:calc(var(--u)*24)} .dialog-l{width:calc(var(--u)*84)} }
+
 /* ═ 5 · kredit ═ */
 .kredit-wadah{position:relative;width:min(92vw,560px);flex:1 1 auto;min-height:0;overflow:hidden;
   -webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)}
@@ -291,6 +312,12 @@ body.redup .beludru{filter:brightness(.45)}
 </section>
 
 <!-- 5 · kredit film & penutup -->
+<section class="sc tegak" id="s5">
+  <div class="klep ajak" id="klep"><span class="panah-k">tepuk ↓</span><div class="tongkat" id="tongkat"></div>
+    <div class="papan-k"><div class="lebar">FILM<b id="klepJudul"></b></div><div>ADEGAN<b id="klepAdegan">1</b></div><div>TAKE<b>1</b></div><div class="lebar">SUTRADARA<b id="klepSutradara"></b></div></div></div>
+  <ol class="dialog-l" id="dialogL"></ol>
+</section>
+
 <section class="sc tegak" id="s4">
   <div class="kredit-wadah" id="kreditWadah"><div class="kredit" id="kredit"></div></div>
   <div class="akhir" id="akhir">
@@ -481,12 +508,14 @@ var JENIS={pacaran:'Mulai pacaran',tunangan:'Mulai tunangan',menikah:'Mulai meni
 SFX.proyektor=function(){ noise(.06,900,.05); };
 SFX.sobek=function(){ noise(.35,5200,.18); noise(.2,2600,.1); };
 
+var DIALOG=(Array.isArray(D.dialog)?D.dialog:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,3);
+var URUT=DIALOG.length?[0,1,2,3,5,4]:[0,1,2,3,4];
 var kini=-1, MASUK={};
 function ke(no){
   if(kini>=0) $('#s'+kini).classList.remove('aktif');
   kini=no; $('#s'+no).classList.add('aktif'); if(MASUK[no]) MASUK[no]();
 }
-function berikut(){ ke(kini+1); }
+function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
 $('#mqJudul').textContent='STUDIO 1 · '+JUDUL.toUpperCase();
 
 /* ═ 1 · tiket: tarik sobekan ke bawah sepanjang perforasi ═ */
@@ -553,10 +582,31 @@ $('#mqJudul').textContent='STUDIO 1 · '+JUDUL.toUpperCase();
   var ls=$('#layarSurat'), daftar=SURAT.length?SURAT:[''], i=-1, ketik=null, penuh=true;
   function tampil(k){ i=k; $('#babakNo').textContent='BABAK '+(k+1)+(daftar.length>1?' DARI '+daftar.length:''); var t=daftar[k], c=0; penuh=false; $('#babakTeks').textContent='';
     clearInterval(ketik); ketik=setInterval(function(){ c+=2; $('#babakTeks').textContent=t.slice(0,c); if(c>=t.length){ clearInterval(ketik); penuh=true; if(k===daftar.length-1) habis(); } },28); }
-  function habis(){ $('#babakKetuk').style.visibility='hidden'; var t=$('#babakTtd'); t.textContent=PENGIRIM; t.classList.add('tampil'); setTimeout(function(){ lanjut(berikut,'Lihat kreditnya'); },1800); }
+  function habis(){ $('#babakKetuk').style.visibility='hidden'; var t=$('#babakTtd'); t.textContent=PENGIRIM; t.classList.add('tampil'); setTimeout(function(){ lanjut(berikut,DIALOG.length?'Di balik layar':'Lihat kreditnya'); },1800); }
   ls.addEventListener('click',function(){ if(!penuh){ return; } if(i>=daftar.length-1) return; SFX.kertas(); tampil(i+1); });
   noMenu(ls);
   MASUK[3]=function(){ tampil(0); petunjuk('Ini naskah dari '+PENGIRIM+'. <b>Ketuk layarnya</b> untuk babak berikutnya.'); };
+})();
+
+/* ═ 4b · di balik layar: tongkat papan klep ditarik ke bawah sampai
+   menepuk; tiap take menampilkan satu dialog yang diingat (isian `dialog`) ═ */
+(function(){
+  if(!DIALOG.length) return;
+  var kl=$('#klep'), tk=$('#tongkat'), dl=$('#dialogL'), take=0, k=-28, beres=false, sibuk=false;
+  $('#klepJudul').textContent=JUDUL; $('#klepSutradara').textContent=PENGIRIM;
+  function atur(){ tk.style.setProperty('--k',k+'deg'); }
+  seret(tk,{
+    boleh:function(){ return !beres && !sibuk; },
+    down:function(){ kl.classList.remove('ajak'); },
+    move:function(e,dx,dy){ k=klem(-28+dy/(U()*0.5),-28,0); atur(); if(k>=-1) tepuk(); },
+    up:function(){ if(sibuk||beres) return; if(k<-1){ k=-28; atur(); kedip(); } }
+  });
+  function tepuk(){ if(sibuk) return; sibuk=true; k=0; atur(); noise(.08,2200,.3); tone(140,.08,{type:'square',vol:.12}); buzz(25);
+    var i=take++; $('#klepAdegan').textContent=String(i+1);
+    var li=el('li'); li.appendChild(el('small',null,'Adegan '+(i+1)+' · dialog yang aku ingat')); li.appendChild(el('span',null,'“'+DIALOG[i]+'”')); dl.appendChild(li);
+    setTimeout(function(){ if(take>=DIALOG.length){ beres=true; petunjuk('Cut! Semua adegan sudah diambil.'); setTimeout(function(){ lanjut(berikut,'Lihat kreditnya'); },2200); return; }
+      k=-28; atur(); sibuk=false; kl.classList.add('ajak'); $('#klepAdegan').textContent=String(take+1); petunjuk('Adegan berikutnya. <b>Tepuk lagi.</b>'); },1300); }
+  MASUK[5]=function(){ petunjuk('Di balik layar, kamera siap. <b>Tarik tongkat papan klepnya ke bawah</b> sampai menepuk.'); };
 })();
 
 /* ═ 5 · kredit bergulir, lalu balasan ═ */

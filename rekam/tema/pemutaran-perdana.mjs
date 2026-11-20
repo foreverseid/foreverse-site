@@ -42,6 +42,17 @@ export async function main(a){
   }
   await lanjut();
 
+  a.bagian("di-balik-layar");
+  await jeda(900);
+  for (let i = 0; i < 3; i++){
+    const t = await page.locator("#tongkat").boundingBox(), x = t.x + t.width*0.8, y = t.y + t.height*0.2;
+    await a.seret(x, y, x, y + 140, { langkah:12 }); await jeda(700);
+    await a.baca(`#dialogL li >> nth=${i}`);
+    if (i === 2) await a.jepret("klep-isi");
+    else await jeda(800);
+  }
+  await lanjut();
+
   a.bagian("kredit");
   await page.locator("#akhir.tampil").waitFor({ timeout:60000 });
   await a.baca("#akhirJudul");
