@@ -17,6 +17,20 @@ export async function main(a){
   await a.baca("#labelKagum");
   await a.lanjut();
 
+  a.bagian("kaca-pembesar");
+  await jeda(900);
+  const nt = await page.locator("#catLap .kecil-tulis").count();
+  for (let i = 0; i < nt; i++){
+    const l = await page.locator("#lensa").boundingBox(), t = await page.locator(`#catLap .kecil-tulis >> nth=${i}`).boundingBox();
+    const lx = l.x + l.width/2, ly = l.y + l.height/2;
+    a.stat.aksi++; await page.mouse.move(lx, ly); await page.mouse.down();
+    await page.mouse.move(lx + (t.x + t.width/2 - lx)*0.5, ly + (t.y + t.height/2 - ly)*0.5 + 30, { steps:12 });
+    await page.mouse.move(t.x + t.width/2, t.y + t.height/2, { steps:12 }); await page.mouse.up(); await jeda(600);
+    await a.baca(`#daftarTerima li >> nth=${i}`);
+    if (i === nt - 1) await a.jepret("kaca-pembesar-isi");
+  }
+  await a.lanjut();
+
   a.bagian("kertas-minyak");
   const n = await page.evaluate(() => JSON.parse(document.getElementById("foreverse-data").textContent).foto.length);
   for (let k = 0; k < n; k++){

@@ -142,6 +142,22 @@ img{-webkit-user-drag:none;pointer-events:none}
 .label-kagum li.tampil{opacity:1;transform:none}
 .label-kagum li b{flex:none;font:600 calc(var(--u)*2.8) var(--sans);letter-spacing:.12em;color:var(--sage);text-transform:uppercase}
 .label-kagum li span{font:600 calc(var(--u)*5)/1.15 var(--tangan);color:var(--tinta);word-break:break-word}
+.catatan-lapangan{position:relative;width:calc(var(--u)*88);height:calc(var(--u)*92);background:var(--kertas);border-radius:3px;box-shadow:inset 7px 0 12px rgba(58,47,42,.1),0 8px 22px rgba(58,47,42,.2);overflow:hidden;touch-action:none}
+.catatan-lapangan h2{position:absolute;left:0;right:0;top:calc(var(--u)*4);margin:0;text-align:center;font:600 calc(var(--u)*4.4)/1.2 var(--serif);color:var(--ungu)}
+.catatan-lapangan .daun{position:absolute;width:calc(var(--u)*13);opacity:.55}
+.kecil-tulis{position:absolute;width:calc(var(--u)*30);padding:calc(var(--u)*1);font:600 calc(var(--u)*1.9)/1.2 var(--tangan);color:var(--tinta);transform:rotate(var(--r));transition:transform .45s cubic-bezier(.3,1.4,.5,1),background .3s;border-radius:3px;z-index:1}
+.kecil-tulis.terbaca{transform:rotate(0) scale(2.2);background:#FFFDF6;box-shadow:0 4px 14px rgba(58,47,42,.25);z-index:4}
+.kecil-tulis.simpan{transform:rotate(var(--r)) scale(1);background:rgba(242,201,76,.35);z-index:1}
+.lensa{position:absolute;width:calc(var(--u)*30);height:calc(var(--u)*30);margin:calc(var(--u)*-15) 0 0 calc(var(--u)*-15);border-radius:50%;z-index:3;touch-action:none;cursor:grab;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.55),rgba(255,255,255,.08) 45%,rgba(169,188,160,.12));box-shadow:inset 0 0 0 calc(var(--u)*1.8) #6B5299,0 6px 16px rgba(58,47,42,.3)}
+.lensa::before{content:"";position:absolute;left:84%;top:84%;width:calc(var(--u)*5);height:calc(var(--u)*16);border-radius:99px;background:linear-gradient(90deg,#4E3A78,#6B5299);transform:rotate(-45deg);transform-origin:50% 0}
+.lensa::after{content:"geser";position:absolute;left:50%;bottom:calc(var(--u)*-7);transform:translateX(-50%);font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ungu2)}
+.lensa.ajak{animation:goyang 2s ease-in-out infinite}
+.daftar-terima{list-style:none;margin:0;padding:0;width:min(88vw,calc(var(--u)*88));display:flex;flex-direction:column;gap:calc(var(--u)*1.6)}
+.daftar-terima li{padding:calc(var(--u)*1.6) calc(var(--u)*2.4);border-top:1px dashed var(--sage2);animation:pas .5s}
+.daftar-terima li b{display:block;font:600 calc(var(--u)*2.8) var(--sans);letter-spacing:.12em;color:var(--sage);text-transform:uppercase}
+.daftar-terima li span{font:600 calc(var(--u)*5)/1.15 var(--tangan);color:var(--tinta)}
+@media (min-aspect-ratio:1/1){ .catatan-lapangan{width:calc(var(--u)*92);height:calc(var(--u)*84)} .daftar-terima{width:calc(var(--u)*80)} }
 .baki{display:flex;justify-content:center;gap:calc(var(--u)*5);padding:calc(var(--u)*2) calc(var(--u)*4);border-radius:6px;background:rgba(124,148,115,.16);box-shadow:inset 0 0 0 1px rgba(124,148,115,.35);min-height:calc(var(--u)*40)}
 .bunga{width:calc(var(--u)*20);height:calc(var(--u)*36);display:flex;justify-content:center;touch-action:none;cursor:grab;filter:drop-shadow(0 3px 3px rgba(58,47,42,.2))}
 .bunga svg{height:100%;width:auto;overflow:visible}
@@ -265,6 +281,12 @@ img{-webkit-user-drag:none;pointer-events:none}
     <ol class="label-kagum" id="labelKagum"></ol>
   </div>
   <div class="baki" id="baki"></div>
+</section>
+
+<!-- 2b · catatan kecil di pinggir halaman, dibaca dengan kaca pembesar -->
+<section class="sc" id="s5">
+  <div class="catatan-lapangan" id="catLap"><h2 id="judulCatatan"></h2><div class="lensa ajak" id="lensa"></div></div>
+  <ol class="daftar-terima" id="daftarTerima"></ol>
 </section>
 
 <!-- 3 · kertas minyak di atas foto -->
@@ -501,7 +523,8 @@ SFX.putar=function(){ tone(260,.07,{type:'square',vol:.05}); tone(300,.07,{type:
 SFX.kayu=function(){ tone(140,.18,{type:'triangle',vol:.16}); noise(.12,900,.14); };
 
 var JUDUL_LEMBAR=['Sampul','Lembar 1','Lembar 2','Lembar 3','Lembar terakhir'];
-var URUT=[0,1]; if(FOTO.length) URUT.push(2); URUT.push(3,4);
+var TERIMA=(Array.isArray(D.terimakasih)?D.terimakasih:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,3);
+var URUT=[0,1]; if(TERIMA.length) URUT.push(5); if(FOTO.length) URUT.push(2); URUT.push(3,4);
 var MASUK={}, kini=-1;
 function ke(no){
   if(kini>=0){ var l=$('#s'+kini); l.classList.remove('aktif'); l.classList.add('lewat'); }
@@ -528,6 +551,32 @@ function bungaSvg(id){ var s=document.createElementNS('http://www.w3.org/2000/sv
     setTimeout(function(){ petunjuk('Pitanya lepas. Lembar pertama sudah menunggu.'); },1500);
     setTimeout(function(){ lanjut(berikut,'Buka lembar pertama'); },2300);
   });
+})();
+
+/* ═ 2b · catatan kecil di pinggir halaman: kaca pembesar digeser, tiap
+   catatan yang tersentuh lensanya terbaca (isian `terimakasih`) ═ */
+(function(){
+  if(!TERIMA.length) return;
+  var cl=$('#catLap'), ls=$('#lensa'), dft=$('#daftarTerima'), POS=[[8,26,-6],[52,48,5],[12,72,-3]], DAUN=[[66,18,'b-aster',20],[64,72,'b-lavender',-12],[34,50,'b-mimosa',8]], tulis=[], ketemu=0, x=0, y=0, x0=0, y0=0, beres=false;
+  $('#judulCatatan').textContent='Catatan kecil di pinggir halaman';
+  DAUN.forEach(function(d){ var w=el('div','daun'); w.appendChild(bungaSvg(d[2])); w.style.left=d[0]+'%'; w.style.top=d[1]+'%'; w.style.transform='rotate('+d[3]+'deg)'; cl.appendChild(w); });
+  TERIMA.forEach(function(t,i){ var n=el('div','kecil-tulis',t); n.style.left=POS[i][0]+'%'; n.style.top=POS[i][1]+'%'; n.style.setProperty('--r',POS[i][2]+'deg'); n.style.transformOrigin=POS[i][0]<40?'0 50%':'100% 50%'; cl.appendChild(n); tulis.push(n); });
+  function taruh(){ ls.style.left=x+'px'; ls.style.top=y+'px'; }
+  function cek(){ var c=pusat(ls), r=ls.offsetWidth*.42;
+    tulis.forEach(function(n,i){ if(n._dapat) return; var q=pusat(n); if(Math.hypot(q.x-c.x,q.y-c.y)<r) dapat(n,i); }); }
+  function dapat(n,i){ n._dapat=true; n.classList.add('terbaca'); SFX.benar(); buzz(15); ketemu++;
+    var li=el('li'); li.appendChild(el('b',null,'Terima kasih · '+ketemu+'/'+TERIMA.length)); li.appendChild(el('span',null,TERIMA[i])); dft.appendChild(li);
+    setTimeout(function(){ n.classList.remove('terbaca'); n.classList.add('simpan'); },1600);
+    if(ketemu>=TERIMA.length){ beres=true; ls.classList.remove('ajak'); petunjuk('Semua catatannya sudah terbaca.'); setTimeout(function(){ lanjut(berikut,FOTO.length?'Lembar berikutnya':'Lanjut'); },2200); }
+    else petunjuk('Ketemu satu. <b>'+(TERIMA.length-ketemu)+' catatan lagi</b> di halaman ini.'); }
+  seret(ls,{
+    boleh:function(){ return !beres; },
+    down:function(){ x0=x; y0=y; ls.classList.remove('ajak'); },
+    move:function(e,dx,dy){ x=klem(x0+dx,0,cl.clientWidth); y=klem(y0+dy,0,cl.clientHeight); taruh(); cek(); },
+    up:function(){ if(!beres && ketemu===0) kedip(); }
+  });
+  MASUK[5]=function(){ x=cl.clientWidth*.78; y=cl.clientHeight*.86; taruh();
+    petunjuk('Ada tulisan kecil sekali di pinggir halaman. <b>Geser kaca pembesarnya</b> ke tiap tulisan.'); };
 })();
 
 /* ═ 2 · tiga spesimen: bunga kering dicocokkan ke bayangannya (game) ═ */
@@ -558,7 +607,7 @@ function bungaSvg(id){ var s=document.createElementNS('http://www.w3.org/2000/sv
         if(terisi===JENIS.length){
           baki.style.display='none'; SFX.menang(); var r=$('.halaman').getBoundingClientRect(); konfeti(r.left+r.width/2,r.top+r.height*.3,70,['#F2C94C','#6B5299','#A9BCA0','#E8A5B0','#FBF7EE']);
           petunjuk('Ketiganya sudah di tempatnya.');
-          setTimeout(function(){ lanjut(berikut,FOTO.length?'Lembar berikutnya':'Lanjut'); },1400);
+          setTimeout(function(){ lanjut(berikut,(TERIMA.length||FOTO.length)?'Lembar berikutnya':'Lanjut'); },1400);
         } else petunjuk('Pas. Tinggal '+(JENIS.length-terisi)+' lagi.');
         return true;
       }
