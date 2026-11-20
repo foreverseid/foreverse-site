@@ -42,6 +42,15 @@ export async function main(a){
   }
   await lanjut();
 
+  a.bagian("bonbon");
+  await jeda(900);
+  for (let i = 0; i < 3; i++){
+    await a.ketuk(page.locator("#kotakBonbon .bonbon:not(.gigit)").first(), { tunggu:900 });
+    await a.baca(`#daftarRasa li >> nth=${i}`);
+    if (i === 2) await a.jepret("bonbon-isi");
+  }
+  await lanjut();
+
   a.bagian("lipatan");
   const pn = await page.locator("#lipatan .panel").count();
   for (let i = 0; i < pn; i++){

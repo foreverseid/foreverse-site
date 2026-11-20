@@ -149,6 +149,24 @@ img{-webkit-user-drag:none;pointer-events:none}
 .kartu-foto p{position:absolute;left:4%;right:4%;bottom:3%;margin:0;font:600 clamp(18px,calc(var(--u)*5),28px)/1.1 var(--tangan);text-align:center;color:var(--ink)}
 .kartu-foto small{color:#fff;font-size:13px;opacity:.85}
 
+/* ═ 3b · kotak bonbon: tiap bonbon digigit, isinya meleleh, kartu rasanya keluar ═ */
+.kotak-bonbon{display:flex;gap:calc(var(--u)*5);justify-content:center;padding:calc(var(--u)*5) calc(var(--u)*6);background:linear-gradient(180deg,#5a2f26,var(--kakao));border-radius:calc(var(--u)*2.4);box-shadow:inset 0 0 0 calc(var(--u)*1) var(--mawar2),0 10px 24px rgba(0,0,0,.35);flex:none}
+.bonbon{position:relative;width:calc(var(--u)*20);height:calc(var(--u)*20);border:0;padding:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 50% 50%,#f7eee2 0 31%,transparent 32%),radial-gradient(circle at 40% 30%,var(--susu),var(--kakao2) 70%);
+  box-shadow:0 0 0 calc(var(--u)*1.6) #3a1f19,0 calc(var(--u)*1) calc(var(--u)*1.8) rgba(0,0,0,.5)}
+.bonbon::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 30%,var(--susu),var(--kakao2) 70%);transition:clip-path .35s ease}
+.bonbon::after{content:"";position:absolute;left:24%;right:24%;top:30%;height:12%;border-radius:99px;border-top:2px solid #ffffff55;transform:rotate(-12deg)}
+.bonbon.gigit::before{clip-path:polygon(0 0,100% 0,100% 30%,86% 22%,74% 34%,60% 24%,48% 36%,36% 24%,22% 34%,10% 24%,0 30%)}
+.bonbon.gigit{background:radial-gradient(circle at 50% 62%,var(--isi) 0 34%,#3a1f19 35% 46%,transparent 47%),radial-gradient(circle at 40% 30%,var(--susu),var(--kakao2) 70%)}
+.bonbon.ajak{animation:ajakB 1.6s ease-in-out infinite}
+.bonbon:nth-child(2){animation-delay:-.5s}.bonbon:nth-child(3){animation-delay:-1s}
+@keyframes ajakB{50%{transform:translateY(calc(var(--u)*-1.2))}}
+.rasa{list-style:none;margin:0;padding:0;width:min(90vw,calc(var(--u)*86));display:flex;flex-direction:column;gap:calc(var(--u)*2)}
+.rasa li{background:var(--krem);color:var(--ink);padding:calc(var(--u)*2.2) calc(var(--u)*3);border-radius:calc(var(--u)*1.4);border-left:6px solid var(--isi);box-shadow:0 4px 12px rgba(0,0,0,.25);animation:munculR .5s ease}
+.rasa li b{display:block;font:700 calc(var(--u)*2.8) var(--sans);letter-spacing:.14em;color:var(--mawar2);text-transform:uppercase}
+.rasa li span{font:600 calc(var(--u)*5.4)/1.15 var(--tangan)}
+@keyframes munculR{from{opacity:0;transform:translateY(10px)}}
+@media (min-aspect-ratio:1/1){ #s5{flex-direction:row;gap:calc(var(--u)*6)} .bonbon{width:calc(var(--u)*17);height:calc(var(--u)*17)} .kotak-bonbon{gap:calc(var(--u)*4);padding:calc(var(--u)*4)} .rasa{width:calc(var(--u)*90)} }
+
 /* ═ 4 · bungkus lipat (surat) ═ */
 .lipatan{position:relative;width:calc(var(--u)*80);height:calc(var(--u)*100);perspective:calc(var(--u)*300)}
 @media (min-aspect-ratio:1/1){ .lipatan{width:calc(var(--u)*100);height:calc(var(--u)*80)} }
@@ -247,6 +265,11 @@ img{-webkit-user-drag:none;pointer-events:none}
 <div class="kartu-foto" id="kartuFoto"><div class="bingkai"><img id="kfImg" alt=""><p id="kfKet"></p></div><small>ketuk di mana saja untuk mengembalikannya</small></div>
 
 <!-- 4 · bungkus lipat (surat) -->
+<section class="sc tegak" id="s5">
+  <div class="kotak-bonbon" id="kotakBonbon"></div>
+  <ol class="rasa" id="daftarRasa"></ol>
+</section>
+
 <section class="sc" id="s3">
   <div class="lipatan" id="lipatan"></div>
 </section>
@@ -439,7 +462,8 @@ SFX.tuang=function(){ noise(.12,700,.05); };
 SFX.patah=function(){ noise(.09,5200,.4); tone(320,.06,{type:'square',vol:.12}); };
 var HATI='M50 90 C18 68 2 48 4 28 C6 10 22 2 34 4 C42 5 48 11 50 18 C52 11 58 5 66 4 C78 2 94 10 96 28 C98 48 82 68 50 90Z';
 
-var URUT=[0,1]; if(FOTO.length) URUT.push(2); URUT.push(3,4);
+var MANIS=(Array.isArray(D.manis)?D.manis:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,3);
+var URUT=[0,1]; if(FOTO.length) URUT.push(2); if(MANIS.length) URUT.push(5); URUT.push(3,4);
 var MASUK={}, kini=-1;
 $('#hatiHati').innerHTML=URUT.map(function(){ return '<i></i>'; }).join('');
 function ke(no){
@@ -552,7 +576,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     var a=$('#alasan'); a.innerHTML=''; if(ALASAN[ke_]){ a.appendChild(el('small',null,'alasan '+(ke_+1)+' aku sayang kamu')); a.appendChild(document.createTextNode(ALASAN[ke_])); a.classList.add('tampil'); }
     ke_++;
     if(ke_>=N){ beres=true; petunjuk('Tiga-tiganya pas. Cokelatmu jadi!'); SFX.menang(); var r=pusat(baris); konfeti(r.x,r.y,80,['#E9C9A8','#B23A48','#F7EEE2','#C9A15A']);
-      setTimeout(function(){ lanjut(berikut,FOTO.length?'Buka kotak pralinenya':'Lanjut'); },2600); return; }
+      setTimeout(function(){ lanjut(berikut,FOTO.length?'Buka kotak pralinenya':MANIS.length?'Coba bonbonnya':'Lanjut'); },2600); return; }
     setTimeout(function(){ level=0; atur(); petunjuk('Pas! Sekarang <b>cetakan ke-'+(ke_+1)+'</b>.'); },1800);
   }
 })();
@@ -575,9 +599,23 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     });
   });
   kf.addEventListener('click',function(){ kf.classList.remove('tampil'); ptj.style.visibility=''; sisa--;
-    if(sisa<=0) lanjut(berikut,'Buka bungkus cokelatnya'); else petunjuk('<b>'+sisa+' bendera lagi.</b>'); });
+    if(sisa<=0) lanjut(berikut,MANIS.length?'Coba bonbonnya':'Buka bungkus cokelatnya'); else petunjuk('<b>'+sisa+' bendera lagi.</b>'); });
   noMenu(kf);
   MASUK[2]=function(){ petunjuk('Tiap praline ada benderanya. <b>Tarik benderanya ke atas</b> satu per satu.'); };
+})();
+
+/* ═ 3b · kotak bonbon: tiap bonbon yang diketuk tergigit, isinya
+   kelihatan, dan kartu rasanya berisi satu momen termanis (isian `manis`) ═ */
+(function(){
+  if(!MANIS.length) return;
+  var kb=$('#kotakBonbon'), dft=$('#daftarRasa'), ISI=['#D9A35A','#E7A1AE','#C7C98A'], NAMA=['karamel','stroberi','pistachio'], dimakan=0;
+  MANIS.forEach(function(t,i){ var b=el('button','bonbon ajak'); b.type='button'; b.setAttribute('aria-label','Gigit bonbon '+(i+1)); b.style.setProperty('--isi',ISI[i]); kb.appendChild(b); noMenu(b);
+    b.addEventListener('click',function(){ if(b.classList.contains('gigit')) return; ac(); b.classList.add('gigit'); b.classList.remove('ajak'); SFX.patah(); buzz(15); dimakan++;
+      var li=el('li'); li.style.setProperty('--isi',ISI[i]); li.appendChild(el('b',null,'Isi '+NAMA[i]+' · momen termanis '+(i+1)+'/'+MANIS.length)); li.appendChild(el('span',null,t));
+      setTimeout(function(){ dft.appendChild(li); SFX.pop(); },300);
+      if(dimakan>=MANIS.length){ setTimeout(function(){ SFX.menang(); petunjuk('Tiga-tiganya manis.'); },700); setTimeout(function(){ lanjut(berikut,'Buka bungkus cokelatnya'); },2600); }
+      else petunjuk('<b>'+(MANIS.length-dimakan)+' bonbon lagi.</b> Isinya beda-beda.'); }); });
+  MASUK[5]=function(){ petunjuk('Bonbon buatan '+PENGIRIM+', isinya rahasia. <b>Ketuk bonbonnya</b> untuk mencicipi.'); };
 })();
 
 /* ═ 4 · bungkus dibuka lipat demi lipat (surat) ═ */
