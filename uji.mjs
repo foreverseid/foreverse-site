@@ -2595,7 +2595,7 @@ for (const [tema, tb] of Object.entries(TAMBAHAN_UJI)) {
     harus(!j.ok, "harus ditolak");
   });
   await uji(tema + " · isian tambahan sama di formulir, mesin, dan demo", async () => {
-    const ps = await readFile("./pesan.html", "utf8"), m = await readFile("./" + tema + ".html", "utf8"), dm = await readFile("./" + tema + "-demo.html", "utf8");
+    const ps = await readFile("./pesan.html", "utf8"), m = await readFile("./" + (tema === "bait" ? "surat" : tema) + ".html", "utf8"), dm = await readFile("./" + tema + "-demo.html", "utf8");
     const f = ps.match(new RegExp('"' + tema + '": \\{ kunci:"' + tb.kunci + '", id:"\\w+", n:(\\d+), batas:(\\d+)'));
     harus(f && +f[1] === tb.n && +f[2] === tb.batas, "formulir");
     harus(m.includes("D." + tb.kunci), "mesin membaca D." + tb.kunci);

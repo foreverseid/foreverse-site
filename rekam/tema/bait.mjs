@@ -58,6 +58,15 @@ export async function main(a){
   }
   await lanjut();
 
+  a.bagian("telegram");
+  await jeda(900);
+  for (let i = 0; i < 3; i++){
+    await a.ketuk("#tgKunci", { tunggu:1300 });
+    await a.baca(`#tgPita li >> nth=${i}`);
+    if (i === 2) await a.jepret("telegram-isi");
+  }
+  await lanjut();
+
   a.bagian("timbangan-pos");
   const pilih = await page.evaluate(() => {
     const b = [...document.querySelectorAll("#nampan .brg")], g = b.map(x => x._g);

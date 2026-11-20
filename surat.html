@@ -246,6 +246,23 @@ body.di-meja .luar{opacity:0} body.di-meja .meja{opacity:1}
 .lbr.sampul .angkat{background:rgba(255,255,255,.5)}
 .kue{width:calc(var(--u)*34);height:calc(var(--u)*24)}
 
+/* ═════ 6b · mesin telegram: tiap ketukan tombol mencetak satu pita ═════ */
+.telegraf{position:relative;width:calc(var(--u)*78);flex:none;display:flex;flex-direction:column;align-items:center}
+.tg-mesin{position:relative;width:100%;height:calc(var(--u)*30);border-radius:calc(var(--u)*2.4) calc(var(--u)*2.4) calc(var(--u)*1.2) calc(var(--u)*1.2);background:linear-gradient(180deg,#4a4170,var(--violet));box-shadow:0 8px 20px rgba(22,22,26,.3)}
+.tg-mesin::before{content:"";position:absolute;left:12%;right:12%;top:calc(var(--u)*3);height:calc(var(--u)*3);border-radius:99px;background:#16161A;box-shadow:inset 0 2px 0 #000}
+.tg-mesin small{position:absolute;left:0;right:0;top:calc(var(--u)*8);text-align:center;font:700 10px var(--sans);letter-spacing:.24em;color:var(--blush)}
+.tg-kunci{position:absolute;left:50%;bottom:calc(var(--u)*3.4);width:calc(var(--u)*24);height:calc(var(--u)*11);margin-left:calc(var(--u)*-12);border:0;border-radius:calc(var(--u)*6) calc(var(--u)*6) calc(var(--u)*2) calc(var(--u)*2);cursor:pointer;
+  background:radial-gradient(circle at 50% 30%,#f08e6a,var(--coral) 60%,#b9542f);box-shadow:0 calc(var(--u)*1.4) 0 #8a3c20;font:800 12px var(--sans);letter-spacing:.12em;color:#fff;transition:transform .08s,box-shadow .08s}
+.tg-kunci:active,.tg-kunci.tekan{transform:translateY(calc(var(--u)*1.2));box-shadow:0 calc(var(--u)*.2) 0 #8a3c20}
+.tg-kunci.ajak{animation:ajakTg 1.4s infinite}
+@keyframes ajakTg{50%{box-shadow:0 calc(var(--u)*1.4) 0 #8a3c20,0 0 0 calc(var(--u)*2.4) #E8734A44}}
+.tg-pita{list-style:none;margin:calc(var(--u)*-1) 0 0;padding:0;width:92%;display:flex;flex-direction:column;gap:calc(var(--u)*1.8)}
+.tg-pita li{background:#F4EBD5;padding:calc(var(--u)*2) calc(var(--u)*3);font:600 clamp(13px,calc(var(--u)*3.9),18px)/1.35 'Courier New',ui-monospace,monospace;color:var(--ink);box-shadow:0 3px 8px rgba(22,22,26,.18);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%);animation:cetakTg .9s steps(12) both}
+.tg-pita li b{display:block;font:700 9px var(--sans);letter-spacing:.2em;color:var(--coral);margin-bottom:2px}
+@keyframes cetakTg{from{clip-path:polygon(0 0,0 0,0 100%,0 100%)}}
+@media (min-aspect-ratio:1/1){ #s8{flex-direction:row;gap:calc(var(--u)*6)} .telegraf{width:calc(var(--u)*64)} .tg-pita{width:calc(var(--u)*86)} }
+
 /* ═════ 7 · timbangan pos ═════ */
 .timbang-wrap{display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*4)}
 @media (min-aspect-ratio:1/1){ .timbang-wrap{flex-direction:row;gap:calc(var(--u)*10)} }
@@ -406,6 +423,12 @@ body.di-meja .luar{opacity:0} body.di-meja .meja{opacity:1}
 <!-- 6 · kartu ucapan -->
 <section class="sc tegak" id="s5" data-judul="Kartu ucapan">
   <div class="kartu" id="kartu"></div>
+</section>
+
+<!-- 6b · mesin telegram -->
+<section class="sc tegak" id="s8" data-judul="Telegram">
+  <div class="telegraf"><div class="tg-mesin"><small>TELEGRAM ULANG TAHUN</small><button class="tg-kunci ajak" id="tgKunci" type="button">KIRIM</button></div></div>
+  <ol class="tg-pita" id="tgPita"></ol>
 </section>
 
 <!-- 7 · timbangan pos -->
@@ -633,7 +656,8 @@ var konfeti=(function(){
 var URUT=[0,1,2];
 if(FOTO.length) URUT.push(3);
 if(String(D.rahasia||'').trim()) URUT.push(4);
-URUT.push(5,6,7);
+var TELEGRAM=(Array.isArray(D.telegram)?D.telegram:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,3);
+URUT.push(5); if(TELEGRAM.length) URUT.push(8); URUT.push(6,7);
 var MASUK={}, kini=-1;
 function ke(no){
   var pos=URUT.indexOf(no); if(pos<0) return;
@@ -642,7 +666,7 @@ function ke(no){
   var s=$('#s'+no); s.classList.remove('lewat'); s.classList.add('aktif');
   $('#nomor').textContent=(pos+1)+' / '+URUT.length;
   $('#judulLangkah').textContent=s.dataset.judul;
-  document.body.classList.toggle('di-meja', no>0 && no<7);
+  document.body.classList.toggle('di-meja', no>0 && no!==7);
   document.body.classList.toggle('boleh-lewati', no===6);
   $('#meja').style.setProperty('--geser',(pos*13)+'%');
   if(MASUK[no]) MASUK[no]();
@@ -879,6 +903,21 @@ function berikut(){ var pos=URUT.indexOf(kini); ke(URUT[pos+1]); }
       }
     });
   });
+})();
+
+/* ═════ 6b · telegram ulang tahun: tiap ketukan tombol KIRIM mencetak
+   satu pita berisi harapan untuk umur barunya (isian `telegram`) ═════ */
+(function(){
+  if(!TELEGRAM.length) return;
+  var k=$('#tgKunci'), pita=$('#tgPita'), n=0, sibuk=false;
+  k.addEventListener('click',function(){ if(sibuk||n>=TELEGRAM.length) return; ac(); sibuk=true; k.classList.add('tekan'); setTimeout(function(){ k.classList.remove('tekan'); },120);
+    for(var i=0;i<10;i++) tone(1200,.04,{when:i*.08,type:'square',vol:.05});
+    var li=el('li'); li.appendChild(el('b',null,'TELEGRAM '+(n+1)+'/'+TELEGRAM.length+' · DARI '+PENGIRIM.toUpperCase())); li.appendChild(document.createTextNode(TELEGRAM[n]+' STOP')); pita.appendChild(li); n++; buzz(15);
+    setTimeout(function(){ sibuk=false;
+      if(n>=TELEGRAM.length){ k.classList.remove('ajak'); k.disabled=true; SFX.menang(); petunjuk('Semua telegramnya sudah masuk.'); setTimeout(function(){ lanjut(berikut); },2200); }
+      else petunjuk('Masih ada <b>'+(TELEGRAM.length-n)+' telegram</b>. Ketuk KIRIM lagi.'); },950); });
+  noMenu(k);
+  MASUK[8]=function(){ petunjuk('Ada telegram masuk untukmu. <b>Ketuk tombol KIRIM</b> untuk mencetaknya.'); };
 })();
 
 /* ═════ 7 · timbangan pos ═════ */
