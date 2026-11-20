@@ -856,7 +856,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     if (isi.lokasi.some(x => !x)) throw new Error("Ketiga lokasi syuting belum diisi.");
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "celengan") {
-    /* "Celengan Ketemu" (LDR): `rencana` = tiga hal yang mau dilakukan
+    /* "Celengan Rindu" (LDR): `rencana` = tiga hal yang mau dilakukan
        waktu ketemu; tiap rencana jadi satu koin terakhir di celengan. */
     isi.rencana = [0, 1, 2].map(i => teks((p.rencana || [])[i], BATAS.rencanaKetemu));
     if (isi.rencana.some(x => !x)) throw new Error("Ketiga rencana waktu ketemu belum diisi.");
@@ -1153,7 +1153,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Ketemu", "koper": "Koper ke Kotamu",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
