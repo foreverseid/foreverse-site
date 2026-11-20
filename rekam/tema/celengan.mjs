@@ -37,6 +37,15 @@ export async function main(a){
   await a.baca(".surat .isi");
   await a.lanjut();
 
+  a.bagian("lipatan-rindu");
+  await jeda(1000);
+  for (let i = 0; i < 3; i++){
+    await a.ketuk(page.locator("#lipatan .lipat:not(.dibuka)").first(), { tunggu:800 });
+    await a.baca(`#daftarRindu li >> nth=${i}`);
+    if (i === 2) await a.jepret("lipatan-isi");
+  }
+  await a.lanjut();
+
   a.bagian("celengan-baru");
   await page.locator("#akhir.tampil").waitFor({ timeout:8000 });
 }
