@@ -88,7 +88,8 @@ export async function main(a){
   a.bagian("surat");
   await a.ketukTeks("Baca pernyataannya", { tunggu:1500 });
   const kartu = page.locator("#kartu");
-  for (let i = 0; i < 6; i++){ await kartu.evaluate(k => k.scrollBy({ top:140, behavior:"smooth" })); await jeda(1100); }
+  await a.baca(kartu);
+  await kartu.evaluate(k => k.scrollTo({ top:k.scrollHeight, behavior:"smooth" })); await jeda(800);
 
   a.bagian("stempel-penutup");
   await a.ketuk(page.locator(".stempel button").nth(0), { tunggu:1200 });
