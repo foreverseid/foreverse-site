@@ -114,7 +114,8 @@ const TAMBAHAN = {
   "koper": { kunci: "siapkan", n: 3, batas: 70, galat: "Ketiga hal yang sudah kamu siapkan belum diisi." },
   "herbarium": { kunci: "terimakasih", n: 3, batas: 70, galat: "Ketiga ucapan terima kasihnya belum diisi." },
   "hitung-mundur": { kunci: "syukur", n: 3, batas: 70, galat: "Ketiga hal yang kamu syukuri belum diisi." },
-  "kapal-botol": { kunci: "pelayaran", n: 3, batas: 80, galat: "Ketiga catatan pelayaran belum diisi." }
+  "kapal-botol": { kunci: "pelayaran", n: 3, batas: 80, galat: "Ketiga catatan pelayaran belum diisi." },
+  "malam-takbiran": { kunci: "amplop", n: 3, batas: 70, galat: "Ketiga harapan di amplop belum diisi." }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 

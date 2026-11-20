@@ -37,6 +37,16 @@ export async function main(a){
   }
   await lanjut();
 
+  a.bagian("amplop");
+  await jeda(900);
+  for (let i = 0; i < 3; i++){
+    const b = await page.locator(`#deretAmplop .amplop >> nth=${i}`).boundingBox(), x = b.x + b.width/2, y = b.y + b.height*0.3;
+    await a.seret(x, y, x, y - 120, { langkah:15 }); await jeda(1000);
+    await a.baca(`#isiAmplop li >> nth=${i}`);
+    if (i === 2) await a.jepret("amplop-isi");
+  }
+  await lanjut();
+
   a.bagian("beduk");
   await jeda(800);
   const b = await pusat("#beduk"), bagian = await page.locator("#untai .pelita").count() / 3;
