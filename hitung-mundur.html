@@ -97,6 +97,24 @@ img{-webkit-user-drag:none;pointer-events:none}
 .sc.lewat{transform:translateY(-40%);opacity:0}
 .sc>*{flex-shrink:0}
 @media (min-aspect-ratio:1/1){ .sc{flex-direction:row;gap:calc(var(--u)*9)} .sc.tegak{flex-direction:column;gap:calc(var(--u)*3)} }
+.agenda{position:relative;width:calc(var(--u)*72);height:calc(var(--u)*92);flex:none;perspective:1400px}
+.agenda .sampul-ag,.agenda .halaman-ag{position:absolute;inset:0;border-radius:calc(var(--u)*1.6) calc(var(--u)*3) calc(var(--u)*3) calc(var(--u)*1.6)}
+.agenda .halaman-ag{background:repeating-linear-gradient(180deg,#FBF8F0 0 calc(var(--u)*7),#d9d4e8 calc(var(--u)*7) calc(var(--u)*7.25));box-shadow:inset calc(var(--u)*2) 0 0 #e8e2d2,0 8px 24px rgba(0,0,0,.35);padding:calc(var(--u)*9) calc(var(--u)*6) calc(var(--u)*5) calc(var(--u)*9);display:flex;flex-direction:column;gap:calc(var(--u)*2)}
+.agenda .halaman-ag small{font:700 calc(var(--u)*2.8) var(--angka);letter-spacing:.16em;color:var(--magenta);text-transform:uppercase}
+.agenda .halaman-ag p{margin:0;font:600 calc(var(--u)*6.2)/1.18 var(--tangan);color:var(--ink);opacity:0;transform:translateY(6px);transition:.5s .2s}
+.agenda.buka .halaman-ag p{opacity:1;transform:none}
+.agenda .sampul-ag{z-index:2;background:linear-gradient(135deg,var(--malam2),#2a3370);box-shadow:inset 0 0 0 calc(var(--u)*.8) var(--emas),0 8px 24px rgba(0,0,0,.4);transform-origin:0 50%;transition:transform .8s cubic-bezier(.5,0,.3,1);display:grid;place-items:center;text-align:center;color:var(--emas);font:600 calc(var(--u)*6)/1.15 var(--serif)}
+.agenda .sampul-ag span{display:block;font:700 calc(var(--u)*3) var(--angka);letter-spacing:.2em;color:var(--emas2);margin-top:calc(var(--u)*2)}
+.agenda.buka .sampul-ag{transform:rotateY(-160deg);pointer-events:none;color:transparent}
+.agenda.buka .sampul-ag span{color:transparent}
+.agenda .halaman-ag{z-index:1}
+.tab-ag{position:absolute;right:calc(var(--u)*-9);width:calc(var(--u)*12);height:calc(var(--u)*9);border-radius:0 calc(var(--u)*1.6) calc(var(--u)*1.6) 0;border:0;z-index:0;cursor:pointer;text-align:right!important;padding-right:calc(var(--u)*1.6)!important;
+  font:800 calc(var(--u)*3.4) var(--angka);color:var(--ink);padding-left:calc(var(--u)*3);text-align:left;box-shadow:2px 2px 6px rgba(0,0,0,.3)}
+.tab-ag::after{content:"";position:absolute;inset:calc(var(--u)*-2)}
+.tab-ag.ajak{animation:tabAjak 1.4s infinite}
+@keyframes tabAjak{50%{transform:translateX(calc(var(--u)*1.4))}}
+.tab-ag.dibaca{opacity:.45;animation:none}
+@media (min-aspect-ratio:1/1){ .agenda{width:calc(var(--u)*92);height:calc(var(--u)*70)} }
 .judul{margin:0;font:600 calc(var(--u)*7.4)/1.1 var(--serif);color:var(--putih);text-align:center;text-shadow:0 0 24px rgba(226,69,122,.5);opacity:0;transform:translateY(8px);transition:.8s}
 .judul.tampil{opacity:1;transform:none}
 .judul small{display:block;font:600 calc(var(--u)*5) var(--tangan);color:var(--emas)}
@@ -231,6 +249,11 @@ img{-webkit-user-drag:none;pointer-events:none}
 </section>
 
 <!-- 2 · hitung mundur -->
+<section class="sc" id="s6">
+  <div class="agenda" id="agenda"><div class="halaman-ag" id="halamanAg"><small id="agNo"></small><p id="agTeks"></p></div>
+    <div class="sampul-ag" id="sampulAg"></div></div>
+</section>
+
 <section class="sc tegak" id="s1">
   <div class="jam-kecil" id="jamKecil">23:59:50</div>
   <div class="arena" id="arena"></div>
@@ -471,7 +494,8 @@ var percik=(function(){
 })();
 
 LANJUT_OTOMATIS=2400;
-var URUT=[0,1,2]; if(FOTO.length) URUT.push(3); URUT.push(4,5);
+var SYUKUR=(Array.isArray(D.syukur)?D.syukur:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,3);
+var URUT=[0]; if(SYUKUR.length) URUT.push(6); URUT.push(1,2); if(FOTO.length) URUT.push(3); URUT.push(4,5);
 var MASUK={}, kini=-1;
 function ke(no){
   var pos=URUT.indexOf(no);
@@ -508,8 +532,25 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
     var t=0, iv=setInterval(function(){ var k=kepala(); percik.api(k.x,k.y); if(++t>40) clearInterval(iv); },50);
     var j=$('#judulAwal'); j.innerHTML=''; j.appendChild(document.createTextNode('Malam ini, '+PENERIMA)); j.appendChild(el('small',null,'sebentar lagi '+TAHUN_BARU+', dari '+PENGIRIM));
     setTimeout(function(){ j.classList.add('tampil'); petunjuk('Apinya menyala. Kita naik ke atap, hitung mundurnya sebentar lagi.'); },500);
-    setTimeout(function(){ lanjut(berikut,'Naik ke atap'); },2200);
+    setTimeout(function(){ lanjut(berikut,SYUKUR.length?'Buka agendanya':'Naik ke atap'); },2200);
   }
+})();
+
+/* ═ 1b · agenda tahun ini: tiga pembatas tempel, tiap pembatas membuka
+   satu halaman berisi hal yang disyukuri (isian `syukur`) ═ */
+(function(){
+  if(!SYUKUR.length) return;
+  var ag=$('#agenda'), WARNA=['#E2457A','#3FC1C9','#F2D49B'], dibaca=0, beres=false;
+  var sp=$('#sampulAg'); sp.appendChild(document.createTextNode('Agenda '+TAHUN_LAMA)); sp.appendChild(el('span',null,PENERIMA+' & '+PENGIRIM));
+  SYUKUR.forEach(function(t,i){ var b=el('button','tab-ag ajak',String(i+1).padStart(2,'0')); b.type='button'; b.style.top='calc(var(--u)*'+(12+i*14)+')'; b.style.background=WARNA[i]; ag.appendChild(b); noMenu(b);
+    b.addEventListener('click',function(){ if(beres) return; ac(); SFX.pop(); buzz(10);
+      ag.classList.remove('buka'); void ag.offsetWidth;
+      $('#agNo').textContent='Yang aku syukuri tahun ini · '+(i+1)+'/'+SYUKUR.length; $('#agTeks').textContent=t;
+      ag.classList.add('buka'); $('#halamanAg').style.boxShadow='inset calc(var(--u)*2) 0 0 '+WARNA[i]+',0 8px 24px rgba(0,0,0,.35)';
+      if(!b.classList.contains('dibaca')){ b.classList.add('dibaca'); b.classList.remove('ajak'); dibaca++; }
+      if(dibaca>=SYUKUR.length){ beres=true; petunjuk('Tahun '+TAHUN_LAMA+' sudah kita tutup. Sekarang naik ke atap.'); setTimeout(function(){ lanjut(berikut,'Naik ke atap'); },3600); }
+      else petunjuk('<b>'+(SYUKUR.length-dibaca)+' pembatas lagi.</b>'); }); });
+  MASUK[6]=function(){ petunjuk('Sebelum tahunnya habis, buka dulu agenda kita. <b>Ketuk pembatas berwarna</b> satu per satu.'); };
 })();
 
 /* ═ 2 · hitung mundur 10 → 1 (game) ═ */

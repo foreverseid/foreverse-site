@@ -19,6 +19,14 @@ export async function main(a){
     await page.mouse.move(g.x + g.width - 6 - hx, gy, { steps:5 }); await page.mouse.up(); }
   await page.locator("#judulAwal.tampil").waitFor({ timeout:8000 }); await a.baca("#judulAwal");
 
+  a.bagian("agenda");
+  await aktif(6); await jeda(900);
+  for (let i = 0; i < 3; i++){
+    await a.ketuk(`#agenda .tab-ag >> nth=${i}`, { tunggu:1100 });
+    if (i === 2) await a.jepret("agenda-isi");
+    await a.baca("#halamanAg");
+  }
+
   a.bagian("hitung-mundur");
   await aktif(1); await jeda(800);
   for (let n = 10; n >= 1; n--){
@@ -38,7 +46,7 @@ export async function main(a){
   for (let i = 0; i < n; i++){
     await a.ketuk("#langitFoto .sumbu:not(.terpakai)", { tunggu:400 });
     await page.locator("#ketLedak.tampil").waitFor({ timeout:5000 }); await jeda(400); await a.baca("#ketLedak");
-    const l = await kotak("#langitFoto"); a.stat.aksi++; await page.mouse.click(l.x + 20, l.y + 20); await jeda(500);
+    const l = await kotak("#langitFoto"); a.stat.aksi++; await page.mouse.click(l.x + l.width*0.12, l.y + l.height*0.5); await jeda(500);
   }
 
   a.bagian("hati");
