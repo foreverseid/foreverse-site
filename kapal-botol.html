@@ -153,6 +153,27 @@ img{-webkit-user-drag:none;pointer-events:none}
 @media (min-aspect-ratio:1/1){ .lihat{flex-direction:row;gap:28px} .lihat p{max-width:16rem;text-align:left} .lihat small{position:absolute;bottom:16px} .lihat .bingkai{width:auto;height:min(76vh,calc(var(--u)*80))} .lihat .bingkai.rebah{width:auto;height:min(68vh,calc(var(--u)*66))} }
 
 /* ═ 4 · tali simpul ═ */
+.kompas{position:relative;width:calc(var(--u)*70);height:calc(var(--u)*70);flex:none;border-radius:50%;touch-action:none;
+  background:radial-gradient(circle,#F3E9D2 0 58%,#e4d4b0 59% 66%,var(--kuning) 67% 72%,var(--jati2) 73% 100%);box-shadow:0 10px 26px rgba(0,0,0,.45),inset 0 0 0 calc(var(--u)*1) #F2D48855}
+.kompas .arah{position:absolute;left:50%;top:50%;width:calc(var(--u)*8);height:calc(var(--u)*8);margin:calc(var(--u)*-4) 0 0 calc(var(--u)*-4);display:grid;place-items:center;font:700 calc(var(--u)*4.4) var(--serif);color:var(--jati2)}
+.kompas .tanda{position:absolute;left:50%;top:50%;width:calc(var(--u)*7);height:calc(var(--u)*7);margin:calc(var(--u)*-3.5) 0 0 calc(var(--u)*-3.5);border-radius:50%;display:grid;place-items:center;
+  font:800 calc(var(--u)*3.4) var(--sans);color:var(--laut2);background:var(--kuning2);box-shadow:0 0 0 2px var(--jati2);transition:.3s}
+.kompas .tanda.redup{opacity:.35}
+.kompas .tanda.kini{animation:denyutT 1.2s infinite}
+.kompas .tanda.dapat{background:var(--laut3);color:var(--kuning2)}
+@keyframes denyutT{50%{box-shadow:0 0 0 2px var(--jati2),0 0 0 calc(var(--u)*2.4) #F2D48866}}
+.jarum-k{position:absolute;left:50%;top:50%;width:calc(var(--u)*6);height:calc(var(--u)*44);margin:calc(var(--u)*-22) 0 0 calc(var(--u)*-3);transform:rotate(var(--r,0deg));cursor:grab;touch-action:none}
+.jarum-k::before{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:#B23A3A;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.jarum-k::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;background:#2a2a30;clip-path:polygon(0 0,100% 0,50% 100%)}
+.poros{position:absolute;left:50%;top:50%;width:calc(var(--u)*7);height:calc(var(--u)*7);margin:calc(var(--u)*-3.5) 0 0 calc(var(--u)*-3.5);border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--kuning2),var(--jati));pointer-events:none}
+.kompas .putar-ket{position:absolute;left:0;right:0;bottom:calc(var(--u)*-8);text-align:center;font:600 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--kuning2)}
+.kompas.mulai .putar-ket{opacity:0;transition:opacity .3s}
+.log-kapal{list-style:none;margin:0;padding:0;width:min(90vw,calc(var(--u)*88));display:flex;flex-direction:column;gap:calc(var(--u)*2)}
+.log-kapal li{background:var(--layar);color:var(--ink);padding:calc(var(--u)*2.2) calc(var(--u)*3.2);border-radius:3px;box-shadow:0 4px 12px rgba(0,0,0,.3);animation:munculL .5s ease}
+.log-kapal li b{display:block;font:700 calc(var(--u)*2.8) var(--sans);letter-spacing:.14em;color:var(--jeruk);text-transform:uppercase}
+.log-kapal li span{font:600 calc(var(--u)*5.2)/1.15 var(--tangan)}
+@keyframes munculL{from{opacity:0;transform:translateY(10px)}}
+@media (min-aspect-ratio:1/1){ .kompas{width:calc(var(--u)*64);height:calc(var(--u)*64)} .log-kapal{width:calc(var(--u)*84)} }
 .kolom{display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*5);width:calc(var(--u)*92)}
 .judul-tali{margin:0;font-family:var(--serif);font-size:calc(var(--u)*5.2);text-align:center;line-height:1.25}
 .tali-wadah{position:relative;width:100%;height:calc(var(--u)*30)}
@@ -267,6 +288,12 @@ img{-webkit-user-drag:none;pointer-events:none}
     </button>
     <p class="hasil-tali" id="hasilTali"></p>
   </div>
+</section>
+
+<!-- 4b · kompas: tiga arah, tiga catatan pelayaran -->
+<section class="sc" id="s7">
+  <div class="kompas" id="kompas"><div class="jarum-k" id="jarumK"></div><div class="poros"></div><div class="putar-ket">putar jarumnya</div></div>
+  <ol class="log-kapal" id="logKapal"></ol>
 </section>
 
 <!-- 5 · pesan di dalam botol -->
@@ -496,7 +523,8 @@ var PASANG=[]; (function(){ var bawah=[LAYAR[1],LAYAR[3]], atas=[LAYAR[0],LAYAR[
   PASANG.sort(function(a,b){ var ia=LAYAR.indexOf(a.l), ib=LAYAR.indexOf(b.l); var ta=ia<2?0:1, tb=ib<2?0:1; if(ta!==tb) return ta-tb; return (a.l.classList.contains('bawah')?0:1)-(b.l.classList.contains('bawah')?0:1); });
 })();
 
-var URUT=['s0','s3','s4']; if(String(D.rahasia||'').trim()) URUT.push('s5'); URUT.push('s6');
+var PELAYARAN=(Array.isArray(D.pelayaran)?D.pelayaran:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,3);
+var URUT=['s0','s3']; if(PELAYARAN.length) URUT.push('s7'); URUT.push('s4'); if(String(D.rahasia||'').trim()) URUT.push('s5'); URUT.push('s6');
 var TAHAP=['gabus','kapal','benang'].concat(URUT.slice(1));
 var maju=$('#maju'); maju.innerHTML=TAHAP.map(function(){ return '<i></i>'; }).join('');
 var tahapKe=0; function tandai(n){ tahapKe=n; $$('i',maju).forEach(function(b,i){ b.classList.toggle('ok',i<n); }); }
@@ -504,6 +532,34 @@ var MASUK={}, kini=null;
 function ke(id){ if(kini){ var l=$('#'+kini); l.classList.remove('aktif'); l.classList.add('lewat'); }
   kini=id; var s=$('#'+id); s.classList.remove('lewat'); s.classList.add('aktif'); if(MASUK[id]) MASUK[id](); }
 function berikut(){ tandai(tahapKe+1); ke(URUT[URUT.indexOf(kini)+1]); }
+
+/* ═ 4b · kompas: jarum diputar ke tiga tanda berurutan; tiap tanda
+   membuka satu catatan pelayaran (isian `pelayaran`) ═ */
+(function(){
+  if(!PELAYARAN.length) return;
+  var kp=$('#kompas'), jr=$('#jarumK'), log=$('#logKapal'), SUDUT=[70,205,315].slice(0,PELAYARAN.length), tanda=[], r=0, lalu=0, ke_=0, beres=false, tahan=false;
+  ['U','T','S','B'].forEach(function(a){ kp.appendChild(el('div','arah',a)); });
+  function letak(){ var R=kp.offsetWidth*.33; tanda.forEach(function(t,i){ var a=SUDUT[i]*Math.PI/180; t.style.transform='translate('+(Math.sin(a)*R)+'px,'+(-Math.cos(a)*R)+'px)'; });
+    $$('.arah',kp).forEach(function(d,i){ var a=i*Math.PI/2, R=kp.offsetWidth*.43; d.style.transform='translate('+(Math.sin(a)*R)+'px,'+(-Math.cos(a)*R)+'px)'; }); }
+  SUDUT.forEach(function(sd,i){ var t=el('div','tanda'+(i?' redup':' kini'),String(i+1)); kp.appendChild(t); tanda.push(t); });
+  function sudut(e){ var p=pusat(kp); return Math.atan2(e.clientX-p.x,-(e.clientY-p.y))*180/Math.PI; }
+  function beda(a,b){ var d=((a-b)%360+540)%360-180; return d; }
+  seret(kp,{
+    boleh:function(){ return !beres; },
+    down:function(e){ lalu=sudut(e); },
+    move:function(e){ if(tahan) return; var a=sudut(e), d=beda(a,lalu); lalu=a; r+=d; jr.style.setProperty('--r',r+'deg'); if(Math.abs(d)>2 && Math.random()<.3) SFX.klik();
+      if(Math.abs(beda(r,SUDUT[ke_]))<9) dapat(); },
+    up:function(){ if(!beres && !tahan && ke_===0 && Math.abs(r)<5) kedip(); tahan=false; }
+  });
+  function dapat(){ var i=ke_++; tahan=true; kp.classList.add('mulai'); r=SUDUT[i]+Math.round((r-SUDUT[i])/360)*360; jr.style.setProperty('--r',r+'deg');
+    tanda[i].classList.remove('kini'); tanda[i].classList.add('dapat'); SFX.dentang(); buzz(20);
+    var li=el('li'); li.appendChild(el('b',null,'Catatan pelayaran · '+(i+1)+'/'+PELAYARAN.length)); li.appendChild(el('span',null,PELAYARAN[i])); log.appendChild(li);
+    if(ke_>=PELAYARAN.length){ beres=true; petunjuk('Semua arah sudah ditempuh.'); setTimeout(function(){ lanjut(berikut,'Buka pesan di botolnya'); },2400); return; }
+    tanda[ke_].classList.remove('redup'); tanda[ke_].classList.add('kini');
+    petunjuk('Arah berikutnya. <b>Putar jarumnya ke tanda '+(ke_+1)+'.</b>'); }
+  MASUK.s7=function(){ letak(); petunjuk('Kompas tua dari kapalnya. <b>Putar jarumnya ke tanda 1</b>, lalu ke tanda berikutnya.'); };
+  addEventListener('resize',function(){ if(kini==='s7') letak(); });
+})();
 
 /* ═ 1-3 · botol ═ */
 (function(){
@@ -574,7 +630,7 @@ function berikut(){ tandai(tahapKe+1); ke(URUT[URUT.indexOf(kini)+1]); }
   function ikatSatu(){ var s=simpul[ke_++]; s.classList.remove('calon'); s.classList.add('terikat'); SFX.pop(); buzz(25); isi(0);
     if(ke_>=simpul.length){ beres=true; ikat.disabled=true;
       $('#hasilTali').textContent=SEMBUNYI||!MULAI?'Masih di kapal yang sama.':HARI.toLocaleString('id-ID')+' hari di kapal yang sama.';
-      SFX.menang(); petunjuk('Talinya sudah penuh simpul.'); setTimeout(function(){ lanjut(berikut,'Buka pesan di botolnya'); },1500); }
+      SFX.menang(); petunjuk('Talinya sudah penuh simpul.'); setTimeout(function(){ lanjut(berikut,PELAYARAN.length?'Lihat kompasnya':'Buka pesan di botolnya'); },1500); }
     else petunjuk('Terikat. <b>'+(simpul.length-ke_)+' simpul lagi.</b>'); }
   noMenu(ikat);
   ikat.addEventListener('pointerdown',function(e){ if(beres) return; e.preventDefault(); ac(); tahan=true; t0=performance.now(); SFX.benang(); raf=requestAnimationFrame(jalan); });

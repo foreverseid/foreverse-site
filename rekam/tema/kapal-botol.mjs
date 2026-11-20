@@ -4,7 +4,7 @@ export const berkas = "kapal-botol-demo.html";
 
 export async function main(a){
   const { page, jeda } = a;
-  const U = await page.evaluate(() => Math.min(innerWidth/100, innerHeight/200));
+  const U = await page.evaluate(() => { const p = document.createElement("div"); p.style.cssText = "position:fixed;width:calc(var(--u)*100)"; document.body.appendChild(p); const w = p.getBoundingClientRect().width / 100; p.remove(); return w; });
   a.bagian("botol");
   await jeda(1500);
   await a.seretEl("#gabus", { dx:U*16, dy:0 }, { tunggu:1000 });
@@ -19,6 +19,24 @@ export async function main(a){
   a.bagian("simpul-tahun");
   const n = await page.locator("#tali .simpul").count();
   for (let i = 0; i < n; i++) await a.tahan("#ikat", 1250, { tunggu:500 });
+  await a.lanjut();
+
+  a.bagian("kompas");
+  await jeda(900);
+  for (let i = 0; i < 3; i++){
+    const k = await page.locator("#kompas").boundingBox(), cx = k.x + k.width/2, cy = k.y + k.height/2, R = k.width*0.3;
+    const sudut = await page.locator("#jarumK").evaluate(e => parseFloat(e.style.getPropertyValue("--r")) || 0);
+    const target = [70,205,315][i];
+    let d = ((target - sudut) % 360 + 540) % 360 - 180;
+    a.stat.aksi++; let s = sudut;
+    const xy = deg => [cx + Math.sin(deg*Math.PI/180)*R, cy - Math.cos(deg*Math.PI/180)*R];
+    await page.mouse.move(...xy(s)); await page.mouse.down();
+    const langkah = Math.ceil(Math.abs(d)/6);
+    for (let j = 1; j <= langkah; j++){ await page.mouse.move(...xy(s + d*j/langkah)); await jeda(14); }
+    await page.mouse.up(); await jeda(700);
+    await a.baca(`#logKapal li >> nth=${i}`);
+    if (i === 2) await a.jepret("kompas-isi");
+  }
   await a.lanjut();
 
   a.bagian("gulungan-surat");
