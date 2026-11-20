@@ -462,6 +462,26 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
                 kebiasaan:90, kangen:70, barang:24, penutup:120,
                 catatan:90, pesanan:40, tahu:90, kunangKu:70, sejak:50, janji:90,
                 tempatKj:24, ceritaKj:90, kegiatanRut:50, oleh:50 , harapanNatal:70, janjiTahun:60, alasanSayang:60, kagum:60, rencanaKetemu:50, barangBawa:50, maafLebaran:70, sadar:90, judulFilm:40, lokasiFilm:30, pencapaian:60, sorakan:60, namaStasiun:24, kenangan:90 };
+  /* Isian tambahan per tema (Standar Tema v1): daftar teks berbatas yang
+     muncul sebagai satu blok di bawah isian khas tema. Satu sumber untuk
+     tampilan, hitung huruf, isi kiriman, pemeriksaan, dan pengisian ulang
+     di halaman edit. Harus sama dengan TAMBAHAN di API. */
+  var TAMBAHAN = {
+    "loker-terakhir": { kunci:"bangga", id:"banggaL", n:4, batas:60, label:"Hal",
+      judul:"Empat hal yang bikin kamu bangga sama dia",
+      jelas:"Terselip di buket wisuda. Dia menarik kartunya satu per satu dari antara bunga.",
+      contoh:["Kamu tetap masuk kelas pagi walau malamnya kerja", "Kamu tidak nyerah walau revisinya berkali-kali", "Kamu masih sempat nemenin aku waktu aku drop", "Kamu yang pertama bilang aku juga pasti bisa"],
+      galat:"Bagian ini belum diisi." }
+  };
+  function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
+    return '<h2 style="margin-top:28px"><span class="n">5</span> ' + t.judul + '</h2><p class="jelas">' + t.jelas + '</p>' +
+      t.contoh.slice(0, t.n).map(function(c, i){ return '<div class="baris" data-f="' + t.id + i + '"><label for="' + t.id + i + '">' + t.label + ' ' + (i+1) + '</label>' +
+        '<input id="' + t.id + i + '" type="text" maxlength="' + t.batas + '" placeholder="' + c + '">' +
+        '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">' + t.galat + '</p></div>'; }).join(""); }
+  function idTambahan(){ var t = TAMBAHAN[TEMA]; return t ? Array.apply(null, { length:t.n }).map(function(_, i){ return t.id + i; }) : []; }
+  function isiTambahan(){ var t = TAMBAHAN[TEMA], o = {}; if(t) o[t.kunci] = idTambahan().map(function(id){ return $(id).value; }); return o; }
+  function isiTambahanDari(i){ var t = TAMBAHAN[TEMA]; if(!t) return; (i[t.kunci] || []).forEach(function(v, n){ if($(t.id + n)) $(t.id + n).value = v || ""; }); }
+
   var MODE_EDIT = /^\/edit\//.test(location.pathname);
   var TOKEN = MODE_EDIT ? (location.pathname.match(/^\/edit\/([A-Za-z0-9]+)/)||[])[1] : "";
 
@@ -1202,7 +1222,9 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<textarea id="rahasia" maxlength="120" style="min-height:70px" placeholder="Kado aslinya aku kasih pas kita ketemu nanti."></textarea>' +
         '<div class="hitung"><span></span><span class="angka"></span></div></div>';
     }
+    html += blokTambahan(tema);
     b.innerHTML = html;
+    if(TAMBAHAN[tema]) for(var tb=0; tb<TAMBAHAN[tema].n; tb++) pasangHitung(TAMBAHAN[tema].id + tb, TAMBAHAN[tema].batas);
     if(tema === "kado-riang"){
       for(var ki=0;ki<3;ki++) pasangHitung("kupon"+ki, BATAS.kupon);
     } else if(tema === "langit-harapan"){
@@ -1291,7 +1313,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
   }
 
   /* ══ isi khusus tema, dipakai pratinjau & pengiriman ══ */
-  function isiKhusus(){
+  function isiKhusus(){ return Object.assign(isiKhususTema(), isiTambahan()); }
+  function isiKhususTema(){
     if(TEMA === "kado-riang"){
       return { kupon: [0,1,2].map(function(i){ return $("kupon"+i).value; }) };
     }
@@ -1657,6 +1680,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         if(kosongE) kurang.push("enakan"+i);
       });
     }
+    idTambahan().forEach(function(nm){ var kosongT = !$(nm).value.trim(); tandai(nm, kosongT); if(kosongT) kurang.push(nm); });
 
     kurang = kurang.concat(cekKunci());
 
@@ -2026,6 +2050,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         } else if($("rahasia")){
           $("rahasia").value = i.rahasia || "";
         }
+        isiTambahanDari(i);
         var lagu = i.lagu || {};
         LAGU_ADA = lagu.src || null;
         $("laguMulai").value = lagu.mulai || "";

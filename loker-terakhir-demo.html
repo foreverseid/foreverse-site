@@ -69,6 +69,12 @@
     "Aku bangga sekali sama kamu. Apa pun langkahmu setelah ini, aku tetap ada di sampingmu."
   ],
   "rahasia": "Kursi untuk meja kerja pertamamu nanti, biar aku yang belikan.",
+  "bangga": [
+    "Kamu tetap masuk kelas pagi walau malamnya kerja",
+    "Bab empat direvisi lima kali dan kamu tidak nyerah",
+    "Kamu masih sempat nemenin aku waktu aku lagi drop",
+    "Kamu yang pertama bilang kalau aku juga pasti bisa"
+  ],
   "waPengirim": "6281234567890",
   "lagu": {
     "src": "",
@@ -233,7 +239,35 @@ img{-webkit-user-drag:none;pointer-events:none}
 .kartu-rahasia p{margin:6px 0 0;font:600 clamp(20px,calc(var(--u)*6),30px)/1.25 var(--tangan)}
 @media (min-aspect-ratio:1/1){ #s1{flex-direction:row} .toga-wadah{width:calc(var(--u)*90);height:calc(var(--u)*76)} .kartu-rahasia{width:calc(var(--u)*64)} }
 
-/* ═ 6 · penutup ═ */
+/* ═ 6 · buket wisuda: tiga kartu terselip di antara bunga ═ */
+.buket-wadah{position:relative;width:calc(var(--u)*70);height:calc(var(--u)*78);flex:none}
+.bunga-bunga{position:absolute;left:0;right:0;top:calc(var(--u)*8);height:calc(var(--u)*34)}
+.bunga-bunga::before{content:"";position:absolute;left:8%;right:8%;top:30%;height:62%;border-radius:50% 50% 0 0;background:radial-gradient(ellipse at 50% 100%,#5f8a4e 0 55%,#4b7440 56% 70%,transparent 71%)}
+.bunga-bunga svg{position:absolute;width:calc(var(--u)*15);height:calc(var(--u)*15);filter:drop-shadow(0 1px 2px #0003)}
+.kertas-buket{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);top:calc(var(--u)*30);bottom:0;
+  background:linear-gradient(100deg,#c79a62,#e3c08f 38%,#c49563 60%,#d9b37f);clip-path:polygon(0 0,100% 0,62% 100%,38% 100%);box-shadow:inset 0 0 0 2px #9c744455}
+.kertas-buket::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 calc(var(--u)*6),#ffffff1c calc(var(--u)*6) calc(var(--u)*6.5))}
+.pita-buket{position:absolute;left:50%;top:calc(var(--u)*56);width:calc(var(--u)*22);height:calc(var(--u)*5);margin-left:calc(var(--u)*-11);border-radius:3px;background:var(--baja);box-shadow:0 2px 0 var(--baja2)}
+.pita-buket::before,.pita-buket::after{content:"";position:absolute;top:calc(var(--u)*3);width:calc(var(--u)*4);height:calc(var(--u)*12);background:var(--baja);border-radius:0 0 3px 3px}
+.pita-buket::before{left:calc(var(--u)*6);transform:rotate(14deg)} .pita-buket::after{right:calc(var(--u)*6);transform:rotate(-14deg)}
+.kartu-b{position:absolute;width:calc(var(--u)*15);height:calc(var(--u)*11);margin-left:calc(var(--u)*-7.5);background:#fff;border-radius:3px;box-shadow:0 2px 6px #0003;
+  touch-action:none;cursor:grab;display:grid;place-items:center;transform:rotate(var(--rt)) translateY(var(--ty,0px));z-index:3}
+.kartu-b::before{content:"";position:absolute;left:50%;top:100%;width:2px;height:calc(var(--u)*14);margin-left:-1px;background:#7a8a6a}
+.kartu-b::after{content:"";position:absolute;inset:calc(var(--u)*-4)}
+.kartu-b b{font:700 clamp(11px,calc(var(--u)*3.4),17px) var(--mono);color:var(--baja2)}
+.kartu-b span{position:absolute;top:calc(var(--u)*-6);font:800 14px var(--sans);color:var(--baja2)}
+.kartu-b.ajak{animation:cabut 1.5s infinite}
+@keyframes cabut{50%{transform:rotate(var(--rt)) translateY(calc(var(--u)*-1.6))}}
+.kartu-b.dicabut{transition:transform .5s cubic-bezier(.3,0,.6,1),opacity .4s .15s;transform:translateY(calc(var(--u)*-40)) rotate(0);opacity:0;pointer-events:none}
+.daftar-bangga{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(var(--u)*2.4);width:min(88vw,calc(var(--u)*86))}
+.daftar-bangga li{background:#fff;padding:10px 14px 12px;box-shadow:0 3px 10px #0002;border-left:5px solid var(--mustard);animation:naik .6s cubic-bezier(.3,1.3,.5,1)}
+.daftar-bangga li:nth-child(2){transform:rotate(.6deg)} .daftar-bangga li:nth-child(3){transform:rotate(-.5deg)}
+.daftar-bangga small{display:block;font:700 9px var(--mono);letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.daftar-bangga p{margin:3px 0 0;font:600 clamp(19px,calc(var(--u)*5.4),26px)/1.2 var(--tangan)}
+@media (min-aspect-ratio:1/1){ #s3{flex-direction:row;gap:calc(var(--u)*8)} .buket-wadah{width:calc(var(--u)*62);height:calc(var(--u)*72)} .daftar-bangga{display:grid;grid-template-columns:1fr 1fr;width:calc(var(--u)*96);gap:calc(var(--u)*2)} .daftar-bangga li{padding:7px 12px 8px} .daftar-bangga p{font-size:clamp(17px,calc(var(--u)*4.4),24px)} }
+@media (max-aspect-ratio:1/1){ .daftar-bangga{gap:calc(var(--u)*1.8)} .daftar-bangga li{padding:8px 12px 9px} .daftar-bangga p{font-size:clamp(17px,calc(var(--u)*4.8),24px)} .buket-wadah{height:calc(var(--u)*70)} }
+
+/* ═ 7 · penutup ═ */
 .lempar{display:flex;flex-direction:column;align-items:center;gap:6px;touch-action:none;cursor:grab;transition:transform 1.4s cubic-bezier(.2,.7,.3,1),opacity 1.4s}
 .lempar svg{width:calc(var(--u)*56)}
 .lempar small{font:700 12px var(--mono);color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
@@ -310,7 +344,13 @@ img{-webkit-user-drag:none;pointer-events:none}
   <div class="kartu-rahasia" id="kartuRahasia"><small>tertulis di balik toga</small><p id="rahasiaTeks"></p></div>
 </section>
 
-<!-- 6 · penutup: lempar toga -->
+<!-- 6 · buket wisuda: tarik tiga kartu -->
+<section class="sc" id="s3">
+  <div class="buket-wadah" id="buketWadah"><div class="bunga-bunga" id="bungaBunga"></div><div class="kertas-buket"></div><div class="pita-buket"></div></div>
+  <ol class="daftar-bangga" id="daftarBangga"></ol>
+</section>
+
+<!-- 7 · penutup: lempar toga -->
 <section class="sc" id="s2">
   <div class="lempar" id="lempar"><svg viewBox="0 0 200 130" aria-hidden="true"><path d="M58 70 L58 104 Q100 124 142 104 L142 70 Z" fill="#20232b"/><polygon points="100,22 192,58 100,94 8,58" fill="#2b2f3a" stroke="#14161c" stroke-width="2"/><circle cx="100" cy="58" r="5" fill="#F2B33D"/><path d="M100 58 Q60 64 40 92" stroke="#F2B33D" stroke-width="3" fill="none"/></svg><small>lempar ke atas</small></div>
   <div class="akhir" id="akhir">
@@ -505,10 +545,11 @@ var SEMBUNYI=!!D.sembunyikanTahun;
 var JENJANG={sma:'SMA',d3:'D3',s1:'S1',s2:'S2',s3:'S3'}[D.jenjang]||'S1';
 var KODE=TGL?[TGL.getDate(),TGL.getMonth()+1].concat(SEMBUNYI?[]:[TGL.getFullYear()%100]):[1,2,3];
 
-var TAHAP=6, maju=$('#maju'), tahapKe=0;
+var BANGGA=(Array.isArray(D.bangga)?D.bangga:[]).map(function(t){ return String(t||'').trim(); }).filter(Boolean).slice(0,4);
+var TAHAP=BANGGA.length?7:6, maju=$('#maju'), tahapKe=0;
 maju.innerHTML=Array.apply(null,{length:TAHAP}).map(function(_,i){ return '<i>0'+(i+1)+'</i>'; }).join('');
 function tandai(){ tahapKe++; $$('i',maju).forEach(function(b,i){ b.classList.toggle('ok',i<tahapKe); }); }
-var MASUK={}, kini=null, URUT=['s0','s1','s2'];
+var MASUK={}, kini=null, URUT=BANGGA.length?['s0','s1','s3','s2']:['s0','s1','s2'];
 function ke(id){ if(kini){ var l=$('#'+kini); l.classList.remove('aktif'); l.classList.add('lewat'); }
   kini=id; var s=$('#'+id); s.classList.remove('lewat'); s.classList.add('aktif'); if(MASUK[id]) MASUK[id](); }
 function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
@@ -602,12 +643,43 @@ ov.addEventListener('click',function(){ if(!ovTutup) return; var f=ovTutup; ovTu
     move:function(e,dx){ x=klem(x0+dx/(U()*34),-1,1); atur(); },
     up:function(){ if(x<-.2){ beres=true; x=-1; atur(); SFX.dentang(); buzz([20,40,20]); tandai();
         $('#rahasiaTeks').textContent=String(D.rahasia||'').trim()||'Kuncirnya sudah pindah. Resmi lulus.';
-        $('#kartuRahasia').classList.add('tampil'); petunjuk('Resmi lulus.'); setTimeout(function(){ lanjut(berikut,'Rayakan'); },1800); }
+        $('#kartuRahasia').classList.add('tampil'); petunjuk('Resmi lulus.'); setTimeout(function(){ lanjut(berikut,BANGGA.length?'Ada buket untukmu':'Rayakan'); },1800); }
       else { x=1; atur(); rum.classList.add('ajak'); kedip(); } }
   });
 })();
 
-/* ═ 6 · lempar toga + penutup ═ */
+/* ═ 6 · buket wisuda: tiap kartu yang ditarik ke atas membuka satu hal
+   yang bikin pengirim bangga (isian `bangga`) ═ */
+(function(){
+  if(!BANGGA.length) return;
+  var bb=$('#bungaBunga'), dft=$('#daftarBangga'), dicabut=0;
+  function bunga(warna,tengah){ var s='<svg viewBox="0 0 40 40" aria-hidden="true">';
+    for(var k=0;k<6;k++){ var a=k*Math.PI/3; s+='<ellipse cx="'+(20+Math.cos(a)*10).toFixed(1)+'" cy="'+(20+Math.sin(a)*10).toFixed(1)+'" rx="8" ry="6" transform="rotate('+(k*60)+' '+(20+Math.cos(a)*10).toFixed(1)+' '+(20+Math.sin(a)*10).toFixed(1)+')" fill="'+warna+'"/>'; }
+    return s+'<circle cx="20" cy="20" r="6" fill="'+tengah+'"/></svg>'; }
+  [[12,30,'#FFF8E8','#F2B33D'],[30,16,'#E8734A','#FFF8E8'],[50,8,'#FFF8E8','#F2B33D'],[70,14,'#F2B33D','#C98A17'],[88,28,'#E8734A','#FFF8E8'],
+   [22,44,'#F2B33D','#C98A17'],[40,34,'#FFF8E8','#E8734A'],[60,32,'#E8734A','#FFF8E8'],[78,42,'#FFF8E8','#F2B33D'],[50,50,'#F2B33D','#FFF8E8'],[6,52,'#E8734A','#FFF8E8'],[94,50,'#F2B33D','#C98A17']].forEach(function(b){
+    var d=document.createElement('div'); d.innerHTML=bunga(b[2],b[3]); var g=d.firstChild; g.style.left='calc('+b[0]+'% - var(--u)*7.5)'; g.style.top=b[1]+'%'; bb.appendChild(g); });
+  var POS=BANGGA.length>3?[[18,9,-10],[39,1,-3],[61,0,4],[82,8,10]]:[[24,8,-8],[50,0,3],[76,10,9]];
+  BANGGA.forEach(function(t,i){
+    var k=el('div','kartu-b'); k.innerHTML='<span>↑</span><b>0'+(i+1)+'</b>'; k.style.left=POS[i][0]+'%'; k.style.top='calc(var(--u)*'+POS[i][1]+')'; k.style.setProperty('--rt',POS[i][2]+'deg');
+    $('#buketWadah').appendChild(k); noMenu(k);
+    seret(k,{
+      boleh:function(){ return !k.classList.contains('dicabut'); },
+      down:function(){ k.classList.remove('ajak'); SFX.klik(); },
+      move:function(e,dx,dy){ k.style.setProperty('--ty',Math.min(0,dy)+'px'); },
+      up:function(e,dx,dy){ k.style.setProperty('--ty','0px');
+        if(dy>-U()*9){ k.classList.add('ajak'); kedip(); return; }
+        k.classList.add('dicabut'); SFX.kertas(); buzz(15); dicabut++;
+        var li=el('li'); li.appendChild(el('small',null,'yang bikin aku bangga · '+(i+1)+'/'+BANGGA.length)); li.appendChild(el('p',null,t)); dft.appendChild(li);
+        if(dicabut>=BANGGA.length){ tandai(); SFX.dentang(); petunjuk('Dari '+teks(PENGIRIM)+', buat kamu.'); setTimeout(function(){ lanjut(berikut,'Rayakan'); },2200); }
+        else petunjuk('<b>'+(BANGGA.length-dicabut)+' kartu lagi</b> di antara bunganya.'); }
+    });
+  });
+  MASUK.s3=function(){ $$('.kartu-b').forEach(function(k){ k.classList.add('ajak'); });
+    petunjuk('Buket wisuda dari '+teks(PENGIRIM)+'. Ada kartu terselip di antara bunganya. <b>Tarik kartunya ke atas</b>, satu per satu.'); };
+})();
+
+/* ═ 7 · lempar toga + penutup ═ */
 (function(){
   var lp=$('#lempar'), beres=false, svg=$('svg',lp).outerHTML;
   MASUK.s2=function(){ lp.classList.add('ajak'); petunjuk('Satu lagi. <b>Lempar togamu ke atas.</b>'); };

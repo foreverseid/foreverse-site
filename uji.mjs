@@ -37,6 +37,10 @@ function isiDraf() {
 
 function fotoPenuh(n) { return Array.from({ length: n }, (_, i) => ({ data: FOTO, mime: "image/jpeg", caption: i ? "" : "foto pertama" })); }
 
+/* Isian tambahan per tema (Standar Tema v1), dibaca langsung dari API */
+const TAMBAHAN_UJI = Object.fromEntries([...(await readFile("./functions/api/[[jalur]].js", "utf8"))
+  .match(/const TAMBAHAN = \{([\s\S]*?)\n\};/)[1].matchAll(/"([\w-]+)": \{ kunci: "(\w+)", n: (\d+), batas: (\d+)/g)]
+  .map(m => [m[1], { kunci: m[2], n: +m[3], batas: +m[4] }]));
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
@@ -199,6 +203,8 @@ function isiDrafTema(tema) {
     ];
     d.isi.penutup = "";
   }
+  const tb = TAMBAHAN_UJI[tema];
+  if (tb) d.isi[tb.kunci] = Array.from({ length: tb.n }, (_, i) => "Tambahan " + (i + 1) + ".");
   return d;
 }
 
@@ -2567,6 +2573,34 @@ for (const [tema, momen, kosongkan, pesan] of [
     const d = isiDrafTema(tema); kosongkan(d);
     const j = await draf(L, d);
     harus(!j.ok && new RegExp(pesan, "i").test(j.pesan || ""), "harus ditolak: " + JSON.stringify(j));
+  });
+}
+
+/* ═══════════ isian tambahan (Standar Tema v1) ═══════════ */
+for (const [tema, tb] of Object.entries(TAMBAHAN_UJI)) {
+  await uji(tema + " · isian tambahan '" + tb.kunci + "' tersimpan lengkap dan dipotong sesuai batas", async () => {
+    const L = await buatLingkungan();
+    const d = isiDrafTema(tema); d.isi[tb.kunci][0] = "x".repeat(tb.batas + 30);
+    const j = await draf(L, d);
+    harus(j.ok, "draf gagal: " + JSON.stringify(j));
+    const isi = JSON.parse((await L.env.DB.prepare("SELECT isi FROM pesanan WHERE kode=?").bind(j.kode).first()).isi);
+    sama(isi[tb.kunci].length, tb.n, "jumlah");
+    sama(isi[tb.kunci][0].length, tb.batas, "dipotong");
+    sama(isi[tb.kunci][tb.n - 1], "Tambahan " + tb.n + ".", "isi terakhir");
+  });
+  await uji(tema + " · isian tambahan '" + tb.kunci + "' yang kosong ditolak", async () => {
+    const L = await buatLingkungan();
+    const d = isiDrafTema(tema); d.isi[tb.kunci][tb.n - 1] = " ";
+    const j = await draf(L, d);
+    harus(!j.ok, "harus ditolak");
+  });
+  await uji(tema + " · isian tambahan sama di formulir, mesin, dan demo", async () => {
+    const ps = await readFile("./pesan.html", "utf8"), m = await readFile("./" + tema + ".html", "utf8"), dm = await readFile("./" + tema + "-demo.html", "utf8");
+    const f = ps.match(new RegExp('"' + tema + '": \\{ kunci:"' + tb.kunci + '", id:"\\w+", n:(\\d+), batas:(\\d+)'));
+    harus(f && +f[1] === tb.n && +f[2] === tb.batas, "formulir");
+    harus(m.includes("D." + tb.kunci), "mesin membaca D." + tb.kunci);
+    const data = JSON.parse(dm.match(/<script id="foreverse-data"[^>]*>([\s\S]*?)<\/script>/)[1]);
+    harus(Array.isArray(data[tb.kunci]) && data[tb.kunci].length === tb.n && data[tb.kunci].every(x => x && x.length <= tb.batas), "demo terisi " + tb.n);
   });
 }
 

@@ -106,6 +106,11 @@ const TEMA_SKEMA = {
   "herbarium":         { nfoto: 4, foto: "TRTR", momen: "spesial" },
   "pemutaran-perdana": { nfoto: 5, foto: "TRTRT", momen: "anniversary" }
 };
+/* Isian tambahan per tema (Standar Tema v1): daftar teks wajib berbatas
+   di luar isian khas lama tema. Harus sama dengan TAMBAHAN di pesan.html. */
+const TAMBAHAN = {
+  "loker-terakhir": { kunci: "bangga", n: 4, batas: 60, galat: "Keempat hal yang bikin kamu bangga belum diisi." }
+};
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
 /* ══════════════════ alat bantu ══════════════════ */
@@ -944,6 +949,11 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
        diungkap di balik lapisan interaktif tema masing-masing. */
     isi.rahasia = teks(p.rahasia, BATAS.rahasia);
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  }
+  const tb = TAMBAHAN[tema];
+  if (tb) {
+    isi[tb.kunci] = Array.from({ length: tb.n }, (_, i) => teks((p[tb.kunci] || [])[i], tb.batas));
+    if (isi[tb.kunci].some(x => !x)) throw new Error(tb.galat);
   }
 
   /* Standar foto: skema.foto = urutan slot, "T" tegak 3:4 / "R" mendatar
