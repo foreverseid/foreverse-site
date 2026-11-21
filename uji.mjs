@@ -45,7 +45,7 @@ const TAMBAHAN_UJI = Object.fromEntries([...(await readFile("./functions/api/[[j
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  const JUMLAH_FOTO = { "radio": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
+  const JUMLAH_FOTO = { "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
   d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
@@ -66,7 +66,7 @@ function isiDrafTema(tema) {
     d.isi.tanggalMulai = "2021-10-24";
     d.isi.sembunyikanTahun = false;
     d.isi.rahasia = "Destinasi berikutnya, kamu yang pilih.";
-  } else if (tema === "celengan" || tema === "koper" || tema === "radio") {
+  } else if (tema === "celengan" || tema === "koper" || tema === "radio" || tema === "sulam") {
     d.momen = "ldr";
     delete d.isi.ucapan;
     delete d.isi.tanggalLahir;
@@ -633,7 +633,7 @@ await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", asy
   sama(j.minat["pasar-malam"].demo, 3, "dibuka");
   sama(j.minat["pasar-malam"].form, 1, "mulai isi");
   sama(j.minat["bait"].lunas, 1, "terbayar");
-  sama(Object.keys(j.minat).length, 25, "semua tema terdaftar");
+  sama(Object.keys(j.minat).length, 26, "semua tema terdaftar");
 });
 
 await uji("rumah-contoh · pesanan lengkap diterima, momen proposal, empat janji tersimpan", async () => {
@@ -718,7 +718,7 @@ for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.htm
                       "rumah-contoh.html", "rumah-contoh-demo.html",
                       "kotak-musik.html", "kotak-musik-demo.html", "garis-finis.html", "garis-finis-demo.html",
                       "stasiun-terakhir.html", "stasiun-terakhir-demo.html", "bait-demo.html",
-                      "rumah-menyala.html", "rumah-menyala-demo.html", "hitung-mundur.html", "hitung-mundur-demo.html", "pabrik-cokelat.html", "pabrik-cokelat-demo.html", "malam-takbiran.html", "malam-takbiran-demo.html", "herbarium.html", "herbarium-demo.html", "celengan.html", "celengan-demo.html", "koper.html", "radio.html", "koper-demo.html", "radio.html", "radio-demo.html", "pemutaran-perdana.html", "pemutaran-perdana-demo.html",
+                      "rumah-menyala.html", "rumah-menyala-demo.html", "hitung-mundur.html", "hitung-mundur-demo.html", "pabrik-cokelat.html", "pabrik-cokelat-demo.html", "malam-takbiran.html", "malam-takbiran-demo.html", "herbarium.html", "herbarium-demo.html", "celengan.html", "celengan-demo.html", "koper.html", "radio.html", "sulam.html", "koper-demo.html", "radio.html", "radio-demo.html", "sulam.html", "sulam-demo.html", "pemutaran-perdana.html", "pemutaran-perdana-demo.html",
                       "index.html"]) {
   await uji(berkas + " · skrip di dalamnya masih bisa diurai", async () => {
     const { execFileSync } = await import("node:child_process");
@@ -2227,7 +2227,7 @@ judul("Dasar tema, musik, dan email surat jadi");
 
 const MESIN_TEMA = ["surat", "kado-riang", "langit-harapan", "kapal-botol", "zona-waktu", "loker-terakhir", "confess-kunang",
   "getwell-365", "pasar-malam", "lewat-duluan", "kasus-pengirim", "rekonstruksi", "rumah-contoh", "kotak-musik", "garis-finis",
-  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "radio", "pemutaran-perdana"];
+  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "radio", "sulam", "pemutaran-perdana"];
 const berkasTema = m => [m + ".html", (m === "surat" ? "bait" : m) + "-demo.html"];
 
 await uji("semua tema (mesin & demo) memuat tema-dasar.js sebelum skripnya sendiri, layar terkunci dari zoom", async () => {
@@ -2635,7 +2635,7 @@ await uji("halaman momen tanpa tema aktif menampilkan Segera hadir", async () =>
   const { halamanMomen } = await import("./functions/momen.js");
   const hidup = halamanMomen("ldr", []);
   harus(!hidup.includes("Segera hadir") && hidup.includes("/pesan?tema=zona-waktu"), "tema hidup tampil biasa");
-  const kosong = halamanMomen("ldr", ["zona-waktu", "celengan", "koper", "radio"]);
+  const kosong = halamanMomen("ldr", ["zona-waktu", "celengan", "koper", "radio", "sulam"]);
   harus(kosong.includes("Segera hadir"), "label segera hadir");
   harus(!kosong.includes("/pesan?tema="), "tidak ada tautan pesan ke tema mati");
   harus(!kosong.includes("Dua jendela"), "teks tema yang mati tidak ikut tampil");
