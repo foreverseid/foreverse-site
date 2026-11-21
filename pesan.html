@@ -521,6 +521,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       judul:"Tiga kalimat yang pernah terucap dan masih kamu ingat",
       jelas:"Muncul di balik layar. Dia menepuk papan klep, dan tiap adegan menampilkan satu kalimat ini sebagai dialog film.",
       contoh:["Kamu yakin mau duduk di sini? Ini kursi paling dekat layar", "Aku tidak suka horor, tapi kalau sama kamu boleh", "Pulangnya aku antar, ya. Udah malam"],
+      galat:"Bagian ini belum diisi." },
+    "radio": { kunci:"salam", id:"salamR", n:3, batas:80, label:"Salam",
+      judul:"Tiga kirim-kirim salam",
+      jelas:"Seperti telepon ke radio malam. Tiap fader yang dia dorong ke atas menyiarkan satu salam darimu.",
+      contoh:["Buat yang lagi di kota orang, jangan lupa makan malam", "Salam buat teman sekamarmu, makasih sudah jagain dia", "Buat kamu yang besok ujian, tidur yang cukup ya"],
       galat:"Bagian ini belum diisi." }
   };
   function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
@@ -550,6 +555,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "zona-waktu":        { nama:"Dua Jendela",       nfoto:4, foto:"TTRR", mesin:"/zona-waktu.html",        momen:"ldr" },
     "celengan":          { nama:"Celengan Rindu",   nfoto:4, foto:"TTRR", mesin:"/celengan.html",          momen:"ldr" },
     "koper":             { nama:"Koper ke Kotamu",   nfoto:4, foto:"TRRT", mesin:"/koper.html",             momen:"ldr" },
+    "radio": { nama:"Radio Tengah Malam", nfoto:4, foto:"RTTR", mesin:"/radio.html", momen:"ldr" },
     "loker-terakhir":    { nama:"Loker Terakhir", nfoto:4, foto:"TRTR", mesin:"/loker-terakhir.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:4, foto:"TTRR", mesin:"/confess-kunang.html",  momen:"confess" },
     "getwell-365":       { nama:"36,5",                  nfoto:4, foto:"TTRR", mesin:"/getwell-365.html",     momen:"getwell" },
@@ -708,6 +714,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "rekonstruksi":   { nada:[60,64,67,72,71,67,64,62,60,65,69,72,69,65,64,62], jeda:.46, gema:.85 },
     "rumah-contoh":   { nada:[67,71,74,79,74,71,69,72,76,81,76,72,65,69,72,77,72,69,67,71,74,79,78,74], jeda:.42, gema:1.5 },
     "celengan":       { nada:[67,72,76,72,69,74,77,74,65,69,72,69,67,71,74,79], jeda:.32, gema:1.4 },
+    "radio": { nada:[69,72,76,79,76,72,67,71,74,77,74,71,65,69,72,76,72,69,64,67,71,74,72,67], jeda:0.42, gema:1.6 },
     "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
@@ -1201,6 +1208,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         [0,1,2].map(function(i){ return '<div class="baris" data-f="barangK'+i+'"><label for="barangK'+i+'">Barang '+(i+1)+'</label>' +
           '<input id="barangK'+i+'" type="text" maxlength="50" placeholder="'+contohBr[i]+'">' +
           '<div class="hitung"><span></span><span class="angka"></span></div><p class="galat">Barang ini belum diisi.</p></div>'; }).join("");
+    } else if(tema === "radio"){
+      html = "";
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1446,6 +1455,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     if(TEMA === "pabrik-cokelat") return { alasan: [0,1,2].map(function(i){ return $("alasanS"+i).value; }) };
     if(TEMA === "herbarium") return { kagum: [0,1,2].map(function(i){ return $("kagumH"+i).value; }) };
     if(TEMA === "celengan") return { rencana: [0,1,2].map(function(i){ return $("rencanaC"+i).value; }) };
+    if(TANPA_KHUSUS.indexOf(TEMA) > -1) return {};   /* isiannya cukup lewat TAMBAHAN */
     if(TEMA === "koper") return { barang: [0,1,2].map(function(i){ return $("barangK"+i).value; }) };
     if(TEMA === "pemutaran-perdana") return { judulFilm: $("judulFilm").value, lokasi: [0,1,2].map(function(i){ return $("lokasiF"+i).value; }) };
     if(TEMA === "malam-takbiran") return { ucapan: $("ucapanLebaran").value, maaf: [0,1,2].map(function(i){ return $("maafL"+i).value; }) };
@@ -1456,6 +1466,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
+  var TANPA_KHUSUS = ["radio"];
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau ══

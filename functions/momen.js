@@ -33,6 +33,7 @@ const TEMA = {
   "hitung-mundur": { nama: "Hitung Mundur di Atap", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
   "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." },
   "celengan": { nama: "Celengan Rindu", ringkas: "Celengan ayam untuk tabungan ketemu: tiga koin terakhir membawa rencana kalian, lalu dipecah dan isinya foto serta suratmu yang tergulung." },
+  "radio": { nama: "Radio Tengah Malam", ringkas: "Siaran radio khusus untuk satu pendengar: cari frekuensi kalian, dorong fader salam, putar kaset foto, lalu suratmu dibacakan ON AIR." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -78,7 +79,7 @@ export const MOMEN = {
     deskripsi: "Kado untuk pacar LDR: surat digital yang menampilkan jam asli dua kota kalian, lengkap dengan foto dan pesan. Tinggal kirim tautannya.",
     h1: "Untuk yang lagi jauh, tetap satu layar.",
     lede: "Dua jendela, dua kota, jam aslinya masing-masing. Dia menebak kamu lagi apa di jam segini, membuka paket yang menyeberang, sampai dua kamar itu jadi satu.",
-    tema: ["zona-waktu", "celengan", "koper"],
+    tema: ["zona-waktu", "celengan", "koper", "radio"],
     ide: [
       "Jam kita beda, tapi aku selalu tahu kamu lagi di jam berapa.",
       "Hitung mundurnya jalan terus. Sebentar lagi kita di kota yang sama.",
