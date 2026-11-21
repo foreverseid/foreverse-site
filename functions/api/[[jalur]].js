@@ -91,6 +91,7 @@ const TEMA_SKEMA = {
   "sulam":             { nfoto: 4, foto: "TRTR", momen: "ldr" },
   "radio":             { nfoto: 4, foto: "RTTR", momen: "ldr" },
   "loker-terakhir":    { nfoto: 4, foto: "TRTR", momen: "graduation" },
+  "persembahan": { nfoto: 4, foto: "RTTR", momen: "graduation" },
   "confess-kunang":    { nfoto: 4, foto: "TTRR", momen: "confess" },
   "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
   "pasar-malam":       { nfoto: 4, foto: "TRTR", momen: "askout" },
@@ -123,7 +124,8 @@ const TAMBAHAN = {
   "bait": { kunci: "telegram", n: 3, batas: 70, galat: "Ketiga harapan di telegram belum diisi." },
   "pemutaran-perdana": { kunci: "dialog", n: 3, batas: 70, galat: "Ketiga dialog belum diisi." },
   "radio": { kunci: "salam", n: 3, batas: 80, galat: "Ketiga salam belum diisi." },
-  "sulam": { kunci: "jahitan", n: 3, batas: 70, galat: "Ketiga hal yang bikin kamu kuat belum diisi." }
+  "sulam": { kunci: "jahitan", n: 3, batas: 70, galat: "Ketiga hal yang bikin kamu kuat belum diisi." },
+  "persembahan": { kunci: "saksi", n: 3, batas: 80, galat: "Ketiga hal yang kamu lihat selama dia berjuang belum diisi." }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -892,6 +894,10 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   } else if (tema === "sulam") {
     /* "Sulam Jarak" (LDR): isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "persembahan") {
+    /* "Halaman Persembahan": isian khasnya lewat TAMBAHAN. */
+    if (isi.jenjang === "sma") throw new Error("Tema Halaman Persembahan untuk wisuda D3 sampai S3. Untuk SMA/SMK, pilih tema Graduation yang lain, ya.");
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "herbarium") {
     /* "Herbarium Kecil" (Hari Spesial · Hari Perempuan): `kagum` = tiga hal
        yang dikagumi pengirim, terbuka saat tiap bunga kering dicocokkan. */
@@ -1183,7 +1189,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "sulam": "Sulam Jarak", "radio": "Radio Tengah Malam",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "persembahan": "Halaman Persembahan", "sulam": "Sulam Jarak", "radio": "Radio Tengah Malam",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");

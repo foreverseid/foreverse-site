@@ -45,7 +45,7 @@ const TAMBAHAN_UJI = Object.fromEntries([...(await readFile("./functions/api/[[j
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  const JUMLAH_FOTO = { "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
+  const JUMLAH_FOTO = { "persembahan": 4, "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
   d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
@@ -87,7 +87,7 @@ function isiDrafTema(tema) {
     d.isi.oleh = ["Gantungan kunci", "Teh", "Peluk"];
     d.isi.tanggalKetemu = "";
     d.isi.penutup = "";
-  } else if (tema === "loker-terakhir") {
+  } else if (tema === "loker-terakhir" || tema === "persembahan") {
     d.momen = "graduation";
     delete d.isi.ucapan;
     delete d.isi.tanggalLahir;
@@ -633,7 +633,7 @@ await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", asy
   sama(j.minat["pasar-malam"].demo, 3, "dibuka");
   sama(j.minat["pasar-malam"].form, 1, "mulai isi");
   sama(j.minat["bait"].lunas, 1, "terbayar");
-  sama(Object.keys(j.minat).length, 26, "semua tema terdaftar");
+  sama(Object.keys(j.minat).length, 27, "semua tema terdaftar");
 });
 
 await uji("rumah-contoh · pesanan lengkap diterima, momen proposal, empat janji tersimpan", async () => {
@@ -708,7 +708,7 @@ async function skripHalaman(berkas) {
 for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html",
                       "kado-riang.html", "langit-harapan.html", "kapal-botol.html",
                       "kapal-botol-demo.html", "zona-waktu.html", "zona-waktu-demo.html",
-                      "loker-terakhir.html", "loker-terakhir-demo.html",
+                      "loker-terakhir.html", "loker-terakhir-demo.html", "persembahan.html", "persembahan-demo.html",
                       "confess-kunang.html", "confess-kunang-demo.html",
                       "getwell-365.html", "getwell-365-demo.html",
                       "pasar-malam.html", "pasar-malam-demo.html",
@@ -803,7 +803,7 @@ await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
    "match" — tapi mencaplok sampai </script> SKRIP BERIKUTNYA, menghapus
    skrip bootstrap pratinjau. Uji ini memastikan match-nya selalu pas
    satu skrip saja. */
-for (const berkas of ["kado-riang.html", "langit-harapan.html", "kapal-botol.html", "zona-waktu.html", "loker-terakhir.html", "confess-kunang.html", "getwell-365.html", "pasar-malam.html", "lewat-duluan.html", "kasus-pengirim.html", "rekonstruksi.html", "rumah-contoh.html", "kotak-musik.html", "garis-finis.html", "stasiun-terakhir.html", "rumah-menyala.html", "hitung-mundur.html", "pabrik-cokelat.html", "malam-takbiran.html", "herbarium.html", "celengan.html", "koper.html", "pemutaran-perdana.html"]) {
+for (const berkas of ["kado-riang.html", "langit-harapan.html", "kapal-botol.html", "zona-waktu.html", "loker-terakhir.html", "persembahan.html", "confess-kunang.html", "getwell-365.html", "pasar-malam.html", "lewat-duluan.html", "kasus-pengirim.html", "rekonstruksi.html", "rumah-contoh.html", "kotak-musik.html", "garis-finis.html", "stasiun-terakhir.html", "rumah-menyala.html", "hitung-mundur.html", "pabrik-cokelat.html", "malam-takbiran.html", "herbarium.html", "celengan.html", "koper.html", "pemutaran-perdana.html"]) {
   await uji(berkas + " · pola sisip data worker.js pas satu skrip, tidak mencaplok skrip berikutnya", async () => {
     const t = await readFile("./" + berkas, "utf8");
     const re = /(<script id="foreverse-data" type="application\/json">\n)[\s\S]*?(\n<\/script>)/;
@@ -1148,6 +1148,15 @@ await uji("loker-terakhir · pesanan lengkap diterima dan tersimpan dengan tema 
   sama(isi.jenjang, "s1", "jenjang tersimpan");
   sama(isi.tanggalWisuda, "2026-10-24", "tanggal wisuda tersimpan");
   harus(!("ucapan" in isi) && !("tanggalLahir" in isi), "isian birthday tidak boleh ikut nyangkut di momen graduation");
+});
+
+await uji("persembahan · jenjang SMA ditolak (tema skripsi untuk D3 sampai S3), S2 diterima", async () => {
+  const L = await buatLingkungan();
+  const d = isiDrafTema("persembahan"); d.isi.jenjang = "sma";
+  const j = await draf(L, d);
+  harus(!j.ok && /D3 sampai S3/.test(j.pesan || ""), "SMA seharusnya ditolak: " + JSON.stringify(j));
+  const d2 = isiDrafTema("persembahan"); d2.isi.jenjang = "s2";
+  harus((await draf(L, d2)).ok, "S2 seharusnya diterima");
 });
 
 await uji("loker-terakhir · tanggal wisuda kosong ditolak", async () => {
@@ -2255,7 +2264,7 @@ judul("Dasar tema, musik, dan email surat jadi");
 
 const MESIN_TEMA = ["surat", "kado-riang", "langit-harapan", "kapal-botol", "zona-waktu", "loker-terakhir", "confess-kunang",
   "getwell-365", "pasar-malam", "lewat-duluan", "kasus-pengirim", "rekonstruksi", "rumah-contoh", "kotak-musik", "garis-finis",
-  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "radio", "sulam", "pemutaran-perdana"];
+  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "persembahan", "radio", "sulam", "pemutaran-perdana"];
 const berkasTema = m => [m + ".html", (m === "surat" ? "bait" : m) + "-demo.html"];
 
 await uji("semua tema (mesin & demo) memuat tema-dasar.js sebelum skripnya sendiri, layar terkunci dari zoom", async () => {

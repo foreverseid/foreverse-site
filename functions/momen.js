@@ -35,6 +35,7 @@ const TEMA = {
   "celengan": { nama: "Celengan Rindu", ringkas: "Celengan ayam untuk tabungan ketemu: tiga koin terakhir membawa rencana kalian, lalu dipecah dan isinya foto serta suratmu yang tergulung." },
   "radio": { nama: "Radio Tengah Malam", ringkas: "Siaran radio khusus untuk satu pendengar: cari frekuensi kalian, dorong fader salam, putar kaset foto, lalu suratmu dibacakan ON AIR." },
   "sulam": { nama: "Sulam Jarak", ringkas: "Dia memilih benang lalu menjahit jarak kalian dari kotanya ke kotamu sampai jadi hati, membuka tambalan foto, dan menemukan surat di balik sulaman." },
+  "persembahan": { nama: "Halaman Persembahan", ringkas: "Skripsinya dijilid: coretan revisi berganti jadi kalimatmu, lembar pengesahan ditandatangani, lampiran foto, lalu halaman persembahan dan stempel LULUS." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -97,7 +98,7 @@ export const MOMEN = {
     deskripsi: "Ucapan wisuda digital yang bisa dimainkan: surat interaktif untuk merayakan kelulusannya, dengan foto dan pesan darimu.",
     h1: "Selamat lulus, dalam bentuk yang bisa dia rawat.",
     lede: "Hari terakhir sebelum lokernya dikembalikan. Dia membuka gembok dengan tanggal wisudanya, mengemasi barang-barangnya, dan menemukan pesanmu terselip di antaranya.",
-    tema: ["loker-terakhir"],
+    tema: ["loker-terakhir", "persembahan"],
     ide: [
       "Semua malam begadangmu akhirnya punya nama. Selamat, sarjana.",
       "Aku ikut bangga, dan aku tahu ini baru awal.",
