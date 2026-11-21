@@ -37,6 +37,7 @@ const TEMA = {
   "sulam": { nama: "Sulam Jarak", ringkas: "Dia memilih benang lalu menjahit jarak kalian dari kotanya ke kotamu sampai jadi hati, membuka tambalan foto, dan menemukan surat di balik sulaman." },
   "persembahan": { nama: "Halaman Persembahan", ringkas: "Skripsinya dijilid: coretan revisi berganti jadi kalimatmu, lembar pengesahan ditandatangani, lampiran foto, lalu halaman persembahan dan stempel LULUS." },
   "studio": { nama: "Studio Foto Wisuda", ringkas: "Sesi foto wisuda di studio berlatar biru: kamu fotografernya, dia memutar fokus sampai tajam, lalu suratmu tercetak di bawah foto besar." },
+  "prosesi": { nama: "Prosesi Wisuda", ringkas: "Hari wisudanya dari gerbang aula: foto kalian di layar LED, namanya dipanggil MC, map ijazah berisi suratmu, lalu papan bunga berisi harapanmu." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -98,8 +99,8 @@ export const MOMEN = {
     judul: "Ucapan Wisuda Digital · Kado Kelulusan Interaktif",
     deskripsi: "Ucapan wisuda digital yang bisa dimainkan: surat interaktif untuk merayakan kelulusannya, dengan foto dan pesan darimu.",
     h1: "Selamat lulus, dalam bentuk yang bisa dia rawat.",
-    lede: "Hari terakhir sebelum lokernya dikembalikan. Dia membuka gembok dengan tanggal wisudanya, mengemasi barang-barangnya, dan menemukan pesanmu terselip di antaranya.",
-    tema: ["loker-terakhir", "persembahan", "studio"],
+    lede: "Rayakan kelulusannya dengan cara yang dia mainkan sendiri: dari loker terakhir di kampus, skripsi yang kamu tanda tangani sebagai pembimbingnya, sesi foto di studio, sampai prosesi wisuda dan papan bunga berisi harapanmu.",
+    tema: ["loker-terakhir", "persembahan", "studio", "prosesi"],
     ide: [
       "Semua malam begadangmu akhirnya punya nama. Selamat, sarjana.",
       "Aku ikut bangga, dan aku tahu ini baru awal.",

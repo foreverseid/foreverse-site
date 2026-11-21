@@ -543,6 +543,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       judul:"Tiga aba-aba dari fotografernya",
       jelas:"Kamu jadi fotografernya. Sebelum tiap jepretan, kalimat ini muncul seperti aba-aba yang bikin dia senyum.",
       contoh:["Senyum dong, ingat waktu kamu salah masuk ruang sidang", "Tahan, habis ini kita makan bakso langganan", "Lihat ke sini, ke orang yang paling bangga sama kamu"],
+      galat:"Bagian ini belum diisi." },
+    "prosesi": { kunci:"harapan", id:"harapanW", n:3, batas:70, label:"Harapan",
+      judul:"Tiga harapan untuk langkah berikutnya",
+      jelas:"Di halaman kampus, tiga papan bunga datang terbungkus plastik. Tiap plastik yang dia kelupas membuka satu harapan darimu.",
+      contoh:["Semoga kerja pertamamu dapat atasan yang baik", "Semoga kamu tetap suka belajar walau sudah tidak dikejar nilai", "Semoga kita makin sering jalan-jalan"],
       galat:"Bagian ini belum diisi." }
   };
   function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
@@ -575,6 +580,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "sulam": { nama:"Sulam Jarak", nfoto:4, foto:"TRTR", mesin:"/sulam.html", momen:"ldr" },
     "radio": { nama:"Radio Tengah Malam", nfoto:4, foto:"RTTR", mesin:"/radio.html", momen:"ldr" },
     "loker-terakhir":    { nama:"Loker Terakhir", nfoto:4, foto:"TRTR", mesin:"/loker-terakhir.html", momen:"graduation" },
+    "prosesi": { nama:"Prosesi Wisuda", nfoto:4, foto:"TRRT", mesin:"/prosesi.html", momen:"graduation" },
     "studio": { nama:"Studio Foto Wisuda", nfoto:4, foto:"TTRR", mesin:"/studio.html", momen:"graduation" },
     "persembahan": { nama:"Halaman Persembahan", nfoto:4, foto:"RTTR", mesin:"/persembahan.html", momen:"graduation" },
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:4, foto:"TTRR", mesin:"/confess-kunang.html",  momen:"confess" },
@@ -739,6 +745,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "sulam": { nada:[67,71,74,71,72,76,67,72,71,69,67,69,71,74,79,78,76,74,72,71,69,71,67,67], jeda:0.4, gema:1.8 },
     "persembahan": { nada:[64,67,71,76,74,71,69,72,76,74,72,69,67,71,74,79,76,74,72,71,69,67,69,71], jeda:0.44, gema:1.6 },
     "studio": { nada:[67,71,74,79,74,71,69,72,76,81,76,72,71,74,79,83,79,74,72,76,79,84,79,76], jeda:0.38, gema:1.4 },
+    "prosesi": { nada:[60,64,67,72,67,64,62,65,69,74,69,65,64,67,71,76,71,67,65,69,72,77,72,69], jeda:0.4, gema:1.8 },
     "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
@@ -1242,6 +1249,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       (function(){ var j = $("jenjang"); if(!j) return; var o = j.querySelector('option[value="sma"]'); if(o) o.remove(); if(!j.value) j.value = "s1"; })();
     } else if(tema === "studio"){
       html = "";
+    } else if(tema === "prosesi"){
+      html = "";
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1498,7 +1507,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
-  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio"];
+  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi"];
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau ══
