@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script src="/tema-dasar.js?v=1"></script>
+<script src="/balas-contoh.js?v=1"></script>
 <meta name="theme-color" content="#7B6AD8">
 <meta name="robots" content="noindex, nofollow">
 <title>Ada pesan untukmu 💌</title>
@@ -112,6 +113,21 @@
   "waPengirim": "081234567890",
   "foreverseUrl": "https://foreverse.id"
 }
+</script>
+<script>
+/* pratinjau dari /pesan: isi datang dari sessionStorage (ditulis oleh
+   tombol "Lihat pratinjau penuh"), dibaca di sini SEBELUM mesin tema
+   jalan, supaya F.data langsung berisi isian yang benar.
+   Untuk surat sungguhan di /s/<kode>, blok data di atas sudah ditulis
+   ulang di server (lihat worker.js) sebelum halaman ini dikirim. */
+(function(){
+  try{
+    if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
+      var mentah = sessionStorage.getItem("fv-pratinjau");
+      if(mentah) document.getElementById("foreverse-data").textContent = mentah;
+    }
+  }catch(e){}
+})();
 </script>
 
 <style>
@@ -1414,6 +1430,13 @@ if(wa.length >= 10){
   $('#replyLbl').textContent = `Mau balas ke ${D.pengirim}?`;
   $('#replyTxt').value = `Hai ${D.pengirim}, aku sudah buka kejutannya. Makasih ya 🥹`;
   $('#replyBtn').onclick = () => { window.open(`https://wa.me/${wa}?text=${encodeURIComponent($('#replyTxt').value)}`, '_blank', 'noopener'); };
+}
+if(window.fvBalas){
+  $('#reply').hidden = false;
+  $('#replyLbl').textContent = `Mau balas ke ${D.pengirim || 'dia'}?`;
+  if(!$('#replyTxt').value) $('#replyTxt').value = `Hai ${D.pengirim || ''}, aku sudah buka kejutannya. Makasih ya 🥹`;
+  $('#replyBtn').parentNode.insertBefore(fvBalas.tombol($('#replyTxt'), $('#replyBtn'), `💌 Kirim balasan ke ${D.pengirim || 'dia'}`), $('#replyBtn'));
+  if(wa.length < 10) $('#replyBtn').hidden = true;
 }
 $('#toEnd').onclick = () => { $('#letter').classList.remove('show'); $('#ending').classList.add('show'); F.fx.shower(100); F.sfx.win(); };
 $('#endRead').onclick = () => { $('#ending').classList.remove('show'); $('#letter').classList.add('show'); };

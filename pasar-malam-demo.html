@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <script src="/tema-dasar.js?v=1"></script>
+<script src="/balas-contoh.js?v=1"></script>
 <meta name="theme-color" content="#FFD9A0">
 <meta name="robots" content="noindex, nofollow">
 <title>Pasar malamnya buka malam ini 🎡</title>
@@ -1784,6 +1785,10 @@ var bukaPapan = function(){};
       btn.addEventListener('click', function(){
         this.href = 'https://wa.me/' + nomor + '?text=' + encodeURIComponent($('#balasTxt').value);
       });
+    }
+    if(window.fvBalas && !$('#fvKirim')){
+      var fb = fvBalas.tombol($('#balasTxt'), $('#waBtn'), 'Kirim jawabanku ke ' + (D.pengirim || 'dia'));
+      fb.id = 'fvKirim'; $('#waBtn').parentNode.insertBefore(fb, $('#waBtn'));
     }
     $('#hasil').scrollIntoView({ behavior:'smooth', block:'center' });
   }

@@ -774,6 +774,22 @@ await uji("pesan.html · simpan otomatis: hanya pesanan baru, dibersihkan saat l
   harus(k.includes("Isian formulir yang belum dikirim"), "kebijakan privasi menyebut simpanan di perangkat");
 });
 
+await uji("semua mesin & demo tema memuat tombol balasan contoh, dan demo tidak tertinggal dari mesinnya", async () => {
+  const { readdir } = await import("node:fs/promises");
+  const berkas = (await readdir(".")).filter(f => f.endsWith(".html"));
+  let n = 0;
+  for (const f of berkas) {
+    const t = await readFile("./" + f, "utf8");
+    if (!t.includes('id="foreverse-data"') && f !== "surat.html") continue;
+    n++;
+    harus(t.indexOf("/balas-contoh.js") > t.indexOf("/tema-dasar.js") && t.indexOf("/balas-contoh.js") < t.indexOf("</head>"), f + ": balas-contoh.js harus di <head> sesudah tema-dasar.js");
+    harus(t.includes("fvBalas"), f + ": penutupnya tidak memakai fvBalas");
+  }
+  harus(n >= 52, "jumlah berkas tema terlalu sedikit (" + n + ")");
+  const c = await readFile("./balas-contoh.js", "utf8");
+  harus(/if\(window\.fvBalas \|\| \/\^\\\/s\\\/\/\.test\(location\.pathname\)\) return;/.test(c), "balas-contoh tidak boleh aktif di surat sungguhan");
+});
+
 await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
   const t = await readFile("./pesan.html", "utf8");
   for (const hilang of ["muatSnap", "window.snap", "client_key", "bayar.token"])
