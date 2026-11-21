@@ -228,6 +228,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 .putar{width:34px;height:34px;border:3px solid var(--stone);border-top-color:var(--violet);border-radius:50%;animation:putar .8s linear infinite;margin:0 auto}
 @keyframes putar{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){ .putar{animation-duration:2s} .sisi{transition:none} }
+.pulih{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 16px;padding:12px 14px;border-radius:12px;background:#EFEDF7;color:#3B3168;font-size:14px;line-height:1.45}
+.pulih button{border:0;background:none;color:#3B3168;font:600 14px inherit;font-family:inherit;text-decoration:underline;cursor:pointer;padding:4px 0}
 </style>
 </head>
 <body>
@@ -621,7 +623,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       f.fy = Math.max(0, Math.min(100, Math.round(mulai.fy - (e.clientY - mulai.y) / r.height * 100)));
       posisiFoto(img, f); });
     img.addEventListener("pointerup", function(){ if(typeof jadwalkanPratinjauLive === "function") jadwalkanPratinjauLive(); });
-    img.addEventListener("pointerup", function(){ mulai = null; });
+    img.addEventListener("pointerup", function(){ mulai = null; if(SIMPAN) SIMPAN.jadwal(); });
     img.addEventListener("pointercancel", function(){ mulai = null; });
   }
   function buatFoto(n){
@@ -691,6 +693,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       };
       LAGU_ADA = null;
       namaLagu("Terpilih: " + berkas.name);
+      if(SIMPAN) SIMPAN.jadwal();
     };
     baca.readAsDataURL(berkas);
   });
@@ -771,6 +774,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       FOTO_ADA[i] = null;
       isiJendela(i, hasil, FOTO[i]);
       k.classList.add("isi"); k.classList.remove("kosong");
+      if(SIMPAN) SIMPAN.jadwal();
     });
   }
 
@@ -1963,10 +1967,6 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       if(bayar.sudah){ location.href = "/selesai?kode=" + draf.kode; return; }
       if(!bayar.url) throw new Error("Halaman pembayaran tidak bisa dibuka. Pesananmu tetap tersimpan, coba tekan tombolnya lagi.");
 
-      /* Kode pesanan disimpan supaya pembeli yang menutup tab di
-         halaman DOKU masih bisa melanjutkan nanti tanpa mengisi ulang. */
-      try{ localStorage.setItem("fv-pesanan-terakhir", draf.kode); }catch(_){}
-
       tirai(true, "Mengalihkan ke halaman pembayaran…");
       location.href = bayar.url;
 
@@ -1976,6 +1976,79 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       pesanGalat(err.message || "Ada kendala. Coba lagi sebentar lagi.");
     }
   });
+
+  /* ══ 7b · simpan otomatis (pesanan baru saja) ══
+     Isian, foto, dan lagu disimpan di peramban pembeli sendiri (IndexedDB),
+     bukan di server, supaya tidak hilang kalau tab tertutup sebelum bayar
+     (mis. HP menutup tab saat pindah ke galeri). Dipulihkan saat formulir
+     tema yang sama dibuka lagi dalam 24 jam; dihapus saat lunas
+     (selesai.html menghapus seluruh basis datanya) atau lewat tombol
+     "Mulai dari kosong". */
+  var SIMPAN = (function(){
+    var JAM = 24, db = null, tSimpan = null, aktif = false;
+    function buka(){ return new Promise(function(ok, gagal){
+      if(db) return ok(db);
+      if(!window.indexedDB) return gagal(new Error("tanpa penyimpanan"));
+      var r = indexedDB.open("fv-formulir", 1);
+      r.onupgradeneeded = function(){ r.result.createObjectStore("isian"); };
+      r.onsuccess = function(){ db = r.result; ok(db); };
+      r.onerror = function(){ gagal(r.error); };
+    }); }
+    function toko(mode, fn){ return buka().then(function(d){ return new Promise(function(ok, gagal){
+      var t = d.transaction("isian", mode), h = fn(t.objectStore("isian"));
+      t.oncomplete = function(){ ok(h && h.result); }; t.onerror = function(){ gagal(t.error); };
+    }); }); }
+    function rekam(){
+      var nilai = {}, ket = {};
+      $("form").querySelectorAll("input[id],textarea[id],select[id]").forEach(function(e){
+        if(e.type === "file") return;
+        nilai[e.id] = (e.type === "checkbox" || e.type === "radio") ? e.checked : e.value;
+      });
+      document.querySelectorAll("[data-caption]").forEach(function(e){ ket[e.dataset.caption] = e.value; });
+      return { waktu: Date.now(), nilai: nilai, ket: ket, kunci: KUNCI,
+        foto: FOTO.map(function(f){ return f ? { data: f.data, mime: f.mime, fx: f.fx, fy: f.fy } : null; }),
+        lagu: LAGU ? { data: LAGU.data, mime: LAGU.mime, judul: LAGU.judul } : null };
+    }
+    function sekarang(){ if(!aktif) return; clearTimeout(tSimpan); var r = rekam(); toko("readwrite", function(s){ s.put(r, TEMA); }).catch(function(){}); }
+    function jadwal(){ if(!aktif) return; clearTimeout(tSimpan); tSimpan = setTimeout(sekarang, 700); }
+    function pulihkan(r){
+      var v = r.nilai || {}, id;
+      /* centang & pilihan dulu (bisa memunculkan baris lain), baru teks */
+      for(id in v){ var a = $(id); if(!a || !a.closest("#form")) continue;
+        if(a.type === "checkbox" || a.type === "radio"){ a.checked = !!v[id]; a.dispatchEvent(new Event("change", { bubbles:true })); }
+        else if(a.tagName === "SELECT"){ a.value = v[id]; a.dispatchEvent(new Event("change", { bubbles:true })); } }
+      for(id in v){ var b = $(id); if(!b || !b.closest("#form") || b.type === "checkbox" || b.type === "radio" || b.tagName === "SELECT") continue;
+        b.value = v[id]; b.dispatchEvent(new Event("input", { bubbles:true })); }
+      if(r.kunci) pilihKunci(r.kunci);
+      (r.foto || []).forEach(function(f, i){
+        if(!f || i >= FOTO.length) return;
+        FOTO[i] = { data: f.data, mime: f.mime || "image/jpeg", caption: "", fx: f.fx, fy: f.fy };
+        isiJendela(i, f.data, FOTO[i]);
+        var k = kartu(i); k.classList.add("isi"); k.classList.remove("kosong");
+      });
+      Object.keys(r.ket || {}).forEach(function(i){ var c = document.querySelector('[data-caption="'+i+'"]'); if(c){ c.value = r.ket[i]; c.dispatchEvent(new Event("input", { bubbles:true })); } });
+      if(r.lagu){ LAGU = r.lagu; namaLagu("Terpilih: " + r.lagu.judul); }
+      if(typeof jadwalkanPratinjauLive === "function") jadwalkanPratinjauLive();
+    }
+    function kabar(){
+      var d = document.createElement("div"); d.className = "pulih"; d.id = "kabarPulih";
+      d.innerHTML = '<span>Isianmu sebelumnya masih tersimpan di perangkat ini, jadi kami pasang lagi.</span><button type="button" id="mulaiKosong">Mulai dari kosong</button>';
+      $("form").insertBefore(d, $("form").firstChild);
+      $("mulaiKosong").addEventListener("click", function(){ aktif = false; toko("readwrite", function(s){ s.delete(TEMA); }).then(function(){ location.reload(); }, function(){ location.reload(); }); });
+    }
+    function mulai(){
+      toko("readonly", function(s){ return s.get(TEMA); }).then(function(r){
+        if(r && Date.now() - r.waktu < JAM * 3600000){ pulihkan(r); kabar(); }
+        else if(r) toko("readwrite", function(s){ s.delete(TEMA); }).catch(function(){});
+        aktif = true;
+        ["input", "change", "click"].forEach(function(n){ $("form").addEventListener(n, jadwal); });
+        document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "hidden") sekarang(); });
+        window.addEventListener("pagehide", sekarang);
+      }).catch(function(){});
+    }
+    return { mulai: mulai, jadwal: jadwal };
+  })();
+  if(!MODE_EDIT) SIMPAN.mulai();
 
   /* ══ 8 · mode edit ══ */
   if(MODE_EDIT){

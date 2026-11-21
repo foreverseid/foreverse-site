@@ -766,6 +766,14 @@ await uji("pesan.html · mode edit mengisi ulang isian khas setiap tema yang pun
   for (const x of tema) harus(edit.includes('TEMA === "' + x + '"'), "tema " + x + " tidak punya cabang isi-ulang di mode edit");
 });
 
+await uji("pesan.html · simpan otomatis: hanya pesanan baru, dibersihkan saat lunas, tercantum di Kebijakan Privasi", async () => {
+  const t = await readFile("./pesan.html", "utf8"), s = await readFile("./selesai.html", "utf8"), k = await readFile("./kebijakan-privasi.html", "utf8");
+  harus(/if\(!MODE_EDIT\) SIMPAN\.mulai\(\);/.test(t), "simpan otomatis harus mati di mode edit");
+  harus(t.includes('indexedDB.open("fv-formulir"') && s.includes('indexedDB.deleteDatabase("fv-formulir")'), "nama basis data formulir harus sama di pesan & selesai");
+  harus(/JAM = 24/.test(t), "masa simpan 24 jam");
+  harus(k.includes("Isian formulir yang belum dikirim"), "kebijakan privasi menyebut simpanan di perangkat");
+});
+
 await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
   const t = await readFile("./pesan.html", "utf8");
   for (const hilang of ["muatSnap", "window.snap", "client_key", "bayar.token"])
@@ -1610,10 +1618,14 @@ await uji("batas laju: draf ke-13 dari IP yang sama dalam 10 menit ditolak 429",
 await uji("surat dibuka: skrip tersisip di semua mesin tema", async () => {
   const L = await buatLingkungan();
   const p = await lunaskan(L);
-  for (const tema of ["bait", "kado-riang", "rumah-contoh"]) {
+  /* semua tema yang terdaftar di API, bukan contoh beberapa saja */
+  const semuaTema = [...(await readFile("./functions/api/[[jalur]].js", "utf8")).match(/const TEMA_SKEMA = \{([\s\S]*?)\n\};/)[1].matchAll(/^\s*"([\w-]+)":/gm)].map(m => m[1]);
+  harus(semuaTema.length >= 26, "daftar tema tidak terbaca (" + semuaTema.length + ")");
+  for (const tema of semuaTema) {
     await L.env.DB.prepare("UPDATE pesanan SET tema=? WHERE kode=?").bind(tema, p.kode).run();
     const html = await (await L.panggil("/s/" + p.kode)).text();
     harus(html.includes('"/api/dibuka"') && html.includes('fv-edit-' + p.kode), tema + ": skrip dibuka tidak tersisip");
+    harus(html.includes("window.fvBalas="), tema + ": tombol balasan email tidak tersisip");
     harus(html.indexOf("/api/dibuka") < html.lastIndexOf("</body>"), tema + ": skrip harus sebelum </body>");
   }
 });

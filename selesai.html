@@ -241,6 +241,8 @@ h1.judul{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,5.6vw,2
   if(!kode){ gagal("Alamat halaman ini tidak lengkap, kode pesanannya tidak terbaca."); return; }
 
   function selesai(data){
+    /* sudah lunas: isian simpanan formulir di perangkat ini tidak diperlukan lagi */
+    try{ if(window.indexedDB) indexedDB.deleteDatabase("fv-formulir"); }catch(_){}
     var tautan = asal + "/s/" + data.kode;
 
     /* token edit hanya ada di peramban pembeli, bukan dari server -
