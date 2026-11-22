@@ -40,6 +40,8 @@ const TEMA = {
   "prosesi": { nama: "Prosesi Wisuda", ringkas: "Hari wisudanya dari gerbang aula: foto kalian di layar LED, namanya dipanggil MC, map ijazah berisi suratmu, lalu papan bunga berisi harapanmu." },
   "meja-dua": { nama: "Makan Malam Pertama", ringkas: "Ajakan makan malam berbentuk meja yang dipesan atas namanya: nyalakan lilin, buka tudung saji berisi rencanamu, dan jawab dengan stempel." },
   "payung": { nama: "Payung Berdua", ringkas: "Ajakan di sore hujan: buka payung, usap embun kaca halte berisi kalimatmu, dan jawab ajakan lewat bus yang datang saat hujan reda." },
+  "tumpeng": { nama: "Tumpeng Syukuran", ringkas: "Syukuran kecil untuk pencapaiannya: buka daun penutup tumpeng, tata lauk berisi alasanmu bangga, lalu dia memotong pucuknya sendiri." },
+  "pengumuman": { nama: "Papan Pengumuman", ringkas: "Untuk yang lolos atau diterima: dia mencari namanya sendiri di papan pengumuman, menstabilonya, lalu membuka amplop resmi berisi suratmu." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -218,10 +220,10 @@ export const MOMEN = {
   },
   "selamat": {
     judul: "Ucapan Selamat atas Pencapaian · Kado Digital",
-    deskripsi: "Ucapan selamat digital yang bisa dimainkan: dia lari 100 meter terakhir diiringi sorakanmu, lalu mengalungkan medali berukir pencapaiannya.",
+    deskripsi: "Ucapan selamat digital yang bisa dimainkan: lomba lari ke garis finis, syukuran tumpeng, atau namanya di papan pengumuman. Isinya pesan dan foto darimu.",
     h1: "Rayakan pencapaiannya seperti juara.",
-    lede: "Hari perlombaan untuknya. Dia berlari ke garis finis diiringi spanduk sorakanmu, lalu naik podium dan membaca pesanmu di papan skor stadion.",
-    tema: ["garis-finis"],
+    lede: "Pilih cara merayakannya: dia berlari ke garis finis diiringi sorakanmu, memotong pucuk tumpeng syukuran, atau menemukan namanya sendiri di papan pengumuman.",
+    tema: ["garis-finis", "tumpeng", "pengumuman"],
     ide: [
       "Kamu tidak pernah berhenti, dan hari ini kebayar.",
       "Aku penonton paling berisik buat kamu.",

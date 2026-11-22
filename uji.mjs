@@ -24,7 +24,7 @@ const FOTO = "data:image/jpeg;base64," + Buffer.from("x".repeat(400)).toString("
 function isiDraf() {
   return {
     tema: "bait", momen: "birthday",
-    email: "pembeli@contoh.id", whatsapp: "6281234567890",
+    email: "pembeli@contoh.id", whatsapp: "6289512385393",
     isi: {
       penerima: "Amira", pengirim: "Adriel", ucapan: "selamat",
       surat: ["Selamat ulang tahun.", "Semoga sehat selalu.", "Sampai jumpa."],
@@ -45,7 +45,7 @@ const TAMBAHAN_UJI = Object.fromEntries([...(await readFile("./functions/api/[[j
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  const JUMLAH_FOTO = { "payung": 4, "meja-dua": 4, "prosesi": 4, "studio": 4, "persembahan": 4, "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
+  const JUMLAH_FOTO = { "pengumuman": 4, "tumpeng": 4, "payung": 4, "meja-dua": 4, "prosesi": 4, "studio": 4, "persembahan": 4, "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
   d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
@@ -633,7 +633,7 @@ await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", asy
   sama(j.minat["pasar-malam"].demo, 3, "dibuka");
   sama(j.minat["pasar-malam"].form, 1, "mulai isi");
   sama(j.minat["bait"].lunas, 1, "terbayar");
-  sama(Object.keys(j.minat).length, 31, "semua tema terdaftar");
+  sama(Object.keys(j.minat).length, 33, "semua tema terdaftar");
 });
 
 await uji("rumah-contoh · pesanan lengkap diterima, momen proposal, empat janji tersimpan", async () => {
@@ -708,7 +708,7 @@ async function skripHalaman(berkas) {
 for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html",
                       "kado-riang.html", "langit-harapan.html", "kapal-botol.html",
                       "kapal-botol-demo.html", "zona-waktu.html", "zona-waktu-demo.html",
-                      "loker-terakhir.html", "loker-terakhir-demo.html", "payung.html", "payung-demo.html", "meja-dua.html", "meja-dua-demo.html", "prosesi.html", "prosesi-demo.html", "studio.html", "studio-demo.html", "persembahan.html", "persembahan-demo.html",
+                      "loker-terakhir.html", "loker-terakhir-demo.html", "pengumuman.html", "pengumuman-demo.html", "tumpeng.html", "tumpeng-demo.html", "payung.html", "payung-demo.html", "meja-dua.html", "meja-dua-demo.html", "prosesi.html", "prosesi-demo.html", "studio.html", "studio-demo.html", "persembahan.html", "persembahan-demo.html",
                       "confess-kunang.html", "confess-kunang-demo.html",
                       "getwell-365.html", "getwell-365-demo.html",
                       "pasar-malam.html", "pasar-malam-demo.html",
@@ -788,6 +788,15 @@ await uji("semua mesin & demo tema memuat tombol balasan contoh, dan demo tidak 
   harus(n >= 52, "jumlah berkas tema terlalu sedikit (" + n + ")");
   const c = await readFile("./balas-contoh.js", "utf8");
   harus(/if\(window\.fvBalas \|\| \/\^\\\/s\\\/\/\.test\(location\.pathname\)\) return;/.test(c), "balas-contoh tidak boleh aktif di surat sungguhan");
+});
+
+await uji("WhatsApp di semua demo tersambung ke nomor Foreverse", async () => {
+  const { readdir } = await import("node:fs/promises");
+  const wa = (await readFile("./bantuan.js", "utf8")).match(/var WA = "62(\d+)"/)[1];
+  for (const f of (await readdir(".")).filter(f => f.endsWith("-demo.html"))) {
+    const t = await readFile("./" + f, "utf8"), m = t.match(/"waPengirim":\s*"([^"]*)"/);
+    if (m) sama(m[1].replace(/^(0|62)/, ""), wa, f + ": nomor WhatsApp demo harus nomor Foreverse");
+  }
 });
 
 await uji("tidak ada panggilan ke fungsi yang sudah dibuang", async () => {
@@ -2281,7 +2290,7 @@ judul("Dasar tema, musik, dan email surat jadi");
 
 const MESIN_TEMA = ["surat", "kado-riang", "langit-harapan", "kapal-botol", "zona-waktu", "loker-terakhir", "confess-kunang",
   "getwell-365", "pasar-malam", "lewat-duluan", "kasus-pengirim", "rekonstruksi", "rumah-contoh", "kotak-musik", "garis-finis",
-  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "payung", "meja-dua", "prosesi", "studio", "persembahan", "radio", "sulam", "pemutaran-perdana"];
+  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "pengumuman", "tumpeng", "payung", "meja-dua", "prosesi", "studio", "persembahan", "radio", "sulam", "pemutaran-perdana"];
 const berkasTema = m => [m + ".html", (m === "surat" ? "bait" : m) + "-demo.html"];
 
 await uji("semua tema (mesin & demo) memuat tema-dasar.js sebelum skripnya sendiri, layar terkunci dari zoom", async () => {
