@@ -46,6 +46,8 @@ const TEMA = {
   "titipan": { nama: "Paket Titipan", ringkas: "Paket cepat sembuh diantar ke depan pintunya: dia membuka kardus berisi titipan kecil darimu, memecahkan plastik gelembung di atas foto kalian, dan membaca kartu ucapanmu." },
   "tanaman": { nama: "Tanaman yang Layu", ringkas: "Tanaman di pojok jendela layu karena kamu lalai: dia menyiramnya, memetik daun kering berisi janjimu, membuka krai sampai kuncupnya mekar, lalu menentukan sendiri jawabannya." },
   "cangkir": { nama: "Cangkir yang Retak", ringkas: "Cangkir kesayangannya retak karena kamu: dia merekatkan retakannya dengan garis emas sambil membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya." },
+  "bekal": { nama: "Bekal Makan Siang", ringkas: "Love note dalam kotak bekal: dia membuka kotaknya, menarik bendera kecil berisi pesanmu dari tiap lauk, mengelupas stiker berisi foto kalian, lalu menemukan memo di balik tutupnya." },
+  "jemuran": { nama: "Tali Jemuran", ringkas: "Love note untuk hari biasa: dia menarik tali jemuran dan mengambil catatan kecilmu yang terjepit di antara cucian, mengibaskan polaroid kalian sampai gambarnya muncul, lalu menangkap suratmu yang tertiup angin." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -124,8 +126,8 @@ export const MOMEN = {
     judul: "Surat Cinta Digital untuk Pacar",
     deskripsi: "Surat cinta digital yang bisa dimainkan, untuk bilang sayang tanpa menunggu momen. Isi pesan, foto, dan lagumu, tautannya langsung jadi.",
     h1: "Bilang sayang, tanpa nunggu momen.",
-    lede: "Satu hari biasa yang dia jalani sendiri, dan di tiap tempat ternyata kamu sudah lewat duluan, meninggalkan hal-hal kecil untuknya.",
-    tema: ["lewat-duluan"],
+    lede: "Untuk hari biasa: jejak kecil yang kamu tinggalkan di jalannya, bekal makan siang dengan bendera berisi pesanmu, atau catatan yang terjepit di tali jemuran.",
+    tema: ["lewat-duluan", "bekal", "jemuran"],
     ide: [
       "Tidak ada acara apa-apa hari ini. Aku cuma lagi kepikiran kamu.",
       "Hal-hal kecil darimu itu yang bikin hariku enteng.",

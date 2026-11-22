@@ -588,6 +588,16 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       judul:"Tiga hal yang kamu sadari",
       jelas:"Tiap retakan yang dia rekatkan dengan emas membuka satu kalimat ini. Jujur saja, tidak perlu panjang.",
       contoh:["Aku sering melampiaskan capekku ke kamu", "Aku jarang bilang terima kasih", "Aku harus belajar diam dulu waktu marah"],
+      galat:"Bagian ini belum diisi." },
+    "bekal": { kunci:"bendera", id:"benderaB", n:3, batas:60, label:"Pesan",
+      judul:"Tiga pesan di bendera kecil",
+      jelas:"Ditulis di bendera tusuk gigi yang dia cabut dari tiap lauk. Pendek dan manis saja.",
+      contoh:["Semangat kerjanya hari ini!", "Kamu ganteng pakai kemeja itu", "Jangan lupa minum, ya"],
+      galat:"Bagian ini belum diisi." },
+    "jemuran": { kunci:"jemur", id:"jemurJ", n:3, batas:70, label:"Catatan",
+      judul:"Tiga catatan kecil di jemuran",
+      jelas:"Terjepit di antara cucian. Dia menarik tali jemurannya dan mengambil catatan ini satu per satu.",
+      contoh:["Bajumu wangi, bikin aku kangen", "Makasih sudah ngingetin aku minum vitamin", "Minggu nanti aku yang angkat jemuran"],
       galat:"Bagian ini belum diisi." }
   };
   function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
@@ -631,6 +641,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "payung": { nama:"Payung Berdua", nfoto:4, foto:"RTTR", mesin:"/payung.html", momen:"askout" },
     "meja-dua": { nama:"Makan Malam Pertama", nfoto:4, foto:"TRRT", mesin:"/meja-dua.html", momen:"askout" },
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:4, foto:"TTRR", mesin:"/lewat-duluan.html",    momen:"lovenote" },
+    "jemuran": { nama:"Tali Jemuran", nfoto:4, foto:"TRRT", mesin:"/jemuran.html", momen:"lovenote" },
+    "bekal": { nama:"Bekal Makan Siang", nfoto:4, foto:"TRTR", mesin:"/bekal.html", momen:"lovenote" },
     "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:4, foto:"TTRR", mesin:"/kasus-pengirim.html", momen:"confess" },
     "rumah-contoh":      { nama:"Rumah Contoh", nfoto:4, foto:"TRTR", mesin:"/rumah-contoh.html", momen:"proposal" },
     "rekonstruksi":      { nama:"Rekonstruksi Hari Pertama", nfoto:4, foto:"TRTR", mesin:"/rekonstruksi.html",   momen:"anniversary" },
@@ -802,6 +814,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "titipan": { nada:[64,67,72,67,64,60,62,65,69,65,62,59,60,64,67,72,71,69,67,65,64,62,60,62], jeda:0.42, gema:1.6 },
     "tanaman": { nada:[64,62,60,62,64,64,64,62,62,62,64,67,67,64,62,60,62,64,64,64,64,62,62,64], jeda:0.5, gema:2 },
     "cangkir": { nada:[69,72,76,74,72,71,69,67,65,69,72,71,69,67,65,64,62,65,69,67,65,64,62,64], jeda:0.52, gema:2.2 },
+    "bekal": { nada:[72,76,79,76,72,74,77,74,71,74,79,77,76,72,76,79,84,79,76,74,72,71,72,74], jeda:0.3, gema:1.2 },
+    "jemuran": { nada:[67,71,74,79,74,71,69,72,76,72,69,67,66,69,74,78,74,69,67,71,74,71,67,62], jeda:0.36, gema:1.4 },
     "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
@@ -1323,6 +1337,10 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       html = "";
     } else if(tema === "cangkir"){
       html = "";
+    } else if(tema === "bekal"){
+      html = "";
+    } else if(tema === "jemuran"){
+      html = "";
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1579,7 +1597,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
-  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua", "payung", "tumpeng", "pengumuman", "bubur", "titipan", "tanaman", "cangkir"];
+  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua", "payung", "tumpeng", "pengumuman", "bubur", "titipan", "tanaman", "cangkir", "bekal", "jemuran"];
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau ══
