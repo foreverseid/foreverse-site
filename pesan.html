@@ -548,6 +548,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       judul:"Tiga harapan untuk langkah berikutnya",
       jelas:"Di halaman kampus, tiga papan bunga datang terbungkus plastik. Tiap plastik yang dia kelupas membuka satu harapan darimu.",
       contoh:["Semoga kerja pertamamu dapat atasan yang baik", "Semoga kamu tetap suka belajar walau sudah tidak dikejar nilai", "Semoga kita makin sering jalan-jalan"],
+      galat:"Bagian ini belum diisi." },
+    "meja-dua": { kunci:"menu", id:"menuM", n:3, batas:60, label:"Menu",
+      judul:"Tiga menu untuk malam itu",
+      jelas:"Rencanamu malam itu, disajikan sebagai pembuka, hidangan utama, dan penutup. Tiap tudung saji yang dia angkat menampilkan satu.",
+      contoh:["Makan nasi goreng langganan di dekat kampus", "Nonton film yang kamu pilih, aku yang traktir", "Pulangnya mampir beli martabak manis"],
       galat:"Bagian ini belum diisi." }
   };
   function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
@@ -586,6 +591,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:4, foto:"TTRR", mesin:"/confess-kunang.html",  momen:"confess" },
     "getwell-365":       { nama:"36,5",                  nfoto:4, foto:"TTRR", mesin:"/getwell-365.html",     momen:"getwell" },
     "pasar-malam":       { nama:"Pasar Malam",           nfoto:4, foto:"TRTR", mesin:"/pasar-malam.html",     momen:"askout" },
+    "meja-dua": { nama:"Meja untuk Dua", nfoto:4, foto:"TRRT", mesin:"/meja-dua.html", momen:"askout" },
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:4, foto:"TTRR", mesin:"/lewat-duluan.html",    momen:"lovenote" },
     "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:4, foto:"TTRR", mesin:"/kasus-pengirim.html", momen:"confess" },
     "rumah-contoh":      { nama:"Rumah Contoh", nfoto:4, foto:"TRTR", mesin:"/rumah-contoh.html", momen:"proposal" },
@@ -746,6 +752,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "persembahan": { nada:[64,67,71,76,74,71,69,72,76,74,72,69,67,71,74,79,76,74,72,71,69,67,69,71], jeda:0.44, gema:1.6 },
     "studio": { nada:[67,71,74,79,74,71,69,72,76,81,76,72,71,74,79,83,79,74,72,76,79,84,79,76], jeda:0.38, gema:1.4 },
     "prosesi": { nada:[60,64,67,72,67,64,62,65,69,74,69,65,64,67,71,76,71,67,65,69,72,77,72,69], jeda:0.4, gema:1.8 },
+    "meja-dua": { nada:[65,69,72,77,72,69,67,70,74,79,74,70,69,72,76,81,76,72,70,74,77,82,77,74], jeda:0.36, gema:1.2 },
     "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
@@ -871,7 +878,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<p class="jelas">Love note bisa dikirim kapan saja, jadi tidak ada tanggal atau angka yang perlu diisi. Lanjut ke foto dan isinya.</p>';
     } else if(momen === "askout"){
       html = '<h2><span class="n">4</span> Malam yang kamu ajak</h2>' +
-        '<p class="jelas">Tanggal dan jamnya jadi jam menara di puncak bianglala, dan jadi baris pertama di papan lampu tempat dia menjawab.</p>' +
+        '<p class="jelas">Tanggal dan jamnya muncul di dalam surat sebagai ajakanmu, dan ikut terkirim bersama jawabannya.</p>' +
         '<div class="dua">' +
         '<div class="baris" data-f="tglAjak"><label for="tglAjak">Tanggal ajakannya</label>' +
         '<input id="tglAjak" type="date">' +
@@ -888,7 +895,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '<p class="jelas">Pengakuan cuma terjadi sekali, jadi tidak ada angka seperti umur atau tahun jadian. Lanjut ke foto dan suratnya saja.</p>';
     } else if(momen === "ldr"){
       html = '<h2><span class="n">4</span> Kota kalian berdua</h2>' +
-        '<p class="jelas">Dipakai untuk menampilkan jam asli di kota kalian masing-masing dan jaraknya di tengah surat.</p>' +
+        '<p class="jelas">Nama kota kalian muncul di dalam surat, misalnya sebagai jam dua kota, boarding pass, siaran radio, atau rute jahitan, sesuai tema yang kamu pilih.</p>' +
         '<div class="dua">' +
         '<div class="baris" data-f="kotaPengirim"><label for="kotaPengirim">Kotamu sekarang</label>' +
         '<select id="kotaPengirim"><option value="">Pilih kota</option>' + opsiKota() + '</select>' +
@@ -899,7 +906,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '</div>';
     } else if(momen === "graduation"){
       html = '<h2><span class="n">4</span> Jenjang dan tanggal wisuda</h2>' +
-        '<p class="jelas">Tanggal wisudanya dipakai untuk adegan lingkar tahun di tengah surat.</p>' +
+        '<p class="jelas">Tanggal wisudanya muncul di dalam surat, misalnya di gembok loker, lembar pengesahan, piagam, atau foto bareng, sesuai tema yang kamu pilih.</p>' +
         '<div class="baris" data-f="jenjang"><label for="jenjang">Jenjang yang diselesaikan</label>' +
         '<select id="jenjang">' +
         '<option value="sma">SMA/SMK</option>' +
@@ -919,7 +926,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '</div></div></div>';
     } else if(momen === "anniversary"){
       html = '<h2><span class="n">4</span> Hari jadi dan tanggal</h2>' +
-        '<p class="jelas">Tanggal mulainya dipakai untuk adegan pin bertanggal di tengah surat.</p>' +
+        '<p class="jelas">Tanggal mulainya dipakai di dalam surat untuk mengingat hari pertama kalian, sesuai tema yang kamu pilih.</p>' +
         '<div class="baris" data-f="jenisHariJadi"><label for="jenisHariJadi">Jenis hari jadinya</label>' +
         '<select id="jenisHariJadi">' +
         '<option value="pacaran">Pacaran</option>' +
@@ -937,7 +944,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         '</div></div></div>';
     } else {
       html = '<h2><span class="n">4</span> Ucapan dan tanggal</h2>' +
-        '<p class="jelas">Tanggal lahirnya dipakai untuk adegan stempel umur di tengah surat.</p>' +
+        '<p class="jelas">Tanggal lahirnya dipakai untuk menampilkan umurnya yang baru di dalam surat, sesuai tema yang kamu pilih.</p>' +
         '<div class="baris" data-f="ucapan"><label for="ucapan">Gaya ucapannya</label>' +
         '<select id="ucapan">' +
         '<option value="selamat">Selamat ulang tahun</option>' +
@@ -1251,6 +1258,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       html = "";
     } else if(tema === "prosesi"){
       html = "";
+    } else if(tema === "meja-dua"){
+      html = "";
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1507,7 +1516,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
-  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi"];
+  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua"];
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau ══

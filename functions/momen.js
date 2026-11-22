@@ -38,6 +38,7 @@ const TEMA = {
   "persembahan": { nama: "Halaman Persembahan", ringkas: "Skripsinya dijilid: coretan revisi berganti jadi kalimatmu, lembar pengesahan ditandatangani, lampiran foto, lalu halaman persembahan dan stempel LULUS." },
   "studio": { nama: "Studio Foto Wisuda", ringkas: "Sesi foto wisuda di studio berlatar biru: kamu fotografernya, dia memutar fokus sampai tajam, lalu suratmu tercetak di bawah foto besar." },
   "prosesi": { nama: "Prosesi Wisuda", ringkas: "Hari wisudanya dari gerbang aula: foto kalian di layar LED, namanya dipanggil MC, map ijazah berisi suratmu, lalu papan bunga berisi harapanmu." },
+  "meja-dua": { nama: "Meja untuk Dua", ringkas: "Ajakan makan malam berbentuk meja yang dipesan atas namanya: nyalakan lilin, buka tudung saji berisi rencanamu, dan jawab dengan stempel." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -134,7 +135,7 @@ export const MOMEN = {
     deskripsi: "Cara unik ngajak dia jalan: undangan kencan digital berbentuk pasar malam, lengkap dengan pilihan acara dan papan lampu untuk menjawab.",
     h1: "Ngajak dia jalan, tapi jangan lewat chat biasa.",
     lede: "Pasar malam yang cuma buka satu malam. Dia memilih acara lewat permainan, naik bianglala melihat foto kalian, lalu menjawab ajakanmu di papan lampu.",
-    tema: ["pasar-malam"],
+    tema: ["pasar-malam", "meja-dua"],
     ide: [
       "Malam minggu ini kosong? Aku punya rencana, tinggal kamu.",
       "Aku sudah pilih tempatnya. Kamu cukup bilang iya.",
