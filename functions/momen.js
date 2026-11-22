@@ -42,6 +42,8 @@ const TEMA = {
   "payung": { nama: "Payung Berdua", ringkas: "Ajakan di sore hujan: buka payung, usap embun kaca halte berisi kalimatmu, dan jawab ajakan lewat bus yang datang saat hujan reda." },
   "tumpeng": { nama: "Tumpeng Syukuran", ringkas: "Syukuran kecil untuk pencapaiannya: buka daun penutup tumpeng, tata lauk berisi alasanmu bangga, lalu dia memotong pucuknya sendiri." },
   "pengumuman": { nama: "Papan Pengumuman", ringkas: "Untuk yang lolos atau diterima: dia mencari namanya sendiri di papan pengumuman, menstabilonya, lalu membuka amplop resmi berisi suratmu." },
+  "bubur": { nama: "Semangkuk Bubur", ringkas: "Kamu memasakkan bubur dari jauh: dia menyalakan kompor, mengaduk bubur sambil membaca pesan penyemangat, menabur topping berisi foto kalian, lalu membaca suratmu di serbet." },
+  "titipan": { nama: "Paket Titipan", ringkas: "Paket cepat sembuh diantar ke depan pintunya: dia membuka kardus berisi titipan kecil darimu, memecahkan plastik gelembung di atas foto kalian, dan membaca kartu ucapanmu." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -171,8 +173,8 @@ export const MOMEN = {
     judul: "Ucapan Cepat Sembuh untuk Pacar · Surat Digital",
     deskripsi: "Ucapan cepat sembuh untuk pacar yang lagi sakit: surat digital interaktif yang menemaninya istirahat, dengan pesan dan foto darimu.",
     h1: "Untuk yang lagi sakit, temani dari jauh.",
-    lede: "Satu kamar yang panas dan buram. Tiap hal kecil yang dia lakukan, seperti membuka jendela, minum, dan mengatur napas, menurunkan suhunya sampai 36,5.",
-    tema: ["getwell-365"],
+    lede: "Pilih cara menemaninya: turunkan suhunya sampai 36,5, masakkan semangkuk bubur dari jauh, atau kirim paket titipan ke depan pintunya.",
+    tema: ["getwell-365", "bubur", "titipan"],
     ide: [
       "Istirahat dulu. Dunia bisa nunggu, aku juga.",
       "Minum obatnya, minum airnya, terus kabari aku ya.",
