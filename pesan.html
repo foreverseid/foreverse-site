@@ -553,6 +553,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       judul:"Tiga menu untuk malam itu",
       jelas:"Rencanamu malam itu, disajikan sebagai pembuka, hidangan utama, dan penutup. Tiap tudung saji yang dia angkat menampilkan satu.",
       contoh:["Makan nasi goreng langganan di dekat kampus", "Nonton film yang kamu pilih, aku yang traktir", "Pulangnya mampir beli martabak manis"],
+      galat:"Bagian ini belum diisi." },
+    "payung": { kunci:"embun", id:"embunP", n:3, batas:70, label:"Kalimat",
+      judul:"Tiga kalimat di kaca berembun",
+      jelas:"Kalimat yang selama ini cuma berani kamu simpan sendiri. Di kaca halte yang berembun, dia mengusapnya satu per satu sampai terbaca.",
+      contoh:["Aku selalu nunggu kamu lewat di depan kantin", "Tiap hujan aku ingat kamu lupa bawa jaket", "Sudah lama aku mau ngajak kamu jalan"],
       galat:"Bagian ini belum diisi." }
   };
   function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
@@ -591,6 +596,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "confess-kunang":    { nama:"Toples Kunang-Kunang",  nfoto:4, foto:"TTRR", mesin:"/confess-kunang.html",  momen:"confess" },
     "getwell-365":       { nama:"36,5",                  nfoto:4, foto:"TTRR", mesin:"/getwell-365.html",     momen:"getwell" },
     "pasar-malam":       { nama:"Pasar Malam",           nfoto:4, foto:"TRTR", mesin:"/pasar-malam.html",     momen:"askout" },
+    "payung": { nama:"Payung Berdua", nfoto:4, foto:"RTTR", mesin:"/payung.html", momen:"askout" },
     "meja-dua": { nama:"Meja untuk Dua", nfoto:4, foto:"TRRT", mesin:"/meja-dua.html", momen:"askout" },
     "lewat-duluan":      { nama:"Dia Lewat Sini Duluan", nfoto:4, foto:"TTRR", mesin:"/lewat-duluan.html",    momen:"lovenote" },
     "kasus-pengirim":    { nama:"Kasus Pengirim Tanpa Nama", nfoto:4, foto:"TTRR", mesin:"/kasus-pengirim.html", momen:"confess" },
@@ -753,6 +759,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "studio": { nada:[67,71,74,79,74,71,69,72,76,81,76,72,71,74,79,83,79,74,72,76,79,84,79,76], jeda:0.38, gema:1.4 },
     "prosesi": { nada:[60,64,67,72,67,64,62,65,69,74,69,65,64,67,71,76,71,67,65,69,72,77,72,69], jeda:0.4, gema:1.8 },
     "meja-dua": { nada:[65,69,72,77,72,69,67,70,74,79,74,70,69,72,76,81,76,72,70,74,77,82,77,74], jeda:0.36, gema:1.2 },
+    "payung": { nada:[64,67,71,74,71,67,62,66,69,74,69,66,60,64,67,72,67,64,62,65,69,74,71,67], jeda:0.42, gema:1.8 },
     "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
@@ -1260,6 +1267,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       html = "";
     } else if(tema === "meja-dua"){
       html = "";
+    } else if(tema === "payung"){
+      html = "";
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1516,7 +1525,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
-  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua"];
+  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua", "payung"];
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau ══

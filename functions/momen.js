@@ -39,6 +39,7 @@ const TEMA = {
   "studio": { nama: "Studio Foto Wisuda", ringkas: "Sesi foto wisuda di studio berlatar biru: kamu fotografernya, dia memutar fokus sampai tajam, lalu suratmu tercetak di bawah foto besar." },
   "prosesi": { nama: "Prosesi Wisuda", ringkas: "Hari wisudanya dari gerbang aula: foto kalian di layar LED, namanya dipanggil MC, map ijazah berisi suratmu, lalu papan bunga berisi harapanmu." },
   "meja-dua": { nama: "Meja untuk Dua", ringkas: "Ajakan makan malam berbentuk meja yang dipesan atas namanya: nyalakan lilin, buka tudung saji berisi rencanamu, dan jawab dengan stempel." },
+  "payung": { nama: "Payung Berdua", ringkas: "Ajakan di sore hujan: buka payung, usap embun kaca halte berisi kalimatmu, dan jawab ajakan lewat bus yang datang saat hujan reda." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -132,10 +133,10 @@ export const MOMEN = {
   },
   "ajak-kencan": {
     judul: "Cara Unik Ngajak Kencan · Undangan Jalan Digital",
-    deskripsi: "Cara unik ngajak dia jalan: undangan kencan digital berbentuk pasar malam, lengkap dengan pilihan acara dan papan lampu untuk menjawab.",
+    deskripsi: "Cara unik ngajak dia jalan: undangan kencan digital yang bisa dimainkan, dari pasar malam, meja makan untuk dua, sampai payung berdua di halte, lengkap dengan cara dia menjawab.",
     h1: "Ngajak dia jalan, tapi jangan lewat chat biasa.",
-    lede: "Pasar malam yang cuma buka satu malam. Dia memilih acara lewat permainan, naik bianglala melihat foto kalian, lalu menjawab ajakanmu di papan lampu.",
-    tema: ["pasar-malam", "meja-dua"],
+    lede: "Ajak dia jalan dengan cara yang dia mainkan sendiri: pasar malam yang cuma buka satu malam, meja makan yang sudah dipesan atas namanya, atau payung berdua di halte saat hujan. Di akhir, dia menjawab ajakanmu.",
+    tema: ["pasar-malam", "meja-dua", "payung"],
     ide: [
       "Malam minggu ini kosong? Aku punya rencana, tinggal kamu.",
       "Aku sudah pilih tempatnya. Kamu cukup bilang iya.",

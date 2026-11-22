@@ -201,7 +201,7 @@ async function tangani(request, env, ctx) {
          langit-harapan.html, kapal-botol.html, zona-waktu.html,
          loker-terakhir.html, confess-kunang.html, getwell-365.html,
          pasar-malam.html, lewat-duluan.html, kasus-pengirim.html, rumah-contoh.html,
-         kotak-musik.html, garis-finis.html, stasiun-terakhir.html, rumah-menyala.html, hitung-mundur.html, pabrik-cokelat.html, malam-takbiran.html, pemutaran-perdana.html, herbarium.html, celengan.html, meja-dua.html, prosesi.html, studio.html, persembahan.html, sulam.html, radio.html, koper.html,
+         kotak-musik.html, garis-finis.html, stasiun-terakhir.html, rumah-menyala.html, hitung-mundur.html, pabrik-cokelat.html, malam-takbiran.html, pemutaran-perdana.html, herbarium.html, celengan.html, payung.html, meja-dua.html, prosesi.html, studio.html, persembahan.html, sulam.html, radio.html, koper.html,
          rekonstruksi.html)
          berbagi alamat /s/<kode> yang sama. Temanya dilihat dulu di D1,
          baru file yang cocok disajikan. Bait tetap mengambil datanya
@@ -262,6 +262,7 @@ async function tangani(request, env, ctx) {
           : tema === "herbarium" ? "herbarium"
           : tema === "celengan" ? "celengan"
           : tema === "koper" ? "koper"
+          : tema === "payung" ? "payung"
           : tema === "meja-dua" ? "meja-dua"
           : tema === "prosesi" ? "prosesi"
           : tema === "studio" ? "studio"
