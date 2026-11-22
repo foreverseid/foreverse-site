@@ -48,6 +48,8 @@ const TEMA = {
   "cangkir": { nama: "Cangkir yang Retak", ringkas: "Cangkir kesayangannya retak karena kamu: dia merekatkan retakannya dengan garis emas sambil membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya." },
   "bekal": { nama: "Bekal Makan Siang", ringkas: "Love note dalam kotak bekal: dia membuka kotaknya, menarik bendera kecil berisi pesanmu dari tiap lauk, mengelupas stiker berisi foto kalian, lalu menemukan memo di balik tutupnya." },
   "jemuran": { nama: "Tali Jemuran", ringkas: "Love note untuk hari biasa: dia menarik tali jemuran dan mengambil catatan kecilmu yang terjepit di antara cucian, mengibaskan polaroid kalian sampai gambarnya muncul, lalu menangkap suratmu yang tertiup angin." },
+  "pesawat": { nama: "Pesawat Kertas", ringkas: "Selesai dengan baik dari atap gedung: dia melipat kertas berisi terima kasihmu jadi pesawat, mencari tempat-tempat kalian dengan teropong, membaca suratmu, lalu menerbangkannya." },
+  "kunci-cadangan": { nama: "Kunci Cadangan", ringkas: "Selesai dengan baik lewat kunci cadangan yang dikembalikan: tiap kunci yang dia lepas membawa ucapan terima kasihmu, foto di pintu kulkas jatuh satu per satu, lalu suratmu masuk ke kotak surat." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -243,10 +245,10 @@ export const MOMEN = {
   },
   "selesai-baik-baik": {
     judul: "Pamit dengan Baik · Surat Perpisahan Digital",
-    deskripsi: "Surat perpisahan digital yang hangat: satu perjalanan kereta terakhir, singgah di tempat-tempat kenangan, lalu berangkat ke arah masing-masing.",
+    deskripsi: "Surat perpisahan digital yang hangat: perjalanan kereta terakhir, pesawat kertas yang diterbangkan, atau kunci cadangan yang dikembalikan dengan baik.",
     h1: "Selesai, tapi dengan baik.",
-    lede: "Satu perjalanan kereta terakhir bersama. Kereta singgah di tempat-tempat kenangan kalian, lalu dua kereta berangkat ke arah yang berbeda.",
-    tema: ["stasiun-terakhir"],
+    lede: "Pilih caranya pamit: naik kereta terakhir bersama, melipat terima kasihmu jadi pesawat kertas, atau mengembalikan kunci cadangan dengan sebuah surat.",
+    tema: ["stasiun-terakhir", "pesawat", "kunci-cadangan"],
     ide: [
       "Makasih buat semua perjalanan yang pernah kita naiki bareng.",
       "Kita berhenti bukan karena tidak sayang, tapi karena arah kita beda.",
