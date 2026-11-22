@@ -900,7 +900,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     /* "Radio Tengah Malam" (LDR): isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "sulam") {
-    /* "Sulam Jarak" (LDR): isian khasnya lewat TAMBAHAN. */
+    /* "Sulaman Dua Kota" (LDR): isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "persembahan") {
     /* "Halaman Persembahan": isian khasnya lewat TAMBAHAN. */
@@ -913,7 +913,7 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
     /* "Prosesi Wisuda": isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "meja-dua") {
-    /* "Meja untuk Dua": isian khasnya lewat TAMBAHAN. */
+    /* "Makan Malam Pertama": isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "payung") {
     /* "Payung Berdua": isian khasnya lewat TAMBAHAN. */
@@ -1209,7 +1209,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "payung": "Payung Berdua", "meja-dua": "Meja untuk Dua", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulam Jarak", "radio": "Radio Tengah Malam",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");

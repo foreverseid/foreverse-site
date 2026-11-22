@@ -1,4 +1,4 @@
-/* Sulam Jarak (LDR) — pilih benang, kencangkan sekrup, seret jarum
+/* Sulaman Dua Kota (LDR) — pilih benang, kencangkan sekrup, seret jarum
    melewati 22 titik (rute antar kota yang berakhir jadi hati; tiga
    simpul membuka isian jahitan), tarik 4 peniti ke atas, balik
    pamidangan dan buka kertas yang terselip, gunting benang. */

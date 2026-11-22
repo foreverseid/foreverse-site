@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <!-- =====================================================================
-     FOREVERSE · ASK OUT · Tema "Meja untuk Dua" (id: meja-dua)
+     FOREVERSE · ASK OUT · Tema "Makan Malam Pertama" (id: meja-dua)
      Isi pesanan disisipkan server ke blok DATA di bawah.
      ===================================================================== -->
 <script id="foreverse-data" type="application/json">
@@ -410,7 +410,7 @@ function pasangBalasan(wadah, teks, kelasUtama, kelasWa){
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Meja untuk Dua (Ask Out). Trattoria kecil yang memesan meja atas nama
+   Makan Malam Pertama (Ask Out). Trattoria kecil yang memesan meja atas nama
    penerima: bel meja diketuk, korek digesek lalu apinya dibawa ke sumbu
    lilin, buku menu dibalik berisi foto, tiga tudung saji diangkat
    (isian `menu`: rencana malam itu), bon dibuka berisi surat tercetak
@@ -460,7 +460,7 @@ function label(t){ $('#labelK').textContent=t; }
       petunjuk('Apinya sudah ada. <b>Bawa ke sumbu lilin</b> di tengah meja.'); return false; }
   });
   function sulut(){ if(nyala) return; nyala=true; ak.classList.add('nyala'); SFX.gores(); buzz(20); $('#gesekKet').style.display='none'; label('korek menyala'); petunjuk('Menyala. <b>Bawa apinya ke sumbu lilin.</b>'); }
-  MASUK[1]=function(){ label('meja untuk dua'); petunjuk('Mejanya masih gelap. <b>Seret korek apinya</b> lalu gesek di sisi kotaknya.'); };
+  MASUK[1]=function(){ label('meja sudah dipesan'); petunjuk('Mejanya masih gelap. <b>Seret korek apinya</b> lalu gesek di sisi kotaknya.'); };
 })();
 
 /* ═ 3 · buku menu: balik halaman, tiap halaman satu foto ═ */
@@ -493,7 +493,7 @@ function label(t){ $('#labelK').textContent=t; }
 /* ═ 5 · bon: surat tercetak seperti nota ═ */
 (function(){
   var mb=$('#mapBon'), sb=$('#sampulBon'), nt=$('#nota'), isi=$('#isiN'), buka=false, PAR=SURAT.length?SURAT:['Terima kasih sudah datang.'];
-  $('#kepalaN').textContent='MEJA UNTUK DUA · No. 02';
+  $('#kepalaN').textContent='RESERVASI BERDUA · Meja 02';
   PAR.forEach(function(p){ isi.appendChild(el('p',null,p)); });
   sb.addEventListener('click',function(){ if(buka) return; buka=true; sb.classList.remove('ajak'); mb.classList.add('buka'); SFX.kertas(); buzz(10); label('bon');
     var ps=$$('p',isi), n=0;

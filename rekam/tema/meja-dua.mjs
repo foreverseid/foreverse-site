@@ -1,4 +1,4 @@
-/* Meja untuk Dua (Ask Out) — ketuk bel, gesek korek lalu bawa apinya
+/* Makan Malam Pertama (Ask Out) — ketuk bel, gesek korek lalu bawa apinya
    ke lilin, balik 4 halaman menu (foto), angkat 3 tudung saji, buka bon
    (surat), pilih stempel jawaban. */
 export const berkas = "meja-dua-demo.html";
