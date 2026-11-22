@@ -44,6 +44,8 @@ const TEMA = {
   "pengumuman": { nama: "Papan Pengumuman", ringkas: "Untuk yang lolos atau diterima: dia mencari namanya sendiri di papan pengumuman, menstabilonya, lalu membuka amplop resmi berisi suratmu." },
   "bubur": { nama: "Semangkuk Bubur", ringkas: "Kamu memasakkan bubur dari jauh: dia menyalakan kompor, mengaduk bubur sambil membaca pesan penyemangat, menabur topping berisi foto kalian, lalu membaca suratmu di serbet." },
   "titipan": { nama: "Paket Titipan", ringkas: "Paket cepat sembuh diantar ke depan pintunya: dia membuka kardus berisi titipan kecil darimu, memecahkan plastik gelembung di atas foto kalian, dan membaca kartu ucapanmu." },
+  "tanaman": { nama: "Tanaman yang Layu", ringkas: "Tanaman di pojok jendela layu karena kamu lalai: dia menyiramnya, memetik daun kering berisi janjimu, membuka krai sampai kuncupnya mekar, lalu menentukan sendiri jawabannya." },
+  "cangkir": { nama: "Cangkir yang Retak", ringkas: "Cangkir kesayangannya retak karena kamu: dia merekatkan retakannya dengan garis emas sambil membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -205,10 +207,10 @@ export const MOMEN = {
   },
   "minta-maaf": {
     judul: "Cara Minta Maaf ke Pacar · Surat Maaf Digital",
-    deskripsi: "Surat maaf digital yang bisa dimainkan: dia ikut memperbaiki kotak musik yang rusak, membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya.",
+    deskripsi: "Surat maaf digital yang bisa dimainkan: dia ikut memperbaiki yang rusak, membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya.",
     h1: "Minta maaf yang bukan cuma kata-kata.",
-    lede: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya, dan tiap bagian yang beres memperlihatkan satu hal yang kamu sadari.",
-    tema: ["kotak-musik"],
+    lede: "Pilih caranya: memperbaiki kotak musik yang rusak, merawat lagi tanaman yang layu, atau merekatkan cangkir yang retak dengan emas. Di akhir, dia yang menentukan jawabannya.",
+    tema: ["kotak-musik", "tanaman", "cangkir"],
     ide: [
       "Aku tidak mau cuma bilang maaf. Aku mau benerin.",
       "Kamu tidak harus maafin sekarang. Aku cuma pengin kamu tahu aku dengar.",

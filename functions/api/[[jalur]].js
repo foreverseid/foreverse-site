@@ -106,6 +106,8 @@ const TEMA_SKEMA = {
   "rekonstruksi":      { nfoto: 4, foto: "TRTR", momen: "anniversary" },
   "rumah-contoh":      { nfoto: 4, foto: "TRTR", momen: "proposal" },
   "kotak-musik":       { nfoto: 4, foto: "TTRR", momen: "apology" },
+  "cangkir": { nfoto: 4, foto: "RTRT", momen: "apology" },
+  "tanaman": { nfoto: 4, foto: "TRTR", momen: "apology" },
   "garis-finis":       { nfoto: 4, foto: "TRRR", momen: "congrats" },
   "pengumuman": { nfoto: 4, foto: "RTTR", momen: "congrats" },
   "tumpeng": { nfoto: 4, foto: "TRRT", momen: "congrats" },
@@ -141,7 +143,9 @@ const TAMBAHAN = {
   "tumpeng": { kunci: "lauk", n: 3, batas: 70, galat: "Ketiga alasan bangga belum diisi." },
   "pengumuman": { kunci: "catatan", n: 3, batas: 70, galat: "Ketiga catatan kecil belum diisi." },
   "bubur": { kunci: "semangat", n: 3, batas: 70, galat: "Ketiga pesan penyemangat belum diisi." },
-  "titipan": { kunci: "titipan", n: 3, batas: 70, galat: "Ketiga pesan di titipan belum diisi." }
+  "titipan": { kunci: "titipan", n: 3, batas: 70, galat: "Ketiga pesan di titipan belum diisi." },
+  "tanaman": { kunci: "janji", n: 3, batas: 70, galat: "Ketiga janji belum diisi." },
+  "cangkir": { kunci: "sadar", n: 3, batas: 70, galat: "Ketiga hal yang kamu sadari belum diisi." }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -938,6 +942,12 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   } else if (tema === "titipan") {
     /* "Paket Titipan": isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "tanaman") {
+    /* "Tanaman yang Layu": isian khasnya lewat TAMBAHAN. */
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "cangkir") {
+    /* "Cangkir yang Retak": isian khasnya lewat TAMBAHAN. */
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "herbarium") {
     /* "Herbarium Kecil" (Hari Spesial · Hari Perempuan): `kagum` = tiga hal
        yang dikagumi pengirim, terbuka saat tiap bunga kering dicocokkan. */
@@ -1229,7 +1239,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "titipan": "Paket Titipan", "bubur": "Semangkuk Bubur", "pengumuman": "Papan Pengumuman", "tumpeng": "Tumpeng Syukuran", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "cangkir": "Cangkir yang Retak", "tanaman": "Tanaman yang Layu", "titipan": "Paket Titipan", "bubur": "Semangkuk Bubur", "pengumuman": "Papan Pengumuman", "tumpeng": "Tumpeng Syukuran", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
