@@ -50,6 +50,8 @@ const TEMA = {
   "jemuran": { nama: "Tali Jemuran", ringkas: "Love note untuk hari biasa: dia menarik tali jemuran dan mengambil catatan kecilmu yang terjepit di antara cucian, mengibaskan polaroid kalian sampai gambarnya muncul, lalu menangkap suratmu yang tertiup angin." },
   "pesawat": { nama: "Pesawat Kertas", ringkas: "Selesai dengan baik dari atap gedung: dia melipat kertas berisi terima kasihmu jadi pesawat, mencari tempat-tempat kalian dengan teropong, membaca suratmu, lalu menerbangkannya." },
   "kunci-cadangan": { nama: "Kunci Cadangan", ringkas: "Selesai dengan baik lewat kunci cadangan yang dikembalikan: tiap kunci yang dia lepas membawa ucapan terima kasihmu, foto di pintu kulkas jatuh satu per satu, lalu suratmu masuk ke kotak surat." },
+  "seserahan": { nama: "Seserahan", ringkas: "Lamaran lewat tiga baki seserahan: tiap pita yang dia lepas membuka satu janjimu, baki putar memperlihatkan foto kalian, gulungan berisi suratmu, dan kotak cincin di akhir." },
+  "lukis": { nama: "Melukis Bersama", ringkas: "Lamaran di studio lukis: dia mewarnai lukisan bernomor sambil membaca alasanmu ingin seumur hidup bersamanya, membalik bingkai berisi foto kalian, lalu menuliskan sendiri pertanyaannya dengan kuas." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -194,10 +196,10 @@ export const MOMEN = {
   },
   "lamaran": {
     judul: "Ide Lamaran Unik · Surat Lamaran Digital",
-    deskripsi: "Ide lamaran yang unik: surat digital berbentuk tur rumah, tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin.",
+    deskripsi: "Ide lamaran yang unik: tur rumah impian, tiga baki seserahan, atau lukisan yang kalian selesaikan berdua. Tiap tema menyimpan janjimu dan satu pertanyaan.",
     h1: "Ajak dia pulang ke rumah yang kalian bayangkan.",
-    lede: "Tur rumah dari sudut pandangnya sendiri. Tiap ruangan menyimpan satu janji darimu, dan di kamar terakhir ada pertanyaan yang sudah lama kamu siapkan.",
-    tema: ["rumah-contoh"],
+    lede: "Pilih caranya: tur rumah yang kalian bayangkan, seserahan yang dibuka satu per satu, atau lukisan yang dia selesaikan sendiri. Di akhir, ada pertanyaan yang sudah lama kamu siapkan.",
+    tema: ["rumah-contoh", "seserahan", "lukis"],
     ide: [
       "Rumahnya belum ada. Tapi aku tahu siapa yang mau aku ajak pulang.",
       "Aku mau bangun hari-hari biasa yang panjang, sama kamu.",

@@ -107,6 +107,8 @@ const TEMA_SKEMA = {
   "kasus-pengirim":    { nfoto: 4, foto: "TTRR", momen: "confess" },
   "rekonstruksi":      { nfoto: 4, foto: "TRTR", momen: "anniversary" },
   "rumah-contoh":      { nfoto: 4, foto: "TRTR", momen: "proposal" },
+  "lukis": { nfoto: 4, foto: "TRRT", momen: "proposal" },
+  "seserahan": { nfoto: 4, foto: "TRRT", momen: "proposal" },
   "kotak-musik":       { nfoto: 4, foto: "TTRR", momen: "apology" },
   "cangkir": { nfoto: 4, foto: "RTRT", momen: "apology" },
   "tanaman": { nfoto: 4, foto: "TRTR", momen: "apology" },
@@ -153,7 +155,9 @@ const TAMBAHAN = {
   "bekal": { kunci: "bendera", n: 3, batas: 60, galat: "Ketiga pesan di bendera belum diisi." },
   "jemuran": { kunci: "jemur", n: 3, batas: 70, galat: "Ketiga catatan kecil belum diisi." },
   "pesawat": { kunci: "lipat", n: 3, batas: 70, galat: "Ketiga ucapan terima kasih belum diisi." },
-  "kunci-cadangan": { kunci: "gantungan", n: 3, batas: 70, galat: "Ketiga ucapan di label kunci belum diisi." }
+  "kunci-cadangan": { kunci: "gantungan", n: 3, batas: 70, galat: "Ketiga ucapan di label kunci belum diisi." },
+  "seserahan": { kunci: "hantaran", n: 3, batas: 70, galat: "Ketiga janji di baki belum diisi." },
+  "lukis": { kunci: "warna", n: 3, batas: 70, galat: "Ketiga alasan belum diisi." }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -968,6 +972,12 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   } else if (tema === "kunci-cadangan") {
     /* "Kunci Cadangan": isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "seserahan") {
+    /* "Seserahan": isian khasnya lewat TAMBAHAN. */
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "lukis") {
+    /* "Melukis Bersama": isian khasnya lewat TAMBAHAN. */
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "herbarium") {
     /* "Herbarium Kecil" (Hari Spesial · Hari Perempuan): `kagum` = tiga hal
        yang dikagumi pengirim, terbuka saat tiap bunga kering dicocokkan. */
@@ -1259,7 +1269,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "kunci-cadangan": "Kunci Cadangan", "pesawat": "Pesawat Kertas", "jemuran": "Tali Jemuran", "bekal": "Bekal Makan Siang", "cangkir": "Cangkir yang Retak", "tanaman": "Tanaman yang Layu", "titipan": "Paket Titipan", "bubur": "Semangkuk Bubur", "pengumuman": "Papan Pengumuman", "tumpeng": "Tumpeng Syukuran", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "lukis": "Melukis Bersama", "seserahan": "Seserahan", "kunci-cadangan": "Kunci Cadangan", "pesawat": "Pesawat Kertas", "jemuran": "Tali Jemuran", "bekal": "Bekal Makan Siang", "cangkir": "Cangkir yang Retak", "tanaman": "Tanaman yang Layu", "titipan": "Paket Titipan", "bubur": "Semangkuk Bubur", "pengumuman": "Papan Pengumuman", "tumpeng": "Tumpeng Syukuran", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
