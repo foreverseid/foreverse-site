@@ -52,6 +52,7 @@ const TEMA = {
   "kunci-cadangan": { nama: "Kunci Cadangan", ringkas: "Selesai dengan baik lewat kunci cadangan yang dikembalikan: tiap kunci yang dia lepas membawa ucapan terima kasihmu, foto di pintu kulkas jatuh satu per satu, lalu suratmu masuk ke kotak surat." },
   "seserahan": { nama: "Seserahan", ringkas: "Lamaran lewat tiga baki seserahan: tiap pita yang dia lepas membuka satu janjimu, baki putar memperlihatkan foto kalian, gulungan berisi suratmu, dan kotak cincin di akhir." },
   "lukis": { nama: "Melukis Bersama", ringkas: "Lamaran di studio lukis: dia mewarnai lukisan bernomor sambil membaca alasanmu ingin seumur hidup bersamanya, membalik bingkai berisi foto kalian, lalu menuliskan sendiri pertanyaannya dengan kuas." },
+  "selamanya": { nama: "Selamanya", ringkas: "Tema khas Foreverse: dia menggambar lingkaran tak hingga dengan jarinya sampai empat bait darimu muncul, menggeser kartu foto kalian, lalu membuka surat yang dilipat tiga." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -131,7 +132,7 @@ export const MOMEN = {
     deskripsi: "Surat cinta digital yang bisa dimainkan, untuk bilang sayang tanpa menunggu momen. Isi pesan, foto, dan lagumu, tautannya langsung jadi.",
     h1: "Bilang sayang, tanpa nunggu momen.",
     lede: "Untuk hari biasa: jejak kecil yang kamu tinggalkan di jalannya, bekal makan siang dengan bendera berisi pesanmu, atau catatan yang terjepit di tali jemuran.",
-    tema: ["lewat-duluan", "bekal", "jemuran"],
+    tema: ["selamanya", "lewat-duluan", "bekal", "jemuran"],
     ide: [
       "Tidak ada acara apa-apa hari ini. Aku cuma lagi kepikiran kamu.",
       "Hal-hal kecil darimu itu yang bikin hariku enteng.",
