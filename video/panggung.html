@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<!-- Panggung video konten Foreverse 1080×1920. Tiap frame = gambar(adegan, detik):
+     tidak ada animasi yang berjalan sendiri, jadi hasil render selalu sama. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@500;600;700&display=block">
+<style>
+  :root{ --ink:#16161A; --cream:#FBFAF7; --stone:#E4E2DC; --violet:#3B3168; --coral:#E8734A; --blush:#E8A5B0; }
+  *{ margin:0; box-sizing:border-box; }
+  html,body{ width:1080px; height:1920px; overflow:hidden; background:var(--cream); }
+  #layar{ position:relative; width:1080px; height:1920px; overflow:hidden; color:var(--ink);
+    background:
+      radial-gradient(900px 700px at 100% 0%, rgba(232,165,176,.22), transparent 70%),
+      radial-gradient(900px 800px at 0% 100%, rgba(59,49,104,.10), transparent 70%),
+      var(--cream); }
+  /* kepala: label kecil + titik adegan */
+  #alis{ position:absolute; left:80px; top:236px; font:700 24px/1 "Plus Jakarta Sans"; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--violet); display:flex; align-items:center; gap:14px; }
+  #alis::before{ content:""; width:12px; height:12px; border-radius:50%; background:var(--coral); }
+  #titik{ position:absolute; right:150px; top:240px; display:flex; gap:10px; }
+  #titik i{ width:12px; height:12px; border-radius:50%; background:var(--stone); }
+  #titik i.ini{ background:var(--violet); width:30px; border-radius:6px; }
+  /* judul besar, satu kata disorot */
+  #judul{ position:absolute; left:76px; right:150px; top:290px; font:600 78px/1.06 Fraunces; letter-spacing:-.02em; }
+  #judul span{ display:inline-block; white-space:pre; }
+  #judul em{ font-style:italic; color:var(--coral); }
+  #sub{ position:absolute; left:80px; right:150px; top:480px; font:500 34px/1.35 "Plus Jakarta Sans"; color:rgba(22,22,26,.68); }
+  /* bingkai HP berisi rekaman tema asli */
+  #hp{ position:absolute; left:50%; top:572px; width:632px; height:1124px; margin-left:-316px;
+    border-radius:58px; background:var(--ink); padding:12px; box-shadow:0 40px 90px rgba(22,22,26,.22), 0 8px 24px rgba(22,22,26,.12); }
+  #kaca{ position:relative; width:100%; height:100%; border-radius:46px; overflow:hidden; background:#000; }
+  #rek{ position:absolute; left:0; top:0; width:100%; height:100%; object-fit:cover; transform-origin:0 0; }
+  /* penutup */
+  #tutup{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:34px; opacity:0; }
+  #tutup img{ width:300px; }
+  #merek{ font:400 96px/1 Fraunces; letter-spacing:-.01em; }
+  #slogan{ font:500 40px/1.3 "Plus Jakarta Sans"; color:rgba(22,22,26,.7); text-align:center; }
+</style></head>
+<body><div id="layar">
+  <div id="alis"></div><div id="titik"></div>
+  <div id="judul"></div><div id="sub"></div>
+  <div id="hp"><div id="kaca"><img id="rek" alt=""></div></div>
+  <div id="tutup"><img src="/foreverse-logo.png" alt=""><div id="merek">foreverse</div><div id="slogan"></div></div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const jepit = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const halus = x => { x = jepit(x); return x * x * (3 - 2 * x); };
+const keluar = x => 1 - Math.pow(1 - jepit(x), 3);
+let K = null;
+
+/* "Ada kertas *tanpa nama*" → kata-kata, yang di antara * dicetak miring berwarna */
+function pecah(teks){
+  const kata = []; let sorot = false;
+  for (const bag of teks.split(/(\*)/)){ if (bag === "*"){ sorot = !sorot; continue; }
+    for (const k of bag.split(/(\s+)/)) if (k) kata.push({ k, sorot }); }
+  return kata;
+}
+window.siapkan = konten => {
+  K = konten;
+  $("#alis").textContent = konten.alis;
+  $("#titik").innerHTML = konten.adegan.map(() => "<i></i>").join("");
+  $("#slogan").textContent = konten.penutup.slogan;
+  return document.fonts.ready;
+};
+let adeganIni = -1;
+/* gambar satu frame: adegan i, detik t sejak adegan mulai, src = frame rekaman */
+window.gambar = async (i, t, src) => {
+  const A = K.adegan[i], tutup = i === K.adegan.length - 1 && A.penutup;
+  if (i !== adeganIni){
+    adeganIni = i;
+    $("#judul").innerHTML = A.judul ? pecah(A.judul).map(w => /^\s+$/.test(w.k) ? w.k : `<span>${w.sorot ? `<em>${w.k}</em>` : w.k}</span>`).join("") : "";
+    $("#sub").textContent = A.sub || "";
+    [...$("#titik").children].forEach((d, j) => d.className = j === i ? "ini" : "");
+  }
+  /* judul masuk kata demi kata (adegan pertama sudah utuh sejak frame 0 untuk sampul) */
+  const masuk = i === 0 ? 1 : 0;
+  [...$("#judul").querySelectorAll("span")].forEach((s, j) => {
+    const p = masuk || keluar((t - j * .06) / .42);
+    s.style.opacity = p; s.style.transform = `translateY(${(1 - p) * 34}px)`;
+  });
+  const ps = masuk || keluar((t - .25) / .5);
+  $("#sub").style.opacity = ps; $("#sub").style.transform = `translateY(${(1 - ps) * 16}px)`;
+  /* rekaman + zoom pelan ke bagian penting */
+  if (src){
+    const img = $("#rek");
+    if (img.getAttribute("src") !== src){ img.src = src; await img.decode().catch(() => {}); }
+    const z = A.zoom; let s = 1, x = 0, y = 0;
+    if (z){ /* titik (z.x, z.y) dibawa ke tengah layar HP, tanpa keluar dari tepi rekaman */
+      const p = halus((t - (z.mulai || 0)) / (z.lama || .9)); s = 1 + (z.s - 1) * p;
+      const W = img.clientWidth, H = img.clientHeight;
+      x = jepit((W / 2 - s * W * z.x) * p, W - s * W, 0); y = jepit((H / 2 - s * H * z.y) * p, H - s * H, 0); }
+    img.style.transform = `translate(${x}px,${y}px) scale(${s})`;
+  }
+  /* penutup: HP & teks turun-pudar, merek muncul */
+  const pt = tutup ? halus(t / .5) : 0;
+  for (const id of ["#hp", "#judul", "#sub", "#alis", "#titik"]){
+    $(id).style.opacity = 1 - pt; }
+  $("#hp").style.transform = `translateY(${pt * 120}px) scale(${1 - pt * .06})`;
+  const pm = tutup ? keluar((t - .35) / .6) : 0;
+  $("#tutup").style.opacity = pm; $("#tutup").style.transform = `translateY(${(1 - pm) * 30}px)`;
+};
+</script></body></html>

@@ -1,0 +1,31 @@
+{
+  "id": "k01-kasus-pengirim",
+  "tema": "kasus-pengirim",
+  "alis": "Confess · Kasus Pengirim Tanpa Nama",
+  "tempoSuara": 0.94,
+  "bpm": 84,
+  "adegan": [
+    { "judul": "Ada kertas *tanpa nama* di mejamu.", "sub": "Seminggu ini, tiap hari, selalu di tempat yang sama.",
+      "naskah": "Seminggu ini, ada kertas tanpa nama di meja kamu.",
+      "rekaman": { "dari": 0.3, "laju": 1 }, "durasi": 4.2 },
+    { "judul": "Hari ini, kamu *detektifnya*.", "sub": "Mulai dari meja langgananmu.",
+      "naskah": "Hari ini, kamu yang jadi detektifnya.",
+      "rekaman": { "dari": 4.6, "laju": 2.2 }, "durasi": 3.6 },
+    { "judul": "Kumpulkan *buktinya*.", "sub": "Tanya barista. Periksa foto di papan.",
+      "naskah": "Tanya barista. Periksa foto di papan.",
+      "rekaman": { "dari": 24, "laju": 3.2 }, "durasi": 4.5 },
+    { "judul": "Coret satu per *satu*.", "sub": "Sampai tinggal satu nama.",
+      "naskah": "Satu per satu, tersangkanya gugur.",
+      "rekaman": { "dari": 57, "laju": 1.5 }, "durasi": 3.2 },
+    { "judul": "Ternyata *dia*.", "sub": "Yang tahu kebiasaan kecilmu.",
+      "naskah": "Ternyata... dia.",
+      "rekaman": { "dari": 64.5, "laju": 1 }, "durasi": 3.4,
+      "zoom": { "x": 0.75, "y": 0.6, "s": 1.7, "mulai": 0.6, "lama": 1.1 } },
+    { "judul": "Ini bukan game. Ini *surat*.", "sub": "Cara dia bilang suka.",
+      "naskah": "Yang barusan kamu mainin itu surat. Cara dia bilang suka.",
+      "rekaman": { "dari": 70, "laju": 1 }, "durasi": 4.4,
+      "zoom": { "x": 0.5, "y": 0.42, "s": 1.25, "mulai": 0.3, "lama": 1.6 } },
+    { "penutup": true, "naskah": "Forever vers. Surat digital yang bisa dimainkan.", "durasi": 3.8 }
+  ],
+  "penutup": { "slogan": "Surat digital yang bisa dimainkan." }
+}

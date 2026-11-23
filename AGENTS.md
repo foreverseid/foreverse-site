@@ -30,6 +30,8 @@ pengelola. Konteks lengkap: Google Drive "Foreverse — Arsip Project".
   `node rekam/rekam.mjs <tema>` → `rekaman/<tema>.mp4` + potongan per bagian.
   Skrip per tema di `rekam/tema/<tema>.mjs`; contoh: `kasus-pengirim.mjs`.
   Mainkan dengan sentuhan sungguhan (klik/seret), jangan memanggil fungsi internal.
+- `video/` — penyusun video konten (tidak ikut tayang): kemasan merek di atas rekaman tema asli,
+  narasi & musik dari kode. Aturan gaya di `video/STANDAR.md`; satu konten = `video/konten/<id>.json`.
 
 ## Uji
 - `node uji.mjs` wajib lulus sebelum PR (Node 22+). Tambah uji untuk perilaku baru.
