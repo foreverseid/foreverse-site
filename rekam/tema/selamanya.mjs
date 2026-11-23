@@ -27,9 +27,9 @@ export async function main(a){
   await a.lanjut();
 
   a.bagian("surat");
-  await jeda(900); await a.baca("#lipatan .lp >> nth=0 >> p");
-  for (let i = 1; i < 3; i++){ await page.locator("#bukaL:not([disabled])").waitFor({ timeout:20000 }); await a.ketuk("#bukaL", { tunggu:600 }); await a.baca(`#lipatan .lp >> nth=${i} >> p`); }
-  await page.locator("#bukaL.ajak").waitFor({ timeout:20000 }); await a.ketuk("#bukaL", { tunggu:2600 });
+  await jeda(900); await a.baca("#lipatan .lpw >> nth=0 >> p");
+  for (let i = 1; i < 3; i++){ await page.locator("#bukaL.siap").waitFor({ timeout:20000 }); await a.ketuk("#bukaL", { tunggu:1000 }); await a.baca(`#lipatan .lpw >> nth=${i} >> p`); }
+  await page.locator("#bukaL.siap").waitFor({ timeout:20000 }); await a.jepret("surat-terbuka"); await a.ketuk("#bukaL", { tunggu:2800 });
   await a.lanjut();
 
   a.bagian("hati");
