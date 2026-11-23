@@ -623,6 +623,11 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       judul:"Empat bait pendek untuknya",
       jelas:"Muncul satu per satu saat dia menggambar lingkaran tak hingga dengan jarinya. Satu kalimat saja per bait.",
       contoh:["Kamu rumah yang selalu aku cari", "Senyummu masih bikin aku lupa mau ngomong apa", "Aku mau ini selamanya", "Terima kasih sudah sabar"],
+      galat:"Bagian ini belum diisi." },
+    "sampai-ketemu": { kunci:"dekat", id:"dekatSK", n:3, batas:70, label:"Hal",
+      judul:"Tiga hal yang bikin jarak terasa dekat",
+      jelas:"Muncul satu per satu saat dia menggeser kotanya mendekat ke kotamu dan angka kilometernya berkurang.",
+      contoh:["Suaramu tiap malam sebelum tidur", "Foto makan siang yang kamu kirim", "Lagu yang kita dengar bareng"],
       galat:"Bagian ini belum diisi." }
   };
   function blokTambahan(tema){ var t = TAMBAHAN[tema]; if(!t) return "";
@@ -653,6 +658,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "celengan":          { nama:"Celengan Rindu",   nfoto:4, foto:"TTRR", mesin:"/celengan.html",          momen:"ldr" },
     "koper":             { nama:"Koper ke Kotamu",   nfoto:4, foto:"TRRT", mesin:"/koper.html",             momen:"ldr" },
     "sulam": { nama:"Sulaman Dua Kota", nfoto:4, foto:"TRTR", mesin:"/sulam.html", momen:"ldr" },
+    "sampai-ketemu": { nama:"Sampai Ketemu", nfoto:4, foto:"RTRT", mesin:"/sampai-ketemu.html", momen:"ldr" },
     "radio": { nama:"Radio Tengah Malam", nfoto:4, foto:"RTTR", mesin:"/radio.html", momen:"ldr" },
     "loker-terakhir":    { nama:"Loker Terakhir", nfoto:4, foto:"TRTR", mesin:"/loker-terakhir.html", momen:"graduation" },
     "prosesi": { nama:"Prosesi Wisuda", nfoto:4, foto:"TRRT", mesin:"/prosesi.html", momen:"graduation" },
@@ -851,6 +857,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     "seserahan": { nada:[67,72,76,79,76,72,74,77,81,77,74,71,72,76,79,84,79,76,77,74,71,67,72,72], jeda:0.44, gema:2 },
     "lukis": { nada:[64,67,72,76,74,72,71,72,74,67,71,74,77,76,74,72,69,72,76,79,77,76,74,72], jeda:0.4, gema:1.8 },
     "selamanya": { nada:[65,69,72,77,76,72,74,70,67,70,74,72,69,72,77,81,79,76,77,72,69,65,67,65], jeda:0.46, gema:2.2 },
+    "sampai-ketemu": { nada:[64,67,71,76,74,71,72,69,65,69,72,77,76,72,74,71,67,71,74,79,77,74,72,71], jeda:0.44, gema:2 },
     "koper":          { nada:[64,69,73,76,73,69,66,71,74,78,74,71,69,73,76,81,76,73,71,74,78,74,71,69], jeda:.36, gema:1.4 },
     "herbarium":      { nada:[65,72,77,69,72,77,62,69,74,65,69,74,58,65,70,62,65,74,60,67,72,64,67,76], jeda:.4, gema:1.4 }
   };
@@ -1386,6 +1393,8 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       html = "";
     } else if(tema === "selamanya"){
       html = "";
+    } else if(tema === "sampai-ketemu"){
+      html = "";
     } else if(tema === "herbarium"){
       var contohKg = ["Kamu berani bilang tidak, walau lagi takut.", "Kamu selalu ingat hal kecil soal orang lain.", "Kamu jatuh, terus bangun lagi tanpa banyak drama."];
       html = '<h2><span class="n">5</span> Tiga hal yang kamu kagumi darinya</h2>' +
@@ -1642,7 +1651,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
       penutup: $("penutup").value };
     return { rahasia: $("rahasia").value };
   }
-  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua", "payung", "tumpeng", "pengumuman", "bubur", "titipan", "tanaman", "cangkir", "bekal", "jemuran", "pesawat", "kunci-cadangan", "seserahan", "lukis", "selamanya"];
+  var TANPA_KHUSUS = ["radio", "sulam", "persembahan", "studio", "prosesi", "meja-dua", "payung", "tumpeng", "pengumuman", "bubur", "titipan", "tanaman", "cangkir", "bekal", "jemuran", "pesawat", "kunci-cadangan", "seserahan", "lukis", "selamanya", "sampai-ketemu"];
   function fotoRange(){ var a=[]; for(var i=0;i<NFOTO;i++) a.push(i); return a; }
 
   /* ══ 3 · pratinjau ══

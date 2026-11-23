@@ -53,6 +53,7 @@ const TEMA = {
   "seserahan": { nama: "Seserahan", ringkas: "Lamaran lewat tiga baki seserahan: tiap pita yang dia lepas membuka satu janjimu, baki putar memperlihatkan foto kalian, gulungan berisi suratmu, dan kotak cincin di akhir." },
   "lukis": { nama: "Melukis Bersama", ringkas: "Lamaran di studio lukis: dia mewarnai lukisan bernomor sambil membaca alasanmu ingin seumur hidup bersamanya, membalik bingkai berisi foto kalian, lalu menuliskan sendiri pertanyaannya dengan kuas." },
   "selamanya": { nama: "Selamanya", ringkas: "Tema khas Foreverse: dia menggambar lingkaran tak hingga dengan jarinya sampai empat bait darimu muncul, menggeser kartu foto kalian, lalu membuka surat yang dilipat tiga." },
+  "sampai-ketemu": { nama: "Sampai Ketemu", ringkas: "Tema khas Foreverse untuk LDR: dia memperpendek jarak kalian dengan jarinya sampai angka kilometernya habis, mengangkat panggilan video berisi foto kalian, lalu memilih siapa yang datang duluan." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
@@ -97,8 +98,8 @@ export const MOMEN = {
     judul: "Kado untuk Pacar LDR · Surat Digital Dua Kota",
     deskripsi: "Kado untuk pacar LDR: surat digital yang menampilkan jam asli dua kota kalian, lengkap dengan foto dan pesan. Tinggal kirim tautannya.",
     h1: "Untuk yang lagi jauh, tetap satu layar.",
-    lede: "Dua jendela, dua kota, jam aslinya masing-masing. Dia menebak kamu lagi apa di jam segini, membuka paket yang menyeberang, sampai dua kamar itu jadi satu.",
-    tema: ["zona-waktu", "celengan", "koper", "radio", "sulam"],
+    lede: "Enam cara bilang kangen dari kota yang berbeda: memperpendek jarak kalian kilometer demi kilometer, menebak kamu lagi apa di jam segini, menabung rindu, sampai menyiarkan salam lewat radio tengah malam.",
+    tema: ["sampai-ketemu", "zona-waktu", "celengan", "koper", "radio", "sulam"],
     ide: [
       "Jam kita beda, tapi aku selalu tahu kamu lagi di jam berapa.",
       "Hitung mundurnya jalan terus. Sebentar lagi kita di kota yang sama.",
