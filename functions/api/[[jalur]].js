@@ -1212,8 +1212,9 @@ async function kirimEmailDibuka(env, b, asal) {
   <div style="background:#FFFDF8;border:1px solid #EFE4D4;border-radius:18px;padding:28px 24px">
     <h1 style="margin:0 0 12px;font-size:21px;font-weight:600;line-height:1.35">Suratmu sudah sampai.</h1>
     <p style="margin:0;font-size:15px;line-height:1.65;color:#4E4A5E">
-      Surat untuk <strong>${esc(isi.penerima || "")}</strong> baru saja dibuka untuk pertama kalinya.
+      Surat untuk <strong>${esc(isi.penerima || "")}</strong> baru saja dibuka untuk pertama kalinya. Sekarang tinggal tunggu reaksinya.
     </p>
+    <p style="margin:12px 0 0;font-size:14px;line-height:1.65;color:#8A8598">Kalau dia menulis balasan di akhir surat, balasannya langsung masuk ke email ini.</p>
   </div>
   <p style="margin:22px 2px 0;font-size:12.5px;line-height:1.7;color:#8A8598">Kode pesanan <strong>${esc(b.kode)}</strong>.</p>
 </div></body></html>`

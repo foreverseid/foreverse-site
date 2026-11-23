@@ -12,59 +12,59 @@
    ══════════════════════════════════════════════════════════════════ */
 
 const TEMA = {
-  "bait": { nama: "Bait", ringkas: "Satu hari menerima pos: kotak pos dibuka, amplop dirobek pisau surat, perangko umur baru ditempel, kertas tipis diterawang, dan paket balasan ditimbang pas umurnya." },
-  "kado-riang": { nama: "Kado Riang", ringkas: "Riang dan ramai: tiket disobek, lilin umur baru dinyalakan, dan kupon ulang tahun bisa ditukar langsung." },
-  "langit-harapan": { nama: "Langit Harapan", ringkas: "Hangat dan lembut: galeri kenangan, kuis seberapa kenal, bintang harapan, lalu ditutup surat senja." },
-  "kapal-botol": { nama: "Kapal dalam Botol", ringkas: "Kapal kecil yang belum selesai dirakit: cabut gabusnya, masukkan kapal lewat leher botol, tarik benang sampai layar-layarnya terbuka jadi foto kalian, ikat satu simpul untuk tiap tahun bersama." },
-  "rekonstruksi": { nama: "Rekonstruksi Hari Pertama", ringkas: "Hari pertama kalian tinggal sketsa pensil. Dia mengumpulkan bukti dan menyusun jamnya sampai harinya berwarna lagi." },
-  "pemutaran-perdana": { nama: "Pemutaran Perdana", ringkas: "Kisah kalian diputar sebagai film untuk satu penonton: tiket disobek, kursi dicari dengan senter, gulungan film diputar sampai foto-foto tayang, lalu kredit film bergulir." },
-  "zona-waktu": { nama: "Dua Jendela", ringkas: "Layar terbelah dua kota dengan jam aslinya masing-masing, sampai dua kamar itu jadi satu." },
-  "loker-terakhir": { nama: "Loker Terakhir", ringkas: "Hari terakhir sebelum loker dikembalikan: kode gemboknya tanggal wisudanya, foto-foto tertempel di balik pintu, barang dikemasi sambil menemukan suratmu, kuncir toga dipindah, lalu toganya dilempar." },
-  "lewat-duluan": { nama: "Dia Lewat Sini Duluan", ringkas: "Satu hari biasa yang dijalani pakai joystick, dan di tiap tempat ternyata kamu sudah lewat duluan." },
-  "pasar-malam": { nama: "Pasar Malam", ringkas: "Ajakan jalan berbentuk pasar malam satu malam: lempar gelang, gula kapas, bianglala, dan papan lampu untuk menjawab." },
-  "confess-kunang": { nama: "Toples Kunang-Kunang", ringkas: "Kunang-kunang di toples membawa hal-hal kecil yang kamu simpan tentang dia, sampai pengakuannya terbang jadi hati." },
-  "kasus-pengirim": { nama: "Kasus Pengirim Tanpa Nama", ringkas: "Dia jadi detektif di kafe langganannya, mengumpulkan bukti sampai ketahuan siapa pengirim kertas tanpa nama itu." },
-  "getwell-365": { nama: "36,5", ringkas: "Satu kamar yang panas dan buram. Tiap hal kecil yang kamu lakukan menurunkan suhunya sampai 36,5." },
-  "rumah-contoh": { nama: "Rumah Contoh", ringkas: "Tur rumah dari sudut pandang orang pertama. Tiap ruangan menyimpan satu janji, dan di kamar ada kotak cincin." },
-  "kotak-musik": { nama: "Kotak Musik Diservis", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya: tiap roda gigi yang pas memunculkan satu hal yang kamu sadari, lalu lagunya bunyi lagi." },
-  "garis-finis": { nama: "Garis Finis", ringkas: "Hari perlombaan untuk pencapaiannya: lari 100 meter terakhir diiringi sorakanmu, foto finis, lalu medali berukir pencapaiannya." },
-  "stasiun-terakhir": { nama: "Stasiun Terakhir", ringkas: "Satu perjalanan kereta terakhir bersama, singgah di tiga tempat kenangan, lalu dua kereta berangkat ke arah yang berbeda." },
-  "rumah-menyala": { nama: "Rumah yang Menyala", ringkas: "Satu malam Natal di rumahnya: lonceng pintu, kabel lampu yang dirangkai sampai pohonnya menyala, foto dari kaus kaki, dan bintang di puncak pohon." },
-  "hitung-mundur": { nama: "Hitung Mundur di Atap", ringkas: "Malam pergantian tahun di atap: hitung mundur dari 10, kembang api yang mengganti angka tahunnya, rencana tahun depan, lalu bersulang." },
-  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", ringkas: "Cokelat Valentine yang dia bikin sendiri: foil dikelupas, cokelat dituang pas ke cetakan berhias alasanmu sayang dia, lalu dibagi dua." },
-  "celengan": { nama: "Celengan Rindu", ringkas: "Celengan ayam untuk tabungan ketemu: tiga koin terakhir membawa rencana kalian, lalu dipecah dan isinya foto serta suratmu yang tergulung." },
-  "radio": { nama: "Radio Tengah Malam", ringkas: "Siaran radio khusus untuk satu pendengar: cari frekuensi kalian, dorong fader salam, putar kaset foto, lalu suratmu dibacakan ON AIR." },
-  "sulam": { nama: "Sulaman Dua Kota", ringkas: "Dia memilih benang lalu menjahit jarak kalian dari kotanya ke kotamu sampai jadi hati, membuka tambalan foto, dan menemukan surat di balik sulaman." },
-  "persembahan": { nama: "Halaman Persembahan", ringkas: "Skripsinya dijilid: coretan revisi berganti jadi kalimatmu, lembar pengesahan ditandatangani, lampiran foto, lalu halaman persembahan dan stempel LULUS." },
-  "studio": { nama: "Studio Foto Wisuda", ringkas: "Sesi foto wisuda di studio berlatar biru: kamu fotografernya, dia memutar fokus sampai tajam, lalu suratmu tercetak di bawah foto besar." },
-  "prosesi": { nama: "Prosesi Wisuda", ringkas: "Hari wisudanya dari gerbang aula: foto kalian di layar LED, namanya dipanggil MC, map ijazah berisi suratmu, lalu papan bunga berisi harapanmu." },
-  "meja-dua": { nama: "Makan Malam Pertama", ringkas: "Ajakan makan malam berbentuk meja yang dipesan atas namanya: nyalakan lilin, buka tudung saji berisi rencanamu, dan jawab dengan stempel." },
-  "payung": { nama: "Payung Berdua", ringkas: "Ajakan di sore hujan: buka payung, usap embun kaca halte berisi kalimatmu, dan jawab ajakan lewat bus yang datang saat hujan reda." },
-  "tumpeng": { nama: "Tumpeng Syukuran", ringkas: "Syukuran kecil untuk pencapaiannya: buka daun penutup tumpeng, tata lauk berisi alasanmu bangga, lalu dia memotong pucuknya sendiri." },
-  "pengumuman": { nama: "Papan Pengumuman", ringkas: "Untuk yang lolos atau diterima: dia mencari namanya sendiri di papan pengumuman, menstabilonya, lalu membuka amplop resmi berisi suratmu." },
-  "bubur": { nama: "Semangkuk Bubur", ringkas: "Kamu memasakkan bubur dari jauh: dia menyalakan kompor, mengaduk bubur sambil membaca pesan penyemangat, menabur topping berisi foto kalian, lalu membaca suratmu di serbet." },
-  "titipan": { nama: "Paket Titipan", ringkas: "Paket cepat sembuh diantar ke depan pintunya: dia membuka kardus berisi titipan kecil darimu, memecahkan plastik gelembung di atas foto kalian, dan membaca kartu ucapanmu." },
-  "tanaman": { nama: "Tanaman yang Layu", ringkas: "Tanaman di pojok jendela layu karena kamu lalai: dia menyiramnya, memetik daun kering berisi janjimu, membuka krai sampai kuncupnya mekar, lalu menentukan sendiri jawabannya." },
-  "cangkir": { nama: "Cangkir yang Retak", ringkas: "Cangkir kesayangannya retak karena kamu: dia merekatkan retakannya dengan garis emas sambil membaca hal-hal yang kamu sadari, lalu menentukan sendiri jawabannya." },
-  "bekal": { nama: "Bekal Makan Siang", ringkas: "Love note dalam kotak bekal: dia membuka kotaknya, menarik bendera kecil berisi pesanmu dari tiap lauk, mengelupas stiker berisi foto kalian, lalu menemukan memo di balik tutupnya." },
-  "jemuran": { nama: "Tali Jemuran", ringkas: "Love note untuk hari biasa: dia menarik tali jemuran dan mengambil catatan kecilmu yang terjepit di antara cucian, mengibaskan polaroid kalian sampai gambarnya muncul, lalu menangkap suratmu yang tertiup angin." },
-  "pesawat": { nama: "Pesawat Kertas", ringkas: "Selesai dengan baik dari atap gedung: dia melipat kertas berisi terima kasihmu jadi pesawat, mencari tempat-tempat kalian dengan teropong, membaca suratmu, lalu menerbangkannya." },
-  "kunci-cadangan": { nama: "Kunci Cadangan", ringkas: "Selesai dengan baik lewat kunci cadangan yang dikembalikan: tiap kunci yang dia lepas membawa ucapan terima kasihmu, foto di pintu kulkas jatuh satu per satu, lalu suratmu masuk ke kotak surat." },
-  "seserahan": { nama: "Seserahan", ringkas: "Lamaran lewat tiga baki seserahan: tiap pita yang dia lepas membuka satu janjimu, baki putar memperlihatkan foto kalian, gulungan berisi suratmu, dan kotak cincin di akhir." },
-  "lukis": { nama: "Melukis Bersama", ringkas: "Lamaran di studio lukis: dia mewarnai lukisan bernomor sambil membaca alasanmu ingin seumur hidup bersamanya, membalik bingkai berisi foto kalian, lalu menuliskan sendiri pertanyaannya dengan kuas." },
-  "selamanya": { nama: "Selamanya", ringkas: "Tema khas Foreverse: dia menggambar lingkaran tak hingga dengan jarinya sampai empat bait darimu muncul, menggeser kartu foto kalian, lalu membuka surat yang dilipat tiga." },
-  "sampai-ketemu": { nama: "Sampai Ketemu", ringkas: "Tema khas Foreverse untuk LDR: dia memperpendek jarak kalian dengan jarinya sampai angka kilometernya habis, mengangkat panggilan video berisi foto kalian, lalu memilih siapa yang datang duluan." },
-  "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu: barang titipanmu masuk koper, foto muncul di mesin X-ray, surat di balik boarding pass." },
-  "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil: bunga kering dicocokkan ke bayangannya untuk membuka hal-hal yang kamu kagumi darinya, foto di balik kertas minyak, dan surat yang dipres supaya awet." },
-  "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam terakhir Ramadan sampai pagi Lebaran: hilal dicari lewat teropong, ketupat dianyam sampai maaf-maafmu terbaca, beduk dipukul, lalu bersalaman." }
+  "bait": { nama: "Bait", ringkas: "Seharian dia menerima pos darimu. Kotak posnya dibuka, amplop dirobek, perangko umur barunya ditempel, sampai bendera balasan dinaikkan." },
+  "kado-riang": { nama: "Kado Riang", ringkas: "Pesta kecil yang riuh untuk ulang tahunnya. Dia menyobek tiket, menyalakan lilin di kue, lalu menukar kupon hadiah darimu." },
+  "langit-harapan": { nama: "Langit Harapan", ringkas: "Ulang tahun yang hangat dan pelan: galeri kenangan, kuis seberapa kenal kamu, bintang harapan untuk umur barunya, lalu surat di langit senja." },
+  "kapal-botol": { nama: "Kapal dalam Botol", ringkas: "Kapal kecil di dalam botol yang dia rakit sendiri. Tiap layar yang terbuka berisi foto kalian, dan tiap tahun bersama jadi satu simpul." },
+  "rekonstruksi": { nama: "Rekonstruksi Hari Pertama", ringkas: "Hari pertama kalian tinggal sketsa pensil. Dia menyusun ulang kejadiannya jam demi jam, sampai semuanya berwarna lagi." },
+  "pemutaran-perdana": { nama: "Pemutaran Perdana", ringkas: "Kisah kalian diputar di bioskop dengan satu penonton. Tiketnya disobek, foto kalian tayang di layar lebar, lalu namamu muncul di kredit film." },
+  "zona-waktu": { nama: "Dua Jendela", ringkas: "Layar terbelah jadi kota kalian masing-masing, lengkap dengan jam aslinya. Dia menebak kamu lagi apa di jam segini, sampai dua kamar itu jadi satu." },
+  "loker-terakhir": { nama: "Loker Terakhir", ringkas: "Hari terakhir di kampus. Gembok lokernya dibuka dengan tanggal wisuda, kenangan bertahun-tahun dikemasi, lalu toganya dilempar ke udara." },
+  "lewat-duluan": { nama: "Dia Lewat Sini Duluan", ringkas: "Satu hari biasa yang dia jalani, dan di tiap tempat ternyata kamu sudah lewat duluan, meninggalkan hal-hal kecil untuknya." },
+  "pasar-malam": { nama: "Pasar Malam", ringkas: "Ajak dia ke pasar malam. Main lempar gelang, gulung gula kapas, naik bianglala bersama foto kalian, lalu dia menjawab ajakanmu di papan lampu." },
+  "confess-kunang": { nama: "Toples Kunang-Kunang", ringkas: "Hal-hal kecil yang diam-diam kamu perhatikan darinya, dilepas seperti kunang-kunang dari toples, sampai dia tahu sejak kapan kamu suka." },
+  "kasus-pengirim": { nama: "Kasus Pengirim Tanpa Nama", ringkas: "Dia jadi detektif di kafe langganannya. Kumpulkan bukti, coret tersangka, sampai ketahuan siapa yang selama ini menaruh kertas tanpa nama." },
+  "getwell-365": { nama: "36,5", ringkas: "Kamar yang panas dan buram. Tiap hal kecil yang dia lakukan, dari minum sampai mengatur napas, menurunkan suhunya sampai 36,5." },
+  "rumah-contoh": { nama: "Rumah Contoh", ringkas: "Tur rumah yang kalian bayangkan. Tiap ruangan menyimpan satu janji darimu, dan di kamar terakhir ada kotak cincin." },
+  "kotak-musik": { nama: "Kotak Musik Diservis", ringkas: "Kotak musik kesayangannya rusak gara-gara kamu. Dia ikut memperbaikinya, dan tiap bagian yang beres memperlihatkan satu hal yang kamu sadari." },
+  "garis-finis": { nama: "Garis Finis", ringkas: "Seratus meter terakhir menuju pencapaiannya. Dia berlari diiringi sorakanmu, naik podium, lalu membaca pesanmu di papan skor stadion." },
+  "stasiun-terakhir": { nama: "Stasiun Terakhir", ringkas: "Perjalanan kereta terakhir berdua. Kereta singgah di stasiun-stasiun kenangan, lalu kalian berangkat ke arah masing-masing dengan baik." },
+  "rumah-menyala": { nama: "Rumah yang Menyala", ringkas: "Rumah yang belum terang di malam Natal. Dia merangkai lampunya sampai menyala, menggantung harapanmu di ornamen, lalu memilih ucapannya." },
+  "hitung-mundur": { nama: "Hitung Mundur di Atap", ringkas: "Malam tahun baru di atap. Hitung mundur bersama, baca rencana kalian untuk tahun depan, lalu kembang api membentuk hati." },
+  "pabrik-cokelat": { nama: "Cokelat Buatan Sendiri", ringkas: "Cokelat Valentine yang dia bikin sendiri. Tiap cetakan menyimpan alasanmu sayang dia, lalu cokelatnya dibagi dua untuk kalian." },
+  "celengan": { nama: "Celengan Rindu", ringkas: "Celengan ayam untuk tabungan ketemu. Tiga koin terakhir membawa rencana kalian, lalu celengannya dipecah dan isinya foto serta suratmu." },
+  "radio": { nama: "Radio Tengah Malam", ringkas: "Kamu jadi penyiar, dia satu-satunya pendengar. Dia mencari frekuensi kalian, mendengar salam-salammu, lalu suratmu dibacakan ON AIR." },
+  "sulam": { nama: "Sulaman Dua Kota", ringkas: "Jarak kalian dijahit titik demi titik dari kotanya sampai kotamu, dan ujung jahitannya membentuk hati. Di tiap simpul ada hal yang bikin kamu kuat." },
+  "persembahan": { nama: "Halaman Persembahan", ringkas: "Skripsinya dibuka sampai halaman yang paling sering dilewati orang: halaman persembahan. Revisi dicoret, pengesahan ditandatangani, dan suratmu ada di sana." },
+  "studio": { nama: "Studio Foto Wisuda", ringkas: "Kamu jadi fotografer di hari wisudanya. Aba-abamu muncul di tiap jepretan, lalu cetakan besarnya keluar membawa suratmu." },
+  "prosesi": { nama: "Prosesi Wisuda", ringkas: "Prosesi wisuda dari pintu aula sampai halaman kampus. Namanya dipanggil, dia naik panggung, dan papan bunga darimu sudah menunggu di luar." },
+  "meja-dua": { nama: "Makan Malam Pertama", ringkas: "Meja sudah dipesan atas namanya. Dia menyalakan lilin, membuka menu kenangan kalian, lalu menjawab ajakan makan malammu dengan stempel." },
+  "payung": { nama: "Payung Berdua", ringkas: "Sore hujan di halte. Dia mengusap embun di kaca sampai kalimatmu terbaca, lalu bus datang membawa ajakanmu." },
+  "tumpeng": { nama: "Tumpeng Syukuran", ringkas: "Syukuran kecil untuk pencapaiannya. Lauk di sekeliling tumpeng membawa alasanmu bangga, dan pucuknya dia potong sendiri." },
+  "pengumuman": { nama: "Papan Pengumuman", ringkas: "Untuk yang lolos atau diterima. Dia mencari namanya sendiri di papan pengumuman, menstabilonya, lalu membuka amplop resmi berisi suratmu." },
+  "bubur": { nama: "Semangkuk Bubur", ringkas: "Kamu memasakkan bubur untuknya dari jauh. Tiap putaran adukan membawa pesan penyemangat, dan suratmu tertulis di serbet." },
+  "titipan": { nama: "Paket Titipan", ringkas: "Paket cepat sembuh sampai di depan pintunya. Isinya teh jahe, kaus kaki tebal, dan jeruk, masing-masing dengan pesan darimu." },
+  "tanaman": { nama: "Tanaman yang Layu", ringkas: "Tanaman yang layu karena kamu lupa merawatnya. Dia menyiramnya, memetik daun kering berisi janjimu, lalu dia sendiri yang menentukan jawabannya." },
+  "cangkir": { nama: "Cangkir yang Retak", ringkas: "Cangkir kesayangannya retak karena kamu. Retakannya dia rekatkan dengan garis emas, sambil membaca hal-hal yang akhirnya kamu sadari." },
+  "bekal": { nama: "Bekal Makan Siang", ringkas: "Surat cinta di dalam kotak bekal. Tiap lauk punya bendera kecil berisi pesanmu, dan ada memo yang ditempel di balik tutupnya." },
+  "jemuran": { nama: "Tali Jemuran", ringkas: "Untuk hari yang biasa saja. Di antara cucian ada catatan kecil darimu, polaroid kalian dikibaskan sampai jadi, dan suratmu terbang tertiup angin." },
+  "pesawat": { nama: "Pesawat Kertas", ringkas: "Pamit dari atap gedung. Terima kasihmu dilipat jadi pesawat kertas, dibaca sekali lagi, lalu diterbangkan." },
+  "kunci-cadangan": { nama: "Kunci Cadangan", ringkas: "Mengembalikan kunci cadangan dengan baik. Tiap kunci membawa satu terima kasih, dan suratmu masuk ke kotak surat." },
+  "seserahan": { nama: "Seserahan", ringkas: "Lamaran lewat tiga baki seserahan. Tiap baki membawa satu janji, dan di akhir ada kotak cincin bersama pertanyaanmu." },
+  "lukis": { nama: "Melukis Bersama", ringkas: "Lukisan yang belum selesai, dan dia yang mewarnainya. Tiap warna membuka alasanmu ingin seumur hidup bersamanya, sampai pertanyaanmu tertulis dengan kuas." },
+  "selamanya": { nama: "Selamanya", ringkas: "Tema khas Foreverse. Dia menggambar lingkaran tak hingga dengan jarinya sampai bait-baitmu muncul, lalu membuka suratmu lipatan demi lipatan." },
+  "sampai-ketemu": { nama: "Sampai Ketemu", ringkas: "Tema khas Foreverse untuk yang beda kota. Jarak kalian dalam kilometer sungguhan dia perpendek dengan jarinya, sampai tinggal memutuskan siapa yang datang." },
+  "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu. Titipanmu masuk koper, ragu-ragu ditinggal di rumah, dan suratmu tertulis di balik boarding pass." },
+  "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil untuk perempuan yang kamu kagumi. Tiap bunga kering yang dia tempel membuka satu hal yang kamu kagumi darinya." },
+  "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam takbiran berdua. Dia menganyam ketupat sampai maaf-maafmu terbaca, membuka amplop Lebaran, lalu memilih ucapannya." }
 };
 
 export const MOMEN = {
   "ulang-tahun": {
     judul: "Kado Ulang Tahun Digital untuk Pacar",
     deskripsi: "Kado ulang tahun digital yang bisa dimainkan: surat interaktif berisi ucapan, foto, dan lagu kalian. Dibuat 5 menit, tautannya langsung jadi.",
-    h1: "Kado ulang tahun yang bisa dia mainkan.",
-    lede: "Lebih dari ucapan di chat. Dia meniup lilin, membuka amplop, memainkan game kecil, lalu sampai di surat yang kamu tulis sendiri.",
+    h1: "Kado ulang tahun yang dia buka pelan-pelan.",
+    lede: "Lebih berkesan dari ucapan di chat yang cepat tenggelam. Dia menyalakan lilin, membuka amplop, memainkan permainan kecil, lalu sampai di surat yang kamu tulis sendiri.",
     tema: ["bait", "kado-riang", "langit-harapan"],
     ide: [
       "Selamat ulang tahun. Terima kasih sudah jadi bagian paling tenang dari hariku.",
@@ -74,7 +74,7 @@ export const MOMEN = {
     faq: [
       ["Bisa dikirim tepat jam 12 malam?", "Bisa. Pakai kunci waktu: suratnya baru terbuka di jam yang kamu pilih, dengan hitung mundur sebelum waktunya."],
       ["Umurnya bisa disembunyikan?", "Bisa. Di formulir ada pilihan untuk tidak menampilkan umur."],
-      ["Fotonya berapa?", "Tergantung tema, biasanya 3 sampai 4 foto. Semuanya kamu pilih sendiri."]
+      ["Fotonya berapa?", "Tergantung tema, 4 sampai 5 foto. Semuanya kamu pilih sendiri, dan bagian yang mau ditonjolkan bisa kamu geser."]
     ]
   },
   "anniversary": {
@@ -97,7 +97,7 @@ export const MOMEN = {
   "ldr": {
     judul: "Kado untuk Pacar LDR · Surat Digital Dua Kota",
     deskripsi: "Kado untuk pacar LDR: surat digital yang menampilkan jam asli dua kota kalian, lengkap dengan foto dan pesan. Tinggal kirim tautannya.",
-    h1: "Untuk yang lagi jauh, tetap satu layar.",
+    h1: "Jauh di peta, dekat di layar.",
     lede: "Enam cara bilang kangen dari kota yang berbeda: memperpendek jarak kalian kilometer demi kilometer, menebak kamu lagi apa di jam segini, menabung rindu, sampai menyiarkan salam lewat radio tengah malam.",
     tema: ["sampai-ketemu", "zona-waktu", "celengan", "koper", "radio", "sulam"],
     ide: [
@@ -106,19 +106,19 @@ export const MOMEN = {
       "Jauhnya cuma di peta. Di sini kamu dekat terus."
     ],
     faq: [
-      ["Kalau beda zona waktu?", "Kamu pilih kota masing-masing; jam di surat mengikuti jam aslinya saat dibuka."],
-      ["Bisa ada hitung mundur ketemuan?", "Bisa. Isi tanggal kalian akan bertemu."],
+      ["Kalau beda zona waktu?", "Tidak masalah. Kamu pilih kota masing-masing, dan jam di surat mengikuti waktu aslinya saat dibuka."],
+      ["Jaraknya dihitung sungguhan?", "Ya. Pilih kota kamu dan kota dia, jarak dan jam di surat mengikuti kota aslinya. Di tema Dua Jendela kamu juga bisa menambahkan hitung mundur ketemuan."],
       ["Dia harus pasang aplikasi?", "Tidak. Cukup buka tautannya di browser HP."]
     ]
   },
   "wisuda": {
     judul: "Ucapan Wisuda Digital · Kado Kelulusan Interaktif",
     deskripsi: "Ucapan wisuda digital yang bisa dimainkan: surat interaktif untuk merayakan kelulusannya, dengan foto dan pesan darimu.",
-    h1: "Selamat lulus, dalam bentuk yang bisa dia rawat.",
-    lede: "Rayakan kelulusannya dengan cara yang dia mainkan sendiri: dari loker terakhir di kampus, skripsi yang kamu tanda tangani sebagai pembimbingnya, sesi foto di studio, sampai prosesi wisuda dan papan bunga berisi harapanmu.",
+    h1: "Ucapan wisuda yang tidak tenggelam di antara ratusan chat.",
+    lede: "Rayakan kelulusannya dengan cara yang dia mainkan sendiri: loker terakhir di kampus, halaman persembahan di skripsinya, sesi foto di studio, sampai prosesi wisuda dan papan bunga berisi harapanmu.",
     tema: ["loker-terakhir", "persembahan", "studio", "prosesi"],
     ide: [
-      "Semua malam begadangmu akhirnya punya nama. Selamat, sarjana.",
+      "Semua malam begadangmu akhirnya terbayar. Selamat lulus.",
       "Aku ikut bangga, dan aku tahu ini baru awal.",
       "Terima kasih sudah tidak menyerah. Sekarang waktunya tumbuh."
     ],
@@ -141,14 +141,13 @@ export const MOMEN = {
     ],
     faq: [
       ["Tanpa momen khusus juga boleh?", "Justru itu gunanya. Kirim kapan saja."],
-      ["Bisa dibalas?", "Bisa. Di akhir surat dia bisa menulis balasan yang langsung masuk ke emailmu."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Bisa dibalas?", "Bisa. Di akhir surat dia bisa menulis balasan yang langsung masuk ke emailmu."]
     ]
   },
   "ajak-kencan": {
     judul: "Cara Unik Ngajak Kencan · Undangan Jalan Digital",
     deskripsi: "Cara unik ngajak dia jalan: undangan kencan digital yang bisa dimainkan, dari pasar malam, meja makan untuk dua, sampai payung berdua di halte, lengkap dengan cara dia menjawab.",
-    h1: "Ngajak dia jalan, tapi jangan lewat chat biasa.",
+    h1: "Ajak dia jalan, dengan cara yang susah dilupakan.",
     lede: "Ajak dia jalan dengan cara yang dia mainkan sendiri: pasar malam yang cuma buka satu malam, meja makan yang sudah dipesan atas namanya, atau payung berdua di halte saat hujan. Di akhir, dia menjawab ajakanmu.",
     tema: ["pasar-malam", "meja-dua", "payung"],
     ide: [
@@ -199,7 +198,7 @@ export const MOMEN = {
   "lamaran": {
     judul: "Ide Lamaran Unik · Surat Lamaran Digital",
     deskripsi: "Ide lamaran yang unik: tur rumah impian, tiga baki seserahan, atau lukisan yang kalian selesaikan berdua. Tiap tema menyimpan janjimu dan satu pertanyaan.",
-    h1: "Ajak dia pulang ke rumah yang kalian bayangkan.",
+    h1: "Pertanyaan paling penting, dengan cara yang paling kalian.",
     lede: "Pilih caranya: tur rumah yang kalian bayangkan, seserahan yang dibuka satu per satu, atau lukisan yang dia selesaikan sendiri. Di akhir, ada pertanyaan yang sudah lama kamu siapkan.",
     tema: ["rumah-contoh", "seserahan", "lukis"],
     ide: [
@@ -226,14 +225,13 @@ export const MOMEN = {
     ],
     faq: [
       ["Kalau dia belum mau memaafkan?", "Di akhir surat dia bisa memilih \"Sudah dimaafkan\" atau \"Butuh waktu\". Dua-duanya sama-sama jawaban yang dihormati."],
-      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."]
     ]
   },
   "selamat": {
     judul: "Ucapan Selamat atas Pencapaian · Kado Digital",
     deskripsi: "Ucapan selamat digital yang bisa dimainkan: lomba lari ke garis finis, syukuran tumpeng, atau namanya di papan pengumuman. Isinya pesan dan foto darimu.",
-    h1: "Rayakan pencapaiannya seperti juara.",
+    h1: "Ikut bangga, dengan cara yang dia ingat.",
     lede: "Pilih cara merayakannya: dia berlari ke garis finis diiringi sorakanmu, memotong pucuk tumpeng syukuran, atau menemukan namanya sendiri di papan pengumuman.",
     tema: ["garis-finis", "tumpeng", "pengumuman"],
     ide: [
@@ -243,8 +241,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Pencapaian apa saja yang cocok?", "Apa saja: lulus, diterima kerja, naik jabatan, menang lomba, atau selesai sesuatu yang berat."],
-      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."]
     ]
   },
   "selesai-baik-baik": {
@@ -260,8 +257,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Apakah ini untuk putus saja?", "Untuk semua pamit yang ingin dijaga baik: putus, pindah kota, atau berpisah dengan sahabat."],
-      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Bisa dibalas?", "Bisa. Balasannya langsung masuk ke emailmu."]
     ]
   },
   "natal": {
@@ -277,8 +273,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Ucapannya bisa diganti?", "Bisa. Pilih \"Selamat Natal\" atau \"Merry Christmas\" di formulir."],
-      ["Kapan sebaiknya dikirim?", "Kapan saja menjelang Natal. Kalau mau tepat di malam Natal, pakai kunci waktu supaya suratnya baru terbuka di jam yang kamu pilih."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Kapan sebaiknya dikirim?", "Kapan saja menjelang Natal. Kalau mau tepat di malam Natal, pakai kunci waktu supaya suratnya baru terbuka di jam yang kamu pilih."]
     ]
   },
   "tahun-baru": {
@@ -294,8 +289,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Angka tahunnya ikut berganti otomatis?", "Ya. Surat menghitung tahun baru yang akan datang dari tanggal saat dibuka."],
-      ["Kapan sebaiknya dikirim?", "Menjelang malam pergantian tahun. Pakai kunci waktu kalau mau suratnya baru terbuka tepat tengah malam."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Kapan sebaiknya dikirim?", "Menjelang malam pergantian tahun. Pakai kunci waktu kalau mau suratnya baru terbuka tepat tengah malam."]
     ]
   },
   "valentine": {
@@ -311,8 +305,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Kapan sebaiknya dikirim?", "Menjelang 14 Februari. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
-      ["Harus pacaran dulu?", "Tidak. Cocok juga untuk pasangan suami-istri atau gebetan yang mau dikasih kejutan manis."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Harus pacaran dulu?", "Tidak. Cocok juga untuk pasangan suami-istri atau gebetan yang mau dikasih kejutan manis."]
     ]
   },
   "lebaran": {
@@ -328,8 +321,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Ucapannya bisa diganti?", "Bisa. Pilih \"Selamat Hari Raya Idulfitri\", \"Mohon Maaf Lahir dan Batin\", atau \"Minal ’Aidin wal Faizin\" di formulir."],
-      ["Kapan sebaiknya dikirim?", "Malam takbiran atau pagi Idulfitri. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Kapan sebaiknya dikirim?", "Malam takbiran atau pagi Idulfitri. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."]
     ]
   },
   "hari-perempuan": {
@@ -345,8 +337,7 @@ export const MOMEN = {
     ],
     faq: [
       ["Kapan sebaiknya dikirim?", "Menjelang 8 Maret, Hari Perempuan Internasional. Pakai kunci waktu kalau mau suratnya baru terbuka di jam yang kamu pilih."],
-      ["Harus untuk pacar?", "Tidak. Cocok juga untuk istri, ibu, kakak, sahabat, atau perempuan mana pun yang kamu kagumi."],
-      ["Apakah privat?", "Ya. Tautannya acak dan tidak muncul di Google."]
+      ["Harus untuk pacar?", "Tidak. Cocok juga untuk istri, ibu, kakak, sahabat, atau perempuan mana pun yang kamu kagumi."]
     ]
   }
 };
@@ -490,7 +481,7 @@ ${tema.length ? `<section>
 </section>
 
 <section>
-  ${tema[0] ? `<div class="harga"><div><h2>Siap bikin punyamu?</h2><p>Dibuat sekitar 5 menit. Tautannya langsung jadi setelah bayar.</p></div>
+  ${tema[0] ? `<div class="harga"><div><h2>Siap bikin punyamu?</h2><p>Cukup 5 menit. Lihat hasilnya dulu, bayar paling akhir, dan tautannya langsung jadi.</p></div>
   <a class="btn" href="/pesan?tema=${esc(tema[0])}">Mulai sekarang</a></div>` : `<div class="harga"><div><h2>Temanya segera hadir</h2><p>Sambil menunggu, lihat tema untuk momen lain.</p></div>
   <a class="btn" href="/template">Lihat semua tema</a></div>`}
 </section>

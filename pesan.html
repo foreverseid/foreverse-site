@@ -248,7 +248,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 <main class="wrap">
   <div class="kepala">
     <h1 id="judul">Tulis suratnya</h1>
-    <p id="subjudul">Tulis apa adanya. Yang kamu ketik dipasang persis seperti itu. Sebelum bayar, kamu melihat hasilnya dulu.</p>
+    <p id="subjudul">Tulis dengan gayamu sendiri. Yang kamu ketik tampil persis seperti itu, dan kamu bisa melihat hasilnya dulu sebelum bayar.</p>
   </div>
 
   <ol class="wizard" id="wizard" aria-label="Langkah mengisi">
@@ -265,7 +265,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">1</span> Nama kalian berdua</h2>
-        <p class="jelas">Nama panggilan lebih hangat daripada nama lengkap.</p>
+        <p class="jelas">Pakai nama panggilan atau sebutan sayang kalian, biasanya terasa lebih hangat.</p>
         <div class="dua">
           <div class="baris" data-f="penerima">
             <label for="penerima">Nama dia</label>
@@ -284,20 +284,20 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok">
         <h2><span class="n">2</span> Suratmu</h2>
-        <p class="jelas">Tiga paragraf, muncul satu per satu setelah dua permainannya selesai. Enter untuk baris baru juga dipakai persis.</p>
+        <p class="jelas">Tiga paragraf yang dia baca di bagian surat. Tidak perlu panjang, yang penting jujur. Ganti baris dengan Enter juga ikut tampil.</p>
         <div class="baris" data-f="surat1">
-          <label for="surat1">Paragraf 1 (pembuka)</label>
+          <label for="surat1">Paragraf 1 · pembuka</label>
           <textarea id="surat1" maxlength="220" placeholder="Selamat ulang tahun, …"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
           <p class="galat">Paragraf 1 belum diisi.</p>
         </div>
         <div class="baris" data-f="surat2">
-          <label for="surat2">Paragraf 2 (isi) <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <label for="surat2">Paragraf 2 · isi <span style="font-weight:400;color:var(--ink-faint)">boleh kosong</span></label>
           <textarea id="surat2" maxlength="220" placeholder="Tahun ini kamu banyak berjuang, dan aku lihat semuanya…"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
         <div class="baris" data-f="surat3">
-          <label for="surat3">Paragraf 3 (penutup) <span style="font-weight:400;color:var(--ink-faint)">(boleh dikosongkan)</span></label>
+          <label for="surat3">Paragraf 3 · penutup <span style="font-weight:400;color:var(--ink-faint)">boleh kosong</span></label>
           <textarea id="surat3" maxlength="220" placeholder="Di umur yang baru, semoga…"></textarea>
           <div class="hitung"><span></span><span class="angka"></span></div>
         </div>
@@ -384,7 +384,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
 
       <section class="blok" id="blokKontak">
         <h2><span class="n">8</span> Ke mana tautannya dikirim?</h2>
-        <p class="jelas">Tautan suratnya langsung muncul di layar setelah bayar. Salinannya juga kami kirim ke email ini, supaya tidak hilang.</p>
+        <p class="jelas">Tautan suratnya langsung muncul di layar setelah bayar. Salinannya kami kirim ke email ini, bersama tautan edit dan kabar saat suratnya dibuka.</p>
         <div class="baris" data-f="email">
           <label for="email">Email kamu</label>
           <input id="email" type="email" maxlength="120" inputmode="email" autocomplete="email" placeholder="kamu@email.com">
@@ -393,7 +393,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
         <div class="baris" data-f="wa">
           <label for="wa">Nomor WhatsApp <span style="font-weight:400;color:var(--ink-faint)">(opsional)</span></label>
           <input id="wa" type="tel" maxlength="24" inputmode="tel" placeholder="0812xxxxxxx">
-          <p class="bantu">Hanya dipakai kalau ada kendala dengan pesananmu.</p>
+          <p class="bantu">Dipakai untuk tombol "balas lewat WhatsApp" di akhir surat, dan untuk menghubungimu kalau pesananmu ada kendala.</p>
         </div>
       </section>
 
@@ -1541,13 +1541,31 @@ textarea{resize:vertical;min-height:88px;line-height:1.6}
     }
   }
 
+  /* contoh kalimat di kotak surat, mengikuti momennya */
+  var CONTOH_SURAT = {
+    birthday:["Selamat ulang tahun, …","Tahun ini kamu banyak berjuang, dan aku lihat semuanya…","Di umur yang baru, semoga…"],
+    anniversary:["Tidak terasa sudah sejauh ini…","Dari semua hari yang kita lewati, yang paling aku ingat…","Ayo lanjut jalan bareng…"],
+    ldr:["Hari ini aku kangen kamu lagi…","Jarak ini berat, tapi…","Sampai ketemu nanti, aku…"],
+    graduation:["Selamat lulus, …","Aku lihat sendiri malam-malam begadangmu…","Setelah ini, semoga…"],
+    apology:["Aku minta maaf soal…","Aku sadar, selama ini aku…","Aku tidak minta kamu langsung maafin, tapi…"],
+    lovenote:["Tidak ada acara apa-apa hari ini, aku cuma…","Hal kecil darimu yang paling aku suka…","Pokoknya, aku…"],
+    congrats:["Selamat ya, kamu akhirnya…","Aku tahu jalannya tidak gampang…","Sekarang waktunya kamu…"],
+    askout:["Aku mau ngajak kamu…","Dari kemarin aku kepikiran…","Kalau kamu mau, kita…"],
+    confess:["Aku sudah lama mau bilang ini…","Dari pertama kenal, aku…","Kamu tidak harus jawab sekarang…"],
+    getwell:["Cepat sembuh, ya…","Istirahat yang benar, jangan…","Nanti kalau sudah sehat, kita…"],
+    parting:["Makasih untuk semuanya…","Aku tidak menyesal pernah…","Semoga ke depannya kamu…"],
+    proposal:["Aku sudah lama memikirkan ini…","Bersamamu, aku belajar…","Jadi, aku mau tanya satu hal…"],
+    spesial:["Selamat hari raya, …","Tahun ini terasa lebih hangat karena…","Semoga ke depannya kita…"]
+  };
+  function contohSurat(g){ var c=CONTOH_SURAT[g]||CONTOH_SURAT.lovenote; ["surat1","surat2","surat3"].forEach(function(id,i){ $(id).placeholder=c[i]; }); }
+
   /* ══ 2c · bagian yang bergantung pada tema, disatukan ══ */
   function siapkanTema(tema){
     TEMA = TEMA_INFO[tema] ? tema : "bait";
     NFOTO = slotTema(TEMA).length;
     MOMEN_GRUP = TEMA_INFO[TEMA].momen;
     buatFoto(NFOTO);
-    renderBlokDasar(MOMEN_GRUP);
+    renderBlokDasar(MOMEN_GRUP); contohSurat(MOMEN_GRUP);
     renderBlokKhusus(TEMA);
     $("labelSurat").textContent = "Surat digital · " + TEMA_INFO[TEMA].nama;
   }

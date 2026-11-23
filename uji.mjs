@@ -2255,7 +2255,7 @@ await uji("halaman momen untuk Google: teks lengkap dari server, FAQ terstruktur
   const r = await L.panggil("/ulang-tahun");
   sama(r.status, 200, "ada");
   const h = await r.text();
-  harus(h.includes("Kado ulang tahun yang bisa dia mainkan") && h.includes('"@type":"FAQPage"') && h.includes('rel="canonical" href="https://foreverse.id/ulang-tahun"'), "isi");
+  harus(h.includes("Kado ulang tahun yang dia buka pelan-pelan") && h.includes('"@type":"FAQPage"') && h.includes('rel="canonical" href="https://foreverse.id/ulang-tahun"'), "isi");
   harus(h.includes("Kado Riang") && !/noindex/.test(r.headers.get("x-robots-tag") || ""), "terindeks");
   await admin(L, { aksi: "atur", tema_mati: ["kado-riang"] });
   harus(!(await (await L.panggil("/ulang-tahun")).text()).includes("Kado Riang"), "tema mati hilang");
