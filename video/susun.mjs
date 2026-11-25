@@ -32,7 +32,8 @@ for (const [i, A] of K.adegan.entries()){
   const wav = join(KERJA, `baris-${String(i+1).padStart(2,"0")}.wav`);
   A.wav = existsSync(wav) ? wav : null;
   A.lamaSuara = A.wav ? durasi(A.wav) / (K.tempoSuara || 1) : 0;
-  A.d = Math.max(A.durasi || 0, A.lamaSuara + (A.sisa ?? .7) + (A.suaraMulai ?? .2));
+  A.mulaiSuara = A.suaraMulai ?? K.suaraMulai ?? .2;
+  A.d = Math.max(A.durasi || 0, A.lamaSuara + (A.sisa ?? K.sisa ?? .7) + A.mulaiSuara);
   A.t0 = mulai; mulai += A.d;
 }
 const TOTAL = mulai;
@@ -106,7 +107,7 @@ const masuk = ["-i", musik], saring = [], suara = [];
 let n = 2;                                   /* [0] video, [1] musik, [2…] narasi */
 for (const A of K.adegan){
   if (!A.wav) continue;
-  const ms = Math.round((A.t0 + (A.suaraMulai ?? .2)) * 1000);
+  const ms = Math.round((A.t0 + A.mulaiSuara) * 1000);
   masuk.push("-i", A.wav);
   saring.push(`[${n}]aresample=44100,atempo=${K.tempoSuara || 1},highpass=f=80,acompressor=threshold=0.1:ratio=3,volume=1.6,adelay=${ms}|${ms},apad[v${n}]`);
   suara.push(`[v${n}]`); n++;
