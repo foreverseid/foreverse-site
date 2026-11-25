@@ -659,7 +659,7 @@ function berikut(){ ke(URUT[URUT.indexOf(kini)+1]); }
   MASUK[2]=function(){ petunjuk('Tinggal check-in. <b>Ketuk tombol kuning</b> untuk mencetak boarding pass-mu.'); };
   noMenu(cetak); cetak.addEventListener('click',function(){
     if(cetak.disabled) return; ac(); cetak.disabled=true; SFX.cetak(); kecil.classList.add('keluar'); petunjuk('Sedang dicetak…');
-    setTimeout(function(){ petunjuk('Sudah keluar. <b>Ketuk boarding pass-nya</b> untuk mengambil.'); },1700);
+    setTimeout(function(){ petunjuk('Sudah keluar. <b>Ketuk boarding pass-nya</b> untuk mengambilnya.'); },1700);
   });
   noMenu(ambil); ambil.addEventListener('click',function(){
     if(!kecil.classList.contains('keluar')) return; SFX.kertas(); tirai.classList.add('tampil');

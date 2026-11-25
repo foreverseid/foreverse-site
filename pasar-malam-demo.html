@@ -9,7 +9,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Pasar malamnya buka malam ini 🎡</title>
 <meta property="og:title" content="Pasar malamnya buka malam ini">
-<meta property="og:description" content="Masuk dulu, pelan-pelan.">
+<meta property="og:description" content="Pasar malamnya cuma buka satu malam, khusus untukmu.">
 <meta property="og:image" content="https://foreverse.id/og-pasar-malam.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -1192,7 +1192,7 @@ var gelangSelesai = false;
     segarAcara();
     $('#gelangKet').textContent = HASIL_KENA.length
       ? 'gelangnya habis. ' + HASIL_KENA.length + ' rencana tersangkut.'
-      : 'semua meleset. tidak apa-apa, semuanya bisa diambil lagi di kios pancing.';
+      : 'semua meleset. Tidak apa-apa, semuanya bisa diambil lagi di kios pancing.';
     siapkanPancing();
     toast('Gelangnya habis. Turun terus, ada bianglala.');
   }
@@ -1434,7 +1434,7 @@ var gelangSelesai = false;
       $('#laguArtis').textContent = MU.info.artis || '';
     } else {
       $('#laguJudul').textContent = 'Kotak musik pasar malam';
-      $('#laguArtis').textContent = 'dimainkan browser kamu sendiri';
+      $('#laguArtis').textContent = 'musik bawaan, diputar dari HP-mu';
     }
   }
 })();
@@ -1744,7 +1744,7 @@ var bukaPapan = function(){};
         soket.style.transform = 'rotate(' + (maju/60*90).toFixed(1) + 'deg)';
         if(maju >= 58){ sudah = true; nyalakan(f); }
       },
-      lepas: function(){ if(!sudah){ soket.style.transform = ''; $('#papanKet').textContent = 'belum klik, putar soketnya ke kanan →'; } }
+      lepas: function(){ if(!sudah){ soket.style.transform = ''; $('#papanKet').textContent = 'belum terpasang, putar soketnya ke kanan →'; } }
     });
     soket.tabIndex = 0;
     soket.addEventListener('keydown', function(e){

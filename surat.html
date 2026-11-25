@@ -1078,7 +1078,7 @@ window.FV_MULAI = FV_MULAI;
   if(location.hash === "#pratinjau" || location.search.indexOf("pratinjau") > -1){
     var mentah = null;
     try{ mentah = sessionStorage.getItem("fv-pratinjau"); }catch(_){}
-    if(!mentah){ gagal("Tidak ada pratinjau tersimpan. Buka tombol “Lihat pratinjau penuh” dari halaman /pesan."); return; }
+    if(!mentah){ gagal("Tidak ada pratinjau tersimpan. Tekan tombol “Lihat pratinjau penuh” dari halaman /pesan."); return; }
     try{ pasang(JSON.parse(mentah)); }catch(_){ gagal("Pratinjau rusak. Coba isi formulirnya lagi."); return; }
     FV_MULAI();
     tutupTirai();

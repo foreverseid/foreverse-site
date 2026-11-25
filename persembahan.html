@@ -538,7 +538,7 @@ function label(t){ $('#labelK').textContent=t; }
   noMenu(st);
   function akhir(){ label('lulus');
     var j=$('#judulAkhir'); j.innerHTML=''; j.appendChild(document.createTextNode('Selamat, '+PENERIMA)); j.appendChild(el('small',null,'resmi lulus '+JENJANG+(TGL_T?', '+TGL_T:''))); j.classList.add('tampil');
-    setTimeout(function(){ var t=$('#balasTeks'); t.value='Makasih sudah jadi pembimbing kedua aku 🎓';
+    setTimeout(function(){ var t=$('#balasTeks'); t.value='Makasih sudah jadi pembimbing keduaku 🎓';
       $('#akhirJudul').textContent='Balas ke '+PENGIRIM+'?';
       if(!pasangBalasan($('#balasAksi'),t,'t-utama','t-wa')){ t.style.display='none'; $('#akhirJudul').textContent='Selamat wisuda.'; }
       $('#akhir').classList.add('tampil'); ptj.hidden=true; },900); }

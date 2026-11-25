@@ -9,7 +9,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Ada kado kecil buat kamu 🎁</title>
 <meta property="og:title" content="Ada kado kecil buat kamu">
-<meta property="og:description" content="Buka pelan-pelan, ya.">
+<meta property="og:description" content="Ada pesta kecil yang disiapkan khusus untukmu.">
 <meta property="og:image" content="https://foreverse.id/og-kado-riang.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -415,7 +415,7 @@ h2{font-weight:800}
   <div class="wrap center reveal">
     <span class="eyebrow">kue digital, khusus buat kamu</span>
     <h2 id="cakeH"></h2>
-    <p class="lead">Make a wish dulu, lalu ketuk tiap lilin angkanya satu-satu.</p>
+    <p class="lead">Ucapkan permohonan dulu, lalu ketuk tiap lilin angkanya satu-satu.</p>
     <div id="cakeStage"></div>
     <p class="cake-msg" id="cakeMsg"></p>
     <div class="cake-actions"><button class="btn ghost small" id="cakeReplay" hidden>🔁 Ulangi adegannya</button></div>
@@ -527,7 +527,7 @@ h2{font-weight:800}
         </svg>
       </div>
     </div>
-    <p class="wax-hint" id="waxHint">tarik segelnya ke bawah, supaya kadonya tidak kemana-mana ↓</p>
+    <p class="wax-hint" id="waxHint">tarik segelnya ke bawah, supaya kadonya tidak ke mana-mana ↓</p>
     <p class="sealed-note" id="sealedNote"></p>
     <div class="cr-btns" id="crBtns">
       <div class="reply-box" id="replyBox" hidden>
@@ -1443,10 +1443,10 @@ function drag(node, o){
     onMove(p){
       if(sealed) return;
       wax.style.transform = `translateY(${(p*14).toFixed(1)}px)`;
-      hint.textContent = p > .1 ? 'terus…' : 'tarik segelnya ke bawah, supaya kadonya tidak kemana-mana ↓';
+      hint.textContent = p > .1 ? 'terus…' : 'tarik segelnya ke bawah, supaya kadonya tidak ke mana-mana ↓';
     },
     onTap(){ if(sealed) return; wax.classList.remove('nudge'); void wax.offsetWidth; wax.classList.add('nudge'); },
-    onCancel(){ if(!sealed){ wax.style.transform = ''; hint.textContent = 'tarik segelnya ke bawah, supaya kadonya tidak kemana-mana ↓'; } },
+    onCancel(){ if(!sealed){ wax.style.transform = ''; hint.textContent = 'tarik segelnya ke bawah, supaya kadonya tidak ke mana-mana ↓'; } },
     onDone(){
       if(sealed) return; sealed = true;
       wax.dataset.off = '1'; wax.style.transform = '';
@@ -1456,7 +1456,7 @@ function drag(node, o){
         wax.classList.add('sealed'); F.sfx.chime(); F.buzz([30,40,30]);
         const r = wax.getBoundingClientRect(); F.fx.burst(r.left + r.width/2, r.top + r.height*.3, 70, 11);
         hint.textContent = 'tersegel';
-        $('#sealedNote').textContent = `Kadonya tersegel lagi, ${D.penerima}. Supaya tidak kemana-mana.`;
+        $('#sealedNote').textContent = `Kadonya tersegel lagi, ${D.penerima}. Supaya tidak ke mana-mana.`;
         $('#sealedNote').classList.add('show');
       }, 1320);
       setTimeout(() => $('#crBtns').classList.add('show'), 2100);
