@@ -45,7 +45,7 @@ const TAMBAHAN_UJI = Object.fromEntries([...(await readFile("./functions/api/[[j
 function isiDrafTema(tema) {
   const d = isiDraf();
   d.tema = tema;
-  const JUMLAH_FOTO = { "bangku-belakang": 4, "sampai-ketemu": 4, "selamanya": 4, "lukis": 4, "seserahan": 4, "kunci-cadangan": 4, "pesawat": 4, "jemuran": 4, "bekal": 4, "cangkir": 4, "tanaman": 4, "titipan": 4, "bubur": 4, "pengumuman": 4, "tumpeng": 4, "payung": 4, "meja-dua": 4, "prosesi": 4, "studio": 4, "persembahan": 4, "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
+  const JUMLAH_FOTO = { "mesin-capit": 4, "bangku-belakang": 4, "sampai-ketemu": 4, "selamanya": 4, "lukis": 4, "seserahan": 4, "kunci-cadangan": 4, "pesawat": 4, "jemuran": 4, "bekal": 4, "cangkir": 4, "tanaman": 4, "titipan": 4, "bubur": 4, "pengumuman": 4, "tumpeng": 4, "payung": 4, "meja-dua": 4, "prosesi": 4, "studio": 4, "persembahan": 4, "radio": 4, "sulam": 4, "confess-kunang": 4, "pasar-malam": 4, "zona-waktu": 4, "bait": 4, "rumah-contoh": 4, "rekonstruksi": 4, "lewat-duluan": 4, "kasus-pengirim": 4, "kado-riang": 5, "langit-harapan": 4, "getwell-365": 4, "kotak-musik": 4, "garis-finis": 4, "stasiun-terakhir": 4, "rumah-menyala": 4, "hitung-mundur": 4, "pabrik-cokelat": 4, "malam-takbiran": 4, "herbarium": 4, "celengan": 4, "koper": 4, "pemutaran-perdana": 5, "kapal-botol": 4, "loker-terakhir": 4 };
   d.foto = fotoPenuh(JUMLAH_FOTO[tema] || 3);
   if (tema === "kado-riang") {
     delete d.isi.rahasia;
@@ -58,7 +58,7 @@ function isiDrafTema(tema) {
       { tanya: "Soal tiga?", pilihan: ["A", "B", "C"], benar: 2 }
     ];
     d.isi.harapan = ["Harapan satu.", "Harapan dua.", "Harapan tiga."];
-  } else if (tema === "kapal-botol") {
+  } else if (tema === "kapal-botol" || tema === "mesin-capit") {
     delete d.isi.ucapan;
     delete d.isi.tanggalLahir;
     delete d.isi.sembunyikanUmur;
@@ -633,7 +633,7 @@ await uji("minat per tema: dibuka, mulai isi, terbayar terhitung di dasbor", asy
   sama(j.minat["pasar-malam"].demo, 3, "dibuka");
   sama(j.minat["pasar-malam"].form, 1, "mulai isi");
   sama(j.minat["bait"].lunas, 1, "terbayar");
-  sama(Object.keys(j.minat).length, 46, "semua tema terdaftar");
+  sama(Object.keys(j.minat).length, 47, "semua tema terdaftar");
 });
 
 await uji("rumah-contoh · pesanan lengkap diterima, momen proposal, empat janji tersimpan", async () => {
@@ -708,7 +708,7 @@ async function skripHalaman(berkas) {
 for (const berkas of ["pesan.html", "selesai.html", "developer.html", "surat.html",
                       "kado-riang.html", "langit-harapan.html", "kapal-botol.html",
                       "kapal-botol-demo.html", "zona-waktu.html", "zona-waktu-demo.html",
-                      "loker-terakhir.html", "loker-terakhir-demo.html", "bangku-belakang.html", "bangku-belakang-demo.html", "sampai-ketemu.html", "sampai-ketemu-demo.html", "selamanya.html", "selamanya-demo.html", "lukis.html", "lukis-demo.html", "seserahan.html", "seserahan-demo.html", "kunci-cadangan.html", "kunci-cadangan-demo.html", "pesawat.html", "pesawat-demo.html", "jemuran.html", "jemuran-demo.html", "bekal.html", "bekal-demo.html", "cangkir.html", "cangkir-demo.html", "tanaman.html", "tanaman-demo.html", "titipan.html", "titipan-demo.html", "bubur.html", "bubur-demo.html", "pengumuman.html", "pengumuman-demo.html", "tumpeng.html", "tumpeng-demo.html", "payung.html", "payung-demo.html", "meja-dua.html", "meja-dua-demo.html", "prosesi.html", "prosesi-demo.html", "studio.html", "studio-demo.html", "persembahan.html", "persembahan-demo.html",
+                      "loker-terakhir.html", "loker-terakhir-demo.html", "mesin-capit.html", "mesin-capit-demo.html", "bangku-belakang.html", "bangku-belakang-demo.html", "sampai-ketemu.html", "sampai-ketemu-demo.html", "selamanya.html", "selamanya-demo.html", "lukis.html", "lukis-demo.html", "seserahan.html", "seserahan-demo.html", "kunci-cadangan.html", "kunci-cadangan-demo.html", "pesawat.html", "pesawat-demo.html", "jemuran.html", "jemuran-demo.html", "bekal.html", "bekal-demo.html", "cangkir.html", "cangkir-demo.html", "tanaman.html", "tanaman-demo.html", "titipan.html", "titipan-demo.html", "bubur.html", "bubur-demo.html", "pengumuman.html", "pengumuman-demo.html", "tumpeng.html", "tumpeng-demo.html", "payung.html", "payung-demo.html", "meja-dua.html", "meja-dua-demo.html", "prosesi.html", "prosesi-demo.html", "studio.html", "studio-demo.html", "persembahan.html", "persembahan-demo.html",
                       "confess-kunang.html", "confess-kunang-demo.html",
                       "getwell-365.html", "getwell-365-demo.html",
                       "pasar-malam.html", "pasar-malam-demo.html",
@@ -2290,7 +2290,7 @@ judul("Dasar tema, musik, dan email surat jadi");
 
 const MESIN_TEMA = ["surat", "kado-riang", "langit-harapan", "kapal-botol", "zona-waktu", "loker-terakhir", "confess-kunang",
   "getwell-365", "pasar-malam", "lewat-duluan", "kasus-pengirim", "rekonstruksi", "rumah-contoh", "kotak-musik", "garis-finis",
-  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "bangku-belakang", "sampai-ketemu", "selamanya", "lukis", "seserahan", "kunci-cadangan", "pesawat", "jemuran", "bekal", "cangkir", "tanaman", "titipan", "bubur", "pengumuman", "tumpeng", "payung", "meja-dua", "prosesi", "studio", "persembahan", "radio", "sulam", "pemutaran-perdana"];
+  "stasiun-terakhir", "rumah-menyala", "hitung-mundur", "pabrik-cokelat", "malam-takbiran", "herbarium", "celengan", "koper", "mesin-capit", "bangku-belakang", "sampai-ketemu", "selamanya", "lukis", "seserahan", "kunci-cadangan", "pesawat", "jemuran", "bekal", "cangkir", "tanaman", "titipan", "bubur", "pengumuman", "tumpeng", "payung", "meja-dua", "prosesi", "studio", "persembahan", "radio", "sulam", "pemutaran-perdana"];
 const berkasTema = m => [m + ".html", (m === "surat" ? "bait" : m) + "-demo.html"];
 
 await uji("semua tema (mesin & demo) memuat tema-dasar.js sebelum skripnya sendiri, layar terkunci dari zoom", async () => {

@@ -55,6 +55,7 @@ const TEMA = {
   "selamanya": { nama: "Selamanya", ringkas: "Tema khas Foreverse. Dia menggambar lingkaran tak hingga dengan jarinya sampai bait-baitmu muncul, lalu membuka suratmu lipatan demi lipatan." },
   "sampai-ketemu": { nama: "Sampai Ketemu", ringkas: "Tema khas Foreverse untuk yang beda kota. Jarak kalian dalam kilometer sungguhan dia perpendek dengan jarinya, sampai tinggal memutuskan siapa yang datang." },
   "bangku-belakang": { nama: "Kertas dari Bangku Belakang", ringkas: "Kertas yang dioper diam-diam dari bangku belakang sampai ke mejanya, cuma saat guru menghadap papan. Tiap lipatan membawa pesanmu, lalu dia menjawab dengan mencentang kotak." },
+  "mesin-capit": { nama: "Mesin Capit", ringkas: "Arcade di mal, versi kalian. Lama hubungan kalian tampil sebagai level, dia mengarahkan capit sendiri untuk mengambil kapsul kenangan, menukar tiket dengan foto-foto kalian, lalu menarik boneka hadiah utama yang membawa suratmu." },
   "koper": { nama: "Koper ke Kotamu", ringkas: "Dia berkemas untuk terbang ke kotamu. Titipanmu masuk koper, ragu-ragu ditinggal di rumah, dan suratmu tertulis di balik boarding pass." },
   "herbarium": { nama: "Herbarium Kecil", ringkas: "Buku herbarium kecil untuk perempuan yang kamu kagumi. Tiap bunga kering yang dia tempel membuka satu hal yang kamu kagumi darinya." },
   "malam-takbiran": { nama: "Malam Takbiran", ringkas: "Malam takbiran berdua. Dia menganyam ketupat sampai maaf-maafmu terbaca, membuka amplop Lebaran, lalu memilih ucapannya." }
@@ -83,7 +84,7 @@ export const MOMEN = {
     deskripsi: "Kado anniversary digital: surat interaktif tentang perjalanan kalian, lengkap dengan foto, tanggal jadian, dan pesan pribadi.",
     h1: "Untuk hari jadi kalian, ceritakan ulang perjalanannya.",
     lede: "Tanggal jadian, tempat-tempat yang pernah kalian datangi, foto-foto yang cuma kalian yang paham. Semuanya dirangkai jadi satu surat yang dia jelajahi sendiri.",
-    tema: ["kapal-botol", "rekonstruksi", "pemutaran-perdana"],
+    tema: ["kapal-botol", "rekonstruksi", "pemutaran-perdana", "mesin-capit"],
     ide: [
       "Sudah sekian hari, dan aku masih memilih kamu setiap paginya.",
       "Terima kasih sudah bertahan di hari-hari yang tidak gampang. Ayo lanjut jalan.",
