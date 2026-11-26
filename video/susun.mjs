@@ -121,7 +121,7 @@ for (const [i, A] of K.adegan.entries()) if (i > 0){
 saring.push(`${suara.filter(s => s.startsWith("[v")).join("")}amix=inputs=${suara.filter(s => s.startsWith("[v")).length}:normalize=0[narasi]`,
   `[narasi]asplit=2[nar1][nar2]`,
   `[1]volume=0.42[m]`, `[m][nar1]sidechaincompress=threshold=0.03:ratio=6:attack=40:release=500[md]`,
-  `[md][nar2]${suara.filter(s => s.startsWith("[w")).join("")}amix=inputs=${2 + suara.filter(s => s.startsWith("[w")).length}:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=9,aresample=44100,atrim=0:${TOTAL.toFixed(3)}[a]`);
+  `[md][nar2]${suara.filter(s => s.startsWith("[w")).join("")}amix=inputs=${2 + suara.filter(s => s.startsWith("[w")).length}:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=9,aresample=44100,alimiter=limit=0.85:level=false,atrim=0:${TOTAL.toFixed(3)}[a]`);
 const hasil = join(AKAR, "rekaman/video", K.id + ".mp4"), tmp = hasil.replace(".mp4", ".tmp.mp4");
 ff("-i", bisu, ...masuk, "-filter_complex", saring.join(";"), "-map","0:v","-map","[a]","-c:v","copy","-c:a","aac","-b:a","192k","-ar","44100","-shortest", tmp);
 await rename(tmp, hasil);

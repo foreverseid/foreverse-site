@@ -2,33 +2,95 @@
   "id": "k02-kado-riang",
   "tema": "kado-riang",
   "alis": "Birthday · Kado Riang",
-  "tempoSuara": 1.09,
+  "tempoSuara": 1.08,
   "suaraMulai": 0.1,
   "sisa": 0.1,
   "bpm": 92,
   "suaraDari": "Google AI Studio, Gemini 3.8 Flash TTS, suara Achernar; dirapikan dengan video/rapikan_vo.py",
   "adegan": [
-    { "judul": "Katanya *nggak usah kado*.", "sub": "Terus kamu beneran nggak beliin apa-apa?",
+    {
+      "judul": "Katanya *nggak usah kado*.",
+      "sub": "Terus kamu beneran nggak beliin apa-apa?",
       "naskah": "Pacar kamu bilang, \"udah, nggak usah kado-kadoan.\" Terus kamu beneran nggak beliin apa-apa?",
-      "rekaman": { "dari": 0, "laju": 1 } },
-    { "judul": "Padahal besok dia *ulang tahun*.", "sub": "Tenang, masih keburu.",
+      "rekaman": {
+        "dari": 6,
+        "laju": 1.3
+      }
+    },
+    {
+      "judul": "Padahal besok dia *ulang tahun*.",
+      "sub": "Tenang, masih keburu.",
       "naskah": "Padahal besok dia ulang tahun, lho. Tenang... masih keburu.",
-      "rekaman": { "dari": 5.4, "laju": 1.2 } },
-    { "judul": "Dia main *tebak foto* dulu.", "sub": "Foto-foto kalian berdua.",
+      "rekaman": {
+        "dari": 17,
+        "laju": 1.2
+      }
+    },
+    {
+      "judul": "Dia main *tebak foto* dulu.",
+      "sub": "Foto-foto kalian berdua.",
       "naskah": "Kirimin dia ini. Pertama, dia main tebak-tebakan foto kalian dulu.",
-      "rekaman": { "dari": 14, "laju": 3 } },
-    { "judul": "Ada *kupon* yang bisa ditagih.", "sub": "Martabak. Jalan seharian. Isinya kamu yang tulis.",
+      "rekaman": {
+        "dari": 26,
+        "laju": 3
+      }
+    },
+    {
+      "judul": "Ada *kupon* yang bisa ditagih.",
+      "sub": "Martabak. Jalan seharian. Isinya kamu yang tulis.",
       "naskah": "Abis itu, ada kupon yang bisa dia tagih ke kamu. Martabak, jalan seharian... atau apa pun yang berani kamu janjiin. <short pause> Isinya kamu yang tulis.",
-      "rekaman": { "dari": 29.5, "laju": 1.1 },
-      "zoom": { "x": 0.5, "y": 0.6, "s": 1.12, "mulai": 0.2, "lama": 1.2 } },
-    { "judul": "Tangkap *kadonya*.", "sub": "Hati-hati, ada tawonnya.",
-      "naskah": "Terus dia nangkepin kadonya. Hati-hati, ada tawonnya!",
-      "rekaman": { "dari": 51.5, "laju": 2 } },
-    { "judul": "Terakhir, *suratmu* kebuka.", "sub": "Bagian yang paling dia tunggu.",
+      "rekaman": {
+        "dari": 43,
+        "laju": 1.25
+      },
+      "zoom": {
+        "x": 0.5,
+        "y": 0.6,
+        "s": 1.08,
+        "mulai": 0.2,
+        "lama": 1.2
+      }
+    },
+    {
+      "judul": "Tangkap *kadonya*.",
+      "sub": "Awas, jangan sampai dapet kado zonk.",
+      "naskah": "Terus dia nangkepin kadonya. Awas, jangan sampai dapet kado zonk!",
+      "rekaman": {
+        "dari": 63,
+        "laju": 2.2
+      }
+    },
+    {
+      "judul": "Terakhir, *suratmu* kebuka.",
+      "sub": "Bagian yang paling dia tunggu.",
       "naskah": "Paling akhir, baru deh surat dari kamu kebuka.",
-      "rekaman": { "dari": 64.5, "laju": 1 },
-      "zoom": { "x": 0.5, "y": 0.55, "s": 1.2, "mulai": 0.3, "lama": 1.4 } },
-    { "penutup": true, "naskah": "Tuh kan. <soft laugh> Katanya nggak usah kado. <short pause> Foreverse. Surat digital yang bisa dimainkan.", "durasi": 6.0 }
+      "rekaman": {
+        "dari": 81,
+        "laju": 1
+      },
+      "zoom": {
+        "x": 0.5,
+        "y": 0.55,
+        "s": 1.2,
+        "mulai": 0.3,
+        "lama": 1.4
+      }
+    },
+    {
+      "judul": "Katanya *nggak usah kado*.",
+      "sub": "Tuh kan.",
+      "naskah": "Tuh kan. <soft laugh> Katanya nggak usah kado.",
+      "rekaman": {
+        "dari": 104,
+        "laju": 1.5
+      }
+    },
+    {
+      "penutup": true,
+      "naskah": "Surat digital yang bisa dimainkan."
+    }
   ],
-  "penutup": { "slogan": "Surat digital yang bisa dimainkan." }
+  "penutup": {
+    "slogan": "Surat digital yang bisa dimainkan."
+  }
 }
