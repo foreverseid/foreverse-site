@@ -33,8 +33,8 @@ for (const [i, A] of K.adegan.entries()){
   A.wav = existsSync(wav) ? wav : null;
   A.lamaSuara = A.wav ? durasi(A.wav) / (K.tempoSuara || 1) : 0;
   A.mulaiSuara = A.suaraMulai ?? K.suaraMulai ?? .2;
-  /* penutup: selesai 0,6 detik setelah tagline (standar: ≤0,8) */
-  A.d = Math.max(A.durasi || 0, A.lamaSuara + (A.penutup ? .6 : (A.sisa ?? K.sisa ?? .7)) + A.mulaiSuara);
+  /* penutup: selesai ±0,6 detik setelah kata terakhir (jeda ekor narasi ±0,15 + 0,45) (standar: ≤0,8) */
+  A.d = Math.max(A.durasi || 0, A.lamaSuara + (A.penutup ? .45 : (A.sisa ?? K.sisa ?? .7)) + A.mulaiSuara);
   A.t0 = mulai; mulai += A.d;
 }
 const TOTAL = mulai;
