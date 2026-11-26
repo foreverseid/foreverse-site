@@ -96,6 +96,7 @@ const TEMA_SKEMA = {
   "studio": { nfoto: 4, foto: "TTRR", momen: "graduation" },
   "persembahan": { nfoto: 4, foto: "RTTR", momen: "graduation" },
   "confess-kunang":    { nfoto: 4, foto: "TTRR", momen: "confess" },
+  "bangku-belakang": { nfoto: 4, foto: "RTRT", momen: "confess" },
   "getwell-365":       { nfoto: 4, foto: "TTRR", momen: "getwell" },
   "titipan": { nfoto: 4, foto: "TRRT", momen: "getwell" },
   "bubur": { nfoto: 4, foto: "RTTR", momen: "getwell" },
@@ -161,7 +162,8 @@ const TAMBAHAN = {
   "seserahan": { kunci: "hantaran", n: 3, batas: 70, galat: "Ketiga janji di baki belum diisi." },
   "lukis": { kunci: "warna", n: 3, batas: 70, galat: "Ketiga alasan belum diisi." },
   "selamanya": { kunci: "bait", n: 4, batas: 60, galat: "Keempat bait belum diisi." },
-  "sampai-ketemu": { kunci: "dekat", n: 3, batas: 70, galat: "Ketiga hal yang bikin dekat belum diisi." }
+  "sampai-ketemu": { kunci: "dekat", n: 3, batas: 70, galat: "Ketiga hal yang bikin dekat belum diisi." },
+  "bangku-belakang": { kunci: "oper", n: 3, batas: 70, galat: "Ketiga tulisan di lipatan kertas belum diisi." }
 };
 function temaSah(t){ return TEMA_SKEMA[t] ? t : "bait"; }
 
@@ -988,6 +990,9 @@ async function rapikanIsi(env, kode, badan, lamaIsi, tema) {
   } else if (tema === "sampai-ketemu") {
     /* "Sampai Ketemu": isian khasnya lewat TAMBAHAN. */
     isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
+  } else if (tema === "bangku-belakang") {
+    /* "Kertas dari Bangku Belakang": isian khasnya lewat TAMBAHAN. */
+    isi.waPengirim = teks(badan.whatsapp, BATAS.whatsapp);
   } else if (tema === "herbarium") {
     /* "Herbarium Kecil" (Hari Spesial · Hari Perempuan): `kagum` = tiga hal
        yang dikagumi pengirim, terbuka saat tiap bunga kering dicocokkan. */
@@ -1280,7 +1285,7 @@ const NAMA_TEMA = {
   "loker-terakhir": "Loker Terakhir", "kotak-musik": "Kotak Musik Diservis", "lewat-duluan": "Dia Lewat Sini Duluan",
   "garis-finis": "Garis Finis", "pasar-malam": "Pasar Malam", "confess-kunang": "Toples Kunang-Kunang",
   "kasus-pengirim": "Kasus Pengirim Tanpa Nama", "getwell-365": "36,5", "stasiun-terakhir": "Stasiun Terakhir",
-  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "sampai-ketemu": "Sampai Ketemu", "selamanya": "Selamanya", "lukis": "Melukis Bersama", "seserahan": "Seserahan", "kunci-cadangan": "Kunci Cadangan", "pesawat": "Pesawat Kertas", "jemuran": "Tali Jemuran", "bekal": "Bekal Makan Siang", "cangkir": "Cangkir yang Retak", "tanaman": "Tanaman yang Layu", "titipan": "Paket Titipan", "bubur": "Semangkuk Bubur", "pengumuman": "Papan Pengumuman", "tumpeng": "Tumpeng Syukuran", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
+  "rumah-contoh": "Rumah Contoh", "rumah-menyala": "Rumah yang Menyala", "hitung-mundur": "Hitung Mundur di Atap", "herbarium": "Herbarium Kecil", "celengan": "Celengan Rindu", "koper": "Koper ke Kotamu", "bangku-belakang": "Kertas dari Bangku Belakang", "sampai-ketemu": "Sampai Ketemu", "selamanya": "Selamanya", "lukis": "Melukis Bersama", "seserahan": "Seserahan", "kunci-cadangan": "Kunci Cadangan", "pesawat": "Pesawat Kertas", "jemuran": "Tali Jemuran", "bekal": "Bekal Makan Siang", "cangkir": "Cangkir yang Retak", "tanaman": "Tanaman yang Layu", "titipan": "Paket Titipan", "bubur": "Semangkuk Bubur", "pengumuman": "Papan Pengumuman", "tumpeng": "Tumpeng Syukuran", "payung": "Payung Berdua", "meja-dua": "Makan Malam Pertama", "prosesi": "Prosesi Wisuda", "studio": "Studio Foto Wisuda", "persembahan": "Halaman Persembahan", "sulam": "Sulaman Dua Kota", "radio": "Radio Tengah Malam",
   "pabrik-cokelat": "Cokelat Buatan Sendiri", "malam-takbiran": "Malam Takbiran"
 };
 const rupiah = n => "Rp" + Math.round(Number(n) || 0).toLocaleString("id-ID");
