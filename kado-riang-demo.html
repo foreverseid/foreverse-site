@@ -509,7 +509,7 @@ h2{font-weight:800}
     <div class="reveal">
       <span class="eyebrow">game kedua</span>
       <h2>Tangkap Kadonya</h2>
-      <p class="lead">Geser keranjang, tangkap 10 kado. Awas tawon nakal.</p>
+      <p class="lead">Geser keranjang, tangkap 10 kado. Awas kado zonk.</p>
     </div>
     <div class="game-box reveal">
       <div class="game-head"><span class="gi">🧺</span><div><h3>Kumpulkan 10 kado</h3><p>Geser jari di area game</p></div><span class="done-tag" id="tagCatch">belum</span></div>
@@ -1114,6 +1114,20 @@ F.games.catcher = (wrap, opt={}) => {
     W = r.width; H = r.height; cv.width = W*d; cv.height = H*d;
     ctx = cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
   }
+  /* kado zonk: kotak kado kusam berlabel ZONK, sengaja abu-abu supaya beda jelas dari kado asli yang cerah */
+  function zonk(x, y, r){
+    ctx.save(); ctx.translate(x, y); ctx.rotate(r); ctx.scale(1.2, 1.2);
+    const kotak = (x0, y0, w, h, rad, warna) => { ctx.fillStyle = warna; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, w, h, rad) : ctx.rect(x0, y0, w, h); ctx.fill(); };
+    kotak(-14, -8, 28, 22, 3, '#8C8781');
+    kotak(-16, -14, 32, 8, 3, '#A6A19B');
+    ctx.fillStyle = '#6F6A64'; ctx.fillRect(-2.5, -14, 5, 28);
+    ctx.strokeStyle = '#6F6A64'; ctx.lineWidth = 2; ctx.beginPath();
+    ctx.moveTo(0, -14); ctx.quadraticCurveTo(-9, -22, -4, -14); ctx.moveTo(0, -14); ctx.quadraticCurveTo(7, -19, 5, -13); ctx.stroke();
+    kotak(-13, 0, 26, 10, 2, '#3F3B37');
+    ctx.fillStyle = '#fff'; ctx.font = '800 8px Nunito, system-ui, sans-serif'; ctx.fillText('ZONK', 0, 5.5);
+    ctx.restore();
+    ctx.font = '30px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+  }
   function start(){
     F.ac(); size(); px = W/2; items = []; score = 0; spawn = 0; last = performance.now(); run = true;
     over.style.display = 'none'; requestAnimationFrame(loop);
@@ -1129,7 +1143,7 @@ F.games.catcher = (wrap, opt={}) => {
     ctx.clearRect(0,0,W,H);
     ctx.font = '30px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const py = H - 34;
-    items.forEach(it => { it.y += it.v * dt; ctx.fillText(it.e, it.x, it.y); });
+    items.forEach(it => { it.y += it.v * dt; if(it.e === 'zonk') zonk(it.x, it.y, it.r || (it.r = rand(-.25,.25))); else ctx.fillText(it.e, it.x, it.y); });
     items = items.filter(it => {
       if(Math.abs(it.x - px) < 34 && Math.abs(it.y - py) < 26){
         if(it.bad){ score = Math.max(0, score-1); F.sfx.bad(); F.buzz(40); }
@@ -1361,8 +1375,8 @@ F.games.memory($('#memGame'), photos, {
 
 /* ---------- 7. game tangkap kado ---------- */
 F.games.catcher($('#catchGame'), {
-  goal:10, player:'🧺', good:['🎁','🎈','🍰','🧁','🍭'], bad:['🐝'], hud:'#FFC94A',
-  title:'Tangkap Kadonya!', desc:'Geser jari ke kiri dan kanan. Kado +1, tawon nakal −1.',
+  goal:10, player:'🧺', good:['🎁','🎈','🍰','🧁','🍭'], bad:['zonk'], hud:'#FFC94A',
+  title:'Tangkap Kadonya!', desc:'Geser jari ke kiri dan kanan. Kado +1, kado zonk −1.',
   winTitle:'Semua kado tertangkap! 🎉', winDesc:'Keranjangmu penuh. Hadiah sebenarnya ada di surat nanti.',
   onWin: () => mark('catch')
 });
