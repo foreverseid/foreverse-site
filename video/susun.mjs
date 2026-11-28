@@ -18,12 +18,14 @@ const AKAR = resolve(new URL("..", import.meta.url).pathname);
 const FPS = 30;
 const K = JSON.parse(await readFile(process.argv[2], "utf8"));
 const KERJA = join(AKAR, "rekaman/video", K.id);
-const SUMBER = join(AKAR, "rekaman", K.tema + ".mp4");
+/* sumber rekaman per adegan: adegan.rekaman.tema (montase) atau K.tema untuk video satu tema */
+const sumber = A => join(AKAR, "rekaman", ((A.rekaman && A.rekaman.tema) || K.tema) + ".mp4");
 const ff = (...a) => execFileSync("ffmpeg", ["-y", "-v", "error", ...a]);
 const durasi = f => +execFileSync("ffprobe", ["-v","error","-show_entries","format=duration","-of","csv=p=0", f]).toString();
 const ENC = ["-c:v","libx264","-preset","veryfast","-crf","18","-pix_fmt","yuv420p","-r",String(FPS)];
 
-if (!existsSync(SUMBER)) throw new Error(`rekaman belum ada: jalankan node rekam/rekam.mjs ${K.tema}`);
+for (const A of K.adegan) if (A.rekaman && !existsSync(sumber(A)))
+  throw new Error(`rekaman belum ada: jalankan node rekam/rekam.mjs ${A.rekaman.tema || K.tema}`);
 await mkdir(KERJA, { recursive:true });
 
 /* 1. durasi tiap adegan: ikut narasi (+jeda), minimal K.adegan[i].durasi */
@@ -47,7 +49,7 @@ for (const [i, A] of K.adegan.entries()){
   if (!A.rekaman) continue;
   await rm(A.dir, { recursive:true, force:true }); await mkdir(A.dir);
   const r = A.rekaman, laju = r.laju || 1;
-  ff("-ss", String(r.dari), "-t", String(A.d * laju + .2), "-i", SUMBER,
+  ff("-ss", String(r.dari), "-t", String(A.d * laju + .2), "-i", sumber(A),
      "-vf", `setpts=PTS/${laju},fps=${FPS},scale=720:-2`, "-q:v", "3", join(A.dir, "%05d.jpg"));
   A.frame = (await readdir(A.dir)).sort();
 }

@@ -30,6 +30,8 @@
   #kaca{ position:relative; width:100%; height:100%; border-radius:46px; overflow:hidden; background:#000; }
   #rek{ position:absolute; left:0; top:0; width:100%; height:100%; object-fit:cover; transform-origin:0 0; }
   /* penutup */
+  /* teks selalu di atas bingkai HP, jadi transisi masuk tidak pernah menutupi judul */
+  #alis, #titik, #judul, #sub{ z-index:2; } #hp{ z-index:1; }
   #tutup{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:34px; opacity:0; }
   #tutup img{ width:300px; }
   #merek{ font:400 96px/1 Fraunces; letter-spacing:-.01em; }
@@ -58,12 +60,22 @@ function pecah(teks){
 }
 window.siapkan = konten => {
   K = konten;
-  $("#alis").textContent = konten.alis;
+  $("#alis").textContent = konten.adegan[0].alis || konten.alis;
   $("#titik").innerHTML = konten.adegan.map(() => "<i></i>").join("");
   $("#slogan").textContent = konten.penutup.slogan;
   return document.fonts.ready;
 };
-let adeganIni = -1;
+let adeganIni = -1, labelBaru = false;
+/* transisi masuk bingkai HP; adegan tanpa "masuk" mendapat giliran otomatis supaya tidak berulang */
+const MASUK = {
+  geser:  p => `translateX(${(1-p)*720}px) rotate(${(1-p)*5}deg)`,
+  naik:   p => `translateY(${(1-p)*620}px)`,
+  miring: p => `translateX(${-(1-p)*720}px) rotate(${-(1-p)*9}deg)`,
+  zoom:   p => `scale(${.72 + .28*p})`,
+  putar:  p => `perspective(1800px) rotateY(${(1-p)*85}deg)`,
+  jatuh:  p => `translateY(${-(1-p)*700}px) rotate(${-(1-p)*6}deg)`,
+};
+const URUTAN = ["geser", "naik", "miring", "zoom", "putar", "jatuh"];
 /* gambar satu frame: adegan i, detik t sejak adegan mulai, src = frame rekaman */
 window.gambar = async (i, t, src) => {
   const A = K.adegan[i], tutup = i === K.adegan.length - 1 && A.penutup;
@@ -72,7 +84,13 @@ window.gambar = async (i, t, src) => {
     $("#judul").innerHTML = A.judul ? pecah(A.judul).map(w => /^\s+$/.test(w.k) ? w.k : `<span>${w.sorot ? `<em>${w.k}</em>` : w.k}</span>`).join("") : "";
     $("#sub").textContent = A.sub || "";
     [...$("#titik").children].forEach((d, j) => d.className = j === i ? "ini" : "");
+    const label = A.alis || K.alis;
+    labelBaru = !A.penutup && $("#alis").textContent !== label;
+    if (!A.penutup) $("#alis").textContent = label;
   }
+  /* label momen · tema berganti di montase: geser masuk dari kiri */
+  const pl = labelBaru ? keluar(t / .4) : 1;
+  $("#alis").style.transform = `translateX(${(1 - pl) * -60}px)`;
   /* judul masuk kata demi kata (adegan pertama sudah utuh sejak frame 0 untuk sampul) */
   const masuk = i === 0 ? 1 : 0;
   [...$("#judul").querySelectorAll("span")].forEach((s, j) => {
@@ -94,9 +112,15 @@ window.gambar = async (i, t, src) => {
   }
   /* penutup: HP & teks turun-pudar, merek muncul */
   const pt = tutup ? halus(t / .5) : 0;
-  for (const id of ["#hp", "#judul", "#sub", "#alis", "#titik"]){
+  for (const id of ["#hp", "#judul", "#sub", "#titik"]){
     $(id).style.opacity = 1 - pt; }
-  $("#hp").style.transform = `translateY(${pt * 120}px) scale(${1 - pt * .06})`;
+  $("#alis").style.opacity = (1 - pt) * (labelBaru ? keluar(t / .4) : 1);
+  /* bingkai HP: transisi masuk per adegan + denyut kecil pas kata kunci diucapkan */
+  let tf = "";
+  if (!tutup && i > 0){ const jenis = A.masuk || URUTAN[(i - 1) % URUTAN.length]; tf = MASUK[jenis](keluar(t / .42)); }
+  if (A.kunci !== undefined){ const u = (t - A.kunci) / .38; if (u > 0 && u < 1) tf += ` scale(${1 + .045 * Math.sin(u * Math.PI)})`;
+    [...$("#judul").querySelectorAll("em")].forEach(e => e.style.color = u > 0 && u < 1.4 ? "var(--violet)" : ""); }
+  $("#hp").style.transform = tutup ? `translateY(${pt * 120}px) scale(${1 - pt * .06})` : tf;
   const pm = tutup ? keluar((t - .35) / .6) : 0;
   $("#tutup").style.opacity = pm; $("#tutup").style.transform = `translateY(${(1 - pm) * 30}px)`;
 };

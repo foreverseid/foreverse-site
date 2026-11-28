@@ -121,6 +121,8 @@ Playful young woman from Jakarta telling her best friend <jenis cerita>, everyda
 Perintah teknis:
 1. `node rekam/rekam.mjs <tema>`
 2. `video/konten/<id>.json`: tiap adegan `judul`, `sub`, `naskah`, `rekaman {dari, laju}`, opsional `zoom {x, y, s, mulai, lama}`; adegan terakhir `penutup: true` hanya berisi tagline.
+   - Montase: tiap adegan boleh punya `rekaman.tema` dan `alis` sendiri. Halaman situs direkam dengan `rekam/tema/situs-qr.mjs` dan `situs-katalog.mjs` (butuh `node sim.mjs` berjalan).
+   - Gerak: `masuk` = transisi bingkai HP (`geser`, `naik`, `miring`, `zoom`, `putar`, `jatuh`; kalau kosong bergiliran otomatis), `kunci` = detik kata kunci di adegan itu (bingkai berdenyut, frasa sorotan berganti warna). Detik kata kunci diambil dari transkrip potongan narasi.
 3. `python3 video/rapikan_vo.py vo.wav rekaman/video/<id> <titik potong antar kalimat> 0.3`
 4. `SAMPEL=1 node video/susun.mjs video/konten/<id>.json` → periksa `lembar.jpg`
 5. `node video/susun.mjs video/konten/<id>.json` → `rekaman/video/<id>.mp4` + sampul
