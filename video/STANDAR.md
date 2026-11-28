@@ -1,23 +1,33 @@
-# Standar Konten Video Foreverse v2
+# Standar Konten Video Foreverse v3
 
-Berlaku untuk semua video TikTok & Instagram @foreverse.id (diperbarui 26 Nov 2026).
+Berlaku untuk semua video TikTok & Instagram @foreverse.id (diperbarui 28 Nov 2026).
 Tujuannya: setiap video terasa dibuat oleh merek yang sama, dan penonton paham dalam 30 detik apa yang dijual.
 
 ---
 
 ## 1. Prinsip utama
 
-1. **Narasi dulu, gambar mengikuti.** Naskah dan suara dibuat lebih dulu. Panjang dan isi tiap adegan mengikuti kalimat yang diucapkan, bukan sebaliknya.
+1. **Suara dulu, baru storyboard dan animasi.** Naskah disetujui, suara dibuat, baru detik tiap adegan, storyboard, dan animasinya disusun mengikuti suara itu. Urutan ini tidak pernah dibalik; sebelum suara ada, jangan menetapkan detik.
 2. **Tampilan produk selalu rekaman tema asli** (`rekam/rekam.mjs`). Boleh dipercepat (laju ≤3,5×) dan diperbesar; isi layarnya tidak pernah diubah. Narasi tidak boleh menyebut sesuatu yang tidak ada di tema.
 3. **Satu kalimat, satu adegan, satu gagasan.** Tidak ada adegan yang memuat dua hal berbeda.
 4. **Tanpa harga, promo, tanggal, atau "pesan sekarang" di dalam video.** Semua itu di caption.
-5. Konten yang bukan demo produk (tips kado, cerita relatable) tetap memakai susunan layar ini; bingkai HP boleh diganti kartu teks atau b-roll suasana, tapi tampilan produk yang muncul selalu rekaman asli.
+5. Naskah harus wajar diucapkan, jelas maksudnya, tidak ambigu, dan konsepnya tidak ganjil.
+6. Konten yang bukan demo produk (tips kado, cerita relatable) tetap memakai susunan layar ini; bingkai HP boleh diganti kartu teks atau b-roll suasana, tapi tampilan produk yang muncul selalu rekaman asli.
 
 ## 2. Ukuran & durasi
 
 - 1080×1920, 30 fps, H.264 + AAC, kenyaringan sekitar -14 LUFS.
 - **Durasi 25–35 detik**, ditentukan panjang narasi. Kalau narasi lebih dari 35 detik, **naskahnya yang dipersingkat**; percepatan suara maksimal 8% (`tempoSuara` ≤1,08).
 - 5–7 adegan isi + adegan tagline penutup.
+
+### Montase (beberapa tema dalam satu video)
+
+Montase = satu video yang menyambung potongan pendek dari beberapa tema.
+
+- 3–5 tema, tiap potongan minimal 3 detik.
+- Label di atas judul berganti mengikuti tema yang sedang tampil.
+- Narasi tidak boleh menyiratkan satu cara main berlaku di semua tema.
+- Video sesudah montase tidak memakai tema yang ada di montase.
 
 ## 3. Struktur cerita (sama di semua video)
 
@@ -81,21 +91,31 @@ Playful young woman from Jakarta telling her best friend <jenis cerita>, everyda
 - Penutup: logo + **foreverse** + tagline + foreverse.id.
 - Musik latar dari `musik.py` (bebas hak cipta), otomatis mengecil saat narasi; bunyi "wus" halus tiap pergantian adegan. Tempo 84 untuk romantis/misteri, 92 untuk komedi.
 
+### Gerak & transisi (wajib di setiap video)
+
+- Animasinya harus sangat menarik, bukan sekadar bingkai HP yang berganti isi.
+- Transisi bervariasi dan diturunkan dari isi adegannya (misalnya capit, adukan, jepretan, garis yang tersambung, lipatan kertas). Satu video tidak mengulang satu transisi yang sama dari awal sampai akhir.
+- Bingkai HP, judul, dan label ikut bergerak (masuk, keluar, zoom, miring halus) tepat pada kata kuncinya.
+- Gerak tidak boleh menutupi isi layar produk atau membuat teks sulit dibaca. Isi rekaman tetap tidak diubah.
+
 ## 9. Caption & unggahan
 
-- **Caption maksimal 3 kalimat:** hook diulang dengan kalimat lain, satu kalimat yang menjelaskan produk, lalu ajakan + foreverse.id.
-- **3–5 tagar:** 1 momen (#kadoulangtahun, #confess, …), 1 hubungan (#kadopacar), #suratdigital, #foreverse.
-- **Satu pertanyaan komentar** yang mengajak penonton mengarang atau menebak sesuatu.
+- **Susunan tetap:** `Untuk: yang …` → satu kalimat tentang suratnya + 💌 → `Coba contohnya di foreverse.id.` → `P.S.` berisi satu pertanyaan → tagar.
+- Komentar sematan dibuka `P.P.S.`
+- **4 tagar** (maks. 5): #suratdigital, #foreverse, 1 momen, 1 hubungan.
+- Nama seri dan nomor tidak ditulis di sosmed; hanya untuk arsip di Google Drive.
 - Tautan bio berlabel: `foreverse.id/?utm_source=tiktok&utm_campaign=bio` (Instagram: `utm_source=instagram`).
-- Jarak unggah 2–3 hari; catat jumlah tayang, rata-rata ditonton, dan komentar tiap video.
+- Jam utama 19.00 WIB. 3 hari pertama unggah setiap hari, lalu tiap 2 hari.
+- Catat metrik hari ke-1 dan ke-7 di spreadsheet "Kalender & Metrik Konten".
+- Sistem komunikasi lengkap: dokumen `claude/sistem-komunikasi-sosmed.md`; berkas induk di Google Drive.
 
 ## 10. Alur kerja satu konten
 
 | Langkah | Siapa | Waktu Morfhi |
 |---|---|---|
-| Konsep, naskah, teks gaya, storyboard | Claude | 2 menit membaca dan menyetujui |
+| Konsep, naskah, teks gaya | Claude | 2 menit membaca dan menyetujui |
 | Suara di AI Studio, kirim WAV | Morfhi | 5 menit |
-| Rekam tema, potong narasi, susun, render, periksa | Claude | — |
+| Rekam tema, potong narasi, storyboard, animasi, render, periksa | Claude | — |
 | Dengarkan hasil, unggah + caption | Morfhi | 5 menit |
 
 Perintah teknis:
@@ -113,3 +133,4 @@ Perintah teknis:
 - [ ] Tidak ada tampilan tema yang bertentangan dengan narasi.
 - [ ] Transkrip ulang narasi terbaca utuh.
 - [ ] Kenyaringan sekitar -14 LUFS.
+- [ ] Gerak dan transisi bervariasi, halus, dan tidak menutupi isi layar.
