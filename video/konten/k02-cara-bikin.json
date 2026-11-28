@@ -13,18 +13,12 @@
       "sub": "Sini, lihat dulu.",
       "naskah": "Mau bikinin dia surat kayak gini, tapi takut ribet?",
       "rekaman": {
-        "tema": "situs-pesan",
-        "dari": 1.6,
-        "laju": 1
+        "tema": "pemutaran-perdana",
+        "dari": 59,
+        "laju": 3
       },
       "kunci": 2.3,
-      "zoom": {
-        "x": 0.5,
-        "y": 0.527,
-        "s": 1.12,
-        "mulai": -1,
-        "lama": 0.1
-      }
+      "alis": "Anniversary · Pemutaran Perdana"
     },
     {
       "judul": "Tanpa akun, tanpa *jago desain*.",
@@ -32,8 +26,8 @@
       "naskah": "Tenang aja. Nggak perlu bikin akun atau jago desain.",
       "rekaman": {
         "tema": "situs-pesan",
-        "dari": 4.0,
-        "laju": 1.4
+        "dari": 1.6,
+        "laju": 1.2
       },
       "masuk": "naik",
       "kunci": 2.7,
@@ -43,7 +37,8 @@
         "s": 1.12,
         "mulai": -1,
         "lama": 0.1
-      }
+      },
+      "alis": "foreverse.id · Isi surat"
     },
     {
       "judul": "Nama, foto, *judul film*.",
