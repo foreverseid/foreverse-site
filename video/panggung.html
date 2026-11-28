@@ -32,6 +32,10 @@
   /* penutup */
   /* teks selalu di atas bingkai HP, jadi transisi masuk tidak pernah menutupi judul */
   #alis, #titik, #judul, #sub{ z-index:2; } #hp{ z-index:1; }
+  /* lampu meredup (masuk "redup") dan isian yang terbang ke dalam tema (A.terbang) */
+  #gelap{ position:absolute; inset:0; background:var(--ink); opacity:0; z-index:0; pointer-events:none; }
+  #terbang{ position:absolute; left:0; top:0; z-index:3; opacity:0; white-space:nowrap; font:600 40px/1 Fraunces; color:var(--ink);
+    background:#fff; padding:20px 30px; border-radius:18px; border:3px solid var(--violet); box-shadow:0 18px 40px rgba(22,22,26,.25); }
   #tutup{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:34px; opacity:0; }
   #tutup img{ width:300px; }
   #merek{ font:400 96px/1 Fraunces; letter-spacing:-.01em; }
@@ -41,6 +45,7 @@
 <body><div id="layar">
   <div id="alis"></div><div id="titik"></div>
   <div id="judul"></div><div id="sub"></div>
+  <div id="gelap"></div><div id="terbang"></div>
   <div id="hp"><div id="kaca"><img id="rek" alt=""></div></div>
   <div id="tutup"><img src="/foreverse-logo.png" alt=""><div id="merek">foreverse</div><div id="slogan"></div><div id="alamat">foreverse.id</div></div>
 </div>
@@ -74,7 +79,11 @@ const MASUK = {
   zoom:   p => `scale(${.72 + .28*p})`,
   putar:  p => `perspective(1800px) rotateY(${(1-p)*85}deg)`,
   jatuh:  p => `translateY(${-(1-p)*700}px) rotate(${-(1-p)*6}deg)`,
+  sapu:   p => `rotate(${-(1-p)*75}deg)`,           /* berputar dari pojok kiri bawah, seperti gulungan film */
+  redup:  p => `scale(${.94 + .06*p})`,              /* ditemani panggung yang menggelap, lihat #gelap */
+  susut:  p => `scale(${1 + .6*(1-p)})`,             /* layar besar mengecil jadi pratinjau */
 };
+const PUSAT = { sapu:"0% 100%" };
 const URUTAN = ["geser", "naik", "miring", "zoom", "putar", "jatuh"];
 /* gambar satu frame: adegan i, detik t sejak adegan mulai, src = frame rekaman */
 window.gambar = async (i, t, src) => {
@@ -120,6 +129,21 @@ window.gambar = async (i, t, src) => {
   if (!tutup && i > 0){ const jenis = A.masuk || URUTAN[(i - 1) % URUTAN.length]; tf = MASUK[jenis](keluar(t / .42)); }
   if (A.kunci !== undefined){ const u = (t - A.kunci) / .38; if (u > 0 && u < 1) tf += ` scale(${1 + .045 * Math.sin(u * Math.PI)})`;
     [...$("#judul").querySelectorAll("em")].forEach(e => e.style.color = u > 0 && u < 1.4 ? "var(--violet)" : ""); }
+  const jenisIni = !tutup && i > 0 ? (A.masuk || URUTAN[(i - 1) % URUTAN.length]) : "";
+  $("#hp").style.transformOrigin = PUSAT[jenisIni] || "50% 50%";
+  /* redup: panggung menggelap seperti lampu bioskop, layar HP menyala belakangan */
+  const pr = jenisIni === "redup" ? halus(t / .5) * (1 - halus((t - .9) / .7)) : 0;
+  $("#gelap").style.opacity = pr * .45;
+  $("#hp").style.filter = jenisIni === "redup" ? `brightness(${.25 + .75 * halus((t - .2) / .7)})` : "";
+  /* terbang: isian formulir melayang ke tempatnya di tema */
+  const tb = A.terbang, el = $("#terbang");
+  if (tb){
+    if (el.textContent !== tb.teks) el.textContent = tb.teks;
+    const q = halus((t - (tb.mulai || 0)) / (tb.lama || .8));
+    const x = tb.dari[0] + (tb.ke[0] - tb.dari[0]) * q, y = tb.dari[1] + (tb.ke[1] - tb.dari[1]) * q - Math.sin(q * Math.PI) * 140;
+    el.style.opacity = jepit((t - (tb.mulai || 0)) / .12) * (1 - halus((t - (tb.mulai || 0) - (tb.lama || .8)) / .25));
+    el.style.transform = `translate(-50%,-50%) translate(${x}px,${y}px) rotate(${-4 * q}deg) scale(${1.15 - .35 * q})`;
+  } else el.style.opacity = 0;
   $("#hp").style.transform = tutup ? `translateY(${pt * 120}px) scale(${1 - pt * .06})` : tf;
   const pm = tutup ? keluar((t - .35) / .6) : 0;
   $("#tutup").style.opacity = pm; $("#tutup").style.transform = `translateY(${(1 - pm) * 30}px)`;

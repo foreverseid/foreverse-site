@@ -1,0 +1,160 @@
+{
+  "id": "k02-cara-bikin",
+  "tema": "situs-pesan",
+  "alis": "foreverse.id · Isi surat",
+  "tempoSuara": 1,
+  "suaraMulai": 0.1,
+  "sisa": 0.1,
+  "bpm": 88,
+  "suaraDari": "Google AI Studio, Gemini Flash TTS, suara Achernar; dipotong per kalimat dengan video/rapikan_vo.py",
+  "adegan": [
+    {
+      "judul": "Mau bikin, tapi *takut ribet*?",
+      "sub": "Sini, lihat dulu.",
+      "naskah": "Mau bikinin dia surat kayak gini, tapi takut ribet?",
+      "rekaman": {
+        "tema": "situs-pesan",
+        "dari": 1.6,
+        "laju": 1
+      },
+      "kunci": 2.3,
+      "zoom": {
+        "x": 0.5,
+        "y": 0.527,
+        "s": 1.12,
+        "mulai": -1,
+        "lama": 0.1
+      }
+    },
+    {
+      "judul": "Tanpa akun, tanpa *jago desain*.",
+      "sub": "Tinggal isi.",
+      "naskah": "Tenang aja. Nggak perlu bikin akun atau jago desain.",
+      "rekaman": {
+        "tema": "situs-pesan",
+        "dari": 4.0,
+        "laju": 1.4
+      },
+      "masuk": "naik",
+      "kunci": 2.7,
+      "zoom": {
+        "x": 0.5,
+        "y": 0.527,
+        "s": 1.12,
+        "mulai": -1,
+        "lama": 0.1
+      }
+    },
+    {
+      "judul": "Nama, foto, *judul film*.",
+      "sub": "Sesuai cerita kalian.",
+      "naskah": "Pilih ceritanya, terus isi nama, foto, sama judul film.",
+      "rekaman": {
+        "tema": "situs-pesan",
+        "dari": 9.8,
+        "laju": 1.75
+      },
+      "masuk": "zoom",
+      "kunci": 4.0,
+      "zoom": {
+        "x": 0.5,
+        "y": 0.527,
+        "s": 1.12,
+        "mulai": -1,
+        "lama": 0.1
+      }
+    },
+    {
+      "alis": "Anniversary · Pemutaran Perdana",
+      "judul": "Judulmu *jadi tiket*.",
+      "sub": "Dia yang sobek.",
+      "naskah": "Judul itu kecetak di tiket yang dia sobek.",
+      "rekaman": {
+        "tema": "pemutaran-perdana",
+        "dari": 8,
+        "laju": 2
+      },
+      "masuk": "zoom",
+      "kunci": 1.5,
+      "terbang": {
+        "teks": "Dua Kopi, Satu Meja",
+        "dari": [
+          540,
+          860
+        ],
+        "ke": [
+          460,
+          950
+        ],
+        "mulai": 0.02,
+        "lama": 0.75
+      }
+    },
+    {
+      "alis": "Anniversary · Pemutaran Perdana",
+      "judul": "Fotomu, *diputar* dia.",
+      "sub": "Satu per satu.",
+      "naskah": "Foto kalian? Dia puterin satu-satu pakai gulungan film.",
+      "rekaman": {
+        "tema": "pemutaran-perdana",
+        "dari": 21,
+        "laju": 3.5
+      },
+      "masuk": "sapu",
+      "kunci": 1.4
+    },
+    {
+      "alis": "Anniversary · Pemutaran Perdana",
+      "judul": "Tulis yang *mau kamu sampaikan*.",
+      "sub": "Nggak harus panjang.",
+      "naskah": "Bingung nulisnya? Nggak harus panjang, tulis yang mau kamu sampaikan.",
+      "rekaman": {
+        "tema": "pemutaran-perdana",
+        "dari": 40,
+        "laju": 3
+      },
+      "masuk": "redup",
+      "kunci": 3.2,
+      "zoom": {
+        "x": 0.5,
+        "y": 0.46,
+        "s": 1.3,
+        "mulai": 0.8,
+        "lama": 1.4
+      }
+    },
+    {
+      "judul": "*Cek dulu* hasilnya.",
+      "sub": "Sebelum bayar.",
+      "naskah": "Kamu bisa susun dulu, terus cek hasilnya sebelum bayar.",
+      "rekaman": {
+        "tema": "situs-pesan",
+        "dari": 23.2,
+        "laju": 1.4
+      },
+      "masuk": "susut",
+      "kunci": 2.0,
+      "zoom": {
+        "x": 0.5,
+        "y": 0.527,
+        "s": 1.12,
+        "mulai": -1,
+        "lama": 0.1
+      }
+    },
+    {
+      "penutup": true,
+      "naskah": "Surat digital yang bisa dimainkan.",
+      "zoom": {
+        "x": 0.5,
+        "y": 0.527,
+        "s": 1.12,
+        "mulai": -1,
+        "lama": 0.1
+      }
+    }
+  ],
+  "penutup": {
+    "slogan": "Surat digital yang bisa dimainkan."
+  }
+}
