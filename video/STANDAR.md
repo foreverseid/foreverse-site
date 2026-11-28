@@ -10,7 +10,7 @@ Tujuannya: setiap video terasa dibuat oleh merek yang sama, dan penonton paham d
 1. **Suara dulu, baru storyboard dan animasi.** Naskah disetujui, suara dibuat, baru detik tiap adegan, storyboard, dan animasinya disusun mengikuti suara itu. Urutan ini tidak pernah dibalik; sebelum suara ada, jangan menetapkan detik.
 2. **Tampilan produk selalu rekaman tema asli** (`rekam/rekam.mjs`). Boleh dipercepat (laju ≤3,5×) dan diperbesar; isi layarnya tidak pernah diubah. Narasi tidak boleh menyebut sesuatu yang tidak ada di tema.
 3. **Satu kalimat, satu adegan, satu gagasan.** Tidak ada adegan yang memuat dua hal berbeda.
-4. **Tanpa harga, promo, tanggal, atau "pesan sekarang" di dalam video.** Semua itu di caption.
+4. **Tanpa harga, promo, tanggal, atau ajakan membeli ("pesan sekarang") di dalam video.** Semua itu di caption. **Ajakan ringan untuk melihat atau mencoba boleh** (misalnya "Coba mainin sendiri contohnya, link-nya ada di bio"), sebagai kalimat sebelum tagline.
 5. Naskah harus wajar diucapkan, jelas maksudnya, tidak ambigu, dan konsepnya tidak ganjil.
 6. Konten yang bukan demo produk (tips kado, cerita relatable) tetap memakai susunan layar ini; bingkai HP boleh diganti kartu teks atau b-roll suasana, tapi tampilan produk yang muncul selalu rekaman asli.
 
@@ -36,7 +36,7 @@ Montase = satu video yang menyambung potongan pendek dari beberapa tema.
 | Hook | 0–3 dtk | Satu kalimat yang bikin berhenti scroll: situasi relate, pertanyaan, atau misteri. Teks + suara + produk muncul di frame pertama. |
 | Alur | 3–25 dtk | 4–5 adegan, tiap adegan memperlihatkan satu interaksi tema (ketuk, seret, game, surat). Ada perubahan visual tiap 2–4 detik. |
 | Puncak | sekitar 60–75% durasi | Momen paling lucu, menyentuh, atau mengejutkan; diperbesar pas kata kuncinya diucapkan. |
-| Penutup cerita | 2–3 dtk | Kalimat yang menyambung ke hook (supaya penonton memutar ulang), masih dengan rekaman produk. |
+| Penutup cerita | 2–3 dtk | Kalimat yang menyambung ke hook (supaya penonton memutar ulang), atau ajakan ringan untuk melihat/mencoba; masih dengan rekaman produk atau situs. |
 | Tagline | 2–3 dtk | Logo + tagline. Hanya tagline yang diucapkan. |
 
 Pendekatan dipakai bergiliran; dua video berturut-turut tidak boleh sama pendekatan atau temanya: romantis-sinematik, komedi relatable, tebak/interaktif, ide kado/edukatif, satu tema banyak video, di balik layar (proses membuat surat, bukan alat pembuatnya).
